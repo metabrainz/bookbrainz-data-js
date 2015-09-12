@@ -1,12 +1,17 @@
 var util = require('../util');
 
-var Bookshelf = require('../bookshelf')
+var EditorType = null;
 
-var EditorType = Bookshelf.Model.extend({
-  tableName: 'bookbrainz.editor_type',
-  idAttribute: 'id',
-  parse: util.snakeToCamel,
-  format: util.camelToSnake
-});
+module.exports = function(bookshelf) {
+  if (!EditorType) {
+    EditorType = bookshelf.Model.extend({
+      tableName: 'bookbrainz.editor_type',
+      idAttribute: 'id',
+      parse: util.snakeToCamel,
+      format: util.camelToSnake
+    });
 
-module.exports = Bookshelf.model('EditorType', EditorType);
+    EditorType = bookshelf.model('EditorType', EditorType);
+  }
+  return EditorType;
+};

@@ -12,4 +12,9 @@ var Bookshelf = require('bookshelf')(knex);
 Bookshelf.plugin('registry');
 Bookshelf.plugin('visibility');
 
-module.exports = Bookshelf;
+var orm = require('../index')(Bookshelf);
+
+module.exports = {
+  bookshelf: Bookshelf,
+  orm: orm
+};

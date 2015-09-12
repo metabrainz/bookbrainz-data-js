@@ -1,13 +1,15 @@
 var Promise = require('bluebird');
 
-var Bookshelf = require('../bookshelf');
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 
 var util = require('../util');
-var Gender = require('../models/gender');
+
+var Bookshelf = require('./bookshelf').bookshelf;
+var orm = require('./bookshelf').orm;
+var Gender = orm.Gender;
 
 describe('Gender model', function() {
   afterEach(function() {

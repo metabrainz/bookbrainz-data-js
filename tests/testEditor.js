@@ -1,12 +1,14 @@
-var Bookshelf = require('../bookshelf');
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
-var Editor = require('../models/editor');
-var EditorType = require('../models/editorType');
 var expect = chai.expect;
-var Gender = require('../models/gender');
 var Promise = require('bluebird');
 var util = require('../util');
+
+var Bookshelf = require('./bookshelf').bookshelf;
+var orm = require('./bookshelf').orm;
+var Editor = orm.Editor;
+var EditorType = orm.EditorType;
+var Gender = orm.Gender;
 
 chai.use(chaiAsPromised);
 
