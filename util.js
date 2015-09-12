@@ -14,3 +14,7 @@ module.exports.camelToSnake = function(attrs) {
     return result;
   }, {});
 };
+
+module.exports.fetchJSON = function(model) {
+  return model.toJSON();
+};

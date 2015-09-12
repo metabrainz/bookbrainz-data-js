@@ -1,27 +1,27 @@
 var Promise = require('bluebird');
-
 var Bookshelf = require('../bookshelf');
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
-
 var util = require('../util');
-var Gender = require('../models/gender');
 
-describe('Gender model', function() {
+var EditorType = require('../models/editorType');
+
+describe('EditorType model', function() {
   afterEach(function() {
-    return Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE');
+    return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
   });
 
   it('should return a JSON object with correct keys when saved', function() {
-    var genderPromise = new Gender({name: 'Test'}).save()
+    var editorTypeCreationPromise = new EditorType({label: 'test_type'})
+    .save()
     .then(function(model) {
-      return model.refresh().then(util.fetchJSON);
+      return model.refresh().then(util.fetchJSON)
     });
 
-    return expect(genderPromise).to.eventually.have.all.keys([
-      'id', 'name', 'parent', 'childOrder', 'description'
+    return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
+      'id', 'label'
     ]);
   });
 });
