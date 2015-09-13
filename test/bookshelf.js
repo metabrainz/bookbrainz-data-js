@@ -4,7 +4,7 @@ var knex = require('knex')({
     host     : '127.0.0.1',
     user     : 'bookbrainz',
     password : 'bookbrainz',
-    database : 'bookbrainz'
+    database : 'bookbrainz_test'
   }
 });
 
