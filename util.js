@@ -3,14 +3,28 @@ _.str = require('underscore.string');
 
 module.exports.snakeToCamel = function(attrs) {
   return _.reduce(attrs, function(result, val, key) {
-    result[_.str.camelize(key)] = val;
+    var newKey;
+    if (key.indexOf('_') === 0) {
+      newKey = '_' + _.str.camelize(key.substr(1));
+    } else {
+      newKey = _.str.camelize(key);
+    }
+
+    result[newKey] = val;
     return result;
   }, {});
 };
 
 module.exports.camelToSnake = function(attrs) {
   return _.reduce(attrs, function(result, val, key) {
-    result[_.str.underscored(key)] = val;
+    var newKey;
+    if (key.indexOf('_') === 0) {
+      newKey = '_' + _.str.underscored(key.substr(1));
+    } else {
+      newKey = _.str.underscored(key);
+    }
+
+    result[newKey] = val;
     return result;
   }, {});
 };
