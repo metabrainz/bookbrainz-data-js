@@ -7,6 +7,8 @@ notifications:
 
 sudo: false
 
+before_script: cp ./test/bookshelf.js.example ./test/bookshelf.js
+
 cache:
   directories:
     - node_modules

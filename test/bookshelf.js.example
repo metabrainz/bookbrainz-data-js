@@ -22,8 +22,8 @@ var knex = require('knex')({
 	client: 'postgresql',
 	connection: {
 		host: '127.0.0.1',
-		user: 'bookbrainz',
-		password: 'bookbrainz',
+		user: 'postgres',
+		password: '',
 		database: 'bookbrainz_test'
 	}
 });
