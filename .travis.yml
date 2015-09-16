@@ -11,7 +11,7 @@ before_script:
   - git clone https://github.com/bookbrainz/bookbrainz-sql.git
   - cp ./test/bookshelf.js.example ./test/bookshelf.js
   - psql -c 'CREATE DATABASE bookbrainz_test;' -U postgres
-  - psql -c 'CREATE EXTENSION "uuid-ossp"; CREATE SCHEMA musicbrainz;' -d bookbrainz_test -U postgres
+  - psql -c 'CREATE EXTENSION "uuid-ossp"; CREATE SCHEMA musicbrainz; CREATE SCHEMA bookbrainz;' -d bookbrainz_test -U postgres
   - psql -f bookbrainz-sql/schemas/musicbrainz.sql -d bookbrainz_test -U postgres
   - psql -f bookbrainz-sql/schemas/bookbrainz.sql -d bookbrainz_test -U postgres
 
