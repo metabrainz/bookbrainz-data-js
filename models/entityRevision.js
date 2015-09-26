@@ -26,20 +26,24 @@ module.exports = function(bookshelf) {
 	require('./editor')(bookshelf);
 	require('./revision')(bookshelf);
 	require('./entity')(bookshelf);
+	require('./entityData')(bookshelf);
 
 	if (!EntityRevision) {
 		EntityRevision = bookshelf.Model.extend({
 			tableName: 'bookbrainz.entity_revision',
-			idAttribute: 'revision_id',
+			idAttribute: 'id',
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
 			revision: function() {
 				return this.morphOne(
-					'Revision', 'revision', ['_type', 'revision_id'], '1'
+					'Revision', 'revision', ['_type', 'id'], '1'
 				);
 			},
 			entity: function() {
 				return this.belongsTo('Entity', 'entity_bbid');
+			},
+			entityData: function() {
+				return this.belongsTo('EntityData', 'entity_data_id');
 			}
 		});
 

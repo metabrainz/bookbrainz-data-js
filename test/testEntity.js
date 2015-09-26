@@ -73,7 +73,7 @@ describe('Entity model', function setupData() {
 		var entityDataAttribs = {id: 1, _type: 2};
 		var revisionAttribs = {id: 1, authorId: 1, _type: 1};
 		var entityRevisionAttribs = {
-			revisionId: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
+			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 			entityDataId: 1
 		};
 
