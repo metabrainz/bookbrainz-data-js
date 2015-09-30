@@ -23,6 +23,7 @@ var chaiAsPromised = require('chai-as-promised');
 var expect = chai.expect;
 var Promise = require('bluebird');
 var util = require('../util');
+var _ = require('underscore');
 
 var Bookshelf = require('./bookshelf').bookshelf;
 var orm = require('./bookshelf').orm;
@@ -35,6 +36,8 @@ var EntityRevision = orm.EntityRevision;
 
 chai.use(chaiAsPromised);
 
+var revisionAttribs = {id: 1, authorId: 1, _type: 1};
+
 describe('EntityRevision model', function() {
 	var editorTypeAttribs = {id: 1, label: 'test_type'};
 	var editorAttribs = {
@@ -45,14 +48,12 @@ describe('EntityRevision model', function() {
 		bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 		masterRevisionId: null, _type: 'Creator'
 	};
-	var revisionAttribs = {id: 1, authorId: 1, _type: 1};
 	beforeEach(function() {
 		return Promise.all([
 			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
 			new Editor(editorAttribs).save(null, {method: 'insert'}),
 			new Entity(entityAttribs).save(null, {method: 'insert'}),
-			new Revision(revisionAttribs).save(null, {method: 'insert'})
 		]);
 	});
 
@@ -71,8 +72,12 @@ describe('EntityRevision model', function() {
 		var entityRevisionAttribs = {
 			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
 		};
-		var entityRevisionPromise = new EntityRevision(entityRevisionAttribs)
+		var entityRevisionPromise = new Revision(revisionAttribs)
 		.save(null, {method: 'insert'})
+		.then(function() {
+			return new EntityRevision(entityRevisionAttribs)
+			.save(null, {method: 'insert'});
+		})
 		.then(function reloadWithRelated(model) {
 			return model
 			.refresh({withRelated: ['entity', 'entityData', 'revision']})
@@ -81,6 +86,35 @@ describe('EntityRevision model', function() {
 
 		return expect(entityRevisionPromise).to.eventually.have.all.keys([
 			'entityBbid', 'id', 'entityDataId', 'entity', 'revision'
+		]);
+	});
+
+	it('the create method should result in a new revision and EntityRevision',
+	function() {
+		var entityRevisionAttribs = {
+			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
+		};
+		var combinedAttributes = _.extend(entityRevisionAttribs, revisionAttribs);
+		delete combinedAttributes._type;
+		var entityRevisionPromise = new EntityRevision()
+		.create(entityRevisionAttribs)
+		.then(function reloadWithRelated(model) {
+			return model
+			.refresh({withRelated: ['entity', 'entityData', 'revision']})
+			.then(util.fetchJSON);
+		});
+
+		return Promise.all([
+			expect(entityRevisionPromise).to.eventually
+				.have.property('id', 1),
+			expect(entityRevisionPromise).to.eventually
+				.have.property('entityBbid', '68f52341-eea4-4ebc-9a15-6226fb68962c'),
+			expect(entityRevisionPromise).to.eventually
+				.have.deep.property('revision.id', 1),
+			expect(entityRevisionPromise).to.eventually
+				.have.deep.property('revision._type', 1),
+			expect(entityRevisionPromise).to.eventually
+				.have.deep.property('revision.authorId', 1)
 		]);
 	});
 });

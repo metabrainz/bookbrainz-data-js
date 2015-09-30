@@ -18,13 +18,14 @@
 
 'use strict';
 
+var _ = require('underscore');
 var util = require('../util');
 
 var EntityRevision = null;
 
 module.exports = function(bookshelf) {
+	var Revision = require('./revision')(bookshelf);
 	require('./editor')(bookshelf);
-	require('./revision')(bookshelf);
 	require('./entity')(bookshelf);
 	require('./entityData')(bookshelf);
 
@@ -44,6 +45,20 @@ module.exports = function(bookshelf) {
 			},
 			entityData: function() {
 				return this.belongsTo('EntityData', 'entity_data_id');
+			},
+			create: function(attribs) {
+				var self = this;
+				var revisionAttribs = _.pick(attribs, 'id', 'authorId', 'parentId');
+				revisionAttribs._type = 1;
+
+				var entityRevisionAttribs =
+					_.pick(attribs, 'id', 'entityBbid', 'entityDataId');
+
+				return new Revision(revisionAttribs)
+				.save(null, {method: 'insert'})
+				.then(function(revision) {
+					return self.save(entityRevisionAttribs, {method: 'insert'});
+				});
 			}
 		});
 
