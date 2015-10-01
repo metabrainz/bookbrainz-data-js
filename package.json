@@ -23,19 +23,19 @@
   },
   "homepage": "https://github.com/bookbrainz/bookbrainz-schema",
   "dependencies": {
-    "bluebird": "^2.10.0",
+    "bluebird": "^2.10.1",
     "bookshelf": "^0.8.2",
     "knex": "^0.8.6",
-    "pg": "^4.4.1",
+    "pg": "^4.4.2",
     "underscore": "^1.8.3",
-    "underscore.string": "^3.2.0"
+    "underscore.string": "^3.2.2"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
+    "chai": "^3.3.0",
     "chai-as-promised": "^5.1.0",
-    "eslint": "^1.4.3",
-    "istanbul": "^0.3.19",
-    "jscs": "^2.1.1",
-    "mocha": "^2.3.0"
+    "eslint": "^1.5.1",
+    "istanbul": "^0.3.21",
+    "jscs": "^2.2.1",
+    "mocha": "^2.3.3"
   }
 }
