@@ -28,13 +28,10 @@ const knex = require('knex')({
 	}
 });
 
-const Bookshelf = require('bookshelf')(knex);
-Bookshelf.plugin('registry');
-Bookshelf.plugin('visibility');
+const bookshelf = require('bookshelf')(knex);
+bookshelf.plugin('registry');
+bookshelf.plugin('visibility');
 
-const orm = require('../index')(Bookshelf);
+const orm = require('../index')(bookshelf);
 
-module.exports = {
-	bookshelf: Bookshelf,
-	orm: orm
-};
+module.exports = {bookshelf, orm};
