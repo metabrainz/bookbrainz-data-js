@@ -18,16 +18,16 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-var expect = chai.expect;
+const expect = chai.expect;
 
-var util = require('../util');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Gender = orm.Gender;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Gender = orm.Gender;
 
 describe('Gender model', function() {
 	afterEach(function destroyData() {
@@ -35,10 +35,8 @@ describe('Gender model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var genderPromise = new Gender({name: 'Test'}).save()
-		.then(function(model) {
-			return model.refresh().then(util.fetchJSON);
-		});
+		const genderPromise = new Gender({name: 'Test'}).save()
+		.then((model) => model.refresh().then(util.fetchJSON));
 
 		return expect(genderPromise).to.eventually.have.all.keys([
 			'id', 'name', 'parent', 'childOrder', 'description'

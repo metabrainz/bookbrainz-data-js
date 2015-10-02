@@ -18,15 +18,15 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-var expect = chai.expect;
-var util = require('../util');
+const expect = chai.expect;
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var EditorType = orm.EditorType;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const EditorType = orm.EditorType;
 
 describe('EditorType model', function() {
 	afterEach(function() {
@@ -34,11 +34,9 @@ describe('EditorType model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var editorTypeCreationPromise = new EditorType({label: 'test_type'})
+		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
 		.save()
-		.then(function(model) {
-			return model.refresh().then(util.fetchJSON);
-		});
+		.then((model) => model.refresh().then(util.fetchJSON));
 
 		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
 			'id', 'label'

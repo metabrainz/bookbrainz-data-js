@@ -18,13 +18,13 @@
 
 'use strict';
 
-var _ = require('underscore');
-var util = require('../util');
+const _ = require('underscore');
+const util = require('../util');
 
 var EntityRevision = null;
 
 module.exports = function(bookshelf) {
-	var Revision = require('./revision')(bookshelf);
+	const Revision = require('./revision')(bookshelf);
 	require('./editor')(bookshelf);
 	require('./entity')(bookshelf);
 	require('./entityData')(bookshelf);
@@ -35,30 +35,31 @@ module.exports = function(bookshelf) {
 			idAttribute: 'id',
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
-			revision: function() {
+			revision() {
 				return this.morphOne(
 					'Revision', 'revision', ['_type', 'id'], '1'
 				);
 			},
-			entity: function() {
+			entity() {
 				return this.belongsTo('Entity', 'entity_bbid');
 			},
-			entityData: function() {
+			entityData() {
 				return this.belongsTo('EntityData', 'entity_data_id');
 			},
-			create: function(attribs) {
-				var self = this;
-				var revisionAttribs = _.pick(attribs, 'id', 'authorId', 'parentId');
+			create(attribs) {
+				const self = this;
+				const revisionAttribs =
+					_.pick(attribs, 'id', 'authorId', 'parentId');
 				revisionAttribs._type = 1;
 
-				var entityRevisionAttribs =
+				const entityRevisionAttribs =
 					_.pick(attribs, 'id', 'entityBbid', 'entityDataId');
 
 				return new Revision(revisionAttribs)
 				.save(null, {method: 'insert'})
-				.then(function(revision) {
-					return self.save(entityRevisionAttribs, {method: 'insert'});
-				});
+				.then(
+					() => self.save(entityRevisionAttribs, {method: 'insert'})
+				);
 			}
 		});
 

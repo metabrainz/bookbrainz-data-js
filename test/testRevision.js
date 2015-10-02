@@ -18,26 +18,26 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var util = require('../util');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Editor = orm.Editor;
-var EditorType = orm.EditorType;
-var Gender = orm.Gender;
-var Revision = orm.Revision;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Editor = orm.Editor;
+const EditorType = orm.EditorType;
+const Gender = orm.Gender;
+const Revision = orm.Revision;
 
 chai.use(chaiAsPromised);
 
 describe('Revision model', function() {
-	var editorTypeAttribs = {id: 1, label: 'test_type'};
-	var editorAttribs = {
+	const editorTypeAttribs = {id: 1, label: 'test_type'};
+	const editorAttribs = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-		countryId: 1, genderId:1, editorTypeId: 1
+		countryId: 1, genderId: 1, editorTypeId: 1
 	};
 	beforeEach(function() {
 		return Promise.all([
@@ -57,13 +57,14 @@ describe('Revision model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var revisionAttribs = {id: 1, authorId: 1, _type: 1};
-		var revisionPromise = new Revision(revisionAttribs)
+		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
+		const revisionPromise = new Revision(revisionAttribs)
 		.save(null, {method: 'insert'})
-		.then(function reloadWithRelated(model) {
-			return model.refresh({withRelated: ['author', 'parent']})
-			.then(util.fetchJSON);
-		});
+		.then(
+			(model) =>
+			model.refresh({withRelated: ['author', 'parent']})
+			.then(util.fetchJSON)
+		);
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
 			'id', 'author', 'authorId', 'createdAt', 'parentId', '_type'

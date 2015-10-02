@@ -18,7 +18,7 @@
 
 'use strict';
 
-var util = require('../util');
+const util = require('../util');
 
 var Editor = null;
 
@@ -32,10 +32,10 @@ module.exports = function(bookshelf) {
 			idAttribute: 'id',
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
-			gender: function() {
+			gender() {
 				return this.belongsTo('Gender', 'gender_id');
 			},
-			editorType: function() {
+			editorType() {
 				return this.belongsTo('EditorType', 'editor_type_id');
 			}
 		});

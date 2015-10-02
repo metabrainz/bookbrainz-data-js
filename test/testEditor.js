@@ -18,23 +18,23 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var util = require('../util');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Editor = orm.Editor;
-var EditorType = orm.EditorType;
-var Gender = orm.Gender;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Editor = orm.Editor;
+const EditorType = orm.EditorType;
+const Gender = orm.Gender;
 
 chai.use(chaiAsPromised);
 
 describe('Editor model', function() {
-	var genderAttribs = {id: 1, name: 'test'};
-	var editorTypeAttribs = {id: 1, label: 'test_type'};
+	const genderAttribs = {id: 1, name: 'test'};
+	const editorTypeAttribs = {id: 1, label: 'test_type'};
 
 	beforeEach(function() {
 		return Promise.all([
@@ -52,11 +52,11 @@ describe('Editor model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var editorAttribs = {
+		const editorAttribs = {
 			id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-			countryId: 1, genderId:1, editorTypeId: 1
+			countryId: 1, genderId: 1, editorTypeId: 1
 		};
-		var editorPromise = new Editor(editorAttribs)
+		const editorPromise = new Editor(editorAttribs)
 		.save(null, {method: 'insert'})
 		.then(function() {
 			return new Editor({id: 1})

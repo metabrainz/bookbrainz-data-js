@@ -17,6 +17,15 @@
     "orm"
   ],
   "author": "Ben Ockmore",
+  "contributors": [
+      {
+          "name": "Ben Ockmore",
+          "email": "ben.sput+bookbrainz@gmail.com"
+      }
+  ],
+  "engines": {
+      "node": ">=0.12"
+  },
   "license": "GPLv2+",
   "bugs": {
     "url": "https://github.com/bookbrainz/bookbrainz-schema/issues"

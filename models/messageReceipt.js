@@ -18,7 +18,7 @@
 
 'use strict';
 
-var util = require('../util');
+const util = require('../util');
 
 var MessageReceipt = null;
 
@@ -33,10 +33,10 @@ module.exports = function(bookshelf) {
 			idAttribute: 'id',
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
-			message: function() {
+			message() {
 				return this.belongsTo('Message', 'message_id');
 			},
-			recipient: function() {
+			recipient() {
 				return this.belongsTo('Editor', 'recipient_id');
 			}
 		});

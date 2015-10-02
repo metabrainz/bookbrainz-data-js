@@ -18,7 +18,7 @@
 
 'use strict';
 
-var knex = require('knex')({
+const knex = require('knex')({
 	client: 'postgresql',
 	connection: {
 		host: '127.0.0.1',
@@ -28,11 +28,11 @@ var knex = require('knex')({
 	}
 });
 
-var Bookshelf = require('bookshelf')(knex);
+const Bookshelf = require('bookshelf')(knex);
 Bookshelf.plugin('registry');
 Bookshelf.plugin('visibility');
 
-var orm = require('../index')(Bookshelf);
+const orm = require('../index')(Bookshelf);
 
 module.exports = {
 	bookshelf: Bookshelf,

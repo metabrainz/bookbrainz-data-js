@@ -18,26 +18,26 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var util = require('../util');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Editor = orm.Editor;
-var EditorType = orm.EditorType;
-var Gender = orm.Gender;
-var Message = orm.Message;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Editor = orm.Editor;
+const EditorType = orm.EditorType;
+const Gender = orm.Gender;
+const Message = orm.Message;
 
 chai.use(chaiAsPromised);
 
-var genderAttribs = {id: 1, name: 'test'};
-var editorTypeAttribs = {id: 1, label: 'test_type'};
-var editorAttribs = {
+const genderAttribs = {id: 1, name: 'test'};
+const editorTypeAttribs = {id: 1, label: 'test_type'};
+const editorAttribs = {
 	id: 1, name: 'bob', email: 'bob@test.org', password: 'test', countryId: 1,
-	genderId:1, editorTypeId: 1
+	genderId: 1, editorTypeId: 1
 };
 
 describe('Message model', function() {
@@ -59,13 +59,12 @@ describe('Message model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var messagePromise = new Message({
+		const messagePromise = new Message({
 			senderId: 1, subject: 'test', content: 'test'
 		}).save()
-		.then(function(model) {
-			return model.refresh({withRelated: ['sender']})
-			.then(util.fetchJSON);
-		});
+		.then((model) =>
+			model.refresh({withRelated: ['sender']}).then(util.fetchJSON)
+		);
 
 		return expect(messagePromise).to.eventually.have.all.keys([
 			'id', 'sender', 'senderId', 'content', 'subject'
@@ -73,14 +72,10 @@ describe('Message model', function() {
 	});
 
 	it('should include a filled out sender relation if requested', function() {
-		var messageData = {senderId: 1, subject: 'test', content: 'test'};
-		var messagePromise = new Message(messageData).save()
-		.then(function(model) {
-			return model.refresh({withRelated: ['sender']});
-		})
-		.then(function(model) {
-			return model.toJSON().sender;
-		});
+		const messageData = {senderId: 1, subject: 'test', content: 'test'};
+		const messagePromise = new Message(messageData).save()
+		.then((model) => model.refresh({withRelated: ['sender']}))
+		.then((model) => model.toJSON().sender);
 
 		return expect(messagePromise).to.eventually.have.any.keys([
 			'id', 'name', 'email'
@@ -107,15 +102,11 @@ describe('Message collection', function() {
 	});
 
 	it('should include a filled out sender relation if requested', function() {
-		var messagePromise = new Message({
+		const messagePromise = new Message({
 			senderId: 1, subject: 'test', content: 'test'
 		}).save()
-		.then(function() {
-			return new Message().fetchAll({withRelated: ['sender']});
-		})
-		.then(function(collection) {
-			return collection.toJSON()[0].sender;
-		});
+		.then(() => new Message().fetchAll({withRelated: ['sender']}))
+		.then((collection) => collection.toJSON()[0].sender);
 
 		return expect(messagePromise).to.eventually.have.any.keys([
 			'id', 'name', 'email'

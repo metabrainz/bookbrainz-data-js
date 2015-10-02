@@ -18,7 +18,7 @@
 
 'use strict';
 
-var util = require('../util');
+const util = require('../util');
 
 var Revision = null;
 
@@ -31,10 +31,10 @@ module.exports = function(bookshelf) {
 			idAttribute: 'id',
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
-			author: function() {
+			author() {
 				return this.belongsTo('Editor', 'author_id');
 			},
-			parent: function() {
+			parent() {
 				return this.belongsTo('Revision', 'parent_id');
 			}
 		});

@@ -18,29 +18,29 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var util = require('../util');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Entity = orm.Entity;
-var Revision = orm.Revision;
-var EntityRevision = orm.EntityRevision;
-var Gender = orm.Gender;
-var EditorType = orm.EditorType;
-var EntityData = orm.EntityData;
-var Editor = orm.Editor;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Entity = orm.Entity;
+const Revision = orm.Revision;
+const EntityRevision = orm.EntityRevision;
+const Gender = orm.Gender;
+const EditorType = orm.EditorType;
+const EntityData = orm.EntityData;
+const Editor = orm.Editor;
 
 chai.use(chaiAsPromised);
 
-var genderData = {id: 1, name: 'test'};
-var editorTypeData = {id: 1, label: 'test_type'};
-var editorData = {
+const genderData = {id: 1, name: 'test'};
+const editorTypeData = {id: 1, label: 'test_type'};
+const editorData = {
 	id: 1, name: 'bob', email: 'bob@test.org', password: 'test', countryId: 1,
-	genderId:1, editorTypeId: 1
+	genderId: 1, editorTypeId: 1
 };
 
 describe('Entity model', function setupData() {
@@ -66,13 +66,13 @@ describe('Entity model', function setupData() {
 
 	it('should return a JSON object with correct keys when saved', function() {
 		// Construct EntityRevision, add to Entity, then save
-		var entityAttribs = {
+		const entityAttribs = {
 			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 			masterRevisionId: null, _type: 'Creator'
 		};
-		var entityDataAttribs = {id: 1, _type: 2};
-		var revisionAttribs = {id: 1, authorId: 1, _type: 1};
-		var entityRevisionAttribs = {
+		const entityDataAttribs = {id: 1, _type: 2};
+		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
+		const entityRevisionAttribs = {
 			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 			entityDataId: 1
 		};
@@ -80,10 +80,9 @@ describe('Entity model', function setupData() {
 		function createDataAndRevision(entityModel) {
 			return new EntityData(entityDataAttribs)
 			.save(null, {method: 'insert'})
-			.then(function() {
-				return new Revision(revisionAttribs)
-				.save(null, {method: 'insert'});
-			})
+			.then(() =>
+				new Revision(revisionAttribs).save(null, {method: 'insert'})
+			)
 			.then(function() {
 				return new EntityRevision(entityRevisionAttribs)
 				.save(null, {method: 'insert'});
@@ -100,7 +99,7 @@ describe('Entity model', function setupData() {
 			.then(util.fetchJSON);
 		}
 
-		var entityPromise = new Entity(entityAttribs)
+		const entityPromise = new Entity(entityAttribs)
 		.save(null, {method: 'insert'})
 		.then(createDataAndRevision);
 

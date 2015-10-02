@@ -18,29 +18,29 @@
 
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var util = require('../util');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const util = require('../util');
 
-var Bookshelf = require('./bookshelf').bookshelf;
-var orm = require('./bookshelf').orm;
-var Editor = orm.Editor;
-var EditorType = orm.EditorType;
-var Gender = orm.Gender;
-var Message = orm.Message;
-var MessageReceipt = orm.MessageReceipt;
+const Bookshelf = require('./bookshelf').bookshelf;
+const orm = require('./bookshelf').orm;
+const Editor = orm.Editor;
+const EditorType = orm.EditorType;
+const Gender = orm.Gender;
+const Message = orm.Message;
+const MessageReceipt = orm.MessageReceipt;
 
 chai.use(chaiAsPromised);
 
 describe('MessageReceipt model', function() {
-	var editorTypeVars = {id: 1, label: 'test_type'};
-	var editorVars = {
+	const editorTypeVars = {id: 1, label: 'test_type'};
+	const editorVars = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-		countryId: 1, genderId:1, editorTypeId: 1
+		countryId: 1, genderId: 1, editorTypeId: 1
 	};
-	var messageVars = {senderId: 1, subject: 'test', content: 'test'};
+	const messageVars = {senderId: 1, subject: 'test', content: 'test'};
 	beforeEach(function() {
 		return Promise.all([
 			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
@@ -61,12 +61,12 @@ describe('MessageReceipt model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		var msgReceiptVars = {messageId: 1, recipientId: 1};
-		var msgReceiptPromise = new MessageReceipt(msgReceiptVars).save()
-		.then(function reloadWithRelated(model) {
-			return model.refresh({withRelated: ['message', 'recipient']})
-			.then(util.fetchJSON);
-		});
+		const msgReceiptVars = {messageId: 1, recipientId: 1};
+		const msgReceiptPromise = new MessageReceipt(msgReceiptVars).save()
+		.then((model) =>
+			model.refresh({withRelated: ['message', 'recipient']})
+			.then(util.fetchJSON)
+		);
 
 		return expect(msgReceiptPromise).to.eventually.have.all.keys([
 			'id', 'recipient', 'recipientId', 'message', 'messageId', 'archived'

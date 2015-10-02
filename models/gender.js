@@ -18,7 +18,7 @@
 
 'use strict';
 
-var util = require('../util');
+const util = require('../util');
 
 var Gender = null;
 
@@ -31,6 +31,6 @@ module.exports = function(bookshelf) {
 		});
 
 		Gender = bookshelf.model('Gender', Gender);
-	};
+	}
 	return Gender;
 };
