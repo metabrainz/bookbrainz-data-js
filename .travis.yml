@@ -15,7 +15,13 @@ before_script:
   - psql -f bookbrainz-sql/schemas/musicbrainz.sql -d bookbrainz_test -U postgres
   - psql -f bookbrainz-sql/schemas/bookbrainz.sql -d bookbrainz_test -U postgres
 
+after_script:
+  - codeclimate-test-reporter < coverage/lcov.info
 
 cache:
   directories:
     - node_modules
+
+addons:
+  code_climate:
+    repo_token: 97a40fc81268050098a14f76f2befa7b19d548a073b63d852fd89b9cf524afc2
