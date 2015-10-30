@@ -1,5 +1,5 @@
 {
-  "name": "bookbrainz-orm",
+  "name": "bookbrainz-data",
   "version": "0.2.0",
   "description": "The ORM to facilitate access to the BookBrainz database.",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bookbrainz/bookbrainz-schema.git"
+    "url": "https://github.com/bookbrainz/bookbrainz-node-orm.git"
   },
   "keywords": [
     "orm"
@@ -21,6 +21,10 @@
     {
       "name": "Ben Ockmore",
       "email": "ben.sput+bookbrainz@gmail.com"
+    },
+    {
+      "name": "Sean Burke",
+      "email": "leftmostcat+bookbrainz@gmail.com"
     }
   ],
   "engines": {
@@ -28,9 +32,9 @@
   },
   "license": "GPLv2+",
   "bugs": {
-    "url": "https://github.com/bookbrainz/bookbrainz-schema/issues"
+    "url": "https://github.com/bookbrainz/bookbrainz-node-orm/issues"
   },
-  "homepage": "https://github.com/bookbrainz/bookbrainz-schema",
+  "homepage": "https://github.com/bookbrainz/bookbrainz-node-orm",
   "dependencies": {
     "bluebird": "^2.10.1",
     "bookshelf": "^0.8.2",
