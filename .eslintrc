@@ -5,7 +5,7 @@ ecmaFeatures:
   forOf: true
   generators: true
   templateStrings: true
-  jsx: true
+  classes: true
   objectLiteralShorthandProperties: true
   objectLiteralShorthandMethods: true
 env:
