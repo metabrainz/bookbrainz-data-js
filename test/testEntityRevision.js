@@ -25,8 +25,9 @@ const Promise = require('bluebird');
 const util = require('../util');
 const _ = require('underscore');
 
-const Bookshelf = require('./bookshelf').bookshelf;
-const orm = require('./bookshelf').orm;
+const orm = require('./bookshelf');
+const Bookshelf = orm.bookshelf;
+
 const Editor = orm.Editor;
 const EditorType = orm.EditorType;
 const Gender = orm.Gender;

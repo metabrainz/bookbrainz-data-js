@@ -24,8 +24,9 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const util = require('../util');
 
-const Bookshelf = require('./bookshelf').bookshelf;
-const orm = require('./bookshelf').orm;
+const orm = require('./bookshelf');
+const Bookshelf = orm.bookshelf;
+
 const EditorType = orm.EditorType;
 
 describe('EditorType model', function() {

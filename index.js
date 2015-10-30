@@ -18,16 +18,27 @@
 
 'use strict';
 
-module.exports = function collectModules(bookshelf) {
-	return {
-		Editor: require('./models/editor')(bookshelf),
-		EditorType: require('./models/editorType')(bookshelf),
-		Gender: require('./models/gender')(bookshelf),
-		Message: require('./models/message')(bookshelf),
-		MessageReceipt: require('./models/messageReceipt')(bookshelf),
-		Entity: require('./models/entity')(bookshelf),
-		EntityData: require('./models/entityData')(bookshelf),
-		Revision: require('./models/revision')(bookshelf),
-		EntityRevision: require('./models/entityRevision')(bookshelf)
-	};
+module.exports = {
+	init(config) {
+		const bookshelf = require('bookshelf')(require('knex')(config));
+		bookshelf.plugin('registry');
+		bookshelf.plugin('visibility');
+
+		this.bookshelf = bookshelf;
+
+		const entity = require('./models/entity')(bookshelf);
+
+		this.Editor = require('./models/editor')(bookshelf);
+		this.EditorType = require('./models/editorType')(bookshelf);
+		this.Gender = require('./models/gender')(bookshelf);
+		this.Message = require('./models/message')(bookshelf);
+		this.MessageReceipt = require('./models/messageReceipt')(bookshelf);
+		this.Entity = entity.Entity;
+		this.Creator = entity.Creator;
+		this.EntityData = require('./models/entityData')(bookshelf);
+		this.Revision = require('./models/revision')(bookshelf);
+		this.EntityRevision = require('./models/entityRevision')(bookshelf);
+
+		this.EntityTypeError = entity.EntityTypeError;
+	}
 };
