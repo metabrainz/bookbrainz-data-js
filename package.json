@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bookbrainz/bookbrainz-node-orm.git"
+    "url": "https://github.com/bookbrainz/bookbrainz-data-js.git"
   },
   "keywords": [
     "orm"
@@ -32,9 +32,9 @@
   },
   "license": "GPLv2+",
   "bugs": {
-    "url": "https://github.com/bookbrainz/bookbrainz-node-orm/issues"
+    "url": "https://github.com/bookbrainz/bookbrainz-data-js/issues"
   },
-  "homepage": "https://github.com/bookbrainz/bookbrainz-node-orm",
+  "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
     "bluebird": "^2.10.1",
     "bookshelf": "^0.8.2",
