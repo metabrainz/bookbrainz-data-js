@@ -30,6 +30,7 @@ module.exports = {
 
 		this.Alias = require('./models/alias')(bookshelf);
 		this.Annotation = require('./models/annotation')(bookshelf);
+		this.Disambiguation = require('./models/disambiguation')(bookshelf);
 		this.Editor = require('./models/editor')(bookshelf);
 		this.EditorType = require('./models/editorType')(bookshelf);
 		this.Gender = require('./models/gender')(bookshelf);
