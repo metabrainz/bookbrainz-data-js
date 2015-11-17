@@ -25,10 +25,9 @@ const expect = chai.expect;
 
 const util = require('../util');
 
-const orm = require('./bookshelf');
-const Bookshelf = orm.bookshelf;
+const Bookshelf = require('./bookshelf');
 
-const Gender = orm.Gender;
+const Gender = require('../index').Gender;
 
 describe('Gender model', function() {
 	afterEach(function destroyData() {

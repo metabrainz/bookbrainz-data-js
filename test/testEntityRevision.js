@@ -25,15 +25,14 @@ const Promise = require('bluebird');
 const util = require('../util');
 const _ = require('underscore');
 
-const orm = require('./bookshelf');
-const Bookshelf = orm.bookshelf;
+const Bookshelf = require('./bookshelf');
 
-const Editor = orm.Editor;
-const EditorType = orm.EditorType;
-const Gender = orm.Gender;
-const Entity = orm.Entity;
-const Revision = orm.Revision;
-const EntityRevision = orm.EntityRevision;
+const Editor = require('../index').Editor;
+const EditorType = require('../index').EditorType;
+const Gender = require('../index').Gender;
+const Entity = require('../index').Entity;
+const Revision = require('../index').Revision;
+const EntityRevision = require('../index').EntityRevision;
 
 chai.use(chaiAsPromised);
 
