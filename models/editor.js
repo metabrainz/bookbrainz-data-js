@@ -18,7 +18,8 @@
 
 'use strict';
 
-const bcrypt = require('bcrypt');
+const Promise = require('bluebird');
+const bcrypt = Promise.promisifyAll(require('bcrypt'));
 const util = require('../util');
 
 var Editor = null;
@@ -34,9 +35,14 @@ module.exports = function(bookshelf) {
 			initialize() {
 				this.on('saving', (model) => {
 					if (model.hasChanged('password')) {
-						var salt = bcrypt.genSaltSync(10);
-						var hash = bcrypt.hashSync(model.get('password'), salt);
-						model.set('password', hash);
+						return bcrypt.genSaltAsync(10)
+							.then((salt) => {
+								return bcrypt.hashAsync(model.get('password'),
+									salt);
+							})
+							.then((hash) => {
+								model.set('password', hash);
+							});
 					}
 				});
 			},
@@ -48,8 +54,8 @@ module.exports = function(bookshelf) {
 			editorType() {
 				return this.belongsTo('EditorType', 'editor_type_id');
 			},
-			comparePassword(password, done) {
-				bcrypt.compare(password, this.get('password'), done);
+			checkPassword(password) {
+				return bcrypt.compareAsync(password, this.get('password'));
 			}
 		});
 
