@@ -71,4 +71,97 @@ describe('Editor model', function() {
 			'totalRevisions', 'editorType'
 		]);
 	});
+
+	it('should hash passwords for new editors', function() {
+		const editorAttribs = {
+			id: 1,
+			name: 'bob',
+			email: 'bob@test.org',
+			password: 'test',
+			editorTypeId: 1
+		};
+
+		const editorPromise = new Editor(editorAttribs)
+			.save(null, {method: 'insert'})
+			.then(() => {
+				return new Editor({id: 1})
+					.fetch({require: true});
+			})
+			.then((editor) => {
+				return editor.get('password');
+			});
+
+		return Promise.all([
+			expect(editorPromise).to.eventually.not.equal('test'),
+			expect(editorPromise).to.eventually.match(/^[.\/$A-Za-z0-9]{60}$/)
+		]);
+	});
+
+	it('should hash updated passwords', function() {
+		const editorAttribs = {
+			id: 1,
+			name: 'bob',
+			email: 'bob@test.org',
+			password: 'test',
+			editorTypeId: 1
+		};
+
+		let hashed;
+
+		const editorPromise = new Editor(editorAttribs)
+			.save(null, {method: 'insert'})
+			.then(() => {
+				return new Editor({id: 1})
+					.fetch({require: true});
+			})
+			.then((editor) => {
+				hashed = editor.get('password');
+				editor.set('password', 'orange');
+
+				return editor.save();
+			})
+			.then(() => {
+				return new Editor({id: 1})
+					.fetch({require: true});
+			})
+			.then((editor) => {
+				return editor.get('password');
+			});
+
+		return Promise.all([
+			expect(editorPromise).to.eventually.not.equal('orange'),
+			expect(editorPromise).to.eventually.not.equal(hashed),
+			expect(editorPromise).to.eventually.match(/^[.\/$A-Za-z0-9]{60}$/)
+		]);
+	});
+
+	it('should distinguish correct and incorrect passwords', function() {
+		const editorAttribs = {
+			id: 1,
+			name: 'bob',
+			email: 'bob@test.org',
+			password: 'test',
+			editorTypeId: 1
+		};
+
+		const editorPromise = new Editor(editorAttribs)
+			.save(null, {method: 'insert'})
+			.then(function() {
+				return new Editor({id: 1})
+					.fetch({require: true});
+			})
+			.then((editor) => {
+				return [
+					editor.checkPassword('test'),
+					editor.checkPassword('orange')
+				];
+			});
+
+		return editorPromise.spread((correct, incorrect) => {
+			return Promise.all([
+				expect(correct).to.equal(true),
+				expect(incorrect).to.equal(false)
+			]);
+		});
+	});
 });
