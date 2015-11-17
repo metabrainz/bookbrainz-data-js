@@ -1,6 +1,9 @@
 language: node_js
 node_js:
-    - "node"
+  - "stable"
+  - "4.1"
+  - "4.0"
+  - "0.12"
 
 notifications:
     email: false
@@ -22,6 +25,14 @@ cache:
   directories:
     - node_modules
 
+env:
+  - CXX=g++-4.8
+
 addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-rest
+    packages:
+      - g++-4.8
   code_climate:
     repo_token: 97a40fc81268050098a14f76f2befa7b19d548a073b63d852fd89b9cf524afc2
