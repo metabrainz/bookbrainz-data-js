@@ -26,8 +26,6 @@ module.exports = {
 
 		this.bookshelf = bookshelf;
 
-		const entity = require('./models/entity')(bookshelf);
-
 		this.Alias = require('./models/alias')(bookshelf);
 		this.Annotation = require('./models/annotation')(bookshelf);
 		this.Disambiguation = require('./models/disambiguation')(bookshelf);
@@ -37,12 +35,9 @@ module.exports = {
 		this.Language = require('./models/language')(bookshelf);
 		this.Message = require('./models/message')(bookshelf);
 		this.MessageReceipt = require('./models/messageReceipt')(bookshelf);
-		this.Entity = entity.Entity;
-		this.Creator = entity.Creator;
+		this.Entity = require('./models/entity')(bookshelf);
 		this.EntityData = require('./models/entityData')(bookshelf);
 		this.Revision = require('./models/revision')(bookshelf);
 		this.EntityRevision = require('./models/entityRevision')(bookshelf);
-
-		this.EntityTypeError = entity.EntityTypeError;
 	}
 };
