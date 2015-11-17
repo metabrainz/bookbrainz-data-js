@@ -18,28 +18,20 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 const util = require('../util');
 
-const Bookshelf = require('./bookshelf');
+var Disambiguation = null;
 
-const EditorType = require('../index').EditorType;
+module.exports = function(bookshelf) {
+	if (!Disambiguation) {
+		Disambiguation = bookshelf.Model.extend({
+			tableName: 'bookbrainz.disambiguation',
+			idAttribute: 'id',
+			parse: util.snakeToCamel,
+			format: util.camelToSnake
+		});
 
-describe('EditorType model', function() {
-	afterEach(function() {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
-	});
-
-	it('should return a JSON object with correct keys when saved', function() {
-		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
-		.then((model) => model.refresh().then(util.fetchJSON));
-
-		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label'
-		]);
-	});
-});
+		Disambiguation = bookshelf.model('Disambiguation', Disambiguation);
+	}
+	return Disambiguation;
+};

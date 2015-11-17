@@ -24,14 +24,13 @@ const expect = chai.expect;
 const Promise = require('bluebird');
 const util = require('../util');
 
-const orm = require('./bookshelf');
-const Bookshelf = orm.bookshelf;
+const Bookshelf = require('./bookshelf');
 
-const Editor = orm.Editor;
-const EditorType = orm.EditorType;
-const Gender = orm.Gender;
-const Message = orm.Message;
-const MessageReceipt = orm.MessageReceipt;
+const Editor = require('../index').Editor;
+const EditorType = require('../index').EditorType;
+const Gender = require('../index').Gender;
+const Message = require('../index').Message;
+const MessageReceipt = require('../index').MessageReceipt;
 
 chai.use(chaiAsPromised);
 

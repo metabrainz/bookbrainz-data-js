@@ -18,28 +18,39 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 const util = require('../util');
 
-const Bookshelf = require('./bookshelf');
+let Language = null;
+const _ = require('underscore');
 
-const EditorType = require('../index').EditorType;
+function formatWithISOFields(attrs) {
+	const REPLACEMENTS = {
+		isoCode1: 'iso_code_1',
+		isoCode2t: 'iso_code_2t',
+		isoCode2b: 'iso_code_2b',
+		isoCode3: 'iso_code_3'
+	};
 
-describe('EditorType model', function() {
-	afterEach(function() {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
-	});
+	return util.camelToSnake(
+		_.reduce(attrs, (result, val, key) => {
+			const newKey = _.has(REPLACEMENTS, key) ?
+				REPLACEMENTS[key] : key;
+			result[newKey] = val;
+			return result;
+		}, {})
+	);
+}
 
-	it('should return a JSON object with correct keys when saved', function() {
-		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+module.exports = function(bookshelf) {
+	if (!Language) {
+		Language = bookshelf.Model.extend({
+			tableName: 'musicbrainz.language',
+			idAttribute: 'id',
+			parse: util.snakeToCamel,
+			format: formatWithISOFields
+		});
 
-		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label'
-		]);
-	});
-});
+		Language = bookshelf.model('Language', Language);
+	}
+	return Language;
+};

@@ -20,26 +20,34 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
 const expect = chai.expect;
+const Promise = require('bluebird');
 const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
-const EditorType = require('../index').EditorType;
+const Disambiguation = require('../index').Disambiguation;
 
-describe('EditorType model', function() {
-	afterEach(function() {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
+chai.use(chaiAsPromised);
+
+describe('Disambiguation model', function setupData() {
+	afterEach(function destroyData() {
+		return Promise.all([
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.disambiguation CASCADE')
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+		const disambiguationAttribs = {
+			comment: 'Some Comment'
+		};
 
-		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label'
+		const disambiguationPromise = new Disambiguation(disambiguationAttribs)
+			.save(null, {method: 'insert'})
+			.then((model) => model.refresh().then(util.fetchJSON));
+
+		return expect(disambiguationPromise).to.eventually.have.all.keys([
+			'id', 'comment'
 		]);
 	});
 });

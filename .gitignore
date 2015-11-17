@@ -1,3 +1,6 @@
+# Test configuration
+/test/bookshelf.js
+
 # Logs
 logs
 *.log

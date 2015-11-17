@@ -20,26 +20,34 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
 const expect = chai.expect;
+const Promise = require('bluebird');
 const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
-const EditorType = require('../index').EditorType;
+const Annotation = require('../index').Annotation;
 
-describe('EditorType model', function() {
-	afterEach(function() {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
+chai.use(chaiAsPromised);
+
+describe('Annotation model', function setupData() {
+	afterEach(function destroyData() {
+		return Promise.all([
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.annotation CASCADE')
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+		const annotationAttribs = {
+			content: 'Some Content'
+		};
 
-		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label'
+		const annotationPromise = new Annotation(annotationAttribs)
+			.save(null, {method: 'insert'})
+			.then((model) => model.refresh().then(util.fetchJSON));
+
+		return expect(annotationPromise).to.eventually.have.all.keys([
+			'id', 'content', 'createdAt'
 		]);
 	});
 });

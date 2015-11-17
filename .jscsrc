@@ -36,7 +36,7 @@
     "disallowNewlineBeforeBlockStatements": true,
 
     "requireBlocksOnNewline": true,
-    "requireCapitalizedComments": true,
+    "requireCapitalizedComments": false,
     "requireCommaBeforeLineBreak": true,
     "requireKeywordsOnNewLine": ["else"],
     "requireSemicolons": true,

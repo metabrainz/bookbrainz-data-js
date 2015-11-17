@@ -20,26 +20,38 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
 const expect = chai.expect;
+const Promise = require('bluebird');
 const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
-const EditorType = require('../index').EditorType;
+const Language = require('../index').Language;
 
-describe('EditorType model', function() {
-	afterEach(function() {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
+chai.use(chaiAsPromised);
+
+/* eslint camelcase: 0 */
+
+describe('Language model', function setupData() {
+	afterEach(function destroyData() {
+		return Promise.all([
+			Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
+		// Construct EntityRevision, add to Entity, then save
+		const languageAttribs = {
+			name: 'English', isoCode2t: 'eng', isoCode2b: 'eng',
+			isoCode3: 'eng', isoCode1: 'en', frequency: 1
+		};
+
+		const languagePromise = new Language(languageAttribs).save()
 		.then((model) => model.refresh().then(util.fetchJSON));
 
-		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label'
+		return expect(languagePromise).to.eventually.have.all.keys([
+			'id', 'name', 'isoCode2t', 'isoCode2b', 'isoCode1', 'frequency',
+			'isoCode3'
 		]);
 	});
 });
