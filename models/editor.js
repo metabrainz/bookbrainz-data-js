@@ -18,6 +18,7 @@
 
 'use strict';
 
+const bcrypt = require('bcrypt');
 const util = require('../util');
 
 var Editor = null;
@@ -30,6 +31,15 @@ module.exports = function(bookshelf) {
 		Editor = bookshelf.Model.extend({
 			tableName: 'bookbrainz.editor',
 			idAttribute: 'id',
+			initialize() {
+				this.on('saving', (model) => {
+					if (model.hasChanged('password')) {
+						var salt = bcrypt.genSaltSync(10);
+						var hash = bcrypt.hashSync(model.get('password'), salt);
+						model.set('password', hash);
+					}
+				});
+			},
 			parse: util.snakeToCamel,
 			format: util.camelToSnake,
 			gender() {
@@ -37,10 +47,14 @@ module.exports = function(bookshelf) {
 			},
 			editorType() {
 				return this.belongsTo('EditorType', 'editor_type_id');
+			},
+			comparePassword(password, done) {
+				bcrypt.compare(password, this.get('password'), done);
 			}
 		});
 
 		Editor = bookshelf.model('Editor', Editor);
 	}
+
 	return Editor;
 };
