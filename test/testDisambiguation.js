@@ -24,10 +24,9 @@ const expect = chai.expect;
 const Promise = require('bluebird');
 const util = require('../util');
 
-const orm = require('./bookshelf');
-const Bookshelf = orm.bookshelf;
+const Bookshelf = require('./bookshelf');
 
-const Disambiguation = orm.Disambiguation;
+const Disambiguation = require('../index').Disambiguation;
 
 chai.use(chaiAsPromised);
 
