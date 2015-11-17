@@ -31,7 +31,7 @@ env:
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-rest
+      - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
   code_climate:
