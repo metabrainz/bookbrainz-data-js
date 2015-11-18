@@ -21,7 +21,7 @@
 const util = require('../util');
 
 let Language = null;
-const _ = require('underscore');
+const _ = require('lodash');
 
 function formatWithISOFields(attrs) {
 	const REPLACEMENTS = {

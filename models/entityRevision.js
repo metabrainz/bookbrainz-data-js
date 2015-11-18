@@ -18,7 +18,7 @@
 
 'use strict';
 
-const _ = require('underscore');
+const _ = require('lodash');
 const util = require('../util');
 
 var EntityRevision = null;

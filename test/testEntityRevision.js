@@ -23,7 +23,7 @@ const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
 const util = require('../util');
-const _ = require('underscore');
+const _ = require('lodash');
 
 const Bookshelf = require('./bookshelf');
 
@@ -95,11 +95,11 @@ describe('EntityRevision model', function() {
 			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
 		};
 		const combinedAttributes =
-			_.extend(entityRevisionAttribs, revisionAttribs);
+			_.assign(_.clone(entityRevisionAttribs), revisionAttribs);
 		delete combinedAttributes._type;
 
 		const entityRevisionPromise = new EntityRevision()
-		.create(entityRevisionAttribs)
+		.create(combinedAttributes)
 		.then((model) =>
 			model.refresh({withRelated: ['entity', 'entityData', 'revision']})
 			.then(util.fetchJSON)

@@ -29,7 +29,7 @@ const Bookshelf = require('./bookshelf');
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
-const _ = require('underscore');
+const _ = require('lodash');
 
 chai.use(chaiAsPromised);
 
@@ -43,7 +43,7 @@ const editorAttribs = {
 	editorTypeId: 1
 };
 
-const editorAttribsWithOptional = _.extend(editorAttribs, {
+const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
 	countryId: 1,
 	genderId: 1
 });

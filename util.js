@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 _.str = require('underscore.string');
 
 module.exports.snakeToCamel = function(attrs) {
