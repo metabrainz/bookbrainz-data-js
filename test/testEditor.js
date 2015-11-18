@@ -29,13 +29,26 @@ const Bookshelf = require('./bookshelf');
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
+const _ = require('underscore');
 
 chai.use(chaiAsPromised);
 
-describe('Editor model', function() {
-	const genderAttribs = {id: 1, name: 'test'};
-	const editorTypeAttribs = {id: 1, label: 'test_type'};
+const genderAttribs = {id: 1, name: 'test'};
+const editorTypeAttribs = {id: 1, label: 'test_type'};
+const editorAttribs = {
+	id: 1,
+	name: 'bob',
+	email: 'bob@test.org',
+	password: 'test',
+	editorTypeId: 1
+};
 
+const editorAttribsWithOptional = _.extend(editorAttribs, {
+	countryId: 1,
+	genderId: 1
+});
+
+describe('Editor model', function() {
 	beforeEach(function() {
 		return Promise.all([
 			new Gender(genderAttribs).save(null, {method: 'insert'}),
@@ -52,17 +65,13 @@ describe('Editor model', function() {
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
-		const editorAttribs = {
-			id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-			countryId: 1, genderId: 1, editorTypeId: 1
-		};
-		const editorPromise = new Editor(editorAttribs)
+		const editorPromise = new Editor(editorAttribsWithOptional)
 		.save(null, {method: 'insert'})
-		.then(function() {
-			return new Editor({id: 1})
-			.fetch({withRelated: ['editorType', 'gender']})
-			.then(util.fetchJSON);
-		});
+		.then(() =>
+			new Editor({id: 1})
+				.fetch({withRelated: ['editorType', 'gender']})
+				.then(util.fetchJSON)
+		);
 
 		return expect(editorPromise).to.eventually.have.all.keys([
 			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
@@ -73,23 +82,10 @@ describe('Editor model', function() {
 	});
 
 	it('should hash passwords for new editors', function() {
-		const editorAttribs = {
-			id: 1,
-			name: 'bob',
-			email: 'bob@test.org',
-			password: 'test',
-			editorTypeId: 1
-		};
-
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
-			.then(() => {
-				return new Editor({id: 1})
-					.fetch({require: true});
-			})
-			.then((editor) => {
-				return editor.get('password');
-			});
+			.then(() => new Editor({id: 1}).fetch({require: true}))
+			.then((editor) => editor.get('password'));
 
 		return Promise.all([
 			expect(editorPromise).to.eventually.not.equal('test'),
@@ -98,35 +94,19 @@ describe('Editor model', function() {
 	});
 
 	it('should hash updated passwords', function() {
-		const editorAttribs = {
-			id: 1,
-			name: 'bob',
-			email: 'bob@test.org',
-			password: 'test',
-			editorTypeId: 1
-		};
-
 		let hashed;
 
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
-			.then(() => {
-				return new Editor({id: 1})
-					.fetch({require: true});
-			})
+			.then(() => new Editor({id: 1}).fetch({require: true}))
 			.then((editor) => {
 				hashed = editor.get('password');
 				editor.set('password', 'orange');
 
 				return editor.save();
 			})
-			.then(() => {
-				return new Editor({id: 1})
-					.fetch({require: true});
-			})
-			.then((editor) => {
-				return editor.get('password');
-			});
+			.then(() => new Editor({id: 1}).fetch({require: true}))
+			.then((editor) => editor.get('password'));
 
 		return Promise.all([
 			expect(editorPromise).to.eventually.not.equal('orange'),
@@ -136,14 +116,6 @@ describe('Editor model', function() {
 	});
 
 	it('should distinguish correct and incorrect passwords', function() {
-		const editorAttribs = {
-			id: 1,
-			name: 'bob',
-			email: 'bob@test.org',
-			password: 'test',
-			editorTypeId: 1
-		};
-
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
 			.then(function() {

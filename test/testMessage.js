@@ -36,8 +36,13 @@ chai.use(chaiAsPromised);
 const genderAttribs = {id: 1, name: 'test'};
 const editorTypeAttribs = {id: 1, label: 'test_type'};
 const editorAttribs = {
-	id: 1, name: 'bob', email: 'bob@test.org', password: 'test', countryId: 1,
-	genderId: 1, editorTypeId: 1
+	id: 1,
+	name: 'bob',
+	email: 'bob@test.org',
+	password: 'test',
+	countryId: 1,
+	genderId: 1,
+	editorTypeId: 1
 };
 
 describe('Message model', function() {
