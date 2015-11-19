@@ -34,4 +34,4 @@ addons:
     packages:
       - g++-4.8
   code_climate:
-    repo_token: 97a40fc81268050098a14f76f2befa7b19d548a073b63d852fd89b9cf524afc2
+    repo_token: 8547e9682c4141e5760860284de84ac38c7a7ad047b347b020a8487bb831fea8
