@@ -37,7 +37,7 @@ module.exports.fetchJSON = function(model) {
 };
 
 module.exports.parseData = function(partialDate) {
-	parts = partialDate.split('-');
+	const parts = partialDate.split('-');
 
 	switch(parts.length) {
 		case 3:
