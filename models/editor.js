@@ -54,6 +54,9 @@ module.exports = function(bookshelf) {
 			editorType() {
 				return this.belongsTo('EditorType', 'editor_type_id');
 			},
+			messages() {
+				return this.hasMany('MessageReceipt', 'recipient_id');
+			},
 			revisions() {
 				return this.hasMany('Revision', 'author_id');
 			},
