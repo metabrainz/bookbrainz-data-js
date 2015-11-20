@@ -34,6 +34,9 @@ module.exports = function(bookshelf) {
 			format: util.camelToSnake,
 			sender() {
 				return this.belongsTo('Editor', 'sender_id');
+			},
+			receipts() {
+				return this.hasMany('MessageReceipt', 'message_id');
 			}
 		});
 
