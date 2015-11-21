@@ -28,7 +28,10 @@ module.exports = function(bookshelf) {
 			tableName: 'bookbrainz.entity_data',
 			idAttribute: 'id',
 			parse: util.snakeToCamel,
-			format: util.camelToSnake
+			format: util.camelToSnake,
+			defaultAlias() {
+				return this.belongsTo('Alias', 'default_alias_id');
+			}
 		});
 
 		EntityData = bookshelf.model('EntityData', EntityData);
