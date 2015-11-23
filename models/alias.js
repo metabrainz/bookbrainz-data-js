@@ -22,7 +22,7 @@ const util = require('../util');
 
 let Alias = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!Alias) {
 		Alias = bookshelf.Model.extend({
 			tableName: 'bookbrainz.alias',

@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var Entity = null;
+let Entity = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	require('./revision')(bookshelf);
 
 	if (!Entity) {

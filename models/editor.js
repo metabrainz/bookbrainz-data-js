@@ -22,9 +22,9 @@ const Promise = require('bluebird');
 const bcrypt = Promise.promisifyAll(require('bcrypt'));
 const util = require('../util');
 
-var Editor = null;
+let Editor = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	require('./gender')(bookshelf);
 	require('./editorType')(bookshelf);
 

@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var Gender = null;
+let Gender = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!Gender) {
 		Gender = bookshelf.Model.extend({
 			tableName: 'musicbrainz.gender',

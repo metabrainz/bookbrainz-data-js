@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var Disambiguation = null;
+let Disambiguation = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!Disambiguation) {
 		Disambiguation = bookshelf.Model.extend({
 			tableName: 'bookbrainz.disambiguation',

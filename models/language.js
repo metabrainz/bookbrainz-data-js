@@ -41,7 +41,7 @@ function formatWithISOFields(attrs) {
 	);
 }
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!Language) {
 		Language = bookshelf.Model.extend({
 			tableName: 'musicbrainz.language',

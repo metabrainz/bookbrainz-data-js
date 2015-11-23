@@ -30,14 +30,14 @@ const Annotation = require('../index').Annotation;
 
 chai.use(chaiAsPromised);
 
-describe('Annotation model', function setupData() {
-	afterEach(function destroyData() {
+describe('Annotation model', () => {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.annotation CASCADE')
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const annotationAttribs = {
 			content: 'Some Content'
 		};

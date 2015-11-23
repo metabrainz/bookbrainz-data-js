@@ -30,14 +30,14 @@ const Disambiguation = require('../index').Disambiguation;
 
 chai.use(chaiAsPromised);
 
-describe('Disambiguation model', function setupData() {
-	afterEach(function destroyData() {
+describe('Disambiguation model', () => {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.disambiguation CASCADE')
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const disambiguationAttribs = {
 			comment: 'Some Comment'
 		};

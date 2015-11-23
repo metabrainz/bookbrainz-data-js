@@ -23,20 +23,20 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
-
 const Bookshelf = require('./bookshelf');
 
 const Gender = require('../index').Gender;
 
-describe('Gender model', function() {
-	afterEach(function destroyData() {
+describe('Gender model', () => {
+	afterEach(() => {
 		return Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE');
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
-		const genderPromise = new Gender({name: 'Test'}).save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+	it('should return a JSON object with correct keys when saved', () => {
+		const genderPromise = new Gender({name: 'Test'})
+			.save()
+			.then((model) => model.refresh())
+			.then((gender) => gender.toJSON());
 
 		return expect(genderPromise).to.eventually.have.all.keys([
 			'id', 'name', 'parent', 'childOrder', 'description'

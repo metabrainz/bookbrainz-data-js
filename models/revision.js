@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var Revision = null;
+let Revision = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	require('./editor')(bookshelf);
 
 	if (!Revision) {

@@ -22,7 +22,7 @@ const util = require('../util');
 
 let Annotation = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!Annotation) {
 		Annotation = bookshelf.Model.extend({
 			tableName: 'bookbrainz.annotation',

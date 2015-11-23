@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -46,8 +45,8 @@ const editorAttribs = {
 	editorTypeId: 1
 };
 
-describe('Message model', function() {
-	beforeEach(function createRelations() {
+describe('Message model', () => {
+	beforeEach(() => {
 		return Promise.all([
 			new Gender(genderAttribs).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
@@ -55,7 +54,7 @@ describe('Message model', function() {
 		]);
 	});
 
-	afterEach(function destroyData() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
@@ -65,7 +64,7 @@ describe('Message model', function() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const messageReceiptAttribs = {
 			messageId: 1,
 			recipientId: 1
@@ -74,27 +73,28 @@ describe('Message model', function() {
 		const messagePromise = new Message({
 			id: 1, senderId: 1, subject: 'test', content: 'test'
 		})
-		.save(null, {method: 'insert'})
-		.then(() => {
-			return new MessageReceipt(messageReceiptAttribs)
-				.save(null, {method: 'insert'});
-		})
-		.then(() => {
-			return new Message({id: 1})
-				.fetch({withRelated: ['sender', 'receipts']});
-		})
-		.then((model) => model.toJSON());
+			.save(null, {method: 'insert'})
+			.then(() => {
+				return new MessageReceipt(messageReceiptAttribs)
+					.save(null, {method: 'insert'});
+			})
+			.then(() => {
+				return new Message({id: 1})
+					.fetch({withRelated: ['sender', 'receipts']});
+			})
+			.then((message) => message.toJSON());
 
 		return expect(messagePromise).to.eventually.have.all.keys([
 			'id', 'sender', 'senderId', 'content', 'subject', 'receipts'
 		]);
 	});
 
-	it('should include a filled out sender relation if requested', function() {
+	it('should include a filled out sender relation if requested', () => {
 		const messageData = {senderId: 1, subject: 'test', content: 'test'};
-		const messagePromise = new Message(messageData).save()
-		.then((model) => model.refresh({withRelated: ['sender']}))
-		.then((model) => model.toJSON().sender);
+		const messagePromise = new Message(messageData)
+			.save()
+			.then((model) => model.refresh({withRelated: ['sender']}))
+			.then((message) => message.toJSON().sender);
 
 		return expect(messagePromise).to.eventually.have.any.keys([
 			'id', 'name', 'email'
@@ -102,8 +102,8 @@ describe('Message model', function() {
 	});
 });
 
-describe('Message collection', function() {
-	beforeEach(function() {
+describe('Message collection', () => {
+	beforeEach(() => {
 		return Promise.all([
 			new Gender(genderAttribs).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
@@ -111,7 +111,7 @@ describe('Message collection', function() {
 		]);
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
@@ -120,12 +120,13 @@ describe('Message collection', function() {
 		]);
 	});
 
-	it('should include a filled out sender relation if requested', function() {
+	it('should include a filled out sender relation if requested', () => {
 		const messagePromise = new Message({
 			senderId: 1, subject: 'test', content: 'test'
-		}).save()
-		.then(() => new Message().fetchAll({withRelated: ['sender']}))
-		.then((collection) => collection.toJSON()[0].sender);
+		})
+			.save()
+			.then(() => new Message().fetchAll({withRelated: ['sender']}))
+			.then((collection) => collection.toJSON()[0].sender);
 
 		return expect(messagePromise).to.eventually.have.any.keys([
 			'id', 'name', 'email'

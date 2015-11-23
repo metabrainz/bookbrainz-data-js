@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -43,8 +42,8 @@ const editorData = {
 	genderId: 1, editorTypeId: 1
 };
 
-describe('Entity model', function setupData() {
-	beforeEach(function() {
+describe('Entity model', () => {
+	beforeEach(() => {
 		return Promise.all([
 			new Gender(genderData).save(null, {method: 'insert'}),
 			new EditorType(editorTypeData).save(null, {method: 'insert'}),
@@ -52,7 +51,7 @@ describe('Entity model', function setupData() {
 		]);
 	});
 
-	afterEach(function destroyData() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.entity CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.entity_data CASCADE'),
@@ -64,7 +63,7 @@ describe('Entity model', function setupData() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const entityAttribs = {
 			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
@@ -77,31 +76,36 @@ describe('Entity model', function setupData() {
 			entityDataId: 1
 		};
 
-		function createDataAndRevision(entityModel) {
-			return new EntityData(entityDataAttribs)
+		const entityPromise = new Entity(entityAttribs)
 			.save(null, {method: 'insert'})
 			.then(() =>
-				new Revision(revisionAttribs).save(null, {method: 'insert'})
+				new EntityData(entityDataAttribs)
+					.save(null, {method: 'insert'})
 			)
-			.then(function() {
-				return new EntityRevision(entityRevisionAttribs)
-				.save(null, {method: 'insert'});
-			})
-			.then(function() {
-				entityModel.set('masterRevisionId', 1);
-				return entityModel.save();
-			})
-			.then(function() {
+			.then(() =>
+				new Revision(revisionAttribs)
+					.save(null, {method: 'insert'})
+			)
+			.then(() =>
+				new EntityRevision(entityRevisionAttribs)
+					.save(null, {method: 'insert'})
+			)
+			.then(() =>
+				new Entity({bbid: entityAttribs.bbid})
+					.fetch()
+			)
+			.then((entityModel) =>
+				entityModel
+					.set('masterRevisionId', 1)
+					.save()
+			)
+			.then(() => {
 				return new Entity({
 					bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
-				}).fetch({withRelated: ['masterRevision']});
+				})
+					.fetch({withRelated: ['masterRevision']});
 			})
-			.then(util.fetchJSON);
-		}
-
-		const entityPromise = new Entity(entityAttribs)
-		.save(null, {method: 'insert'})
-		.then(createDataAndRevision);
+			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
 			'bbid', 'masterRevisionId', 'masterRevision', '_type', 'lastUpdated'

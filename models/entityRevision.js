@@ -21,9 +21,9 @@
 const _ = require('lodash');
 const util = require('../util');
 
-var EntityRevision = null;
+let EntityRevision = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	const Revision = require('./revision')(bookshelf);
 	require('./editor')(bookshelf);
 	require('./entity')(bookshelf);

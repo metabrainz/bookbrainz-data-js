@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var EditorType = null;
+let EditorType = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!EditorType) {
 		EditorType = bookshelf.Model.extend({
 			tableName: 'bookbrainz.editor_type',

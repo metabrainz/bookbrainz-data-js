@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var EntityData = null;
+let EntityData = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	if (!EntityData) {
 		EntityData = bookshelf.Model.extend({
 			tableName: 'bookbrainz.entity_data',

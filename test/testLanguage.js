@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -32,22 +31,24 @@ chai.use(chaiAsPromised);
 
 /* eslint camelcase: 0 */
 
-describe('Language model', function setupData() {
-	afterEach(function destroyData() {
+describe('Language model', () => {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const languageAttribs = {
 			name: 'English', isoCode2t: 'eng', isoCode2b: 'eng',
 			isoCode3: 'eng', isoCode1: 'en', frequency: 1
 		};
 
-		const languagePromise = new Language(languageAttribs).save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+		const languagePromise = new Language(languageAttribs)
+			.save()
+			.then((model) => model.refresh())
+			.then((language) => language.toJSON());
 
 		return expect(languagePromise).to.eventually.have.all.keys([
 			'id', 'name', 'isoCode2t', 'isoCode2b', 'isoCode1', 'frequency',

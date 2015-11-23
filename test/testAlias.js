@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -31,26 +30,31 @@ const Language = require('../index').Language;
 
 chai.use(chaiAsPromised);
 
-describe('Alias model', function setupData() {
+describe('Alias model', () => {
 	const languageAttribs = {
-		id: 1, name: 'English', isoCode2t: 'eng', isoCode2b: 'eng',
-		isoCode3: 'eng', isoCode1: 'en', frequency: 1
+		id: 1,
+		name: 'English',
+		isoCode2t: 'eng',
+		isoCode2b: 'eng',
+		isoCode3: 'eng',
+		isoCode1: 'en',
+		frequency: 1
 	};
 
-	beforeEach(function() {
+	beforeEach(() => {
 		return Promise.all([
 			new Language(languageAttribs).save(null, {method: 'insert'})
 		]);
 	});
 
-	afterEach(function destroyData() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.alias CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const aliasAttribs = {
 			id: 1,
 			name: 'Bob Marley',
@@ -61,7 +65,8 @@ describe('Alias model', function setupData() {
 
 		const aliasPromise = new Alias(aliasAttribs)
 			.save(null, {method: 'insert'})
-			.then((model) => model.refresh().then(util.fetchJSON));
+			.then((model) => model.refresh())
+			.then((alias) => alias.toJSON());
 
 		return expect(aliasPromise).to.eventually.have.all.keys([
 			'id', 'name', 'sortName', 'languageId', 'primary'

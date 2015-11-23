@@ -20,9 +20,9 @@
 
 const util = require('../util');
 
-var MessageReceipt = null;
+let MessageReceipt = null;
 
-module.exports = function(bookshelf) {
+module.exports = (bookshelf) => {
 	require('./editor')(bookshelf);
 	require('./editorType')(bookshelf);
 	require('./message')(bookshelf);

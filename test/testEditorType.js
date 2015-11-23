@@ -22,21 +22,21 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
 const EditorType = require('../index').EditorType;
 
-describe('EditorType model', function() {
-	afterEach(function() {
+describe('EditorType model', () => {
+	afterEach(() => {
 		return Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE');
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const editorTypeCreationPromise = new EditorType({label: 'test_type'})
-		.save()
-		.then((model) => model.refresh().then(util.fetchJSON));
+			.save()
+			.then((model) => model.refresh())
+			.then((editorType) => editorType.toJSON());
 
 		return expect(editorTypeCreationPromise).to.eventually.have.all.keys([
 			'id', 'label'

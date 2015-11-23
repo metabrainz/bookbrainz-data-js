@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -34,14 +33,17 @@ const MessageReceipt = require('../index').MessageReceipt;
 
 chai.use(chaiAsPromised);
 
-describe('MessageReceipt model', function() {
+describe('MessageReceipt model', () => {
 	const editorTypeVars = {id: 1, label: 'test_type'};
+
 	const editorVars = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
 		countryId: 1, genderId: 1, editorTypeId: 1
 	};
+
 	const messageVars = {senderId: 1, subject: 'test', content: 'test'};
-	beforeEach(function() {
+
+	beforeEach(() => {
 		return Promise.all([
 			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
 			new EditorType(editorTypeVars).save(null, {method: 'insert'}),
@@ -50,7 +52,7 @@ describe('MessageReceipt model', function() {
 		]);
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
@@ -60,13 +62,14 @@ describe('MessageReceipt model', function() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const msgReceiptVars = {messageId: 1, recipientId: 1};
-		const msgReceiptPromise = new MessageReceipt(msgReceiptVars).save()
-		.then((model) =>
-			model.refresh({withRelated: ['message', 'recipient']})
-			.then(util.fetchJSON)
-		);
+		const msgReceiptPromise = new MessageReceipt(msgReceiptVars)
+			.save()
+			.then((model) =>
+				model.refresh({withRelated: ['message', 'recipient']})
+			)
+			.then((receipt) => receipt.toJSON());
 
 		return expect(msgReceiptPromise).to.eventually.have.all.keys([
 			'id', 'recipient', 'recipientId', 'message', 'messageId', 'archived'

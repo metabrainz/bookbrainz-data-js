@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -46,24 +45,6 @@ const editorTypeAttribs = {
 	label: 'test_type'
 };
 
-const messageAttribs = {
-	id: 1,
-	senderId: 1,
-	subject: 'test',
-	content: 'test'
-};
-
-const messageReceiptAttribs = {
-	messageId: 1,
-	recipientId: 1
-};
-
-const revisionAttribs = {
-	id: 1,
-	authorId: 1,
-	_type: 1
-};
-
 const editorAttribs = {
 	id: 1,
 	name: 'bob',
@@ -77,15 +58,15 @@ const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
 	genderId: 1
 });
 
-describe('Editor model', function() {
-	beforeEach(function() {
+describe('Editor model', () => {
+	beforeEach(() => {
 		return Promise.all([
 			new Gender(genderAttribs).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
 		]);
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
@@ -96,29 +77,47 @@ describe('Editor model', function() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const editorPromise = new Editor(editorAttribsWithOptional)
-		.save(null, {method: 'insert'})
-		.then(() => {
-			return Promise.all([
-				new Message(messageAttribs).save(null, {method: 'insert'}),
-				new MessageReceipt(messageReceiptAttribs)
-					.save(null, {method: 'insert'}),
-				new Revision(revisionAttribs).save(null, {method: 'insert'})
-			]);
-		})
-		.then(() =>
-			new Editor({id: 1})
-				.fetch({
-					withRelated: [
-						'editorType',
-						'gender',
-						'messages',
-						'revisions'
-					]
-				})
-				.then(util.fetchJSON)
-		);
+			.save(null, {method: 'insert'})
+			.then(() => {
+				const messageAttribs = {
+					id: 1,
+					senderId: 1,
+					subject: 'test',
+					content: 'test'
+				};
+
+				const messageReceiptAttribs = {
+					messageId: 1,
+					recipientId: 1
+				};
+
+				const revisionAttribs = {
+					id: 1,
+					authorId: 1,
+					_type: 1
+				};
+
+				return Promise.all([
+					new Message(messageAttribs).save(null, {method: 'insert'}),
+					new MessageReceipt(messageReceiptAttribs)
+						.save(null, {method: 'insert'}),
+					new Revision(revisionAttribs).save(null, {method: 'insert'})
+				]);
+			})
+			.then(() => {
+				return new Editor({id: 1})
+					.fetch({
+						withRelated: [
+							'editorType',
+							'gender',
+							'messages',
+							'revisions'
+						]
+					});
+			})
+			.then((editor) => editor.toJSON());
 
 		return expect(editorPromise).to.eventually.have.all.keys([
 			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
@@ -128,7 +127,7 @@ describe('Editor model', function() {
 		]);
 	});
 
-	it('should hash passwords for new editors', function() {
+	it('should hash passwords for new editors', () => {
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
 			.then(() => new Editor({id: 1}).fetch({require: true}))
@@ -140,7 +139,7 @@ describe('Editor model', function() {
 		]);
 	});
 
-	it('should hash updated passwords', function() {
+	it('should hash updated passwords', () => {
 		let hashed;
 
 		const editorPromise = new Editor(editorAttribs)
@@ -162,10 +161,10 @@ describe('Editor model', function() {
 		]);
 	});
 
-	it('should distinguish correct and incorrect passwords', function() {
+	it('should distinguish correct and incorrect passwords', () => {
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
-			.then(function() {
+			.then(() => {
 				return new Editor({id: 1})
 					.fetch({require: true});
 			})

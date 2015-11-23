@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -33,13 +32,14 @@ const Revision = require('../index').Revision;
 
 chai.use(chaiAsPromised);
 
-describe('Revision model', function() {
+describe('Revision model', () => {
 	const editorTypeAttribs = {id: 1, label: 'test_type'};
 	const editorAttribs = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
 		countryId: 1, genderId: 1, editorTypeId: 1
 	};
-	beforeEach(function() {
+
+	beforeEach(() => {
 		return Promise.all([
 			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
@@ -47,7 +47,7 @@ describe('Revision model', function() {
 		]);
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
@@ -56,15 +56,14 @@ describe('Revision model', function() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
 		const revisionPromise = new Revision(revisionAttribs)
-		.save(null, {method: 'insert'})
-		.then(
-			(model) =>
-			model.refresh({withRelated: ['author', 'parent']})
-			.then(util.fetchJSON)
-		);
+			.save(null, {method: 'insert'})
+			.then(
+				(model) => model.refresh({withRelated: ['author', 'parent']})
+			)
+			.then((revision) => revision.toJSON());
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
 			'id', 'author', 'authorId', 'createdAt', 'parentId', '_type'

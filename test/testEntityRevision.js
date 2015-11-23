@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 const _ = require('lodash');
 
 const Bookshelf = require('./bookshelf');
@@ -38,17 +37,20 @@ chai.use(chaiAsPromised);
 
 const revisionAttribs = {id: 1, authorId: 1, _type: 1};
 
-describe('EntityRevision model', function() {
+describe('EntityRevision model', () => {
 	const editorTypeAttribs = {id: 1, label: 'test_type'};
+
 	const editorAttribs = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
 		countryId: 1, genderId: 1, editorTypeId: 1
 	};
+
 	const entityAttribs = {
 		bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 		masterRevisionId: null, _type: 'Creator'
 	};
-	beforeEach(function() {
+
+	beforeEach(() => {
 		return Promise.all([
 			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
 			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
@@ -57,7 +59,7 @@ describe('EntityRevision model', function() {
 		]);
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
@@ -68,21 +70,24 @@ describe('EntityRevision model', function() {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', function() {
+	it('should return a JSON object with correct keys when saved', () => {
 		const entityRevisionAttribs = {
-			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
+			id: 1,
+			entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
 		};
+
 		const entityRevisionPromise = new Revision(revisionAttribs)
-		.save(null, {method: 'insert'})
-		.then(function() {
-			return new EntityRevision(entityRevisionAttribs)
-			.save(null, {method: 'insert'});
-		})
-		.then(function reloadWithRelated(model) {
-			return model
-			.refresh({withRelated: ['entity', 'entityData', 'revision']})
-			.then(util.fetchJSON);
-		});
+			.save(null, {method: 'insert'})
+			.then(() => {
+				return new EntityRevision(entityRevisionAttribs)
+					.save(null, {method: 'insert'});
+			})
+			.then((model) =>
+				model.refresh({
+					withRelated: ['entity', 'entityData', 'revision']
+				})
+			)
+			.then((revision) => revision.toJSON());
 
 		return expect(entityRevisionPromise).to.eventually.have.all.keys([
 			'entityBbid', 'id', 'entityDataId', 'entity', 'revision'
@@ -90,32 +95,40 @@ describe('EntityRevision model', function() {
 	});
 
 	it('the create method should result in a new revision and EntityRevision',
-	function() {
-		const entityRevisionAttribs = {
-			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
-		};
-		const combinedAttributes =
-			_.assign(_.clone(entityRevisionAttribs), revisionAttribs);
-		delete combinedAttributes._type;
+		() => {
+			const entityRevisionAttribs = {
+				id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
+			};
 
-		const entityRevisionPromise = new EntityRevision()
-		.create(combinedAttributes)
-		.then((model) =>
-			model.refresh({withRelated: ['entity', 'entityData', 'revision']})
-			.then(util.fetchJSON)
-		);
+			const combinedAttributes =
+				_.assign(_.clone(entityRevisionAttribs), revisionAttribs);
 
-		return Promise.all([
-			expect(entityRevisionPromise).to.eventually
-				.have.property('id', 1),
-			expect(entityRevisionPromise).to.eventually.have
-				.property('entityBbid', '68f52341-eea4-4ebc-9a15-6226fb68962c'),
-			expect(entityRevisionPromise).to.eventually
-				.have.deep.property('revision.id', 1),
-			expect(entityRevisionPromise).to.eventually
-				.have.deep.property('revision._type', 1),
-			expect(entityRevisionPromise).to.eventually
-				.have.deep.property('revision.authorId', 1)
-		]);
-	});
+			delete combinedAttributes._type;
+
+			const entityRevisionPromise = new EntityRevision()
+				.create(combinedAttributes)
+				.then((model) =>
+					model.refresh({
+						withRelated: ['entity', 'entityData', 'revision']
+					})
+				)
+				.then((revision) => revision.toJSON());
+
+			return Promise.all([
+				expect(entityRevisionPromise).to.eventually
+					.have.property('id', 1),
+				expect(entityRevisionPromise).to.eventually.have
+					.property(
+						'entityBbid',
+						'68f52341-eea4-4ebc-9a15-6226fb68962c'
+					),
+				expect(entityRevisionPromise).to.eventually
+					.have.deep.property('revision.id', 1),
+				expect(entityRevisionPromise).to.eventually
+					.have.deep.property('revision._type', 1),
+				expect(entityRevisionPromise).to.eventually
+					.have.deep.property('revision.authorId', 1)
+			]);
+		}
+	);
 });
