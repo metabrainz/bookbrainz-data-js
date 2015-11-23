@@ -29,12 +29,41 @@ const Bookshelf = require('./bookshelf');
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
+const Message = require('../index').Message;
+const MessageReceipt = require('../index').MessageReceipt;
+const Revision = require('../index').Revision;
 const _ = require('lodash');
 
 chai.use(chaiAsPromised);
 
-const genderAttribs = {id: 1, name: 'test'};
-const editorTypeAttribs = {id: 1, label: 'test_type'};
+const genderAttribs = {
+	id: 1,
+	name: 'test'
+};
+
+const editorTypeAttribs = {
+	id: 1,
+	label: 'test_type'
+};
+
+const messageAttribs = {
+	id: 1,
+	senderId: 1,
+	subject: 'test',
+	content: 'test'
+};
+
+const messageReceiptAttribs = {
+	messageId: 1,
+	recipientId: 1
+};
+
+const revisionAttribs = {
+	id: 1,
+	authorId: 1,
+	_type: 1
+};
+
 const editorAttribs = {
 	id: 1,
 	name: 'bob',
@@ -60,16 +89,34 @@ describe('Editor model', function() {
 		return Promise.all([
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
+			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE'),
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.message CASCADE'),
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.message_receipt CASCADE'),
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE')
 		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
 		const editorPromise = new Editor(editorAttribsWithOptional)
 		.save(null, {method: 'insert'})
+		.then(() => {
+			return Promise.all([
+				new Message(messageAttribs).save(null, {method: 'insert'}),
+				new MessageReceipt(messageReceiptAttribs)
+					.save(null, {method: 'insert'}),
+				new Revision(revisionAttribs).save(null, {method: 'insert'})
+			]);
+		})
 		.then(() =>
 			new Editor({id: 1})
-				.fetch({withRelated: ['editorType', 'gender']})
+				.fetch({
+					withRelated: [
+						'editorType',
+						'gender',
+						'messages',
+						'revisions'
+					]
+				})
 				.then(util.fetchJSON)
 		);
 
@@ -77,7 +124,7 @@ describe('Editor model', function() {
 			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
 			'createdAt', 'activeAt', 'editorTypeId', 'gender', 'genderId',
 			'countryId', 'password', 'revisionsApplied', 'revisionsReverted',
-			'totalRevisions', 'editorType'
+			'totalRevisions', 'editorType', 'messages', 'revisions'
 		]);
 	});
 

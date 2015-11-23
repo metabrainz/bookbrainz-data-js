@@ -30,6 +30,7 @@ const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
 const Message = require('../index').Message;
+const MessageReceipt = require('../index').MessageReceipt;
 
 chai.use(chaiAsPromised);
 
@@ -59,20 +60,33 @@ describe('Message model', function() {
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
 			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.message CASCADE')
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.message CASCADE'),
+			Bookshelf.knex.raw('TRUNCATE bookbrainz.message_receipt CASCADE')
 		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', function() {
+		const messageReceiptAttribs = {
+			messageId: 1,
+			recipientId: 1
+		};
+
 		const messagePromise = new Message({
-			senderId: 1, subject: 'test', content: 'test'
-		}).save()
-		.then((model) =>
-			model.refresh({withRelated: ['sender']}).then(util.fetchJSON)
-		);
+			id: 1, senderId: 1, subject: 'test', content: 'test'
+		})
+		.save(null, {method: 'insert'})
+		.then(() => {
+			return new MessageReceipt(messageReceiptAttribs)
+				.save(null, {method: 'insert'});
+		})
+		.then(() => {
+			return new Message({id: 1})
+				.fetch({withRelated: ['sender', 'receipts']});
+		})
+		.then((model) => model.toJSON());
 
 		return expect(messagePromise).to.eventually.have.all.keys([
-			'id', 'sender', 'senderId', 'content', 'subject'
+			'id', 'sender', 'senderId', 'content', 'subject', 'receipts'
 		]);
 	});
 
