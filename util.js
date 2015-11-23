@@ -1,11 +1,14 @@
-var _ = require('lodash');
+'use strict';
+
+const _ = require('lodash');
 _.str = require('underscore.string');
 
-module.exports.snakeToCamel = function(attrs) {
-	return _.reduce(attrs, function(result, val, key) {
-		var newKey;
+module.exports.snakeToCamel = (attrs) => {
+	return _.reduce(attrs, (result, val, key) => {
+		let newKey;
+
 		if (key.indexOf('_') === 0) {
-			newKey = '_' + _.str.camelize(key.substr(1));
+			newKey = `_${_.str.camelize(key.substr(1))}`;
 		}
 		else {
 			newKey = _.str.camelize(key);
@@ -17,12 +20,14 @@ module.exports.snakeToCamel = function(attrs) {
 	{});
 };
 
-module.exports.camelToSnake = function(attrs) {
-	return _.reduce(attrs, function(result, val, key) {
-		var newKey;
+module.exports.camelToSnake = (attrs) => {
+	return _.reduce(attrs, (result, val, key) => {
+		let newKey;
+
 		if (key.indexOf('_') === 0) {
-			newKey = '_' + _.str.underscored(key.substr(1));
-		} else {
+			newKey = `_${_.str.underscored(key.substr(1))}`;
+		}
+		else {
 			newKey = _.str.underscored(key);
 		}
 
@@ -32,10 +37,10 @@ module.exports.camelToSnake = function(attrs) {
 	{});
 };
 
-module.exports.parseData = function(partialDate) {
+module.exports.parseData = (partialDate) => {
 	const parts = partialDate.split('-');
 
-	switch(parts.length) {
+	switch (parts.length) {
 		case 3:
 			return {
 				fullDate: new Date(
@@ -59,9 +64,9 @@ module.exports.parseData = function(partialDate) {
 		default:
 			return null;
 	}
-}
+};
 
-module.exports.formatDate = function(fullDate, precision) {
+module.exports.formatDate = (fullDate, precision) => {
 	const year = `0000${fullDate.year}`.slice(-4);
 	const month = `00${fullDate.month}`.slice(-2);
 	const day = `00${fullDate.day}`.slice(-2);
