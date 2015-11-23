@@ -20,18 +20,13 @@
 
 const util = require('../util');
 
-let Disambiguation = null;
-
 module.exports = (bookshelf) => {
-	if (!Disambiguation) {
-		Disambiguation = bookshelf.Model.extend({
-			tableName: 'bookbrainz.disambiguation',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake
-		});
+	const Disambiguation = bookshelf.Model.extend({
+		tableName: 'bookbrainz.disambiguation',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake
+	});
 
-		Disambiguation = bookshelf.model('Disambiguation', Disambiguation);
-	}
-	return Disambiguation;
+	return bookshelf.model('Disambiguation', Disambiguation);
 };

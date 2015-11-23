@@ -20,53 +20,45 @@
 
 const Promise = require('bluebird');
 const bcrypt = Promise.promisifyAll(require('bcrypt'));
+
 const util = require('../util');
 
-let Editor = null;
-
 module.exports = (bookshelf) => {
-	require('./gender')(bookshelf);
-	require('./editorType')(bookshelf);
+	const Editor = bookshelf.Model.extend({
+		tableName: 'bookbrainz.editor',
+		idAttribute: 'id',
+		initialize() {
+			this.on('saving', (model) => {
+				if (model.hasChanged('password')) {
+					return bcrypt.genSaltAsync(10)
+						.then((salt) => {
+							return bcrypt.hashAsync(model.get('password'),
+								salt);
+						})
+						.then((hash) => {
+							model.set('password', hash);
+						});
+				}
+			});
+		},
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		gender() {
+			return this.belongsTo('Gender', 'gender_id');
+		},
+		editorType() {
+			return this.belongsTo('EditorType', 'editor_type_id');
+		},
+		messages() {
+			return this.hasMany('MessageReceipt', 'recipient_id');
+		},
+		revisions() {
+			return this.hasMany('Revision', 'author_id');
+		},
+		checkPassword(password) {
+			return bcrypt.compareAsync(password, this.get('password'));
+		}
+	});
 
-	if (!Editor) {
-		Editor = bookshelf.Model.extend({
-			tableName: 'bookbrainz.editor',
-			idAttribute: 'id',
-			initialize() {
-				this.on('saving', (model) => {
-					if (model.hasChanged('password')) {
-						return bcrypt.genSaltAsync(10)
-							.then((salt) => {
-								return bcrypt.hashAsync(model.get('password'),
-									salt);
-							})
-							.then((hash) => {
-								model.set('password', hash);
-							});
-					}
-				});
-			},
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			gender() {
-				return this.belongsTo('Gender', 'gender_id');
-			},
-			editorType() {
-				return this.belongsTo('EditorType', 'editor_type_id');
-			},
-			messages() {
-				return this.hasMany('MessageReceipt', 'recipient_id');
-			},
-			revisions() {
-				return this.hasMany('Revision', 'author_id');
-			},
-			checkPassword(password) {
-				return bcrypt.compareAsync(password, this.get('password'));
-			}
-		});
-
-		Editor = bookshelf.model('Editor', Editor);
-	}
-
-	return Editor;
+	return bookshelf.model('Editor', Editor);
 };

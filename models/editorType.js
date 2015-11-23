@@ -20,18 +20,13 @@
 
 const util = require('../util');
 
-let EditorType = null;
-
 module.exports = (bookshelf) => {
-	if (!EditorType) {
-		EditorType = bookshelf.Model.extend({
-			tableName: 'bookbrainz.editor_type',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake
-		});
+	const EditorType = bookshelf.Model.extend({
+		tableName: 'bookbrainz.editor_type',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake
+	});
 
-		EditorType = bookshelf.model('EditorType', EditorType);
-	}
-	return EditorType;
+	return bookshelf.model('EditorType', EditorType);
 };

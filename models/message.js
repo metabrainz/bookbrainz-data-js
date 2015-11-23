@@ -20,27 +20,19 @@
 
 const util = require('../util');
 
-let Message = null;
-
 module.exports = (bookshelf) => {
-	require('./editor')(bookshelf);
-	require('./editorType')(bookshelf);
+	const Message = bookshelf.Model.extend({
+		tableName: 'bookbrainz.message',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		sender() {
+			return this.belongsTo('Editor', 'sender_id');
+		},
+		receipts() {
+			return this.hasMany('MessageReceipt', 'message_id');
+		}
+	});
 
-	if (!Message) {
-		Message = bookshelf.Model.extend({
-			tableName: 'bookbrainz.message',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			sender() {
-				return this.belongsTo('Editor', 'sender_id');
-			},
-			receipts() {
-				return this.hasMany('MessageReceipt', 'message_id');
-			}
-		});
-
-		Message = bookshelf.model('Message', Message);
-	}
-	return Message;
+	return bookshelf.model('Message', Message);
 };

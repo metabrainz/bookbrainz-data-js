@@ -20,18 +20,13 @@
 
 const util = require('../util');
 
-let Alias = null;
-
 module.exports = (bookshelf) => {
-	if (!Alias) {
-		Alias = bookshelf.Model.extend({
-			tableName: 'bookbrainz.alias',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake
-		});
+	const Alias = bookshelf.Model.extend({
+		tableName: 'bookbrainz.alias',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake
+	});
 
-		Alias = bookshelf.model('Alias', Alias);
-	}
-	return Alias;
+	return bookshelf.model('Alias', Alias);
 };

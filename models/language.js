@@ -18,10 +18,9 @@
 
 'use strict';
 
-const util = require('../util');
-
-let Language = null;
 const _ = require('lodash');
+
+const util = require('../util');
 
 function formatWithISOFields(attrs) {
 	const REPLACEMENTS = {
@@ -42,15 +41,12 @@ function formatWithISOFields(attrs) {
 }
 
 module.exports = (bookshelf) => {
-	if (!Language) {
-		Language = bookshelf.Model.extend({
-			tableName: 'musicbrainz.language',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: formatWithISOFields
-		});
+	const Language = bookshelf.Model.extend({
+		tableName: 'musicbrainz.language',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: formatWithISOFields
+	});
 
-		Language = bookshelf.model('Language', Language);
-	}
-	return Language;
+	return bookshelf.model('Language', Language);
 };

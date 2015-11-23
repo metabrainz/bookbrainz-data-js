@@ -20,23 +20,16 @@
 
 const util = require('../util');
 
-let Entity = null;
-
 module.exports = (bookshelf) => {
-	require('./revision')(bookshelf);
+	const Entity = bookshelf.Model.extend({
+		tableName: 'bookbrainz.entity',
+		idAttribute: 'bbid',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		masterRevision() {
+			return this.belongsTo('Revision', 'master_revision_id');
+		}
+	});
 
-	if (!Entity) {
-		Entity = bookshelf.Model.extend({
-			tableName: 'bookbrainz.entity',
-			idAttribute: 'bbid',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			masterRevision() {
-				return this.belongsTo('Revision', 'master_revision_id');
-			}
-		});
-
-		Entity = bookshelf.model('Entity', Entity);
-	}
-	return Entity;
+	return bookshelf.model('Entity', Entity);
 };

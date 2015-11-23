@@ -20,21 +20,16 @@
 
 const util = require('../util');
 
-let EntityData = null;
-
 module.exports = (bookshelf) => {
-	if (!EntityData) {
-		EntityData = bookshelf.Model.extend({
-			tableName: 'bookbrainz.entity_data',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			defaultAlias() {
-				return this.belongsTo('Alias', 'default_alias_id');
-			}
-		});
+	const EntityData = bookshelf.Model.extend({
+		tableName: 'bookbrainz.entity_data',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		}
+	});
 
-		EntityData = bookshelf.model('EntityData', EntityData);
-	}
-	return EntityData;
+	return bookshelf.model('EntityData', EntityData);
 };

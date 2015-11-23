@@ -20,17 +20,12 @@
 
 const util = require('../util');
 
-let Gender = null;
-
 module.exports = (bookshelf) => {
-	if (!Gender) {
-		Gender = bookshelf.Model.extend({
-			tableName: 'musicbrainz.gender',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake
-		});
+	const Gender = bookshelf.Model.extend({
+		tableName: 'musicbrainz.gender',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake
+	});
 
-		Gender = bookshelf.model('Gender', Gender);
-	}
-	return Gender;
+	return bookshelf.model('Gender', Gender);
 };

@@ -20,26 +20,19 @@
 
 const util = require('../util');
 
-let Revision = null;
-
 module.exports = (bookshelf) => {
-	require('./editor')(bookshelf);
+	const Revision = bookshelf.Model.extend({
+		tableName: 'bookbrainz.revision',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		author() {
+			return this.belongsTo('Editor', 'author_id');
+		},
+		parent() {
+			return this.belongsTo('Revision', 'parent_id');
+		}
+	});
 
-	if (!Revision) {
-		Revision = bookshelf.Model.extend({
-			tableName: 'bookbrainz.revision',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			author() {
-				return this.belongsTo('Editor', 'author_id');
-			},
-			parent() {
-				return this.belongsTo('Revision', 'parent_id');
-			}
-		});
-
-		Revision = bookshelf.model('Revision', Revision);
-	}
-	return Revision;
+	return bookshelf.model('Revision', Revision);
 };

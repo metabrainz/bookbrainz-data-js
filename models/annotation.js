@@ -20,18 +20,13 @@
 
 const util = require('../util');
 
-let Annotation = null;
-
 module.exports = (bookshelf) => {
-	if (!Annotation) {
-		Annotation = bookshelf.Model.extend({
-			tableName: 'bookbrainz.annotation',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake
-		});
+	const Annotation = bookshelf.Model.extend({
+		tableName: 'bookbrainz.annotation',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake
+	});
 
-		Annotation = bookshelf.model('Annotation', Annotation);
-	}
-	return Annotation;
+	return bookshelf.model('Annotation', Annotation);
 };

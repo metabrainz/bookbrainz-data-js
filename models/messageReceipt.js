@@ -20,28 +20,19 @@
 
 const util = require('../util');
 
-let MessageReceipt = null;
-
 module.exports = (bookshelf) => {
-	require('./editor')(bookshelf);
-	require('./editorType')(bookshelf);
-	require('./message')(bookshelf);
+	const MessageReceipt = bookshelf.Model.extend({
+		tableName: 'bookbrainz.message_receipt',
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		message() {
+			return this.belongsTo('Message', 'message_id');
+		},
+		recipient() {
+			return this.belongsTo('Editor', 'recipient_id');
+		}
+	});
 
-	if (!MessageReceipt) {
-		MessageReceipt = bookshelf.Model.extend({
-			tableName: 'bookbrainz.message_receipt',
-			idAttribute: 'id',
-			parse: util.snakeToCamel,
-			format: util.camelToSnake,
-			message() {
-				return this.belongsTo('Message', 'message_id');
-			},
-			recipient() {
-				return this.belongsTo('Editor', 'recipient_id');
-			}
-		});
-
-		MessageReceipt = bookshelf.model('MessageReceipt', MessageReceipt);
-	}
-	return MessageReceipt;
+	return bookshelf.model('MessageReceipt', MessageReceipt);
 };
