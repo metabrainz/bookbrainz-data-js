@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -44,7 +43,8 @@ describe('Annotation model', () => {
 
 		const annotationPromise = new Annotation(annotationAttribs)
 			.save(null, {method: 'insert'})
-			.then((model) => model.refresh().then(util.fetchJSON));
+			.then((model) => model.refresh())
+			.then((annotation) => annotation.toJSON());
 
 		return expect(annotationPromise).to.eventually.have.all.keys([
 			'id', 'content', 'createdAt'

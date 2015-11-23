@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const util = require('../util');
 
 const Bookshelf = require('./bookshelf');
 
@@ -44,7 +43,8 @@ describe('Disambiguation model', () => {
 
 		const disambiguationPromise = new Disambiguation(disambiguationAttribs)
 			.save(null, {method: 'insert'})
-			.then((model) => model.refresh().then(util.fetchJSON));
+			.then((model) => model.refresh())
+			.then((disambig) => disambig.toJSON());
 
 		return expect(disambiguationPromise).to.eventually.have.all.keys([
 			'id', 'comment'

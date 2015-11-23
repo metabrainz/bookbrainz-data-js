@@ -32,10 +32,6 @@ module.exports.camelToSnake = function(attrs) {
 	{});
 };
 
-module.exports.fetchJSON = function(model) {
-	return model.toJSON();
-};
-
 module.exports.parseData = function(partialDate) {
 	const parts = partialDate.split('-');
 
