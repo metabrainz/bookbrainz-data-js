@@ -42,5 +42,18 @@ module.exports = {
 
 		this.Creator = require('./models/entities/creator')(bookshelf);
 		this.CreatorType = require('./models/creatorType')(bookshelf);
+
+		this.Edition = require('./models/entities/edition')(bookshelf);
+		this.EditionFormat = require('./models/editionFormat')(bookshelf);
+		this.EditionStatus = require('./models/editionStatus')(bookshelf);
+
+		this.Publication = require('./models/entities/publication')(bookshelf);
+		this.PublicationType = require('./models/publicationType')(bookshelf);
+
+		this.Publisher = require('./models/entities/publisher')(bookshelf);
+		this.PublisherType = require('./models/publisherType')(bookshelf);
+
+		this.Work = require('./models/entities/work')(bookshelf);
+		this.WorkType = require('./models/workType')(bookshelf);
 	}
 };

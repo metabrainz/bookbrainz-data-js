@@ -18,15 +18,29 @@
 
 'use strict';
 
-const util = require('../util');
+const util = require('../../util');
 
 module.exports = (bookshelf) => {
-	const CreatorType = bookshelf.Model.extend({
-		tableName: 'bookbrainz.creator_type',
-		idAttribute: 'id',
+	const Entity = bookshelf.model('Entity');
+
+	const Publication = Entity.extend({
+		tableName: 'bookbrainz.publication',
+		idAttribute: 'bbid',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		publicationType() {
+			return this.belongsTo('PublicationType', 'publication_type_id');
+		},
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
+		}
 	});
 
-	return bookshelf.model('CreatorType', CreatorType);
+	return bookshelf.model('Publication', Publication);
 };

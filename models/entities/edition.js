@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2015  Ben Ockmore
  * Copyright (C) 2015  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,16 +23,25 @@ const util = require('../../util');
 module.exports = (bookshelf) => {
 	const Entity = bookshelf.model('Entity');
 
-	const Creator = Entity.extend({
-		tableName: 'bookbrainz.creator',
+	const Edition = Entity.extend({
+		tableName: 'bookbrainz.edition',
 		idAttribute: 'bbid',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		gender() {
-			return this.belongsTo('Gender', 'gender_id');
+		publication() {
+			return this.belongsTo('Publication', 'publication_bbid');
 		},
-		creatorType() {
-			return this.belongsTo('CreatorType', 'creator_type_id');
+		language() {
+			return this.belongsTo('Language', 'language_id');
+		},
+		editionFormat() {
+			return this.belongsTo('EditionFormat', 'edition_format_id');
+		},
+		editionStatus() {
+			return this.belongsTo('EditionStatus', 'edition_status_id');
+		},
+		publisher() {
+			return this.belongsTo('Publisher', 'publisher_id');
 		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
@@ -46,5 +54,5 @@ module.exports = (bookshelf) => {
 		}
 	});
 
-	return bookshelf.model('Creator', Creator);
+	return bookshelf.model('Edition', Edition);
 };

@@ -21,12 +21,12 @@
 const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const CreatorType = bookshelf.Model.extend({
-		tableName: 'bookbrainz.creator_type',
+	const EditionStatus = bookshelf.Model.extend({
+		tableName: 'bookbrainz.edition_status',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake
 	});
 
-	return bookshelf.model('CreatorType', CreatorType);
+	return bookshelf.model('EditionStatus', EditionStatus);
 };
