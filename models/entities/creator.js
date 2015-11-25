@@ -18,8 +18,9 @@
 
 'use strict';
 
-const validateEntityType = require('../../utils').validateEntityType;
 const _ = require('lodash');
+
+const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const Entity = bookshelf.model('Entity');
@@ -27,8 +28,24 @@ module.exports = (bookshelf) => {
 	const CreatorData = bookshelf.model('CreatorData');
 
 	const Creator = Entity.extend({
-		initialize(attributes) {
-			this.on('fetched', validateEntityType.bind(this));
+		tableName: 'bookbrainz.creator',
+		idAttribute: 'bbid',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		gender() {
+			return this.belongsTo('Gender', 'gender_id');
+		},
+		creatorType() {
+			return this.belongsTo('CreatorType', 'creator_type_id');
+		},
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		create(data) {
 			// Create Creator
@@ -65,8 +82,7 @@ module.exports = (bookshelf) => {
 						{masterRevisionId: revisionId}
 					);
 				});
-		},
-		typeId: 'Creator'
+		}
 	});
 
 	return bookshelf.model('Creator', Creator);

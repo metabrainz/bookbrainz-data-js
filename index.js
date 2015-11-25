@@ -39,5 +39,8 @@ module.exports = {
 		this.EntityData = require('./models/entityData')(bookshelf);
 		this.Revision = require('./models/revision')(bookshelf);
 		this.EntityRevision = require('./models/entityRevision')(bookshelf);
+
+		this.Creator = require('./models/entities/creator')(bookshelf);
+		this.CreatorType = require('./models/creatorType')(bookshelf);
 	}
 };
