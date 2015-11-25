@@ -69,7 +69,7 @@ describe('Entity model', () => {
 			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 			masterRevisionId: null, _type: 'Creator'
 		};
-		const entityDataAttribs = {id: 1, _type: 2};
+		const entityDataAttribs = {id: 1, _type: 'Creator'};
 		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
 		const entityRevisionAttribs = {
 			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
