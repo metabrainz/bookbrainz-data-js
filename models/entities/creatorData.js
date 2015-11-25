@@ -30,26 +30,6 @@ module.exports = (bookshelf) => {
 			return this.morphOne(
 				'EntityData', 'entity_data', ['_type', 'id'], '1'
 			);
-		},
-		create(data) {
-			const beginDate = util.parseDate(data.beginDate);
-			const endDate = util.parseDate(data.endDate);
-
-			const entityData = _.pluck(
-				data, ['annotation', 'disambiguation', 'aliases']
-			);
-			EntityData.create(entityData);
-
-			this.save({
-				beginDate: beginDate.fullDate,
-				beginDatePrecision: beginDate.precision,
-				endDate: endDate.fullDate,
-				endDatePrecision: endDate.precision,
-				ended: data.ended,
-				countryId: data.country,
-				genderId: data.gender,
-				creatorTypeId: data.creatorType
-			});
 		}
 	});
 

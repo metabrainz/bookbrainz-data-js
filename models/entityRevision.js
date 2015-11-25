@@ -18,13 +18,9 @@
 
 'use strict';
 
-const _ = require('lodash');
-
 const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const Revision = bookshelf.model('Revision');
-
 	const EntityRevision = bookshelf.Model.extend({
 		tableName: 'bookbrainz.entity_revision',
 		idAttribute: 'id',
@@ -40,21 +36,6 @@ module.exports = (bookshelf) => {
 		},
 		entityData() {
 			return this.belongsTo('EntityData', 'entity_data_id');
-		},
-		create(attribs) {
-			const self = this;
-			const revisionAttribs =
-				_.pick(attribs, 'id', 'authorId', 'parentId');
-			revisionAttribs._type = 1;
-
-			const entityRevisionAttribs =
-				_.pick(attribs, 'id', 'entityBbid', 'entityDataId');
-
-			return new Revision(revisionAttribs)
-			.save(null, {method: 'insert'})
-			.then(
-				() => self.save(entityRevisionAttribs, {method: 'insert'})
-			);
 		}
 	});
 

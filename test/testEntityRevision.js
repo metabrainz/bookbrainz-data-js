@@ -22,7 +22,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const Promise = require('bluebird');
-const _ = require('lodash');
 
 const Bookshelf = require('./bookshelf');
 
@@ -93,42 +92,4 @@ describe('EntityRevision model', () => {
 			'entityBbid', 'id', 'entityDataId', 'entity', 'revision'
 		]);
 	});
-
-	it('the create method should result in a new revision and EntityRevision',
-		() => {
-			const entityRevisionAttribs = {
-				id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
-			};
-
-			const combinedAttributes =
-				_.assign(_.clone(entityRevisionAttribs), revisionAttribs);
-
-			delete combinedAttributes._type;
-
-			const entityRevisionPromise = new EntityRevision()
-				.create(combinedAttributes)
-				.then((model) =>
-					model.refresh({
-						withRelated: ['entity', 'entityData', 'revision']
-					})
-				)
-				.then((revision) => revision.toJSON());
-
-			return Promise.all([
-				expect(entityRevisionPromise).to.eventually
-					.have.property('id', 1),
-				expect(entityRevisionPromise).to.eventually.have
-					.property(
-						'entityBbid',
-						'68f52341-eea4-4ebc-9a15-6226fb68962c'
-					),
-				expect(entityRevisionPromise).to.eventually
-					.have.deep.property('revision.id', 1),
-				expect(entityRevisionPromise).to.eventually
-					.have.deep.property('revision._type', 1),
-				expect(entityRevisionPromise).to.eventually
-					.have.deep.property('revision.authorId', 1)
-			]);
-		}
-	);
 });

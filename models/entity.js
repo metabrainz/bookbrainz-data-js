@@ -28,15 +28,6 @@ module.exports = (bookshelf) => {
 		format: util.camelToSnake,
 		masterRevision() {
 			return this.belongsTo('Revision', 'master_revision_id');
-		},
-		create() {
-			throw new Error('Not implemented for base Entity');
-		},
-		update() {
-			throw new Error('Not implemented for base Entity');
-		},
-		destroy() {
-			throw new Error('Not implemented for base Entity');
 		}
 	});
 

@@ -18,14 +18,10 @@
 
 'use strict';
 
-const _ = require('lodash');
-
 const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const Entity = bookshelf.model('Entity');
-	const EntityRevision = bookshelf.model('EntityRevision');
-	const CreatorData = bookshelf.model('CreatorData');
 
 	const Creator = Entity.extend({
 		tableName: 'bookbrainz.creator',
@@ -46,42 +42,6 @@ module.exports = (bookshelf) => {
 		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		create(data) {
-			// Create Creator
-			const creatorPromise = this.save({_type: 'Creator'});
-			const creatorBbidPromise = creatorPromise
-				.then((creatorModel) => creatorModel.get('bbid'));
-
-			const creatorData = _.pluck(
-				data,
-				[
-					'beginDate', 'endDate', 'ended', 'countryId', 'genderId',
-					'creatorTypeId', 'annotationId', 'disambiguationId',
-					'defaultAliasId'
-				]
-			);
-			const creatorDataIdPromise = CreatorData.create(creatorData)
-				.then((creatorDataModel) => creatorDataModel.get('id'));
-
-			const revisionIdPromise = Promise.join(
-				creatorBbidPromise, creatorDataIdPromise,
-				(entityBbid, entityDataId) => {
-					const revisionData =
-						_.pluck(data, ['authorId', 'parentId']);
-					revisionData.entityBbid = entityBbid;
-					revisionData.entityDataId = entityDataId;
-					return new EntityRevision().create(revisionData);
-				})
-				.then((revisionModel) => revisionModel.get('id'));
-
-			return Promise.join(
-				revisionIdPromise, creatorPromise,
-				(revisionId, creatorModel) => {
-					return creatorModel.save(
-						{masterRevisionId: revisionId}
-					);
-				});
 		}
 	});
 
