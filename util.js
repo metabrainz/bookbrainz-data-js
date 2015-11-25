@@ -36,3 +36,22 @@ module.exports.camelToSnake = (attrs) => {
 	},
 	{});
 };
+
+class EntityTypeError extends Error {
+	constructor(message) {
+		super(message);
+		this.name = 'EntityTypeError';
+		this.message = message;
+		this.stack = (new Error()).stack;
+	}
+}
+
+module.exports.EntityTypeError = EntityTypeError;
+
+module.exports.validateEntityType = (model) => {
+	if (model.get('_type') !== model.typeId) {
+		throw new Error(
+			`Entity ${model.get('bbid')} is not a ${model.typeId}`
+		);
+	}
+};

@@ -21,24 +21,37 @@
 const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const Entity = bookshelf.Model.extend({
-		tableName: 'bookbrainz.entity',
-		idAttribute: 'bbid',
+	const CreatorData = bookshelf.Model.extend({
+		tableName: 'bookbrainz.creator_data',
+		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		masterRevision() {
-			return this.belongsTo('Revision', 'master_revision_id');
+		entityData() {
+			return this.morphOne(
+				'EntityData', 'entity_data', ['_type', 'id'], '1'
+			);
 		},
-		create() {
-			throw new Error('Not implemented for base Entity');
-		},
-		update() {
-			throw new Error('Not implemented for base Entity');
-		},
-		destroy() {
-			throw new Error('Not implemented for base Entity');
+		create(data) {
+			const beginDate = util.parseDate(data.beginDate);
+			const endDate = util.parseDate(data.endDate);
+
+			const entityData = _.pluck(
+				data, ['annotation', 'disambiguation', 'aliases']
+			);
+			EntityData.create(entityData);
+
+			this.save({
+				beginDate: beginDate.fullDate,
+				beginDatePrecision: beginDate.precision,
+				endDate: endDate.fullDate,
+				endDatePrecision: endDate.precision,
+				ended: data.ended,
+				countryId: data.country,
+				genderId: data.gender,
+				creatorTypeId: data.creatorType
+			});
 		}
 	});
 
-	return bookshelf.model('Entity', Entity);
+	return bookshelf.model('CreatorData', CreatorData);
 };
