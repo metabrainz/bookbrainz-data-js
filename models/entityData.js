@@ -30,6 +30,9 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
 		create(data) {
 			const annotationPromise =
 				new Annotation({content: data.annotation}).save();
