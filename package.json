@@ -1,7 +1,7 @@
 {
   "name": "bookbrainz-data",
   "version": "0.2.0",
-  "description": "The ORM to facilitate access to the BookBrainz database.",
+  "description": "A JavaScript data access module for BookBrainz",
   "main": "index.js",
   "scripts": {
     "test": "./check-style.sh && istanbul cover _mocha"
