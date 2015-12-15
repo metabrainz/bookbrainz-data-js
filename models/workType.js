@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015  Ben Ockmore
+ * Copyright (C) 2015  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,12 @@
 const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const Entity = bookshelf.Model.extend({
-		tableName: 'bookbrainz.entity',
-		idAttribute: 'bbid',
+	const WorkType = bookshelf.Model.extend({
+		tableName: 'bookbrainz.work_type',
+		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		masterRevision() {
-			return this.belongsTo('Revision', 'master_revision_id');
-		}
+		format: util.camelToSnake
 	});
 
-	return bookshelf.model('Entity', Entity);
+	return bookshelf.model('WorkType', WorkType);
 };

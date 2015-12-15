@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015  Ben Ockmore
+ * Copyright (C) 2015  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,55 +19,31 @@
 
 'use strict';
 
-const validateEntityType = require('../../utils').validateEntityType;
-const _ = require('lodash');
+const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const Entity = bookshelf.model('Entity');
-	const EntityRevision = bookshelf.model('EntityRevision');
-	const CreatorData = bookshelf.model('CreatorData');
 
 	const Creator = Entity.extend({
-		initialize(attributes) {
-			this.on('fetched', validateEntityType.bind(this));
+		tableName: 'bookbrainz.creator',
+		idAttribute: 'bbid',
+		parse: util.snakeToCamel,
+		format: util.camelToSnake,
+		gender() {
+			return this.belongsTo('Gender', 'gender_id');
 		},
-		create(data) {
-			// Create Creator
-			const creatorPromise = this.save({_type: 'Creator'});
-			const creatorBbidPromise = creatorPromise
-				.then((creatorModel) => creatorModel.get('bbid'));
-
-			const creatorData = _.pluck(
-				data,
-				[
-					'beginDate', 'endDate', 'ended', 'countryId', 'genderId',
-					'creatorTypeId', 'annotationId', 'disambiguationId',
-					'defaultAliasId'
-				]
-			);
-			const creatorDataIdPromise = CreatorData.create(creatorData)
-				.then((creatorDataModel) => creatorDataModel.get('id'));
-
-			const revisionIdPromise = Promise.join(
-				creatorBbidPromise, creatorDataIdPromise,
-				(entityBbid, entityDataId) => {
-					const revisionData =
-						_.pluck(data, ['authorId', 'parentId']);
-					revisionData.entityBbid = entityBbid;
-					revisionData.entityDataId = entityDataId;
-					return new EntityRevision().create(revisionData);
-				})
-				.then((revisionModel) => revisionModel.get('id'));
-
-			return Promise.join(
-				revisionIdPromise, creatorPromise,
-				(revisionId, creatorModel) => {
-					return creatorModel.save(
-						{masterRevisionId: revisionId}
-					);
-				});
+		creatorType() {
+			return this.belongsTo('CreatorType', 'creator_type_id');
 		},
-		typeId: 'Creator'
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
+		}
 	});
 
 	return bookshelf.model('Creator', Creator);
