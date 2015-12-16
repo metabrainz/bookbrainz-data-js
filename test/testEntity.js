@@ -21,16 +21,12 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
 const Entity = require('../index').Entity;
-const Revision = require('../index').Revision;
-const EntityRevision = require('../index').EntityRevision;
 const Gender = require('../index').Gender;
 const EditorType = require('../index').EditorType;
-const EntityData = require('../index').EntityData;
 const Editor = require('../index').Editor;
 
 chai.use(chaiAsPromised);
@@ -38,77 +34,47 @@ chai.use(chaiAsPromised);
 const genderData = {id: 1, name: 'test'};
 const editorTypeData = {id: 1, label: 'test_type'};
 const editorData = {
-	id: 1, name: 'bob', email: 'bob@test.org', password: 'test', countryId: 1,
-	genderId: 1, editorTypeId: 1
+	id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
+	genderId: 1, typeId: 1
 };
 
 describe('Entity model', () => {
 	beforeEach(() => {
-		return Promise.all([
-			new Gender(genderData).save(null, {method: 'insert'}),
-			new EditorType(editorTypeData).save(null, {method: 'insert'}),
-			new Editor(editorData).save(null, {method: 'insert'})
-		]);
+		return new Gender(genderData).save(null, {method: 'insert'})
+			.then(() =>
+				new EditorType(editorTypeData).save(null, {method: 'insert'})
+			)
+			.then(() =>
+				new Editor(editorData).save(null, {method: 'insert'})
+			);
 	});
 
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.entity CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.entity_data CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.entity_revision CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.entity CASCADE')
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
+			);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const entityAttribs = {
-			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
-			masterRevisionId: null, _type: 'Creator'
-		};
-		const entityDataAttribs = {id: 1, _type: 'Creator'};
-		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
-		const entityRevisionAttribs = {
-			id: 1, entityBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
-			entityDataId: 1
+			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
 		};
 
 		const entityPromise = new Entity(entityAttribs)
 			.save(null, {method: 'insert'})
-			.then(() =>
-				new EntityData(entityDataAttribs)
-					.save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Revision(revisionAttribs)
-					.save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new EntityRevision(entityRevisionAttribs)
-					.save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Entity({bbid: entityAttribs.bbid})
-					.fetch()
-			)
-			.then((entityModel) =>
-				entityModel
-					.set('masterRevisionId', 1)
-					.save()
-			)
-			.then(() => {
-				return new Entity({
-					bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
-				})
-					.fetch({withRelated: ['masterRevision']});
-			})
+			.then((model) => model.refresh())
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'masterRevisionId', 'masterRevision', '_type', 'lastUpdated'
+			'bbid', 'lastUpdated'
 		]);
 	});
 });

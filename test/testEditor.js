@@ -28,8 +28,6 @@ const Bookshelf = require('./bookshelf');
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
-const Message = require('../index').Message;
-const MessageReceipt = require('../index').MessageReceipt;
 const Revision = require('../index').Revision;
 const _ = require('lodash');
 
@@ -50,69 +48,53 @@ const editorAttribs = {
 	name: 'bob',
 	email: 'bob@test.org',
 	password: 'test',
-	editorTypeId: 1
+	typeId: 1
 };
 
 const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
-	countryId: 1,
+	// countryId: 1,
 	genderId: 1
 });
 
 describe('Editor model', () => {
 	beforeEach(() => {
-		return Promise.all([
-			new Gender(genderAttribs).save(null, {method: 'insert'}),
-			new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-		]);
+		return new Gender(genderAttribs).save(null, {method: 'insert'})
+			.then(() =>
+				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
+			);
 	});
 
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.message CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.message_receipt CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE')
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
+			);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const editorPromise = new Editor(editorAttribsWithOptional)
 			.save(null, {method: 'insert'})
 			.then(() => {
-				const messageAttribs = {
-					id: 1,
-					senderId: 1,
-					subject: 'test',
-					content: 'test'
-				};
-
-				const messageReceiptAttribs = {
-					messageId: 1,
-					recipientId: 1
-				};
-
 				const revisionAttribs = {
 					id: 1,
-					authorId: 1,
-					_type: 1
+					authorId: 1
 				};
 
-				return Promise.all([
-					new Message(messageAttribs).save(null, {method: 'insert'}),
-					new MessageReceipt(messageReceiptAttribs)
-						.save(null, {method: 'insert'}),
-					new Revision(revisionAttribs).save(null, {method: 'insert'})
-				]);
+				return new Revision(revisionAttribs)
+					.save(null, {method: 'insert'});
 			})
 			.then(() => {
 				return new Editor({id: 1})
 					.fetch({
 						withRelated: [
-							'editorType',
+							'type',
 							'gender',
-							'messages',
 							'revisions'
 						]
 					});
@@ -121,9 +103,9 @@ describe('Editor model', () => {
 
 		return expect(editorPromise).to.eventually.have.all.keys([
 			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
-			'createdAt', 'activeAt', 'editorTypeId', 'gender', 'genderId',
-			'countryId', 'password', 'revisionsApplied', 'revisionsReverted',
-			'totalRevisions', 'editorType', 'messages', 'revisions'
+			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
+			'areaId', 'password', 'revisionsApplied', 'revisionsReverted',
+			'totalRevisions', 'type', 'revisions'
 		]);
 	});
 

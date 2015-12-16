@@ -21,7 +21,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
@@ -36,37 +35,45 @@ describe('Revision model', () => {
 	const editorTypeAttribs = {id: 1, label: 'test_type'};
 	const editorAttribs = {
 		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-		countryId: 1, genderId: 1, editorTypeId: 1
+		genderId: 1, typeId: 1
 	};
 
 	beforeEach(() => {
-		return Promise.all([
-			new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'}),
-			new EditorType(editorTypeAttribs).save(null, {method: 'insert'}),
-			new Editor(editorAttribs).save(null, {method: 'insert'})
-		]);
+		return new Gender({id: 1, name: 'test'})
+			.save(null, {method: 'insert'})
+			.then(() =>
+				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
+			)
+			.then(() =>
+				new Editor(editorAttribs).save(null, {method: 'insert'})
+			);
 	});
 
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE')
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
+			);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const revisionAttribs = {id: 1, authorId: 1, _type: 1};
+		const revisionAttribs = {id: 1, authorId: 1};
+		const relatedToLoad = ['author', 'parents', 'children'];
 		const revisionPromise = new Revision(revisionAttribs)
 			.save(null, {method: 'insert'})
 			.then(
-				(model) => model.refresh({withRelated: ['author', 'parent']})
+				(model) => model.refresh({withRelated: relatedToLoad})
 			)
 			.then((revision) => revision.toJSON());
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
-			'id', 'author', 'authorId', 'createdAt', 'parentId', '_type'
+			'id', 'author', 'authorId', 'createdAt', 'parents', 'children'
 		]);
 	});
 });

@@ -21,33 +21,74 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
+const Editor = require('../index').Editor;
+const EditorType = require('../index').EditorType;
+const Gender = require('../index').Gender;
 const Annotation = require('../index').Annotation;
+const Revision = require('../index').Revision;
 
 chai.use(chaiAsPromised);
 
+const editorTypeAttribs = {id: 1, label: 'test_type'};
+const editorAttribs = {
+	id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
+	genderId: 1, typeId: 1
+};
+
+function createAnnotation(lastRevisionId) {
+	const annotationAttribs = {
+		content: 'Some Content',
+		lastRevisionId
+	};
+
+	return new Annotation(annotationAttribs)
+		.save(null, {method: 'insert'})
+		.then((model) => model.refresh())
+		.then((annotation) => annotation.toJSON());
+}
+
 describe('Annotation model', () => {
+	beforeEach(() => {
+		return new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'})
+			.then(() =>
+				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
+			)
+			.then(() =>
+				new Editor(editorAttribs).save(null, {method: 'insert'})
+			);
+	});
+
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.annotation CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.annotation CASCADE')
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
+			)
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
+			);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const annotationAttribs = {
-			content: 'Some Content'
-		};
+		const revisionAttribs = {id: 1, authorId: 1};
 
-		const annotationPromise = new Annotation(annotationAttribs)
+		const revisionPromise = new Revision(revisionAttribs)
 			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
-			.then((annotation) => annotation.toJSON());
+			.then((revision) => revision.toJSON());
+
+		const annotationPromise = revisionPromise
+			.then((revision) => {
+				return createAnnotation(revision.id);
+			});
 
 		return expect(annotationPromise).to.eventually.have.all.keys([
-			'id', 'content', 'createdAt'
+			'id', 'content', 'lastRevisionId'
 		]);
 	});
 });

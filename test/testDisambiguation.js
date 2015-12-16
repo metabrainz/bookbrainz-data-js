@@ -21,7 +21,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
@@ -31,9 +30,7 @@ chai.use(chaiAsPromised);
 
 describe('Disambiguation model', () => {
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.disambiguation CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.disambiguation CASCADE');
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

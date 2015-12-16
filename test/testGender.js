@@ -34,7 +34,7 @@ describe('Gender model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const genderPromise = new Gender({name: 'Test'})
-			.save()
+			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
 			.then((gender) => gender.toJSON());
 

@@ -33,12 +33,8 @@ module.exports = {
 		this.EditorType = require('./models/editorType')(bookshelf);
 		this.Gender = require('./models/gender')(bookshelf);
 		this.Language = require('./models/language')(bookshelf);
-		this.Message = require('./models/message')(bookshelf);
-		this.MessageReceipt = require('./models/messageReceipt')(bookshelf);
 		this.Entity = require('./models/entity')(bookshelf);
-		this.EntityData = require('./models/entityData')(bookshelf);
 		this.Revision = require('./models/revision')(bookshelf);
-		this.EntityRevision = require('./models/entityRevision')(bookshelf);
 
 		this.Creator = require('./models/entities/creator')(bookshelf);
 		this.CreatorType = require('./models/creatorType')(bookshelf);

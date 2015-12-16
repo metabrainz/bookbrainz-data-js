@@ -21,7 +21,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
@@ -42,16 +41,14 @@ describe('Alias model', () => {
 	};
 
 	beforeEach(() => {
-		return Promise.all([
-			new Language(languageAttribs).save(null, {method: 'insert'})
-		]);
+		return new Language(languageAttribs).save(null, {method: 'insert'});
 	});
 
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE bookbrainz.alias CASCADE'),
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE bookbrainz.alias CASCADE')
+			.then(() =>
+				Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
+			);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

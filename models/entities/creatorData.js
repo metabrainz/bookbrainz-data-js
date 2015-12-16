@@ -19,11 +19,8 @@
 'use strict';
 
 const util = require('../util');
-const _ = require('lodash');
 
 module.exports = (bookshelf) => {
-	const EntityData = bookshelf.model('EntityData');
-
 	const CreatorData = bookshelf.Model.extend({
 		tableName: 'bookbrainz.creator_data',
 		idAttribute: 'id',

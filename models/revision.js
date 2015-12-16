@@ -29,8 +29,15 @@ module.exports = (bookshelf) => {
 		author() {
 			return this.belongsTo('Editor', 'author_id');
 		},
-		parent() {
-			return this.belongsTo('Revision', 'parent_id');
+		parents() {
+			return this.belongsToMany(
+				'Revision', 'revision_parent', 'child_id', 'parent_id'
+			);
+		},
+		children() {
+			return this.belongsToMany(
+				'Revision', 'revision_parent', 'parent_id', 'child_id'
+			);
 		}
 	});
 

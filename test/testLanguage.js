@@ -21,7 +21,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 
@@ -33,9 +32,7 @@ chai.use(chaiAsPromised);
 
 describe('Language model', () => {
 	afterEach(() => {
-		return Promise.all([
-			Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
-		]);
+		return Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE');
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
