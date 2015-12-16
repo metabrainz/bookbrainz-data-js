@@ -31,12 +31,14 @@ module.exports = (bookshelf) => {
 		},
 		parents() {
 			return this.belongsToMany(
-				'Revision', 'revision_parent', 'child_id', 'parent_id'
+				'Revision', 'bookbrainz.revision_parent', 'child_id',
+				'parent_id'
 			);
 		},
 		children() {
 			return this.belongsToMany(
-				'Revision', 'revision_parent', 'parent_id', 'child_id'
+				'Revision', 'bookbrainz.revision_parent', 'parent_id',
+				'child_id'
 			);
 		}
 	});
