@@ -24,7 +24,6 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-
 const EditorType = require('../index').EditorType;
 
 describe('EditorType model', () => {

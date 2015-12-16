@@ -20,18 +20,17 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 const expect = chai.expect;
+
+const _ = require('lodash');
 const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
-
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
 const Revision = require('../index').Revision;
-const _ = require('lodash');
-
-chai.use(chaiAsPromised);
 
 const genderAttribs = {
 	id: 1,

@@ -24,7 +24,6 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-
 const Gender = require('../index').Gender;
 
 describe('Gender model', () => {

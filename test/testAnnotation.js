@@ -20,17 +20,15 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
 const Annotation = require('../index').Annotation;
 const Revision = require('../index').Revision;
-
-chai.use(chaiAsPromised);
 
 const editorTypeAttribs = {id: 1, label: 'test_type'};
 const editorAttribs = {

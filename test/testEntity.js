@@ -20,16 +20,14 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-
 const Entity = require('../index').Entity;
 const Gender = require('../index').Gender;
 const EditorType = require('../index').EditorType;
 const Editor = require('../index').Editor;
-
-chai.use(chaiAsPromised);
 
 const genderData = {id: 1, name: 'test'};
 const editorTypeData = {id: 1, label: 'test_type'};
