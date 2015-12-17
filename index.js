@@ -27,6 +27,7 @@ module.exports = {
 		this.bookshelf = bookshelf;
 
 		this.Alias = require('./models/alias')(bookshelf);
+		this.Area = require('./models/area')(bookshelf);
 		this.Annotation = require('./models/annotation')(bookshelf);
 		this.Disambiguation = require('./models/disambiguation')(bookshelf);
 		this.Editor = require('./models/editor')(bookshelf);
