@@ -18,6 +18,10 @@
 
 'use strict';
 
+const _ = require('lodash');
+const glob = require('glob');
+const path = require('path');
+
 module.exports = {
 	init(config) {
 		const bookshelf = require('bookshelf')(require('knex')(config));
@@ -26,31 +30,14 @@ module.exports = {
 
 		this.bookshelf = bookshelf;
 
-		this.Alias = require('./models/alias')(bookshelf);
-		this.Area = require('./models/area')(bookshelf);
-		this.Annotation = require('./models/annotation')(bookshelf);
-		this.Disambiguation = require('./models/disambiguation')(bookshelf);
-		this.Editor = require('./models/editor')(bookshelf);
-		this.EditorType = require('./models/editorType')(bookshelf);
-		this.Gender = require('./models/gender')(bookshelf);
-		this.Language = require('./models/language')(bookshelf);
-		this.Entity = require('./models/entity')(bookshelf);
-		this.Revision = require('./models/revision')(bookshelf);
+		const modelsDirectory = path.join(__dirname, 'models');
+		const modelFiles = glob.sync('**/*.js', {cwd: modelsDirectory});
 
-		this.Creator = require('./models/entities/creator')(bookshelf);
-		this.CreatorType = require('./models/creatorType')(bookshelf);
-
-		this.Edition = require('./models/entities/edition')(bookshelf);
-		this.EditionFormat = require('./models/editionFormat')(bookshelf);
-		this.EditionStatus = require('./models/editionStatus')(bookshelf);
-
-		this.Publication = require('./models/entities/publication')(bookshelf);
-		this.PublicationType = require('./models/publicationType')(bookshelf);
-
-		this.Publisher = require('./models/entities/publisher')(bookshelf);
-		this.PublisherType = require('./models/publisherType')(bookshelf);
-
-		this.Work = require('./models/entities/work')(bookshelf);
-		this.WorkType = require('./models/workType')(bookshelf);
+		modelFiles.forEach((file) => {
+			const modelName =
+				_.capitalize(path.basename(file, path.extname(file)));
+			const modelFile = `./${path.join('models/', file)}`;
+			this[modelName] = require(modelFile)(bookshelf);
+		});
 	}
 };
