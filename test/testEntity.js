@@ -63,7 +63,8 @@ describe('Entity model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const entityAttribs = {
-			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c'
+			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
+			type: 'Creator'
 		};
 
 		const entityPromise = new Entity(entityAttribs)
@@ -72,7 +73,7 @@ describe('Entity model', () => {
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'lastUpdated'
+			'bbid', 'lastUpdated', 'type'
 		]);
 	});
 });
