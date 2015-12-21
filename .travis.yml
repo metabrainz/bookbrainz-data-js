@@ -16,6 +16,7 @@ before_script:
   - psql -c 'CREATE EXTENSION "uuid-ossp"; CREATE SCHEMA musicbrainz; CREATE SCHEMA bookbrainz;' -d bookbrainz_test -U postgres
   - psql -f bookbrainz-sql/schemas/musicbrainz.sql -d bookbrainz_test -U postgres
   - psql -f bookbrainz-sql/schemas/bookbrainz.sql -d bookbrainz_test -U postgres
+  - psql -f bookbrainz-sql/scripts/create_triggers.sql -d bookbrainz_test -U postgres
 
 after_script:
   - codeclimate-test-reporter < coverage/lcov.info
