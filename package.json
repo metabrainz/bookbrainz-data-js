@@ -44,7 +44,7 @@
     "lodash": "^3.10.1",
     "path": "^0.12.7",
     "pg": "^4.4.2",
-    "underscore.string": "^3.2.2"
+    "underscore.string": "^3.2.3"
   },
   "devDependencies": {
     "chai": "^3.3.0",
