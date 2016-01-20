@@ -35,7 +35,7 @@ module.exports = {
 
 		modelFiles.forEach((file) => {
 			const modelName =
-				_.capitalize(path.basename(file, path.extname(file)));
+				_.upperFirst(path.basename(file, path.extname(file)));
 			const modelFile = `./${path.join('models/', file)}`;
 			this[modelName] = require(modelFile)(bookshelf);
 		});
