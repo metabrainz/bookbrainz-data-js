@@ -21,15 +21,18 @@
 const util = require('../../util');
 
 module.exports = (bookshelf) => {
-	const Creator = bookshelf.Model.extend({
-		tableName: 'bookbrainz.creator',
-		idAttribute: 'bbid',
+	const CreatorRevision = bookshelf.Model.extend({
+		tableName: 'bookbrainz.creator_revision',
+		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		defaultAlias() {
-			return this.belongsTo('Alias', 'default_alias_id');
+		revision() {
+			return this.belongsTo('Revision', 'id');
+		},
+		entity() {
+			return this.belongsTo('Entity', 'bbid');
 		}
 	});
 
-	return bookshelf.model('Creator', Creator);
+	return bookshelf.model('CreatorRevision', CreatorRevision);
 };
