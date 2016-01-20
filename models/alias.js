@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015  Ben Ockmore
+ * Copyright (C) 2015-2016  Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,12 @@ module.exports = (bookshelf) => {
 		tableName: 'bookbrainz.alias',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		sets() {
+			return this.belongsToMany(
+				'AliasSet', 'alias_set__alias', 'alias_id', 'set_id'
+			);
+		}
 	});
 
 	return bookshelf.model('Alias', Alias);
