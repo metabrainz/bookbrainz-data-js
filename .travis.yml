@@ -21,10 +21,6 @@ before_script:
 after_script:
   - codeclimate-test-reporter < coverage/lcov.info
 
-cache:
-  directories:
-    - node_modules
-
 env:
   - CXX=g++-4.8
 
