@@ -31,7 +31,7 @@ module.exports = (bookshelf) => {
 		},
 		aliases() {
 			return this.belongsToMany(
-				'Alias', 'alias_set__alias', 'set_id', 'alias_id'
+				'Alias', 'bookbrainz.alias_set__alias', 'set_id', 'alias_id'
 			);
 		}
 	});

@@ -28,7 +28,7 @@ module.exports = (bookshelf) => {
 		format: util.camelToSnake,
 		relationships() {
 			return this.belongsToMany(
-				'Relationship', 'relationship_set__relationship', 'set_id', 'relationship_id'
+				'Relationship', 'bookbrainz.relationship_set__relationship', 'set_id', 'relationship_id'
 			);
 		}
 	});
