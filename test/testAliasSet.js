@@ -22,6 +22,8 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
+const _ = require('lodash');
+const Promise = require('bluebird');
 
 const Bookshelf = require('./bookshelf');
 const AliasSet = require('../index').AliasSet;
@@ -104,15 +106,37 @@ describe('AliasSet model', () => {
 			.then((model) =>
 				model.refresh({withRelated: ['aliases', 'defaultAlias']})
 			)
-			.then((model) => {
-				const data = model.toJSON();
-				console.log(data);
-				return data;
-			});
+			.then((model) => model.toJSON());
 
 		return Promise.all([
 			expect(jsonPromise).to.eventually
 				.have.deep.property('aliases[0].id', 1),
+			expect(jsonPromise).to.eventually
+				.have.deep.property('defaultAlias.id', 1)
+		]);
+	});
+
+	it('should have have two aliases when two are set', () => {
+		const alias1Promise = new Alias(aliasAttribs)
+			.save(null, {method: 'insert'});
+
+		const alias2Promise = new Alias(_.assign(aliasAttribs, {id: 2}))
+			.save(null, {method: 'insert'});
+
+		const jsonPromise = Promise.join(
+			alias1Promise, alias2Promise, (alias1, alias2) =>
+				createAliasSet(alias1, [alias1, alias2])
+		)
+			.then((model) =>
+				model.refresh({withRelated: ['aliases', 'defaultAlias']})
+			)
+			.then((model) => model.toJSON());
+
+		return Promise.all([
+			expect(jsonPromise).to.eventually
+				.have.deep.property('aliases[0].id', 1),
+			expect(jsonPromise).to.eventually
+				.have.deep.property('aliases[1].id', 2),
 			expect(jsonPromise).to.eventually
 				.have.deep.property('defaultAlias.id', 1)
 		]);
