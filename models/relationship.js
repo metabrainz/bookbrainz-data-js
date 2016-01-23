@@ -26,9 +26,19 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		relationships() {
+		type() {
+			return this.belongsTo('RelationshipType', 'type_id');
+		},
+		source() {
+			return this.belongsTo('Entity', 'source_bbid');
+		},
+		target() {
+			return this.belongsTo('Entity', 'target_bbid');
+		},
+		sets() {
 			return this.belongsToMany(
-				'RelationshipSet', 'bookbrainz.relationship_set__relationship', 'relationship_id', 'set_id'
+				'RelationshipSet', 'bookbrainz.relationship_set__relationship',
+				'relationship_id', 'set_id'
 			);
 		}
 	});

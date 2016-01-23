@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const Promise = require('bluebird');
 
 module.exports.snakeToCamel = (attrs) => {
 	return _.reduce(attrs, (result, val, key) => {
@@ -54,3 +55,9 @@ module.exports.validateEntityType = (model) => {
 		);
 	}
 };
+
+module.exports.truncateTables =
+	(Bookshelf, tables) =>
+	Promise.each(tables,
+		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
+	);
