@@ -5,7 +5,13 @@ node_js:
   - "4.0"
 
 notifications:
-    email: false
+  email: false
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/58b7b825ce41f0d5e314
+    on_success: change
+    on_failure: always
+    on_start: never
 
 sudo: false
 
