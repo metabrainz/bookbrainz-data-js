@@ -23,41 +23,13 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Entity = require('../index').Entity;
-const Gender = require('../index').Gender;
-const EditorType = require('../index').EditorType;
-const Editor = require('../index').Editor;
-
-const genderData = {id: 1, name: 'test'};
-const editorTypeData = {id: 1, label: 'test_type'};
-const editorData = {
-	id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
-	genderId: 1, typeId: 1
-};
 
 describe('Entity model', () => {
-	beforeEach(() => {
-		return new Gender(genderData).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorData).save(null, {method: 'insert'})
-			);
-	});
-
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.entity CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
-			);
+		return util.truncateTables(Bookshelf, ['bookbrainz.entity']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

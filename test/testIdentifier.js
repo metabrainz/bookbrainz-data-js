@@ -23,6 +23,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Identifier = require('../index').Identifier;
 const IdentifierType = require('../index').IdentifierType;
@@ -50,10 +51,10 @@ describe('Identifier model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier_type CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.identifier',
+			'bookbrainz.identifier_type'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

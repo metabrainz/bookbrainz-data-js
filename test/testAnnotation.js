@@ -23,6 +23,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
@@ -60,16 +61,12 @@ describe('Annotation model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.annotation CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.annotation',
+			'bookbrainz.editor',
+			'bookbrainz.editor_type',
+			'musicbrainz.gender'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

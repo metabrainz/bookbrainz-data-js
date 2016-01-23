@@ -25,6 +25,7 @@ const expect = chai.expect;
 
 const Promise = require('bluebird');
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Creator = require('../index').Creator;
 const Revision = require('../index').Revision;
@@ -62,28 +63,16 @@ describe('Creator model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.entity CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.revision CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.relationship_set CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier_set CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.alias_set CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.editor_type CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.entity',
+			'bookbrainz.revision',
+			'bookbrainz.relationship_set',
+			'bookbrainz.identifier_set',
+			'bookbrainz.alias_set',
+			'bookbrainz.editor',
+			'bookbrainz.editor_type',
+			'musicbrainz.gender'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

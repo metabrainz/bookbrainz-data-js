@@ -23,6 +23,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Alias = require('../index').Alias;
 const Language = require('../index').Language;
@@ -43,10 +44,10 @@ describe('Alias model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.alias CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.alias',
+			'musicbrainz.language'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

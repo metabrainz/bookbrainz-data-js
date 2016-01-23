@@ -23,12 +23,13 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Disambiguation = require('../index').Disambiguation;
 
 describe('Disambiguation model', () => {
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.disambiguation CASCADE');
+		return util.truncateTables(Bookshelf, ['bookbrainz.disambiguation']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

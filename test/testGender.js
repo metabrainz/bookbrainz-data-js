@@ -23,12 +23,13 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Gender = require('../index').Gender;
 
 describe('Gender model', () => {
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE musicbrainz.gender CASCADE');
+		return util.truncateTables(Bookshelf, ['musicbrainz.gender']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

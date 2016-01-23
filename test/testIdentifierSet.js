@@ -25,6 +25,7 @@ const expect = chai.expect;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const IdentifierSet = require('../index').IdentifierSet;
 const Identifier = require('../index').Identifier;
@@ -61,13 +62,11 @@ describe('IdentifierSet model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier_set CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.identifier_type CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.identifier_set',
+			'bookbrainz.identifier',
+			'bookbrainz.identifier_type'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

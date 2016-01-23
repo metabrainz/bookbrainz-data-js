@@ -23,14 +23,13 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const IdentifierType = require('../index').IdentifierType;
 
 describe('IdentifierType model', () => {
 	afterEach(() => {
-		return Bookshelf.knex.raw(
-			'TRUNCATE bookbrainz.identifier_type CASCADE'
-		);
+		return util.truncateTables(Bookshelf, ['bookbrainz.identifier_type']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

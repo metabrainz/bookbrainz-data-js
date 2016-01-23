@@ -25,6 +25,7 @@ const expect = chai.expect;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const AliasSet = require('../index').AliasSet;
 const Alias = require('../index').Alias;
@@ -63,13 +64,11 @@ describe('AliasSet model', () => {
 	});
 
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE bookbrainz.alias_set CASCADE')
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE bookbrainz.alias CASCADE')
-			)
-			.then(() =>
-				Bookshelf.knex.raw('TRUNCATE musicbrainz.language CASCADE')
-			);
+		return util.truncateTables(Bookshelf, [
+			'bookbrainz.alias_set',
+			'bookbrainz.alias',
+			'musicbrainz.language'
+		]);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {

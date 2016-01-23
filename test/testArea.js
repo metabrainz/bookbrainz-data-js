@@ -24,6 +24,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const uuid = require('node-uuid');
 
+const util = require('../util');
 const Bookshelf = require('./bookshelf');
 const Area = require('../index').Area;
 
@@ -42,7 +43,7 @@ function createArea(name) {
 
 describe('Area model', () => {
 	afterEach(() => {
-		return Bookshelf.knex.raw('TRUNCATE musicbrainz.area CASCADE');
+		return util.truncateTables(Bookshelf, ['musicbrainz.area']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
