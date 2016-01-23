@@ -26,6 +26,9 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		type() {
+			return this.belongsTo('IdentifierType', 'type_id');
+		},
 		sets() {
 			return this.belongsToMany(
 				'IdentifierSet', 'bookbrainz.identifier_set__identifier', 'identifier_id', 'set_id'
