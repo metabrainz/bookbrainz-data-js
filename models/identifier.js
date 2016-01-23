@@ -31,7 +31,8 @@ module.exports = (bookshelf) => {
 		},
 		sets() {
 			return this.belongsToMany(
-				'IdentifierSet', 'bookbrainz.identifier_set__identifier', 'identifier_id', 'set_id'
+				'IdentifierSet', 'bookbrainz.identifier_set__identifier',
+				'identifier_id', 'set_id'
 			);
 		}
 	});
