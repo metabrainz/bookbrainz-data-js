@@ -51,7 +51,7 @@
     "codeclimate-test-reporter": "^0.3.0",
     "eslint": "^1.10.3",
     "istanbul": "^0.4.2",
-    "jscs": "^2.8.0",
+    "jscs": "^2.9.0",
     "mocha": "^2.3.3",
     "node-uuid": "^1.4.7"
   }
