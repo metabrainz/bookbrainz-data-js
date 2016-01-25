@@ -60,7 +60,7 @@ describe('Relationship model', () => {
 			)
 			.then(() =>
 				new Entity(
-					_.assign(entityAttribs, {
+					_.assign(_.clone(entityAttribs), {
 						bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
 					})
 				).save(null, {method: 'insert'})
@@ -70,7 +70,8 @@ describe('Relationship model', () => {
 	afterEach(() => {
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.relationship',
-			'bookbrainz.relationship_type'
+			'bookbrainz.relationship_type',
+			'bookbrainz.entity'
 		]);
 	});
 

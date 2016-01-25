@@ -82,18 +82,21 @@ describe('IdentifierSet model', () => {
 		]);
 	});
 
-	it('should have an empty list of aliases when none are attached', () => {
-		const jsonPromise = new IdentifierSet({id: 1})
-			.save(null, {method: 'insert'})
-			.then((model) =>
-				model.refresh({withRelated: ['identifiers']})
-			)
-			.then((model) => model.toJSON().identifiers);
+	it(
+		'should have an empty list of identifiers when none are attached',
+		() => {
+			const jsonPromise = new IdentifierSet({id: 1})
+				.save(null, {method: 'insert'})
+				.then((model) =>
+					model.refresh({withRelated: ['identifiers']})
+				)
+				.then((model) => model.toJSON().identifiers);
 
-		return expect(jsonPromise).to.eventually.be.empty;
-	});
+			return expect(jsonPromise).to.eventually.be.empty;
+		}
+	);
 
-	it('should have have an alias when one is set', () => {
+	it('should have have an identifier when one is set', () => {
 		const idPromise = new Identifier(idAttribs)
 			.save(null, {method: 'insert'});
 
@@ -111,7 +114,7 @@ describe('IdentifierSet model', () => {
 		]);
 	});
 
-	it('should have have two aliases when two are set', () => {
+	it('should have have two identifiers when two are set', () => {
 		const id1Promise = new Identifier(idAttribs)
 			.save(null, {method: 'insert'});
 
