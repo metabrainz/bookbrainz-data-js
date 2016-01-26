@@ -37,7 +37,7 @@
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
     "bcrypt": "^0.8.5",
-    "bluebird": "^3.1.1",
+    "bluebird": "^3.1.5",
     "bookshelf": "^0.9.1",
     "glob": "^6.0.4",
     "knex": "^0.9.0",
