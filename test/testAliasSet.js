@@ -133,9 +133,7 @@ describe('AliasSet model', () => {
 
 		return Promise.all([
 			expect(jsonPromise).to.eventually
-				.have.deep.property('aliases[0].id', 1),
-			expect(jsonPromise).to.eventually
-				.have.deep.property('aliases[1].id', 2),
+				.have.deep.property('aliases.length', 2),
 			expect(jsonPromise).to.eventually
 				.have.deep.property('defaultAlias.id', 1)
 		]);

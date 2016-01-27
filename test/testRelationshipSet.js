@@ -148,11 +148,7 @@ describe('RelationshipSet model', () => {
 			)
 			.then((model) => model.toJSON());
 
-		return Promise.all([
-			expect(jsonPromise).to.eventually
-				.have.deep.property('relationships[0].id', 1),
-			expect(jsonPromise).to.eventually
-				.have.deep.property('relationships[1].id', 2)
-		]);
+		return expect(jsonPromise).to.eventually
+			.have.deep.property('relationships.length', 2);
 	});
 });

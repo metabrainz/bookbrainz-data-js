@@ -130,11 +130,7 @@ describe('IdentifierSet model', () => {
 			)
 			.then((model) => model.toJSON());
 
-		return Promise.all([
-			expect(jsonPromise).to.eventually
-				.have.deep.property('identifiers[0].id', 1),
-			expect(jsonPromise).to.eventually
-				.have.deep.property('identifiers[1].id', 2)
-		]);
+		return expect(jsonPromise).to.eventually
+			.have.deep.property('identifiers.length', 2);
 	});
 });
