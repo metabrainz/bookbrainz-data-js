@@ -23,28 +23,34 @@ const _ = require('lodash');
 const util = require('../util');
 
 function formatWithISOFields(attrs) {
+	/* eslint-disable camelcase */
 	const REPLACEMENTS = {
-		isoCode1: 'iso_code_1',
-		isoCode2t: 'iso_code_2t',
-		isoCode2b: 'iso_code_2b',
-		isoCode3: 'iso_code_3'
+		iso_code_2_t: 'iso_code_2t',
+		iso_code_2_b: 'iso_code_2b'
+	};
+	/* eslint-enable camelcase */
+
+	return _.mapKeys(util.camelToSnake(attrs), (value, key) => {
+		return _.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key;
+	});
+}
+
+function parseWithISOFields(attrs) {
+	const REPLACEMENTS = {
+		isoCode2T: 'isoCode2t',
+		isoCode2B: 'isoCode2b'
 	};
 
-	return util.camelToSnake(
-		_.reduce(attrs, (result, val, key) => {
-			const newKey = _.has(REPLACEMENTS, key) ?
-				REPLACEMENTS[key] : key;
-			result[newKey] = val;
-			return result;
-		}, {})
-	);
+	return _.mapKeys(util.snakeToCamel(attrs), (value, key) => {
+		return _.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key;
+	});
 }
 
 module.exports = (bookshelf) => {
 	const Language = bookshelf.Model.extend({
 		tableName: 'musicbrainz.language',
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: parseWithISOFields,
 		format: formatWithISOFields
 	});
 
