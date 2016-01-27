@@ -26,6 +26,14 @@ module.exports = (bookshelf) => {
 		idAttribute: 'bbid',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		initialize() {
+			this.on('fetching', (model, col, options) => {
+				// If no revision is specified, fetch the master revision
+				if (!model.get('revisionId')) {
+					options.query.where({master: true});
+				}
+			});
+		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		}

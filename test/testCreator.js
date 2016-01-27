@@ -139,16 +139,15 @@ describe('Creator model', () => {
 					return new Creator(creatorUpdateAttribs).save();
 				})
 				.then((model) =>
-					new Creator({bbid: model.get('bbid'), master: true}).fetch()
+					new Creator({bbid: model.get('bbid')}).fetch()
 				)
-				.then((creator) => {
-					console.log(creator.toJSON());
-					return creator.toJSON();
-				});
+				.then((creator) => creator.toJSON());
 
 			return Promise.all([
 				expect(creatorUpdatePromise)
 					.to.eventually.have.property('revisionId', 2),
+				expect(creatorUpdatePromise)
+					.to.eventually.have.property('master', true),
 				expect(creatorUpdatePromise)
 					.to.eventually.have.property('ended', true)
 			]);
