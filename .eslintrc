@@ -1,13 +1,6 @@
 ---
-ecmaFeatures:
-  arrowFunctions: true
-  blockBindings: true
-  forOf: true
-  generators: true
-  templateStrings: true
-  classes: true
-  objectLiteralShorthandProperties: true
-  objectLiteralShorthandMethods: true
+parserOptions:
+    ecmaVersion: 6
 env:
   node: true
 rules:
@@ -56,7 +49,7 @@ rules:
     - 2
     -
       getWithoutSet: false
-  consistent-return: 2
+  consistent-return: 1
   block-scoped-var: 2
   complexity: 0
   curly: 2
@@ -73,7 +66,6 @@ rules:
   no-caller: 2
   no-div-regex: 2
   no-else-return: 2
-  no-empty-label: 2
   no-eq-null: 2
   no-eval: 2
   no-extend-native: 2
@@ -279,12 +271,11 @@ rules:
     - 2
     - always
   sort-vars: 2
-  space-after-keywords:
+  keyword-spacing:
     - 2
-    - always
-  space-before-keywords:
-    - 2
-    - always
+    -
+        before: true
+        after: true
   space-before-blocks:
     - 2
     - always
@@ -296,7 +287,6 @@ rules:
     - never
   space-infix-ops:
     - 2
-  space-return-throw-case: 2
   space-unary-ops:
     - 2
     -
@@ -347,3 +337,16 @@ rules:
 
   # Project Specific Settings (Node-only)
   no-console: 0
+
+  array-callback-return: 2
+  prefer-rest-params: 2
+  no-confusing-arrow: 2
+  no-unmodified-loop-condition: 2
+  no-useless-constructor: 2
+  no-whitespace-before-property: 2
+  no-new-symbol: 2
+  sort-imports: 2
+  no-self-assign: 2
+  template-curly-spacing:
+    - 2
+    - never
