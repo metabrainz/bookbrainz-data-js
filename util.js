@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const Promise = require('bluebird');
+const diff = require('deep-diff').diff;
 
 module.exports.snakeToCamel = (attrs) => {
 	return _.reduce(attrs, (result, val, key) => {
@@ -61,3 +62,33 @@ module.exports.truncateTables =
 	Promise.each(tables,
 		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
 	);
+
+module.exports.diffRevisions = (base, other, includes) => {
+	function diffFilter(path, key) {
+		return _.includes(['_pivot_set_id', '_pivot_relationship_id'], key);
+	}
+
+	const baseDataPromise = base.related('data').fetch({withRelated: includes});
+
+	if (!other) {
+		return baseDataPromise.then((baseData) =>
+			diff(
+				{},
+				baseData ? baseData.toJSON() : {},
+				diffFilter
+			)
+		);
+	}
+
+	const otherDataPromise =
+		other.related('data').fetch({withRelated: includes});
+
+	return Promise.join(baseDataPromise, otherDataPromise,
+		(baseData, otherData) =>
+		diff(
+			otherData ? otherData.toJSON() : {},
+			baseData ? baseData.toJSON() : {},
+			diffFilter
+		)
+	);
+};

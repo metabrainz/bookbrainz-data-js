@@ -30,7 +30,34 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('Revision', 'id');
 		},
 		entity() {
-			return this.belongsTo('Entity', 'bbid');
+			return this.belongsTo('CreatorHeader', 'bbid');
+		},
+		data() {
+			return this.belongsTo('CreatorData', 'data_id');
+		},
+		diff(other) {
+			return util.diffRevisions(this, other, [
+				'annotation', 'disambiguation', 'aliasSet', 'identifierSet',
+				'relationshipSet'
+			]);
+		},
+		parent() {
+			return this.related('revision').fetch()
+				.then((revision) =>
+					revision.related('parents').fetch()
+				)
+				.then((parents) =>
+					parents.map((parent) => parent.get('id'))
+				)
+				.then((parentIds) => {
+					if (parentIds.length === 0) {
+						return null;
+					}
+
+					return new CreatorRevision({bbid: this.get('bbid')})
+						.query('whereIn', 'id', parentIds)
+						.fetch();
+				});
 		}
 	});
 
