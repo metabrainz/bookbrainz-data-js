@@ -34,8 +34,26 @@ module.exports = (bookshelf) => {
 				}
 			});
 		},
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		aliasSet() {
+			return this.belongsTo('AliasSet', 'alias_set_id');
+		},
+		identifierSet() {
+			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		revision() {
+			return this.belongsTo('CreatorRevision', 'revision_id');
 		}
 	});
 

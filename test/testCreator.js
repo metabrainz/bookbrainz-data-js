@@ -32,6 +32,8 @@ const Revision = require('../index').Revision;
 const Gender = require('../index').Gender;
 const EditorType = require('../index').EditorType;
 const Editor = require('../index').Editor;
+const Annotation = require('../index').Annotation;
+const Disambiguation = require('../index').Disambiguation;
 const AliasSet = require('../index').AliasSet;
 const IdentifierSet = require('../index').IdentifierSet;
 const RelationshipSet = require('../index').RelationshipSet;
@@ -57,7 +59,9 @@ describe('Creator model', () => {
 				Promise.all([
 					new AliasSet(setData).save(null, {method: 'insert'}),
 					new IdentifierSet(setData).save(null, {method: 'insert'}),
-					new RelationshipSet(setData).save(null, {method: 'insert'})
+					new RelationshipSet(setData).save(null, {method: 'insert'}),
+					new Disambiguation({id: 1, comment: 'Test Disambiguation'})
+						.save(null, {method: 'insert'})
 				])
 			);
 	});
@@ -69,6 +73,8 @@ describe('Creator model', () => {
 			'bookbrainz.relationship_set',
 			'bookbrainz.identifier_set',
 			'bookbrainz.alias_set',
+			'bookbrainz.annotation',
+			'bookbrainz.disambiguation',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
 			'musicbrainz.gender'
@@ -79,17 +85,31 @@ describe('Creator model', () => {
 		const revisionAttribs = {id: 1, authorId: 1};
 		const creatorAttribs = {
 			revisionId: 1, aliasSetId: 1, identifierSetId: 1,
-			relationshipSetId: 1
+			relationshipSetId: 1, annotationId: 1,
+			disambiguationId: 1
 		};
 
 		const revisionPromise = new Revision(revisionAttribs)
 			.save(null, {method: 'insert'});
 
-		const creatorPromise = revisionPromise
+		const annotationPromise = revisionPromise
+			.then(() =>
+				new Annotation(
+					{id: 1, content: 'Test Annotation', lastRevisionId: 1
+				})
+					.save(null, {method: 'insert'})
+			);
+
+		const creatorPromise = annotationPromise
 			.then(() =>
 				new Creator(creatorAttribs).save(null, {method: 'insert'})
 			)
-			.then((model) => model.refresh())
+			.then((model) => model.refresh({
+				withRelated: [
+					'relationshipSet', 'aliasSet', 'identifierSet',
+					'annotation', 'disambiguation'
+				]
+			}))
 			.then((creator) => creator.toJSON());
 
 		return expect(creatorPromise).to.eventually.have.all.keys([
@@ -97,7 +117,8 @@ describe('Creator model', () => {
 			'disambiguationId', 'defaultAliasId', 'beginYear', 'beginMonth',
 			'beginDay', 'beginAreaId', 'endYear', 'endMonth', 'endDay',
 			'endAreaId', 'ended', 'areaId', 'genderId', 'typeId', 'aliasSetId',
-			'identifierSetId', 'relationshipSetId', 'master', 'type'
+			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
+			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation'
 		]);
 	});
 
