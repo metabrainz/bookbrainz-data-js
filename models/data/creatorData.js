@@ -25,7 +25,22 @@ module.exports = (bookshelf) => {
 		tableName: 'bookbrainz.creator_data',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		aliasSet() {
+			return this.belongsTo('AliasSet', 'alias_set_id');
+		},
+		identifierSet() {
+			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		}
 	});
 
 	return bookshelf.model('CreatorData', CreatorData);
