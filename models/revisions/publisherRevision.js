@@ -21,8 +21,8 @@
 const util = require('../../util');
 
 module.exports = (bookshelf) => {
-	const CreatorRevision = bookshelf.Model.extend({
-		tableName: 'bookbrainz.creator_revision',
+	const PublisherRevision = bookshelf.Model.extend({
+		tableName: 'bookbrainz.publisher_revision',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
@@ -30,10 +30,10 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('Revision', 'id');
 		},
 		entity() {
-			return this.belongsTo('CreatorHeader', 'bbid');
+			return this.belongsTo('PublisherHeader', 'bbid');
 		},
 		data() {
-			return this.belongsTo('CreatorData', 'data_id');
+			return this.belongsTo('PublisherData', 'data_id');
 		},
 		diff(other) {
 			return util.diffRevisions(this, other, [
@@ -54,12 +54,12 @@ module.exports = (bookshelf) => {
 						return null;
 					}
 
-					return new CreatorRevision({bbid: this.get('bbid')})
+					return new PublisherRevision({bbid: this.get('bbid')})
 						.query('whereIn', 'id', parentIds)
 						.fetch();
 				});
 		}
 	});
 
-	return bookshelf.model('CreatorRevision', CreatorRevision);
+	return bookshelf.model('PublisherRevision', PublisherRevision);
 };
