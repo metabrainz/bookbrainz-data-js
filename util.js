@@ -65,7 +65,11 @@ module.exports.truncateTables =
 
 module.exports.diffRevisions = (base, other, includes) => {
 	function diffFilter(path, key) {
-		return _.includes(['_pivot_set_id', '_pivot_relationship_id'], key);
+		if (_.isString(key)) {
+			return key.startsWith('_pivot');
+		}
+
+		return false;
 	}
 
 	const baseDataPromise = base.related('data').fetch({withRelated: includes});

@@ -37,8 +37,9 @@ module.exports = (bookshelf) => {
 		},
 		diff(other) {
 			return util.diffRevisions(this, other, [
-				'annotation', 'disambiguation', 'aliasSet', 'identifierSet',
-				'relationshipSet'
+				'annotation', 'disambiguation', 'aliasSet.aliases',
+				'aliasSet.defaultAlias', 'identifierSet.identifiers',
+				'relationshipSet.relationships', 'relationshipSet.relationships.type'
 			]);
 		},
 		parent() {
