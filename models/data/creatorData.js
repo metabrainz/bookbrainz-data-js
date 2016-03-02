@@ -41,6 +41,12 @@ module.exports = (bookshelf) => {
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
+		gender() {
+			return this.belongsTo('Gender', 'gender_id');
+		},
+		type() {
+			return this.belongsTo('CreatorType', 'type_id');
+		},
 		virtuals: {
 			beginDate: {
 				get() {

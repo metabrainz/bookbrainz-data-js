@@ -40,6 +40,9 @@ module.exports = (bookshelf) => {
 				'Revision', 'bookbrainz.revision_parent', 'parent_id',
 				'child_id'
 			);
+		},
+		notes() {
+			return this.hasMany('Note', 'revision_id');
 		}
 	});
 

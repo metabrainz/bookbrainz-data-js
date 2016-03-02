@@ -40,6 +40,14 @@ module.exports = (bookshelf) => {
 		},
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		languages() {
+			return this.belongsToMany(
+				'Language', 'bookbrainz.work_data__language', 'data_id', 'language_id'
+			);
+		},
+		type() {
+			return this.belongsTo('WorkType', 'type_id');
 		}
 	});
 
