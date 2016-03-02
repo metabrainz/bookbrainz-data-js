@@ -92,3 +92,42 @@ module.exports.diffRevisions = (base, other, includes) => {
 		)
 	);
 };
+
+module.exports.formatDate = function(year, month, day) {
+	if (!year) {
+		return null;
+	}
+
+	const yearString = _.padStart(year.toString(), 4, '0');
+
+	if (!month) {
+		return `${yearString}`;
+	}
+
+	const monthString = _.padStart(month.toString(), 2, '0');
+
+	if (!day) {
+		return `${yearString}-${monthString}`;
+	}
+
+	const dayString = _.padStart(day.toString(), 2, '0');
+
+	return `${yearString}-${monthString}-${dayString}`;
+};
+
+module.exports.parseDate = function(date) {
+	const parts = date.split('-');
+	if (parts.length === 3) {
+		return parts.map((part) => parseInt(part, 10));
+	}
+
+	if (parts.length === 2) {
+		return parts.map((part) => parseInt(part, 10)).concat([null]);
+	}
+
+	if (parts.length === 1) {
+		return parts.map((part) => parseInt(part, 10)).concat([null, null]);
+	}
+
+	return [null, null, null];
+};

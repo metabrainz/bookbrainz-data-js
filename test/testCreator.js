@@ -118,7 +118,8 @@ describe('Creator model', () => {
 			'beginDay', 'beginAreaId', 'endYear', 'endMonth', 'endDay',
 			'endAreaId', 'ended', 'areaId', 'genderId', 'typeId', 'aliasSetId',
 			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
-			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation'
+			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation',
+			'beginDate', 'endDate'
 		]);
 	});
 

@@ -27,6 +27,7 @@ module.exports = {
 		const bookshelf = require('bookshelf')(require('knex')(config));
 		bookshelf.plugin('registry');
 		bookshelf.plugin('visibility');
+		bookshelf.plugin('virtuals');
 
 		this.bookshelf = bookshelf;
 
