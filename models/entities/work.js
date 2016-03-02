@@ -21,11 +21,11 @@
 const util = require('../../util');
 
 module.exports = (bookshelf) => {
-	const Work = bookshelf.Model.extend({
+	const WorkData = bookshelf.model('WorkData');
+
+	const Work = WorkData.extend({
 		tableName: 'bookbrainz.work',
 		idAttribute: 'bbid',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
 		initialize() {
 			this.on('fetching', (model, col, options) => {
 				// If no revision is specified, fetch the master revision
@@ -34,23 +34,8 @@ module.exports = (bookshelf) => {
 				}
 			});
 		},
-		annotation() {
-			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		disambiguation() {
-			return this.belongsTo('Disambiguation', 'disambiguation_id');
-		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
-		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
-		},
-		identifierSet() {
-			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
 		revision() {
 			return this.belongsTo('WorkRevision', 'revision_id');
