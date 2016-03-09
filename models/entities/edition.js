@@ -18,14 +18,12 @@
 
 'use strict';
 
-const util = require('../../util');
-
 module.exports = (bookshelf) => {
-	const Edition = bookshelf.Model.extend({
+	const EditionData = bookshelf.model('EditionData');
+
+	const Edition = EditionData.extend({
 		tableName: 'bookbrainz.edition',
 		idAttribute: 'bbid',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
 		initialize() {
 			this.on('fetching', (model, col, options) => {
 				// If no revision is specified, fetch the master revision
@@ -34,23 +32,8 @@ module.exports = (bookshelf) => {
 				}
 			});
 		},
-		annotation() {
-			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		disambiguation() {
-			return this.belongsTo('Disambiguation', 'disambiguation_id');
-		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
-		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
-		},
-		identifierSet() {
-			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
 		revision() {
 			return this.belongsTo('EditionRevision', 'revision_id');

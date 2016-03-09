@@ -40,6 +40,33 @@ module.exports = (bookshelf) => {
 		},
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		publication() {
+			return this.belongsTo('Publication', 'publication_bbid');
+		},
+		publishers() {
+			return this.belongsToMany(
+				'Publisher', 'bookbrainz.edition_data__publisher', 'data_id',
+				'publisher_bbid'
+			);
+		},
+		editionStatus() {
+			return this.belongsTo('EditionStatus', 'status_id');
+		},
+		editionFormat() {
+			return this.belongsTo('EditionFormat', 'format_id');
+		},
+		releaseEvents() {
+			return this.belongsToMany(
+				'ReleaseEvent', 'bookbrainz.release_event__edition_data',
+				'edition_data_id', 'release_event_id'
+			);
+		},
+		languages() {
+			return this.belongsToMany(
+				'Language', 'bookbrainz.edition_data__language',
+				'data_id', 'language_id'
+			);
 		}
 	});
 

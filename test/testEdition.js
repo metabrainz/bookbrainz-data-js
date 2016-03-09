@@ -70,6 +70,9 @@ describe('Edition model', () => {
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.entity',
 			'bookbrainz.revision',
+			'bookbrainz.alias',
+			'bookbrainz.identifier',
+			'bookbrainz.relationship',
 			'bookbrainz.relationship_set',
 			'bookbrainz.identifier_set',
 			'bookbrainz.alias_set',
