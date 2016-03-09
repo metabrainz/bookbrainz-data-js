@@ -18,8 +18,6 @@
 
 'use strict';
 
-const util = require('../../util');
-
 module.exports = (bookshelf) => {
 	const WorkData = bookshelf.model('WorkData');
 
