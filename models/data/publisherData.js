@@ -40,6 +40,39 @@ module.exports = (bookshelf) => {
 		},
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		type() {
+			return this.belongsTo('PublisherType', 'type_id');
+		},
+		virtuals: {
+			beginDate: {
+				get() {
+					const year = this.get('beginYear');
+					const month = this.get('beginMonth');
+					const day = this.get('beginDay');
+					return util.formatDate(year, month, day);
+				},
+				set(value) {
+					const parts = util.parseDate(value);
+					this.set('beginYear', parts[0]);
+					this.set('beginMonth', parts[1]);
+					this.set('beginDay', parts[2]);
+				}
+			},
+			endDate: {
+				get() {
+					const year = this.get('endYear');
+					const month = this.get('endMonth');
+					const day = this.get('endDay');
+					return util.formatDate(year, month, day);
+				},
+				set(value) {
+					const parts = util.parseDate(value);
+					this.set('endYear', parts[0]);
+					this.set('endMonth', parts[1]);
+					this.set('endDay', parts[2]);
+				}
+			}
 		}
 	});
 
