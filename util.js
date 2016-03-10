@@ -72,13 +72,39 @@ module.exports.diffRevisions = (base, other, includes) => {
 		return false;
 	}
 
+	function sortEntityData(data) {
+		const aliasesPresent =
+			data.aliasSet && _.isArray(data.aliasSet.aliases);
+		if (aliasesPresent) {
+			data.aliasSet.aliases = _.sortBy(data.aliasSet.aliases, 'name');
+		}
+
+		const identifiersPresent =
+			data.identifierSet && _.isArray(data.identifierSet.identifiers);
+		if (identifiersPresent) {
+			data.identifierSet.identifiers = _.sortBy(
+				data.identifierSet.identifiers, ['value', 'type.label']
+			);
+		}
+
+		const relationshipsPresent = data.relationshipSet &&
+			_.isArray(data.relationshipSet.relationships);
+		if (relationshipsPresent) {
+			data.relationshipSet.relationships = _.sortBy(
+				data.relationshipSet.relationships, 'id'
+			);
+		}
+
+		return data;
+	}
+
 	const baseDataPromise = base.related('data').fetch({withRelated: includes});
 
 	if (!other) {
 		return baseDataPromise.then((baseData) =>
 			diff(
 				{},
-				baseData ? baseData.toJSON() : {},
+				baseData ? sortEntityData(baseData.toJSON()) : {},
 				diffFilter
 			)
 		);
@@ -90,14 +116,14 @@ module.exports.diffRevisions = (base, other, includes) => {
 	return Promise.join(baseDataPromise, otherDataPromise,
 		(baseData, otherData) =>
 		diff(
-			otherData ? otherData.toJSON() : {},
-			baseData ? baseData.toJSON() : {},
+			otherData ? sortEntityData(otherData.toJSON()) : {},
+			baseData ? sortEntityData(baseData.toJSON()) : {},
 			diffFilter
 		)
 	);
 };
 
-module.exports.formatDate = function(year, month, day) {
+module.exports.formatDate = (year, month, day) => {
 	if (!year) {
 		return null;
 	}
@@ -119,7 +145,8 @@ module.exports.formatDate = function(year, month, day) {
 	return `${yearString}-${monthString}-${dayString}`;
 };
 
-module.exports.parseDate = function(date) {
+
+module.exports.parseDate = (date) => {
 	const parts = date.split('-');
 	if (parts.length === 3) {
 		return parts.map((part) => parseInt(part, 10));
