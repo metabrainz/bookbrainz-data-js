@@ -25,7 +25,10 @@ module.exports = (bookshelf) => {
 		tableName: 'bookbrainz.annotation',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		lastRevision() {
+			return this.belongsTo('Revision', 'last_revision_id');
+		}
 	});
 
 	return bookshelf.model('Annotation', Annotation);
