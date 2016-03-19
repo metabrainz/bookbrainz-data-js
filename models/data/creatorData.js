@@ -44,7 +44,7 @@ module.exports = (bookshelf) => {
 		gender() {
 			return this.belongsTo('Gender', 'gender_id');
 		},
-		type() {
+		creatorType() {
 			return this.belongsTo('CreatorType', 'type_id');
 		},
 		virtuals: {

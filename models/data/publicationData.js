@@ -41,7 +41,7 @@ module.exports = (bookshelf) => {
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
-		type() {
+		publicationType() {
 			return this.belongsTo('PublicationType', 'type_id');
 		}
 	});

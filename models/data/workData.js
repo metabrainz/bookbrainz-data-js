@@ -46,7 +46,7 @@ module.exports = (bookshelf) => {
 				'Language', 'bookbrainz.work_data__language', 'data_id', 'language_id'
 			);
 		},
-		type() {
+		workType() {
 			return this.belongsTo('WorkType', 'type_id');
 		}
 	});
