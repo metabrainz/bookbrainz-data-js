@@ -26,6 +26,9 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		language() {
+			return this.belongsTo('Language', 'language_id');
+		},
 		sets() {
 			return this.belongsToMany(
 				'AliasSet', 'bookbrainz.alias_set__alias', 'alias_id', 'set_id'
