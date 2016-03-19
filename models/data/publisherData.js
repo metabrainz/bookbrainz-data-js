@@ -44,6 +44,11 @@ module.exports = (bookshelf) => {
 		publisherType() {
 			return this.belongsTo('PublisherType', 'type_id');
 		},
+		editions() {
+			return this.belongsToMany(
+				'Edition', 'bookbrainz.edition_data__publisher', 'publisher_bbid', 'publisher_bbid'
+			);
+		},
 		virtuals: {
 			beginDate: {
 				get() {

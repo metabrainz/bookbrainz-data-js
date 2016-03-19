@@ -43,6 +43,9 @@ module.exports = (bookshelf) => {
 		},
 		publicationType() {
 			return this.belongsTo('PublicationType', 'type_id');
+		},
+		editions() {
+			return this.hasMany('Edition', 'publication_bbid');
 		}
 	});
 
