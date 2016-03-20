@@ -58,7 +58,7 @@ module.exports = (bookshelf) => {
 		},
 		releaseEvents() {
 			return this.belongsToMany(
-				'ReleaseEvent', 'bookbrainz.release_event__edition_data',
+				'ReleaseEvent', 'bookbrainz.edition_data__release_event',
 				'edition_data_id', 'release_event_id'
 			);
 		},
