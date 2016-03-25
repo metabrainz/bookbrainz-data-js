@@ -41,7 +41,7 @@ module.exports = (bookshelf) => {
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships',
 				'relationshipSet.relationships.type',
-				'identifierSet.identifiers.type', 'type'
+				'identifierSet.identifiers.type', 'publisherType'
 			]);
 		},
 		parent() {

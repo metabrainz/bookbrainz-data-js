@@ -40,7 +40,7 @@ module.exports = (bookshelf) => {
 				'annotation', 'disambiguation', 'aliasSet.aliases',
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships',
-				'relationshipSet.relationships.type', 'gender', 'type',
+				'relationshipSet.relationships.type', 'gender', 'creatorType',
 				'identifierSet.identifiers.type'
 			]);
 		},
