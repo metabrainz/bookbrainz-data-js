@@ -46,7 +46,10 @@ module.exports = (bookshelf) => {
 		},
 		editions() {
 			return this.belongsToMany(
-				'Edition', 'bookbrainz.edition_data__publisher', 'publisher_bbid', 'publisher_bbid'
+				'Edition',
+				'bookbrainz.edition_data__publisher',
+				'publisher_bbid',
+				'publisher_bbid'
 			);
 		},
 		virtuals: {

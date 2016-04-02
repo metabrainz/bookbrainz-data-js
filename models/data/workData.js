@@ -43,7 +43,10 @@ module.exports = (bookshelf) => {
 		},
 		languages() {
 			return this.belongsToMany(
-				'Language', 'bookbrainz.work_data__language', 'data_id', 'language_id'
+				'Language',
+				'bookbrainz.work_data__language',
+				'data_id',
+				'language_id'
 			);
 		},
 		workType() {
