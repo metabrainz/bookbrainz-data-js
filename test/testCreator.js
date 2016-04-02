@@ -115,7 +115,7 @@ describe('Creator model', () => {
 			.then((creator) => creator.toJSON());
 
 		return expect(creatorPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId',
+			'bbid', 'revisionId', 'annotationId', 'dataId',
 			'disambiguationId', 'defaultAliasId', 'beginYear', 'beginMonth',
 			'beginDay', 'beginAreaId', 'endYear', 'endMonth', 'endDay',
 			'endAreaId', 'ended', 'areaId', 'genderId', 'typeId', 'aliasSetId',

@@ -116,7 +116,7 @@ describe('Publication model', () => {
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId',
+			'bbid', 'revisionId', 'annotationId', 'dataId',
 			'disambiguationId', 'defaultAliasId', 'typeId', 'aliasSetId',
 			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
 			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation'
