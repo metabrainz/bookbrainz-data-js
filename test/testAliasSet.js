@@ -63,7 +63,9 @@ describe('AliasSet model', () => {
 		return new Language(languageAttribs).save(null, {method: 'insert'});
 	});
 
-	afterEach(() => {
+	afterEach(function truncate() {
+		this.timeout(0);
+
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.alias_set',
 			'bookbrainz.alias',

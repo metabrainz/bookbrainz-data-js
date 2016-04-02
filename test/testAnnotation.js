@@ -60,7 +60,9 @@ describe('Annotation model', () => {
 			);
 	});
 
-	afterEach(() => {
+	afterEach(function truncate() {
+		this.timeout(0);
+
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.annotation',
 			'bookbrainz.editor',

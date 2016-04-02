@@ -89,7 +89,9 @@ describe('EditionRevision model', () => {
 			);
 	});
 
-	afterEach(() => {
+	afterEach(function truncate() {
+		this.timeout(0);
+
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.annotation',
 			'bookbrainz.disambiguation',

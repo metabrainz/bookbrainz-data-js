@@ -48,7 +48,9 @@ describe('Revision model', () => {
 			);
 	});
 
-	afterEach(() => {
+	afterEach(function truncate() {
+		this.timeout(0);
+
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.revision',
 			'bookbrainz.editor',

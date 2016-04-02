@@ -66,7 +66,9 @@ describe('Work model', () => {
 			);
 	});
 
-	afterEach(() => {
+	afterEach(function truncate() {
+		this.timeout(0);
+
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.entity',
 			'bookbrainz.revision',
