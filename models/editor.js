@@ -54,6 +54,10 @@ module.exports = (bookshelf) => {
 		},
 		checkPassword(password) {
 			return bcrypt.compareAsync(password, this.get('password'));
+		},
+		incrementEditCount() {
+			this.set('totalRevisions', this.get('totalRevisions') + 1);
+			this.set('revisionsApplied', this.get('revisionsApplied') + 1);
 		}
 	});
 
