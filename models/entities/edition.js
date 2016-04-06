@@ -31,6 +31,14 @@ module.exports = (bookshelf) => {
 					options.query.where({master: true});
 				}
 			});
+
+			this.on('updating', (model, attrs, options) => {
+				// Always update the master revision.
+				options.query.where({master: true});
+			});
+		},
+		data() {
+			return this.belongsTo('EditionData', 'data_id');
 		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
