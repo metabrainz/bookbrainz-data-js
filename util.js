@@ -147,6 +147,10 @@ module.exports.formatDate = (year, month, day) => {
 
 
 module.exports.parseDate = (date) => {
+	if (!date) {
+		return [null, null, null];
+	}
+
 	const parts = date.split('-');
 	if (parts.length === 3) {
 		return parts.map((part) => parseInt(part, 10));
