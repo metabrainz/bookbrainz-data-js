@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015-2016  Ben Ockmore
+ *           (C) 2016       Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,12 +43,7 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
 		languages() {
-			return this.belongsToMany(
-				'Language',
-				'bookbrainz.work_data__language',
-				'data_id',
-				'language_id'
-			);
+			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
 		workType() {
 			return this.belongsTo('WorkType', 'type_id');
