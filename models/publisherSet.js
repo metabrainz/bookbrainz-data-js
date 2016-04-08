@@ -26,7 +26,7 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		relationships() {
+		publishers() {
 			return this.belongsToMany(
 				'Publisher', 'bookbrainz.publisher_set__publisher',
 				'set_id', 'publisher_bbid'

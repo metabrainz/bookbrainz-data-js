@@ -42,7 +42,7 @@ module.exports = (bookshelf) => {
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
-		languages() {
+		languageSet() {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
 		workType() {

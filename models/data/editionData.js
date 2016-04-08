@@ -45,7 +45,7 @@ module.exports = (bookshelf) => {
 		publication() {
 			return this.belongsTo('Publication', 'publication_bbid');
 		},
-		publishers() {
+		publisherSet() {
 			return this.belongsTo('Publisher', 'publisher_set_id');
 		},
 		editionStatus() {
@@ -54,10 +54,10 @@ module.exports = (bookshelf) => {
 		editionFormat() {
 			return this.belongsTo('EditionFormat', 'format_id');
 		},
-		releaseEvents() {
+		releaseEventSet() {
 			return this.belongsTo('ReleaseEventSet', 'release_event_set_id');
 		},
-		languages() {
+		languageSet() {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		}
 	});
