@@ -37,9 +37,6 @@ module.exports = (bookshelf) => {
 				options.query.where({master: true});
 			});
 		},
-		data() {
-			return this.belongsTo('WorkData', 'data_id');
-		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
