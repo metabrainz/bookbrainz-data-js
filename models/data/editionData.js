@@ -46,7 +46,7 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('Publication', 'publication_bbid');
 		},
 		publisherSet() {
-			return this.belongsTo('Publisher', 'publisher_set_id');
+			return this.belongsTo('PublisherSet', 'publisher_set_id');
 		},
 		editionStatus() {
 			return this.belongsTo('EditionStatus', 'status_id');
