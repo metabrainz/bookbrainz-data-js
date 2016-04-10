@@ -40,9 +40,10 @@ module.exports = (bookshelf) => {
 				'annotation', 'disambiguation', 'aliasSet.aliases',
 				'aliasSet.defaultAlias',
 				'relationshipSet.relationships',
-				'relationshipSet.relationships.type', 'publishers',
+				'relationshipSet.relationships.type', 'publisherSet.publishers',
 				'publication', 'editionFormat', 'editionStatus',
-				'releaseEvents', 'identifierSet.identifiers.type', 'languages'
+				'releaseEventSet.releaseEvents', 'languageSet.languages',
+				'identifierSet.identifiers.type'
 			]);
 		},
 		parent() {
