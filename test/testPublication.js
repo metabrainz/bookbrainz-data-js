@@ -116,10 +116,10 @@ describe('Publication model', () => {
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId',
-			'disambiguationId', 'defaultAliasId', 'typeId', 'aliasSetId',
-			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
-			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation'
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
+			'defaultAliasId', 'disambiguation', 'disambiguationId',
+			'identifierSet', 'identifierSetId', 'master', 'relationshipSet',
+			'relationshipSetId', 'revisionId', 'type', 'typeId'
 		]);
 	});
 

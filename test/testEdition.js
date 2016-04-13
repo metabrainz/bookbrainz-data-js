@@ -118,12 +118,12 @@ describe('Edition model', () => {
 			.then((edition) => edition.toJSON());
 
 		return expect(editionPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId', 'disambiguationId',
-			'defaultAliasId', 'publicationBbid', 'creatorCreditId', 'width',
-			'height', 'depth', 'weight', 'pages', 'formatId', 'statusId',
-			'aliasSetId', 'identifierSetId', 'relationshipSetId', 'aliasSet',
-			'identifierSet', 'relationshipSet', 'master', 'type', 'annotation',
-			'disambiguation'
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
+			'creatorCreditId', 'defaultAliasId', 'depth', 'disambiguation',
+			'disambiguationId', 'formatId', 'height', 'identifierSet',
+			'identifierSetId', 'master', 'pages', 'publicationBbid',
+			'relationshipSet', 'relationshipSetId', 'revisionId', 'statusId',
+			'type', 'weight', 'width'
 		]);
 	});
 

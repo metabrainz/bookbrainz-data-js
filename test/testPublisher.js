@@ -115,13 +115,12 @@ describe('Publisher model', () => {
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId',
-			'disambiguationId', 'defaultAliasId', 'beginYear', 'beginMonth',
-			'beginDay', 'endYear', 'endMonth', 'endDay', 'ended',
-			'areaId', 'typeId', 'aliasSetId',
-			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
-			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation',
-			'beginDate', 'endDate'
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'areaId',
+			'bbid', 'beginDate', 'beginDay', 'beginMonth', 'beginYear',
+			'defaultAliasId', 'disambiguation', 'disambiguationId', 'endDate',
+			'endDay', 'endMonth', 'endYear', 'ended', 'identifierSetId',
+			'identifierSet', 'master', 'relationshipSet', 'relationshipSetId',
+			'revisionId', 'type', 'typeId'
 		]);
 	});
 

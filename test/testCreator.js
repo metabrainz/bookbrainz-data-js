@@ -115,13 +115,13 @@ describe('Creator model', () => {
 			.then((creator) => creator.toJSON());
 
 		return expect(creatorPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId',
-			'disambiguationId', 'defaultAliasId', 'beginYear', 'beginMonth',
-			'beginDay', 'beginAreaId', 'endYear', 'endMonth', 'endDay',
-			'endAreaId', 'ended', 'areaId', 'genderId', 'typeId', 'aliasSetId',
-			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
-			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation',
-			'beginDate', 'endDate'
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'areaId',
+			'bbid', 'beginAreaId', 'beginDate', 'beginDay', 'beginMonth',
+			'beginYear', 'defaultAliasId', 'disambiguation', 'disambiguationId',
+			'endAreaId', 'endDate', 'endDay', 'endMonth', 'endYear', 'ended',
+			'genderId', 'identifierSet', 'identifierSetId', 'master',
+			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
+			'typeId'
 		]);
 	});
 
