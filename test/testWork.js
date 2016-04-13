@@ -115,7 +115,7 @@ describe('Work model', () => {
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId', 'dataId',
+			'bbid', 'revisionId', 'annotationId',
 			'disambiguationId', 'defaultAliasId', 'typeId', 'aliasSetId',
 			'identifierSetId', 'relationshipSetId', 'aliasSet', 'identifierSet',
 			'relationshipSet', 'master', 'type', 'annotation', 'disambiguation'

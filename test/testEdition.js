@@ -118,7 +118,7 @@ describe('Edition model', () => {
 			.then((edition) => edition.toJSON());
 
 		return expect(editionPromise).to.eventually.have.all.keys([
-			'bbid', 'revisionId', 'annotationId', 'disambiguationId', 'dataId',
+			'bbid', 'revisionId', 'annotationId', 'disambiguationId',
 			'defaultAliasId', 'publicationBbid', 'creatorCreditId', 'width',
 			'height', 'depth', 'weight', 'pages', 'formatId', 'statusId',
 			'aliasSetId', 'identifierSetId', 'relationshipSetId', 'aliasSet',
