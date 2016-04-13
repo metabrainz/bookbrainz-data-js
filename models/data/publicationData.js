@@ -45,7 +45,8 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('PublicationType', 'type_id');
 		},
 		editions() {
-			return this.hasMany('Edition', 'publication_bbid');
+			return this.hasMany('Edition', 'publication_bbid')
+				.query({where: {master: true}});
 		}
 	});
 
