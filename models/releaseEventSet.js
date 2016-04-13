@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2016  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,37 +18,21 @@
 
 'use strict';
 
-const util = require('../../util');
+const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const PublicationData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.publication_data',
+	const ReleaseEventSet = bookshelf.Model.extend({
+		tableName: 'bookbrainz.release_event_set',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
-		annotation() {
-			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		disambiguation() {
-			return this.belongsTo('Disambiguation', 'disambiguation_id');
-		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
-		},
-		identifierSet() {
-			return this.belongsTo('IdentifierSet', 'identifier_set_id');
-		},
-		publicationType() {
-			return this.belongsTo('PublicationType', 'type_id');
-		},
-		editions() {
-			return this.hasMany('Edition', 'publication_bbid')
-				.query({where: {master: true}});
+		releaseEvents() {
+			return this.belongsToMany(
+				'ReleaseEvent', 'bookbrainz.release_event_set__release_event',
+				'set_id', 'release_event_id'
+			);
 		}
 	});
 
-	return bookshelf.model('PublicationData', PublicationData);
+	return bookshelf.model('ReleaseEventSet', ReleaseEventSet);
 };

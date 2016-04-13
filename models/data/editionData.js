@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015-2016  Ben Ockmore
+ *           (C) 2016       Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,11 +45,8 @@ module.exports = (bookshelf) => {
 		publication() {
 			return this.belongsTo('Publication', 'publication_bbid');
 		},
-		publishers() {
-			return this.belongsToMany(
-				'Publisher', 'bookbrainz.edition_data__publisher', 'data_id',
-				'publisher_bbid'
-			);
+		publisherSet() {
+			return this.belongsTo('PublisherSet', 'publisher_set_id');
 		},
 		editionStatus() {
 			return this.belongsTo('EditionStatus', 'status_id');
@@ -56,17 +54,11 @@ module.exports = (bookshelf) => {
 		editionFormat() {
 			return this.belongsTo('EditionFormat', 'format_id');
 		},
-		releaseEvents() {
-			return this.belongsToMany(
-				'ReleaseEvent', 'bookbrainz.edition_data__release_event',
-				'edition_data_id', 'release_event_id'
-			);
+		releaseEventSet() {
+			return this.belongsTo('ReleaseEventSet', 'release_event_set_id');
 		},
-		languages() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.edition_data__language',
-				'data_id', 'language_id'
-			);
+		languageSet() {
+			return this.belongsTo('LanguageSet', 'language_set_id');
 		}
 	});
 

@@ -44,13 +44,27 @@ module.exports = (bookshelf) => {
 		publisherType() {
 			return this.belongsTo('PublisherType', 'type_id');
 		},
-		editions() {
-			return this.belongsToMany(
-				'Edition',
-				'bookbrainz.edition_data__publisher',
-				'publisher_bbid',
-				'publisher_bbid'
-			);
+		editions(options) {
+			const Edition = bookshelf.model('Edition');
+			const bbid = this.get('bbid');
+			return Edition.query((qb) => {
+				qb
+					.leftJoin(
+						'bookbrainz.publisher_set',
+						'bookbrainz.edition.publisher_set_id',
+						'bookbrainz.publisher_set.id'
+					)
+					.rightJoin(
+						'bookbrainz.publisher_set__publisher',
+						'bookbrainz.publisher_set.id',
+						'bookbrainz.publisher_set__publisher.set_id'
+					)
+					.where({
+						'bookbrainz.edition.master': true,
+						'bookbrainz.publisher_set__publisher.publisher_bbid':
+							bbid
+					});
+			}).fetchAll(options);
 		},
 		virtuals: {
 			beginDate: {
