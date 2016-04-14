@@ -117,11 +117,11 @@ describe('Creator model', () => {
 		return expect(creatorPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'areaId',
 			'bbid', 'beginAreaId', 'beginDate', 'beginDay', 'beginMonth',
-			'beginYear', 'defaultAliasId', 'disambiguation', 'disambiguationId',
-			'endAreaId', 'endDate', 'endDay', 'endMonth', 'endYear', 'ended',
-			'genderId', 'identifierSet', 'identifierSetId', 'master',
-			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId'
+			'beginYear', 'dataId', 'defaultAliasId', 'disambiguation',
+			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
+			'endYear', 'ended', 'genderId', 'identifierSet', 'identifierSetId',
+			'master', 'relationshipSet', 'relationshipSetId', 'revisionId',
+			'type', 'typeId'
 		]);
 	});
 

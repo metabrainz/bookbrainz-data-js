@@ -117,10 +117,10 @@ describe('Publisher model', () => {
 		return expect(entityPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'areaId',
 			'bbid', 'beginDate', 'beginDay', 'beginMonth', 'beginYear',
-			'defaultAliasId', 'disambiguation', 'disambiguationId', 'endDate',
-			'endDay', 'endMonth', 'endYear', 'ended', 'identifierSetId',
-			'identifierSet', 'master', 'relationshipSet', 'relationshipSetId',
-			'revisionId', 'type', 'typeId'
+			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
+			'endDate', 'endDay', 'endMonth', 'endYear', 'ended',
+			'identifierSetId', 'identifierSet', 'master', 'relationshipSet',
+			'relationshipSetId', 'revisionId', 'type', 'typeId'
 		]);
 	});
 

@@ -119,11 +119,11 @@ describe('Edition model', () => {
 
 		return expect(editionPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'defaultAliasId', 'depth', 'disambiguation',
-			'disambiguationId', 'formatId', 'height', 'identifierSet',
-			'identifierSetId', 'master', 'pages', 'publicationBbid',
-			'relationshipSet', 'relationshipSetId', 'revisionId', 'statusId',
-			'type', 'weight', 'width'
+			'creatorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'disambiguation', 'disambiguationId', 'formatId', 'height',
+			'identifierSet', 'identifierSetId', 'master', 'pages',
+			'publicationBbid', 'relationshipSet', 'relationshipSetId',
+			'revisionId', 'statusId', 'type', 'weight', 'width'
 		]);
 	});
 
