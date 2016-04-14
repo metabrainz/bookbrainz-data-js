@@ -121,9 +121,10 @@ describe('Edition model', () => {
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
 			'creatorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
-			'identifierSet', 'identifierSetId', 'master', 'pages',
-			'publicationBbid', 'relationshipSet', 'relationshipSetId',
-			'revisionId', 'statusId', 'type', 'weight', 'width'
+			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
+			'pages', 'publicationBbid', 'publisherSetId', 'relationshipSet',
+			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
+			'type', 'weight', 'width'
 		]);
 	});
 
