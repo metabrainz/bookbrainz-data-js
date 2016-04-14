@@ -27,7 +27,7 @@ const Promise = require('bluebird');
 
 const util = require('../util');
 const Bookshelf = require('./bookshelf');
-const Publication = require('../index').Work;
+const Publication = require('../index').Publication;
 const Revision = require('../index').Revision;
 const Gender = require('../index').Gender;
 const EditorType = require('../index').EditorType;
