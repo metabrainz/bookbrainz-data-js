@@ -70,8 +70,7 @@ describe('Revision model', () => {
 			.then((revision) => revision.toJSON());
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
-			'id', 'author', 'authorId', 'createdAt', 'parents', 'children',
-			'type'
+			'id', 'author', 'authorId', 'createdAt', 'parents', 'children'
 		]);
 	});
 });
