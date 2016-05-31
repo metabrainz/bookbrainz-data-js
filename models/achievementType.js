@@ -7,7 +7,7 @@ module.exports = (bookshelf) => {
 		tableName: 'bookbrainz.achievement_type',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		format: util.camelToSnake
 	});
 
 	return bookshelf.model('AchievementType', AchievementType);
