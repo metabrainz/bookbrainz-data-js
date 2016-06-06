@@ -62,7 +62,8 @@ describe('AchievementUnlock model', () => {
 
 		return util.truncateTables(Bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',
-			'bookbrainz.editor', 'bookbrainz.achievement_unlock'
+			'bookbrainz.editor', 'bookbrainz.achievement_unlock',
+			'bookbrainz.achievement_type'
 		]);
 	});
 
