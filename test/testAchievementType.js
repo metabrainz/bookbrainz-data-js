@@ -33,10 +33,13 @@ describe('AchievementType model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const achievementTypePromise = new AchievementType({id: 1, name: 'test achievement', description: 'test achievement', badgeUrl: 'http://test.com'})
-			.save()
+		const achievementTypePromise = new AchievementType({id: 1,
+			name: 'test achievement',
+			description: 'test achievement',
+			badgeUrl: 'http://test.com'})
+			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
-			.then((achievementType) => achievementType.ToJSON());
+			.then((achievementType) => achievementType.toJSON());
 
 		return expect(achievementTypePromise).to.eventually.have.all.keys([
 			'id', 'name', 'description', 'badgeUrl'
