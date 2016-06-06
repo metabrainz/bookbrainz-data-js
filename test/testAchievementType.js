@@ -29,17 +29,17 @@ const AchievementType = require('../index').AchievementType;
 
 describe('AchievementType model', () => {
 	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.AchievementType']);
+		return util.truncateTables(Bookshelf, ['bookbrainz.achievement_type']);
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const achievementTypePromise = new AchievementType({name: 'Test'})
-			.save(null, {method: 'insert'})
+		const achievementTypePromise = new AchievementType({id: 1, name: 'test achievement', description: 'test achievement', badgeUrl: 'http://test.com'})
+			.save()
 			.then((model) => model.refresh())
 			.then((achievementType) => achievementType.ToJSON());
 
 		return expect(achievementTypePromise).to.eventually.have.all.keys([
-			'id', 'name', 'description', 'badge_url'
+			'id', 'name', 'description', 'badgeUrl'
 		]);
 	});
 });
