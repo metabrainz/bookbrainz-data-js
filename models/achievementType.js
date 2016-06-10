@@ -7,7 +7,10 @@ module.exports = (bookshelf) => {
 		tableName: 'bookbrainz.achievement_type',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		achievementUnlocks() {
+			return this.hasMany('AchievementUnlock', 'achievement_id');
+		}
 	});
 
 	return bookshelf.model('AchievementType', AchievementType);
