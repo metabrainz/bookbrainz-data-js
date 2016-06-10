@@ -12,7 +12,7 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('Editor', 'editor_id');
 		},
 		achievement() {
-			return this.belongsTo('AchievementType', 'achievment_id');
+			return this.belongsTo('AchievementType', 'achievement_id');
 		}
 	});
 
