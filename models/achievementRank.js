@@ -3,7 +3,7 @@
 const util = require('../util');
 
 module.exports = (bookshelf) => {
-	const AchievementRank = bookshelf.model.extend({
+	const AchievementRank = bookshelf.Model.extend({
 		tableName: 'bookbrainz.achievement_rank',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
