@@ -75,7 +75,7 @@ describe('AchievementUnlock model', () => {
 			.then((unlock) => unlock.toJSON());
 
 		return expect(unlockPromise).to.eventually.have.all.keys([
-			'id', 'editorId', 'achievementId', 'unlockedAt'
+			'id', 'editorId', 'achievementId', 'unlockedAt', 'profileRank'
 		]);
 	});
 });
