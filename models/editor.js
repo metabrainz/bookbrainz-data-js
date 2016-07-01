@@ -52,6 +52,9 @@ module.exports = (bookshelf) => {
 		revisions() {
 			return this.hasMany('Revision', 'author_id');
 		},
+		achievements() {
+			return this.hasMany('AchievementType').through('AchievementUnlock');
+		},
 		checkPassword(password) {
 			return bcrypt.compareAsync(password, this.get('password'));
 		},

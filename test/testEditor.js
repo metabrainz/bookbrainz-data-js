@@ -103,7 +103,7 @@ describe('Editor model', () => {
 			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
 			'areaId', 'password', 'revisionsApplied', 'revisionsReverted',
-			'totalRevisions', 'type', 'revisions'
+			'totalRevisions', 'type', 'revisions', 'titleUnlockId'
 		]);
 	});
 
