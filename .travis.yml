@@ -17,6 +17,7 @@ notifications:
       - "chat.freenode.net#metabrainz"
     on_success: change
     on_failure: always
+    skip_join: true
     template:
       - "Project %{repository_name} build #%{build_number}: %{result} in %{elapsed_time}: %{build_url}"
 
