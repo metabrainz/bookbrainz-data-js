@@ -100,7 +100,8 @@ describe('Editor model', () => {
 			'id', 'name', 'reputation', 'bio', 'birthDate',
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
 			'areaId', 'password', 'revisionsApplied', 'revisionsReverted',
-			'totalRevisions', 'type', 'revisions', 'metabrainzUserId'
+			'totalRevisions', 'type', 'revisions', 'metabrainzUserId',
+			'cachedMetabrainzName'
 		]);
 	});
 
