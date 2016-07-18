@@ -33,7 +33,7 @@ const Revision = require('../index').Revision;
 
 const editorTypeAttribs = {id: 1, label: 'test_type'};
 const editorAttribs = {
-	id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
+	id: 1, name: 'bob', password: 'test',
 	genderId: 1, typeId: 1
 };
 

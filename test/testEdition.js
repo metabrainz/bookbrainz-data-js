@@ -40,8 +40,8 @@ const RelationshipSet = require('../index').RelationshipSet;
 
 const genderData = {id: 1, name: 'test'};
 const editorTypeData = {id: 1, label: 'test_type'};
-const editorData = {
-	id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
+const editorAttribs = {
+	id: 1, name: 'bob', password: 'test',
 	genderId: 1, typeId: 1
 };
 const setData = {id: 1};
@@ -53,7 +53,7 @@ describe('Edition model', () => {
 				new EditorType(editorTypeData).save(null, {method: 'insert'})
 			)
 			.then(() =>
-				new Editor(editorData).save(null, {method: 'insert'})
+				new Editor(editorAttribs).save(null, {method: 'insert'})
 			)
 			.then(() =>
 				Promise.all([

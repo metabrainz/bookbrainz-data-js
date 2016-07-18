@@ -43,7 +43,7 @@ const data = {
 	gender: {id: 1, name: 'test'},
 	editorType: {id: 1, label: 'test_type'},
 	editor: {
-		id: 1, name: 'bob', email: 'bob@test.org', password: 'test',
+		id: 1, name: 'bob', password: 'test',
 		genderId: 1, typeId: 1
 	},
 	set: {id: 1},

@@ -44,11 +44,8 @@ const editorTypeAttribs = {
 };
 
 const editorAttribs = {
-	id: 1,
-	name: 'bob',
-	email: 'bob@test.org',
-	password: 'test',
-	typeId: 1
+	id: 1, name: 'bob', password: 'test',
+	genderId: 1, typeId: 1
 };
 
 const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
@@ -100,10 +97,11 @@ describe('Editor model', () => {
 			.then((editor) => editor.toJSON());
 
 		return expect(editorPromise).to.eventually.have.all.keys([
-			'id', 'name', 'email', 'reputation', 'bio', 'birthDate',
+			'id', 'name', 'reputation', 'bio', 'birthDate',
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
 			'areaId', 'password', 'revisionsApplied', 'revisionsReverted',
-			'totalRevisions', 'type', 'revisions', 'titleUnlockId'
+			'totalRevisions', 'type', 'revisions', 'titleUnlockId',
+			'metabrainzUserId', 'cachedMetabrainzName'
 		]);
 	});
 
