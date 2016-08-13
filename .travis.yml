@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-  - "stable"
-  - "4.1"
-  - "4.0"
+  - "node"
+  - "6"
+  - "4"
 
 notifications:
   email: false
@@ -45,3 +45,7 @@ addons:
       - g++-4.8
   code_climate:
     repo_token: 8547e9682c4141e5760860284de84ac38c7a7ad047b347b020a8487bb831fea8
+
+branches:
+  only:
+    - master
