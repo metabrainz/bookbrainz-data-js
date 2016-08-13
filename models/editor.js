@@ -29,15 +29,16 @@ module.exports = (bookshelf) => {
 		idAttribute: 'id',
 		initialize() {
 			this.on('saving', (model) => {
-				if (model.hasChanged('password')) {
-					return bcrypt.genSaltAsync(10)
-						.then((salt) =>
-							bcrypt.hashAsync(model.get('password'), salt)
-						)
-						.then((hash) => {
-							model.set('password', hash);
-						});
+				if (!model.hasChanged('password')) {
+					return null;
 				}
+				return bcrypt.genSaltAsync(10)
+					.then((salt) =>
+						bcrypt.hashAsync(model.get('password'), salt)
+					)
+					.then((hash) => {
+						model.set('password', hash);
+					});
 			});
 		},
 		parse: util.snakeToCamel,
