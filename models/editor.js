@@ -52,6 +52,9 @@ module.exports = (bookshelf) => {
 		revisions() {
 			return this.hasMany('Revision', 'author_id');
 		},
+		titleUnlock() {
+			return this.belongsTo('TitleUnlock', 'title_unlock_id');
+		},
 		achievements() {
 			return this.hasMany('AchievementType').through('AchievementUnlock');
 		},
