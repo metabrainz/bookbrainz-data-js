@@ -38,7 +38,7 @@
   "dependencies": {
     "bcrypt": "^0.8.6",
     "bluebird": "^3.4.1",
-    "bookshelf": "^0.9.5",
+    "bookshelf": "^0.10.0",
     "deep-diff": "^0.3.4",
     "glob": "^7.0.0",
     "knex": "^0.10.0",
