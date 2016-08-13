@@ -38,17 +38,32 @@ const IdentifierSet = require('../index').IdentifierSet;
 const RelationshipSet = require('../index').RelationshipSet;
 const Publisher = require('../index').Publisher;
 
-const genderData = {id: 1, name: 'test'};
-const editorTypeData = {id: 1, label: 'test_type'};
+const genderData = {
+	id: 1,
+	name: 'test'
+};
+const editorTypeData = {
+	id: 1,
+	label: 'test_type'
+};
 const editorData = {
-	id: 1, name: 'bob', password: 'test',
-	genderId: 1, typeId: 1
+	id: 1,
+	name: 'bob',
+	password: 'test',
+	genderId: 1,
+	typeId: 1
 };
 const setData = {id: 1};
-const revisionAttribs = {id: 1, authorId: 1};
+const revisionAttribs = {
+	id: 1,
+	authorId: 1
+};
 const publisherAttribs = {
-	revisionId: 1, aliasSetId: 1, identifierSetId: 1,
-	relationshipSetId: 1, annotationId: 1,
+	revisionId: 1,
+	aliasSetId: 1,
+	identifierSetId: 1,
+	relationshipSetId: 1,
+	annotationId: 1,
 	disambiguationId: 1
 };
 
@@ -66,7 +81,10 @@ describe('EditorEntityVisits model', () => {
 					new AliasSet(setData).save(null, {method: 'insert'}),
 					new IdentifierSet(setData).save(null, {method: 'insert'}),
 					new RelationshipSet(setData).save(null, {method: 'insert'}),
-					new Disambiguation({id: 1, comment: 'Test Disambiguation'})
+					new Disambiguation({
+						id: 1,
+						comment: 'Test Disambiguation'
+					})
 						.save(null, {method: 'insert'})
 				])
 			)
@@ -75,7 +93,9 @@ describe('EditorEntityVisits model', () => {
 			)
 			.then(() =>
 				new Annotation({
-					id: 1, content: 'Test Annotation', lastRevisionId: 1
+					id: 1,
+					content: 'Test Annotation',
+					lastRevisionId: 1
 				})
 					.save(null, {method: 'insert'}))
 			.then(() =>

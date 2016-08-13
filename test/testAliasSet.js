@@ -40,7 +40,10 @@ const aliasAttribs = {
 };
 
 function createAliasSet(defaultAlias, aliases) {
-	return new AliasSet({id: 1, defaultAliasId: defaultAlias.get('id')})
+	return new AliasSet({
+		id: 1,
+		defaultAliasId: defaultAlias.get('id')
+	})
 		.save(null, {method: 'insert'})
 		.then((model) =>
 			model.aliases().attach(aliases)

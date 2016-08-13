@@ -32,18 +32,29 @@ const Gender = require('../index').Gender;
 const AchievementUnlock = require('../index').AchievementUnlock;
 
 describe('AchievementUnlock model', () => {
-	const editorTypeAttribs = {id: 1, label: 'test_type'};
+	const editorTypeAttribs = {
+		id: 1,
+		label: 'test_type'
+	};
 	const editorAttribs = {
-		id: 1, name: 'bob', password: 'test',
-		genderId: 1, typeId: 1
+		id: 1,
+		name: 'bob',
+		password: 'test',
+		genderId: 1,
+		typeId: 1
 	};
 	const AchievementTypeAttribs = {
-		id: 1, name: 'test_type', description: 'test_desc',
+		id: 1,
+		name: 'test_type',
+		description: 'test_desc',
 		badgeUrl: 'http://test.com/'
 	};
 
 	beforeEach(() => {
-		return new Gender({id: 1, name: 'test'})
+		return new Gender({
+			id: 1,
+			name: 'test'
+		})
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
@@ -68,8 +79,11 @@ describe('AchievementUnlock model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const unlockPromise = new AchievementUnlock({id: 1, editorId: 1,
-			achievementId: 1})
+		const unlockPromise = new AchievementUnlock({
+			id: 1,
+			editorId: 1,
+			achievementId: 1
+		})
 			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
 			.then((unlock) => unlock.toJSON());

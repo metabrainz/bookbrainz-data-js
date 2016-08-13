@@ -40,22 +40,44 @@ const IdentifierSet = require('../index').IdentifierSet;
 const RelationshipSet = require('../index').RelationshipSet;
 
 const data = {
-	gender: {id: 1, name: 'test'},
-	editorType: {id: 1, label: 'test_type'},
+	gender: {
+		id: 1,
+		name: 'test'
+	},
+	editorType: {
+		id: 1,
+		label: 'test_type'
+	},
 	editor: {
-		id: 1, name: 'bob', password: 'test',
-		genderId: 1, typeId: 1
+		id: 1,
+		name: 'bob',
+		password: 'test',
+		genderId: 1,
+		typeId: 1
 	},
 	set: {id: 1},
-	revision: {id: 1, authorId: 1},
+	revision: {
+		id: 1,
+		authorId: 1
+	},
 	edition: {
 		bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
-		revisionId: 1, aliasSetId: 1, identifierSetId: 1,
-		relationshipSetId: 1, annotationId: 1,
+		revisionId: 1,
+		aliasSetId: 1,
+		identifierSetId: 1,
+		relationshipSetId: 1,
+		annotationId: 1,
 		disambiguationId: 1
 	},
-	disambiguation: {id: 1, comment: 'Test Disambiguation'},
-	annotation: {id: 1, content: 'Test Annotation', lastRevisionId: 1}
+	disambiguation: {
+		id: 1,
+		comment: 'Test Disambiguation'
+	},
+	annotation: {
+		id: 1,
+		content: 'Test Annotation',
+		lastRevisionId: 1
+	}
 };
 
 describe('EditionRevision model', () => {

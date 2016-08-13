@@ -34,17 +34,28 @@ const Gender = require('../index').Gender;
 
 
 describe('TitleUnlock model', () => {
-	const editorTypeAttribs = {id: 1, label: 'test_type'};
+	const editorTypeAttribs = {
+		id: 1,
+		label: 'test_type'
+	};
 	const editorAttribs = {
-		id: 1, name: 'bob', password: 'test',
-		genderId: 1, typeId: 1
+		id: 1,
+		name: 'bob',
+		password: 'test',
+		genderId: 1,
+		typeId: 1
 	};
 	const titleTypeAttribs = {
-		id: 1, title: 'test_title', description: 'test_desc'
+		id: 1,
+		title: 'test_title',
+		description: 'test_desc'
 	};
 
 	beforeEach(() => {
-		return new Gender({id: 1, name: 'test'})
+		return new Gender({
+			id: 1,
+			name: 'test'
+		})
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
@@ -69,8 +80,11 @@ describe('TitleUnlock model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const unlockPromise = new TitleUnlock({id: 1, editorId: 1,
-			titleId: 1})
+		const unlockPromise = new TitleUnlock({
+			id: 1,
+			editorId: 1,
+			titleId: 1
+		})
 			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
 			.then((unlock) => unlock.toJSON());

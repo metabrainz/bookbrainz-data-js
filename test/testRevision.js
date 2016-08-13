@@ -31,14 +31,23 @@ const Gender = require('../index').Gender;
 const Revision = require('../index').Revision;
 
 describe('Revision model', () => {
-	const editorTypeAttribs = {id: 1, label: 'test_type'};
+	const editorTypeAttribs = {
+		id: 1,
+		label: 'test_type'
+	};
 	const editorAttribs = {
-		id: 1, name: 'bob', password: 'test',
-		genderId: 1, typeId: 1
+		id: 1,
+		name: 'bob',
+		password: 'test',
+		genderId: 1,
+		typeId: 1
 	};
 
 	beforeEach(() => {
-		return new Gender({id: 1, name: 'test'})
+		return new Gender({
+			id: 1,
+			name: 'test'
+		})
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
@@ -60,7 +69,10 @@ describe('Revision model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const revisionAttribs = {id: 1, authorId: 1};
+		const revisionAttribs = {
+			id: 1,
+			authorId: 1
+		};
 		const relatedToLoad = ['author', 'parents', 'children'];
 		const revisionPromise = new Revision(revisionAttribs)
 			.save(null, {method: 'insert'})

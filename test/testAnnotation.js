@@ -31,10 +31,16 @@ const Gender = require('../index').Gender;
 const Annotation = require('../index').Annotation;
 const Revision = require('../index').Revision;
 
-const editorTypeAttribs = {id: 1, label: 'test_type'};
+const editorTypeAttribs = {
+	id: 1,
+	label: 'test_type'
+};
 const editorAttribs = {
-	id: 1, name: 'bob', password: 'test',
-	genderId: 1, typeId: 1
+	id: 1,
+	name: 'bob',
+	password: 'test',
+	genderId: 1,
+	typeId: 1
 };
 
 function createAnnotation(lastRevisionId) {
@@ -51,7 +57,10 @@ function createAnnotation(lastRevisionId) {
 
 describe('Annotation model', () => {
 	beforeEach(() => {
-		return new Gender({id: 1, name: 'test'}).save(null, {method: 'insert'})
+		return new Gender({
+			id: 1,
+			name: 'test'
+		}).save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
 			)
@@ -72,7 +81,10 @@ describe('Annotation model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const revisionAttribs = {id: 1, authorId: 1};
+		const revisionAttribs = {
+			id: 1,
+			authorId: 1
+		};
 
 		const revisionPromise = new Revision(revisionAttribs)
 			.save(null, {method: 'insert'})

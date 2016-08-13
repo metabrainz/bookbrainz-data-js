@@ -38,11 +38,20 @@ const AliasSet = require('../index').AliasSet;
 const IdentifierSet = require('../index').IdentifierSet;
 const RelationshipSet = require('../index').RelationshipSet;
 
-const genderData = {id: 1, name: 'test'};
-const editorTypeData = {id: 1, label: 'test_type'};
+const genderData = {
+	id: 1,
+	name: 'test'
+};
+const editorTypeData = {
+	id: 1,
+	label: 'test_type'
+};
 const editorAttribs = {
-	id: 1, name: 'bob', password: 'test',
-	genderId: 1, typeId: 1
+	id: 1,
+	name: 'bob',
+	password: 'test',
+	genderId: 1,
+	typeId: 1
 };
 const setData = {id: 1};
 
@@ -60,7 +69,10 @@ describe('Edition model', () => {
 					new AliasSet(setData).save(null, {method: 'insert'}),
 					new IdentifierSet(setData).save(null, {method: 'insert'}),
 					new RelationshipSet(setData).save(null, {method: 'insert'}),
-					new Disambiguation({id: 1, comment: 'Test Disambiguation'})
+					new Disambiguation({
+						id: 1,
+						comment: 'Test Disambiguation'
+					})
 						.save(null, {method: 'insert'})
 				])
 			);
@@ -87,10 +99,16 @@ describe('Edition model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const revisionAttribs = {id: 1, authorId: 1};
+		const revisionAttribs = {
+			id: 1,
+			authorId: 1
+		};
 		const editionAttribs = {
-			revisionId: 1, aliasSetId: 1, identifierSetId: 1,
-			relationshipSetId: 1, annotationId: 1,
+			revisionId: 1,
+			aliasSetId: 1,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			annotationId: 1,
 			disambiguationId: 1
 		};
 
@@ -99,8 +117,10 @@ describe('Edition model', () => {
 
 		const annotationPromise = revisionPromise
 			.then(() =>
-				new Annotation(
-					{id: 1, content: 'Test Annotation', lastRevisionId: 1
+				new Annotation({
+					id: 1,
+					content: 'Test Annotation',
+					lastRevisionId: 1
 				})
 					.save(null, {method: 'insert'})
 			);
@@ -132,9 +152,14 @@ describe('Edition model', () => {
 		() => {
 			/* Revision ID order is reversed so that result is not dependent on
 			row order */
-			const revisionAttribs = {id: 1, authorId: 1};
+			const revisionAttribs = {
+				id: 1,
+				authorId: 1
+			};
 			const editionAttribs = {
-				revisionId: 1, aliasSetId: 1, identifierSetId: 1,
+				revisionId: 1,
+				aliasSetId: 1,
+				identifierSetId: 1,
 				relationshipSetId: 1
 			};
 

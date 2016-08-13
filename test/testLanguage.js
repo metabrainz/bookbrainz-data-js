@@ -37,8 +37,12 @@ describe('Language model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const languageAttribs = {
-			name: 'English', isoCode2t: 'eng', isoCode2b: 'eng',
-			isoCode3: 'eng', isoCode1: 'en', frequency: 1
+			name: 'English',
+			isoCode2t: 'eng',
+			isoCode2b: 'eng',
+			isoCode3: 'eng',
+			isoCode1: 'en',
+			frequency: 1
 		};
 
 		const languagePromise = new Language(languageAttribs)

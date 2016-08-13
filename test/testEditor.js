@@ -44,8 +44,11 @@ const editorTypeAttribs = {
 };
 
 const editorAttribs = {
-	id: 1, name: 'bob', password: 'test',
-	genderId: 1, typeId: 1
+	id: 1,
+	name: 'bob',
+	password: 'test',
+	genderId: 1,
+	typeId: 1
 };
 
 const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
