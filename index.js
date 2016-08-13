@@ -24,6 +24,7 @@ const path = require('path');
 
 module.exports = {
 	init(config) {
+		/* eslint-disable global-require */
 		const bookshelf = require('bookshelf')(require('knex')(config));
 		bookshelf.plugin('registry');
 		bookshelf.plugin('visibility');
@@ -40,5 +41,6 @@ module.exports = {
 			const modelFile = `./${path.join('models/', file)}`;
 			this[modelName] = require(modelFile)(bookshelf);
 		});
+		/* eslint-enable global-require */
 	}
 };
