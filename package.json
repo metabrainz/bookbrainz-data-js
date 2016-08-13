@@ -4,7 +4,8 @@
   "description": "A JavaScript data access module for BookBrainz",
   "main": "index.js",
   "scripts": {
-    "test": "./check-style.sh && istanbul cover _mocha"
+    "lint": "eslint --ext .js models test *.js",
+    "test": "npm run lint && istanbul cover _mocha"
   },
   "directories": {
     "test": "tests"
