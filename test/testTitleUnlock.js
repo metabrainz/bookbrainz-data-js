@@ -27,7 +27,6 @@ const Bookshelf = require('./bookshelf');
 const util = require('../util');
 const TitleType = require('../index').TitleType;
 const TitleUnlock = require('../index').TitleUnlock;
-const AchievementType = require('../index').AchievementType;
 const Editor = require('../index').Editor;
 const EditorType = require('../index').EditorType;
 const Gender = require('../index').Gender;
