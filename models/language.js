@@ -31,7 +31,9 @@ function formatWithISOFields(attrs) {
 	/* eslint-enable camelcase */
 
 	return _.mapKeys(util.camelToSnake(attrs), (value, key) =>
-		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+		_.has(REPLACEMENTS, key) ?
+			REPLACEMENTS[key] :
+			key
 	);
 }
 
@@ -42,7 +44,9 @@ function parseWithISOFields(attrs) {
 	};
 
 	return _.mapKeys(util.snakeToCamel(attrs), (value, key) =>
-		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+		_.has(REPLACEMENTS, key) ?
+			REPLACEMENTS[key] :
+			key
 	);
 }
 

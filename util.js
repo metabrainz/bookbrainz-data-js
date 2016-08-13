@@ -106,7 +106,9 @@ module.exports.diffRevisions = (base, other, includes) => {
 		return baseDataPromise.then((baseData) =>
 			diff(
 				{},
-				baseData ? sortEntityData(baseData.toJSON()) : {},
+				baseData ?
+					sortEntityData(baseData.toJSON()) :
+					{},
 				diffFilter
 			)
 		);
@@ -118,8 +120,12 @@ module.exports.diffRevisions = (base, other, includes) => {
 	return Promise.join(baseDataPromise, otherDataPromise,
 		(baseData, otherData) =>
 		diff(
-			otherData ? sortEntityData(otherData.toJSON()) : {},
-			baseData ? sortEntityData(baseData.toJSON()) : {},
+			otherData ?
+				sortEntityData(otherData.toJSON()) :
+				{},
+			baseData ?
+				sortEntityData(baseData.toJSON()) :
+				{},
 			diffFilter
 		)
 	);
