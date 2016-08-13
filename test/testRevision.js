@@ -43,8 +43,8 @@ describe('Revision model', () => {
 		typeId: 1
 	};
 
-	beforeEach(() => {
-		return new Gender({
+	beforeEach(() =>
+		new Gender({
 			id: 1,
 			name: 'test'
 		})
@@ -54,8 +54,8 @@ describe('Revision model', () => {
 			)
 			.then(() =>
 				new Editor(editorAttribs).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);

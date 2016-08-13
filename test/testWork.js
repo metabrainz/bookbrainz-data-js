@@ -56,8 +56,8 @@ const editorData = {
 const setData = {id: 1};
 
 describe('Work model', () => {
-	beforeEach(() => {
-		return new Gender(genderData).save(null, {method: 'insert'})
+	beforeEach(() =>
+		new Gender(genderData).save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeData).save(null, {method: 'insert'})
 			)
@@ -75,8 +75,8 @@ describe('Work model', () => {
 					})
 						.save(null, {method: 'insert'})
 				])
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);

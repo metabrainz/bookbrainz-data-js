@@ -31,10 +31,9 @@ module.exports = (bookshelf) => {
 			this.on('saving', (model) => {
 				if (model.hasChanged('password')) {
 					return bcrypt.genSaltAsync(10)
-						.then((salt) => {
-							return bcrypt.hashAsync(model.get('password'),
-								salt);
-						})
+						.then((salt) =>
+							bcrypt.hashAsync(model.get('password'), salt)
+						)
 						.then((hash) => {
 							model.set('password', hash);
 						});

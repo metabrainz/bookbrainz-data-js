@@ -39,16 +39,16 @@ describe('Alias model', () => {
 		frequency: 1
 	};
 
-	beforeEach(() => {
-		return new Language(languageAttribs).save(null, {method: 'insert'});
-	});
+	beforeEach(() =>
+		new Language(languageAttribs).save(null, {method: 'insert'})
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz.alias',
 			'musicbrainz.language'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const aliasAttribs = {

@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const Entity = require('../index').Entity;
 
 describe('Entity model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.entity']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.entity'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save

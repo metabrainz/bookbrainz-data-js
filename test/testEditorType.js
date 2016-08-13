@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const EditorType = require('../index').EditorType;
 
 describe('EditorType model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.editor_type']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.editor_type'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const editorTypeCreationPromise = new EditorType({label: 'test_type'})

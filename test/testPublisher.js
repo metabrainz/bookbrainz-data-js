@@ -56,8 +56,8 @@ const editorAttribs = {
 const setData = {id: 1};
 
 describe('Publisher model', () => {
-	beforeEach(() => {
-		return new Gender(genderData).save(null, {method: 'insert'})
+	beforeEach(() =>
+		new Gender(genderData).save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeData).save(null, {method: 'insert'})
 			)
@@ -75,8 +75,8 @@ describe('Publisher model', () => {
 					})
 						.save(null, {method: 'insert'})
 				])
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);

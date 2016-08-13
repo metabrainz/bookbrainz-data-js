@@ -50,8 +50,8 @@ describe('AchievementUnlock model', () => {
 		badgeUrl: 'http://test.com/'
 	};
 
-	beforeEach(() => {
-		return new Gender({
+	beforeEach(() =>
+		new Gender({
 			id: 1,
 			name: 'test'
 		})
@@ -65,8 +65,8 @@ describe('AchievementUnlock model', () => {
 			.then(() =>
 				new AchievementType(AchievementTypeAttribs)
 					.save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout();

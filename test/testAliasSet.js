@@ -62,9 +62,9 @@ describe('AliasSet model', () => {
 		frequency: 1
 	};
 
-	beforeEach(() => {
-		return new Language(languageAttribs).save(null, {method: 'insert'});
-	});
+	beforeEach(() =>
+		new Language(languageAttribs).save(null, {method: 'insert'})
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);

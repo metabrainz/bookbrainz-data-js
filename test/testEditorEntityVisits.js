@@ -68,8 +68,8 @@ const publisherAttribs = {
 };
 
 describe('EditorEntityVisits model', () => {
-	beforeEach(() => {
-		return new Gender(genderData).save(null, {method: 'insert'})
+	beforeEach(() =>
+		new Gender(genderData).save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeData).save(null, {method: 'insert'})
 			)
@@ -101,11 +101,11 @@ describe('EditorEntityVisits model', () => {
 			.then(() =>
 				new Publisher(publisherAttribs)
 					.save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz._editor_entity_visits',
 			'bookbrainz.entity',
 			'bookbrainz.revision',
@@ -117,28 +117,28 @@ describe('EditorEntityVisits model', () => {
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
 			'musicbrainz.gender'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const publisherPromise = new Publisher(publisherAttribs)
 				.save(null, {method: 'insert'});
 
 		const editorVisitsPromise = publisherPromise
-			.then((publisher) => {
-				return new EditorEntityVisits({
+			.then((publisher) =>
+				new EditorEntityVisits({
 					id: 1,
 					editorId: editorData.id,
 					bbid: publisher.attributes.bbid
 				})
-				.save(null, {method: 'insert'});
-			});
+				.save(null, {method: 'insert'})
+			);
 
 		const jsonPromise = editorVisitsPromise
 			.then((model) => model.refresh())
-			.then((editorVisit) => {
-				return editorVisit.toJSON();
-			});
+			.then((editorVisit) =>
+				editorVisit.toJSON()
+			);
 
 		return expect(jsonPromise).to.eventually.have.all.keys([
 			'id', 'editorId', 'bbid'

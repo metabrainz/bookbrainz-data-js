@@ -45,17 +45,17 @@ const idTypeAttribs = {
 };
 
 describe('Identifier model', () => {
-	beforeEach(() => {
-		return new IdentifierType(idTypeAttribs)
-			.save(null, {method: 'insert'});
-	});
+	beforeEach(() =>
+		new IdentifierType(idTypeAttribs)
+			.save(null, {method: 'insert'})
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new Identifier(idAttribs)

@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const TitleType = require('../index').TitleType;
 
 describe('TitleType model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.title_type']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.title_type'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const titleTypePromise = new TitleType({id: 1,

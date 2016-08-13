@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const diff = require('deep-diff').diff;
 
-module.exports.snakeToCamel = (attrs) => {
+function snakeToCamel(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
 
@@ -19,9 +19,10 @@ module.exports.snakeToCamel = (attrs) => {
 		return result;
 	},
 	{});
-};
+}
+module.exports.snakeToCamel = snakeToCamel;
 
-module.exports.camelToSnake = (attrs) => {
+function camelToSnake(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
 
@@ -36,7 +37,8 @@ module.exports.camelToSnake = (attrs) => {
 		return result;
 	},
 	{});
-};
+}
+module.exports.camelToSnake = camelToSnake;
 
 class EntityTypeError extends Error {
 	constructor(message) {

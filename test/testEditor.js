@@ -57,12 +57,12 @@ const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
 });
 
 describe('Editor model', () => {
-	beforeEach(() => {
-		return new Gender(genderAttribs).save(null, {method: 'insert'})
+	beforeEach(() =>
+		new Gender(genderAttribs).save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);
@@ -87,16 +87,16 @@ describe('Editor model', () => {
 				return new Revision(revisionAttribs)
 					.save(null, {method: 'insert'});
 			})
-			.then(() => {
-				return new Editor({id: 1})
+			.then(() =>
+				new Editor({id: 1})
 					.fetch({
 						withRelated: [
 							'type',
 							'gender',
 							'revisions'
 						]
-					});
-			})
+					})
+			)
 			.then((editor) => editor.toJSON());
 
 		return expect(editorPromise).to.eventually.have.all.keys([
@@ -145,22 +145,22 @@ describe('Editor model', () => {
 	it('should distinguish correct and incorrect passwords', () => {
 		const editorPromise = new Editor(editorAttribs)
 			.save(null, {method: 'insert'})
-			.then(() => {
-				return new Editor({id: 1})
-					.fetch({require: true});
-			})
-			.then((editor) => {
-				return [
+			.then(() =>
+				new Editor({id: 1})
+					.fetch({require: true})
+			)
+			.then((editor) =>
+				[
 					editor.checkPassword('test'),
 					editor.checkPassword('orange')
-				];
-			});
+				]
+			);
 
-		return editorPromise.spread((correct, incorrect) => {
-			return Promise.all([
+		return editorPromise.spread((correct, incorrect) =>
+			Promise.all([
 				expect(correct).to.equal(true),
 				expect(incorrect).to.equal(false)
-			]);
-		});
+			])
+		);
 	});
 });

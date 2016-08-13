@@ -30,9 +30,9 @@ function formatWithISOFields(attrs) {
 	};
 	/* eslint-enable camelcase */
 
-	return _.mapKeys(util.camelToSnake(attrs), (value, key) => {
-		return _.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key;
-	});
+	return _.mapKeys(util.camelToSnake(attrs), (value, key) =>
+		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+	);
 }
 
 function parseWithISOFields(attrs) {
@@ -41,9 +41,9 @@ function parseWithISOFields(attrs) {
 		isoCode2B: 'isoCode2b'
 	};
 
-	return _.mapKeys(util.snakeToCamel(attrs), (value, key) => {
-		return _.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key;
-	});
+	return _.mapKeys(util.snakeToCamel(attrs), (value, key) =>
+		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+	);
 }
 
 module.exports = (bookshelf) => {

@@ -63,8 +63,8 @@ function createRelationshipSet(relationships) {
 }
 
 describe('RelationshipSet model', () => {
-	beforeEach(() => {
-		return new RelationshipType(relTypeAttribs)
+	beforeEach(() =>
+		new RelationshipType(relTypeAttribs)
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new Entity(entityAttribs).save(null, {method: 'insert'})
@@ -75,17 +75,17 @@ describe('RelationshipSet model', () => {
 						bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
 					})
 				).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz.relationship_set',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
 			'bookbrainz.entity'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new RelationshipSet({id: 1})

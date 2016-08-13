@@ -51,8 +51,8 @@ describe('TitleUnlock model', () => {
 		description: 'test_desc'
 	};
 
-	beforeEach(() => {
-		return new Gender({
+	beforeEach(() =>
+		new Gender({
 			id: 1,
 			name: 'test'
 		})
@@ -66,8 +66,8 @@ describe('TitleUnlock model', () => {
 			.then(() =>
 				new TitleType(titleTypeAttribs)
 					.save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout();

@@ -56,8 +56,8 @@ function createAnnotation(lastRevisionId) {
 }
 
 describe('Annotation model', () => {
-	beforeEach(() => {
-		return new Gender({
+	beforeEach(() =>
+		new Gender({
 			id: 1,
 			name: 'test'
 		}).save(null, {method: 'insert'})
@@ -66,8 +66,8 @@ describe('Annotation model', () => {
 			)
 			.then(() =>
 				new Editor(editorAttribs).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);
@@ -92,9 +92,9 @@ describe('Annotation model', () => {
 			.then((revision) => revision.toJSON());
 
 		const annotationPromise = revisionPromise
-			.then((revision) => {
-				return createAnnotation(revision.id);
-			});
+			.then((revision) =>
+				createAnnotation(revision.id)
+			);
 
 		return expect(annotationPromise).to.eventually.have.all.keys([
 			'id', 'content', 'lastRevisionId'

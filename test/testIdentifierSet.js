@@ -57,17 +57,17 @@ describe('IdentifierSet model', () => {
 		entityType: 'Creator'
 	};
 
-	beforeEach(() => {
-		return new IdentifierType(idTypeAttribs).save(null, {method: 'insert'});
-	});
+	beforeEach(() =>
+		new IdentifierType(idTypeAttribs).save(null, {method: 'insert'})
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz.identifier_set',
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new IdentifierSet({id: 1})

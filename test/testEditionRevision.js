@@ -81,8 +81,8 @@ const data = {
 };
 
 describe('EditionRevision model', () => {
-	beforeEach(() => {
-		return new Gender(data.gender)
+	beforeEach(() =>
+		new Gender(data.gender)
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new EditorType(data.editorType).save(null, {method: 'insert'})
@@ -108,8 +108,8 @@ describe('EditionRevision model', () => {
 			)
 			.then(() =>
 				new Edition(data.edition).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
 	afterEach(function truncate() {
 		this.timeout(0);

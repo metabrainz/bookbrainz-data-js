@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const Gender = require('../index').Gender;
 
 describe('Gender model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['musicbrainz.gender']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['musicbrainz.gender'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const genderPromise = new Gender({name: 'Test'})

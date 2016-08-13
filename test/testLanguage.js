@@ -30,9 +30,9 @@ const Language = require('../index').Language;
 /* eslint camelcase: 0 */
 
 describe('Language model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['musicbrainz.language']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['musicbrainz.language'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save

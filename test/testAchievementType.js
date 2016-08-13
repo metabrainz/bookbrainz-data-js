@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const AchievementType = require('../index').AchievementType;
 
 describe('AchievementType model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.achievement_type']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.achievement_type'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const achievementTypePromise = new AchievementType({id: 1,

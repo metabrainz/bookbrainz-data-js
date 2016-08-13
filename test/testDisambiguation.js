@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const Disambiguation = require('../index').Disambiguation;
 
 describe('Disambiguation model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.disambiguation']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.disambiguation'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const disambiguationAttribs = {

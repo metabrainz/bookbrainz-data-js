@@ -42,9 +42,9 @@ function createArea(name) {
 }
 
 describe('Area model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['musicbrainz.area']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['musicbrainz.area'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const areaPromise = createArea('Mars');

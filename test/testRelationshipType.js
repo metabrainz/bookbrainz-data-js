@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const RelationshipType = require('../index').RelationshipType;
 
 describe('RelationshipType model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.relationship_type']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.relationship_type'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const relTypeData = {

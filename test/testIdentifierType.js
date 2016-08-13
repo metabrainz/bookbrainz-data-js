@@ -28,9 +28,9 @@ const Bookshelf = require('./bookshelf');
 const IdentifierType = require('../index').IdentifierType;
 
 describe('IdentifierType model', () => {
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, ['bookbrainz.identifier_type']);
-	});
+	afterEach(() =>
+		util.truncateTables(Bookshelf, ['bookbrainz.identifier_type'])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const idTypeData = {

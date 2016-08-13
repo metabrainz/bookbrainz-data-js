@@ -52,8 +52,8 @@ const entityAttribs = {
 };
 
 describe('Relationship model', () => {
-	beforeEach(() => {
-		return new RelationshipType(relTypeAttribs)
+	beforeEach(() =>
+		new RelationshipType(relTypeAttribs)
 			.save(null, {method: 'insert'})
 			.then(() =>
 				new Entity(entityAttribs).save(null, {method: 'insert'})
@@ -64,16 +64,16 @@ describe('Relationship model', () => {
 						bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
 					})
 				).save(null, {method: 'insert'})
-			);
-	});
+			)
+	);
 
-	afterEach(() => {
-		return util.truncateTables(Bookshelf, [
+	afterEach(() =>
+		util.truncateTables(Bookshelf, [
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
 			'bookbrainz.entity'
-		]);
-	});
+		])
+	);
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new Relationship(relAttribs)
