@@ -131,24 +131,27 @@ module.exports.diffRevisions = (base, other, includes) => {
 	);
 };
 
+const YEAR_STR_LENGTH = 4;
+const MONTH_STR_LENGTH = 2;
+const DAY_STR_LENGTH = 2;
 module.exports.formatDate = (year, month, day) => {
 	if (!year) {
 		return null;
 	}
 
-	const yearString = _.padStart(year.toString(), 4, '0');
+	const yearString = _.padStart(year.toString(), YEAR_STR_LENGTH, '0');
 
 	if (!month) {
 		return `${yearString}`;
 	}
 
-	const monthString = _.padStart(month.toString(), 2, '0');
+	const monthString = _.padStart(month.toString(), MONTH_STR_LENGTH, '0');
 
 	if (!day) {
 		return `${yearString}-${monthString}`;
 	}
 
-	const dayString = _.padStart(day.toString(), 2, '0');
+	const dayString = _.padStart(day.toString(), DAY_STR_LENGTH, '0');
 
 	return `${yearString}-${monthString}-${dayString}`;
 };
