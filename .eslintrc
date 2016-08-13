@@ -207,7 +207,10 @@ rules:
   jsx-quotes:
     - 2
     - prefer-double
-  lines-around-comment: 2
+  lines-around-comment:
+    - 2
+    -
+        beforeBlockComment: false
   key-spacing: 2
   linebreak-style: 2
   max-nested-callbacks:
