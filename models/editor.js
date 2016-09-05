@@ -18,29 +18,12 @@
 
 'use strict';
 
-const Promise = require('bluebird');
-const bcrypt = Promise.promisifyAll(require('bcrypt'));
-
 const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Editor = bookshelf.Model.extend({
 		tableName: 'bookbrainz.editor',
 		idAttribute: 'id',
-		initialize() {
-			this.on('saving', (model) => {
-				if (!model.hasChanged('password')) {
-					return null;
-				}
-				return bcrypt.genSaltAsync(10)
-					.then((salt) =>
-						bcrypt.hashAsync(model.get('password'), salt)
-					)
-					.then((hash) => {
-						model.set('password', hash);
-					});
-			});
-		},
 		parse: util.snakeToCamel,
 		format: util.camelToSnake,
 		gender() {
@@ -57,9 +40,6 @@ module.exports = (bookshelf) => {
 		},
 		achievements() {
 			return this.hasMany('AchievementType').through('AchievementUnlock');
-		},
-		checkPassword(password) {
-			return bcrypt.compareAsync(password, this.get('password'));
 		},
 		incrementEditCount() {
 			this.set('totalRevisions', this.get('totalRevisions') + 1);
