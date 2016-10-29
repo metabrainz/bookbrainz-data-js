@@ -24,7 +24,6 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 
 const util = require('../util');
 const Bookshelf = require('./bookshelf');
