@@ -24,7 +24,6 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 
 const util = require('../util');
 const Bookshelf = require('./bookshelf');
@@ -46,7 +45,6 @@ const editorTypeAttribs = {
 const editorAttribs = {
 	id: 1,
 	name: 'bob',
-	password: 'test',
 	genderId: 1,
 	typeId: 1
 };
@@ -102,65 +100,9 @@ describe('Editor model', () => {
 		return expect(editorPromise).to.eventually.have.all.keys([
 			'id', 'name', 'reputation', 'bio', 'birthDate',
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
-			'areaId', 'password', 'revisionsApplied', 'revisionsReverted',
+			'areaId', 'revisionsApplied', 'revisionsReverted',
 			'totalRevisions', 'type', 'revisions', 'titleUnlockId',
 			'metabrainzUserId', 'cachedMetabrainzName'
 		]);
-	});
-
-	it('should hash passwords for new editors', () => {
-		const editorPromise = new Editor(editorAttribs)
-			.save(null, {method: 'insert'})
-			.then(() => new Editor({id: 1}).fetch({require: true}))
-			.then((editor) => editor.get('password'));
-
-		return Promise.all([
-			expect(editorPromise).to.eventually.not.equal('test'),
-			expect(editorPromise).to.eventually.match(/^[.\/$A-Za-z0-9]{60}$/)
-		]);
-	});
-
-	it('should hash updated passwords', () => {
-		let hashed;
-
-		const editorPromise = new Editor(editorAttribs)
-			.save(null, {method: 'insert'})
-			.then(() => new Editor({id: 1}).fetch({require: true}))
-			.then((editor) => {
-				hashed = editor.get('password');
-				editor.set('password', 'orange');
-
-				return editor.save();
-			})
-			.then(() => new Editor({id: 1}).fetch({require: true}))
-			.then((editor) => editor.get('password'));
-
-		return Promise.all([
-			expect(editorPromise).to.eventually.not.equal('orange'),
-			expect(editorPromise).to.eventually.not.equal(hashed),
-			expect(editorPromise).to.eventually.match(/^[.\/$A-Za-z0-9]{60}$/)
-		]);
-	});
-
-	it('should distinguish correct and incorrect passwords', () => {
-		const editorPromise = new Editor(editorAttribs)
-			.save(null, {method: 'insert'})
-			.then(() =>
-				new Editor({id: 1})
-					.fetch({require: true})
-			)
-			.then((editor) =>
-				[
-					editor.checkPassword('test'),
-					editor.checkPassword('orange')
-				]
-			);
-
-		return editorPromise.spread((correct, incorrect) =>
-			Promise.all([
-				expect(correct).to.equal(true),
-				expect(incorrect).to.equal(false)
-			])
-		);
 	});
 });

@@ -40,7 +40,6 @@ describe('TitleUnlock model', () => {
 	const editorAttribs = {
 		id: 1,
 		name: 'bob',
-		password: 'test',
 		genderId: 1,
 		typeId: 1
 	};
