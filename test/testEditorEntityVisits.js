@@ -103,8 +103,9 @@ describe('EditorEntityVisits model', () => {
 			)
 	);
 
-	afterEach(() =>
-		util.truncateTables(Bookshelf, [
+	afterEach(function truncate() {
+		this.timeout(0);
+		return util.truncateTables(Bookshelf, [
 			'bookbrainz._editor_entity_visits',
 			'bookbrainz.entity',
 			'bookbrainz.revision',
@@ -116,8 +117,8 @@ describe('EditorEntityVisits model', () => {
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
 			'musicbrainz.gender'
-		])
-	);
+		]);
+	});
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const publisherPromise = new Publisher(publisherAttribs)
