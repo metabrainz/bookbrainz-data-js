@@ -44,6 +44,9 @@ module.exports = (bookshelf) => {
 		incrementEditCount() {
 			this.set('totalRevisions', this.get('totalRevisions') + 1);
 			this.set('revisionsApplied', this.get('revisionsApplied') + 1);
+		},
+		area() {
+			return this.belongsTo('Area', 'area_id');
 		}
 	});
 

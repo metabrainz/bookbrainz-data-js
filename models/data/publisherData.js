@@ -44,6 +44,9 @@ module.exports = (bookshelf) => {
 		publisherType() {
 			return this.belongsTo('PublisherType', 'type_id');
 		},
+		area() {
+			return this.belongsTo('Area', 'area_id');
+		},
 		editions(options) {
 			const Edition = bookshelf.model('Edition');
 			const bbid = this.get('bbid');
