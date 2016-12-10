@@ -47,6 +47,12 @@ module.exports = (bookshelf) => {
 		creatorType() {
 			return this.belongsTo('CreatorType', 'type_id');
 		},
+		beginArea() {
+			return this.belongsTo('Area', 'begin_area_id');
+		},
+		endArea() {
+			return this.belongsTo('Area', 'end_area_id');
+		},
 		virtuals: {
 			beginDate: {
 				get() {
