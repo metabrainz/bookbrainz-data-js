@@ -25,7 +25,12 @@ module.exports = (bookshelf) => {
 		tableName: 'musicbrainz.area',
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		format: util.camelToSnake,
+		virtuals: {
+			bbid() {
+				return this.get('gid');
+			}
+		}
 	});
 
 	return bookshelf.model('Area', Area);

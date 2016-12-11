@@ -50,7 +50,7 @@ describe('Area model', () => {
 		const areaPromise = createArea('Mars');
 
 		return expect(areaPromise).to.eventually.have.all.keys([
-			'id', 'gid', 'name', 'type', 'editsPending', 'lastUpdated',
+			'bbid', 'id', 'gid', 'name', 'type', 'editsPending', 'lastUpdated',
 			'beginDateYear', 'beginDateMonth', 'beginDateDay', 'endDateYear',
 			'endDateMonth', 'endDateDay', 'ended', 'comment'
 		]);
