@@ -22,10 +22,10 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Disambiguation = bookshelf.Model.extend({
-		tableName: 'bookbrainz.disambiguation',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		tableName: 'bookbrainz.disambiguation'
 	});
 
 	return bookshelf.model('Disambiguation', Disambiguation);

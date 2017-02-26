@@ -23,43 +23,43 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const EditionData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.edition_data',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		aliasSet() {
+			return this.belongsTo('AliasSet', 'alias_set_id');
+		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		editionFormat() {
+			return this.belongsTo('EditionFormat', 'format_id');
 		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
+		editionStatus() {
+			return this.belongsTo('EditionStatus', 'status_id');
 		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
+		languageSet() {
+			return this.belongsTo('LanguageSet', 'language_set_id');
+		},
+		parse: util.snakeToCamel,
 		publication() {
 			return this.belongsTo('Publication', 'publication_bbid');
 		},
 		publisherSet() {
 			return this.belongsTo('PublisherSet', 'publisher_set_id');
 		},
-		editionStatus() {
-			return this.belongsTo('EditionStatus', 'status_id');
-		},
-		editionFormat() {
-			return this.belongsTo('EditionFormat', 'format_id');
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
 		},
 		releaseEventSet() {
 			return this.belongsTo('ReleaseEventSet', 'release_event_set_id');
 		},
-		languageSet() {
-			return this.belongsTo('LanguageSet', 'language_set_id');
-		}
+		tableName: 'bookbrainz.edition_data'
 	});
 
 	return bookshelf.model('EditionData', EditionData);

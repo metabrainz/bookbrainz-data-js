@@ -22,24 +22,24 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Relationship = bookshelf.Model.extend({
-		tableName: 'bookbrainz.relationship',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		type() {
-			return this.belongsTo('RelationshipType', 'type_id');
-		},
-		source() {
-			return this.belongsTo('Entity', 'source_bbid');
-		},
-		target() {
-			return this.belongsTo('Entity', 'target_bbid');
-		},
 		sets() {
 			return this.belongsToMany(
 				'RelationshipSet', 'bookbrainz.relationship_set__relationship',
 				'relationship_id', 'set_id'
 			);
+		},
+		source() {
+			return this.belongsTo('Entity', 'source_bbid');
+		},
+		tableName: 'bookbrainz.relationship',
+		target() {
+			return this.belongsTo('Entity', 'target_bbid');
+		},
+		type() {
+			return this.belongsTo('RelationshipType', 'type_id');
 		}
 	});
 

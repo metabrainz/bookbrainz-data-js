@@ -22,16 +22,16 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const EditorEntityVisits = bookshelf.Model.extend({
-		tableName: 'bookbrainz._editor_entity_visits',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		achievement() {
+			return this.belongsTo('Entity', 'bbid');
+		},
 		editor() {
 			return this.belongsTo('Editor', 'editor_id');
 		},
-		achievement() {
-			return this.belongsTo('Entity', 'bbid');
-		}
+		format: util.camelToSnake,
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz._editor_entity_visits'
 	});
 
 	return bookshelf.model('EditorEntityVisits', EditorEntityVisits);

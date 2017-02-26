@@ -22,9 +22,9 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Gender = bookshelf.Model.extend({
-		tableName: 'musicbrainz.gender',
+		format: util.camelToSnake,
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		tableName: 'musicbrainz.gender'
 	});
 
 	return bookshelf.model('Gender', Gender);

@@ -22,18 +22,18 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const AliasSet = bookshelf.Model.extend({
-		tableName: 'bookbrainz.alias_set',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		defaultAlias() {
-			return this.belongsTo('Alias', 'default_alias_id');
-		},
 		aliases() {
 			return this.belongsToMany(
 				'Alias', 'bookbrainz.alias_set__alias', 'set_id', 'alias_id'
 			);
-		}
+		},
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.alias_set'
 	});
 
 	return bookshelf.model('AliasSet', AliasSet);

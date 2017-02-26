@@ -22,16 +22,6 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const EditionRevision = bookshelf.Model.extend({
-		tableName: 'bookbrainz.edition_revision',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		revision() {
-			return this.belongsTo('Revision', 'id');
-		},
-		entity() {
-			return this.belongsTo('EditionHeader', 'bbid');
-		},
 		data() {
 			return this.belongsTo('EditionData', 'data_id');
 		},
@@ -46,6 +36,11 @@ module.exports = (bookshelf) => {
 				'identifierSet.identifiers.type'
 			]);
 		},
+		entity() {
+			return this.belongsTo('EditionHeader', 'bbid');
+		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		parent() {
 			return this.related('revision').fetch()
 				.then((revision) =>
@@ -63,7 +58,12 @@ module.exports = (bookshelf) => {
 						.query('whereIn', 'id', parentIds)
 						.fetch();
 				});
-		}
+		},
+		parse: util.snakeToCamel,
+		revision() {
+			return this.belongsTo('Revision', 'id');
+		},
+		tableName: 'bookbrainz.edition_revision'
 	});
 
 	return bookshelf.model('EditionRevision', EditionRevision);

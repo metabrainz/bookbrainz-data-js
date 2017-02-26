@@ -22,31 +22,31 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Editor = bookshelf.Model.extend({
-		tableName: 'bookbrainz.editor',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		achievements() {
+			return this.hasMany('AchievementType').through('AchievementUnlock');
+		},
+		area() {
+			return this.belongsTo('Area', 'area_id');
+		},
 		format: util.camelToSnake,
 		gender() {
 			return this.belongsTo('Gender', 'gender_id');
 		},
-		type() {
-			return this.belongsTo('EditorType', 'type_id');
-		},
-		revisions() {
-			return this.hasMany('Revision', 'author_id');
-		},
-		titleUnlock() {
-			return this.belongsTo('TitleUnlock', 'title_unlock_id');
-		},
-		achievements() {
-			return this.hasMany('AchievementType').through('AchievementUnlock');
-		},
+		idAttribute: 'id',
 		incrementEditCount() {
 			this.set('totalRevisions', this.get('totalRevisions') + 1);
 			this.set('revisionsApplied', this.get('revisionsApplied') + 1);
 		},
-		area() {
-			return this.belongsTo('Area', 'area_id');
+		parse: util.snakeToCamel,
+		revisions() {
+			return this.hasMany('Revision', 'author_id');
+		},
+		tableName: 'bookbrainz.editor',
+		titleUnlock() {
+			return this.belongsTo('TitleUnlock', 'title_unlock_id');
+		},
+		type() {
+			return this.belongsTo('EditorType', 'type_id');
 		}
 	});
 

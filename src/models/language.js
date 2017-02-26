@@ -25,37 +25,33 @@ const util = require('../util');
 function formatWithISOFields(attrs) {
 	/* eslint-disable camelcase */
 	const REPLACEMENTS = {
-		iso_code_2_t: 'iso_code_2t',
-		iso_code_2_b: 'iso_code_2b'
+		iso_code_2_b: 'iso_code_2b',
+		iso_code_2_t: 'iso_code_2t'
 	};
-	/* eslint-enable camelcase */
 
-	return _.mapKeys(util.camelToSnake(attrs), (value, key) =>
-		_.has(REPLACEMENTS, key) ?
-			REPLACEMENTS[key] :
-			key
-	);
+	/* eslint-enable camelcase */
+	return _.mapKeys(util.camelToSnake(attrs), (value, key) => (
+		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+	));
 }
 
 function parseWithISOFields(attrs) {
 	const REPLACEMENTS = {
-		isoCode2T: 'isoCode2t',
-		isoCode2B: 'isoCode2b'
+		isoCode2B: 'isoCode2b',
+		isoCode2T: 'isoCode2t'
 	};
 
-	return _.mapKeys(util.snakeToCamel(attrs), (value, key) =>
-		_.has(REPLACEMENTS, key) ?
-			REPLACEMENTS[key] :
-			key
-	);
+	return _.mapKeys(util.snakeToCamel(attrs), (value, key) => (
+		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
+	));
 }
 
 module.exports = (bookshelf) => {
 	const Language = bookshelf.Model.extend({
-		tableName: 'musicbrainz.language',
+		format: formatWithISOFields,
 		idAttribute: 'id',
 		parse: parseWithISOFields,
-		format: formatWithISOFields
+		tableName: 'musicbrainz.language'
 	});
 
 	return bookshelf.model('Language', Language);

@@ -22,16 +22,6 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const PublicationRevision = bookshelf.Model.extend({
-		tableName: 'bookbrainz.publication_revision',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		revision() {
-			return this.belongsTo('Revision', 'id');
-		},
-		entity() {
-			return this.belongsTo('PublicationHeader', 'bbid');
-		},
 		data() {
 			return this.belongsTo('PublicationData', 'data_id');
 		},
@@ -44,6 +34,11 @@ module.exports = (bookshelf) => {
 				'identifierSet.identifiers.type', 'publicationType'
 			]);
 		},
+		entity() {
+			return this.belongsTo('PublicationHeader', 'bbid');
+		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		parent() {
 			return this.related('revision').fetch()
 				.then((revision) =>
@@ -61,7 +56,12 @@ module.exports = (bookshelf) => {
 						.query('whereIn', 'id', parentIds)
 						.fetch();
 				});
-		}
+		},
+		parse: util.snakeToCamel,
+		revision() {
+			return this.belongsTo('Revision', 'id');
+		},
+		tableName: 'bookbrainz.publication_revision'
 	});
 
 	return bookshelf.model('PublicationRevision', PublicationRevision);

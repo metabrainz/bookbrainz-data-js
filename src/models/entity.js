@@ -22,13 +22,13 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Entity = bookshelf.Model.extend({
-		tableName: 'bookbrainz.entity',
-		idAttribute: 'bbid',
-		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		idAttribute: 'bbid',
 		masterRevision() {
 			return this.belongsTo('Revision', 'master_revision_id');
-		}
+		},
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.entity'
 	});
 
 	return bookshelf.model('Entity', Entity);

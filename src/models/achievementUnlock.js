@@ -22,16 +22,16 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const AchievementUnlock = bookshelf.Model.extend({
-		tableName: 'bookbrainz.achievement_unlock',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		achievement() {
+			return this.belongsTo('AchievementType', 'achievement_id');
+		},
 		editor() {
 			return this.belongsTo('Editor', 'editor_id');
 		},
-		achievement() {
-			return this.belongsTo('AchievementType', 'achievement_id');
-		}
+		format: util.camelToSnake,
+		idAttribute: 'id',
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.achievement_unlock'
 	});
 
 	return bookshelf.model('AchievementUnlock', AchievementUnlock);

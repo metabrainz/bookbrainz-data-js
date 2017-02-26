@@ -22,16 +22,16 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const LanguageSet = bookshelf.Model.extend({
-		tableName: 'bookbrainz.language_set',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		idAttribute: 'id',
 		languages() {
 			return this.belongsToMany(
 				'Language', 'bookbrainz.language_set__language',
 				'set_id', 'language_id'
 			);
-		}
+		},
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.language_set'
 	});
 
 	return bookshelf.model('LanguageSet', LanguageSet);

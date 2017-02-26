@@ -23,28 +23,28 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const WorkData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.work_data',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		aliasSet() {
+			return this.belongsTo('AliasSet', 'alias_set_id');
+		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
-		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
 		languageSet() {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
+		parse: util.snakeToCamel,
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		tableName: 'bookbrainz.work_data',
 		workType() {
 			return this.belongsTo('WorkType', 'type_id');
 		}

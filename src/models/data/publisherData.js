@@ -22,30 +22,17 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const PublisherData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.publisher_data',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		annotation() {
-			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		disambiguation() {
-			return this.belongsTo('Disambiguation', 'disambiguation_id');
-		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
 		aliasSet() {
 			return this.belongsTo('AliasSet', 'alias_set_id');
 		},
-		identifierSet() {
-			return this.belongsTo('IdentifierSet', 'identifier_set_id');
-		},
-		publisherType() {
-			return this.belongsTo('PublisherType', 'type_id');
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		area() {
 			return this.belongsTo('Area', 'area_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
 		editions(options) {
 			const Edition = bookshelf.model('Edition');
@@ -69,6 +56,19 @@ module.exports = (bookshelf) => {
 					});
 			}).fetchAll(options);
 		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
+		identifierSet() {
+			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		parse: util.snakeToCamel,
+		publisherType() {
+			return this.belongsTo('PublisherType', 'type_id');
+		},
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		tableName: 'bookbrainz.publisher_data',
 		virtuals: {
 			beginDate: {
 				get() {

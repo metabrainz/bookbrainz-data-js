@@ -22,18 +22,18 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Identifier = bookshelf.Model.extend({
-		tableName: 'bookbrainz.identifier',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		type() {
-			return this.belongsTo('IdentifierType', 'type_id');
-		},
 		sets() {
 			return this.belongsToMany(
 				'IdentifierSet', 'bookbrainz.identifier_set__identifier',
 				'identifier_id', 'set_id'
 			);
+		},
+		tableName: 'bookbrainz.identifier',
+		type() {
+			return this.belongsTo('IdentifierType', 'type_id');
 		}
 	});
 

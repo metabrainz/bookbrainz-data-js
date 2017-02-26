@@ -22,7 +22,9 @@ module.exports = (bookshelf) => {
 	const WorkData = bookshelf.model('WorkData');
 
 	const Work = WorkData.extend({
-		tableName: 'bookbrainz.work',
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
 		idAttribute: 'bbid',
 		initialize() {
 			this.on('fetching', (model, col, options) => {
@@ -37,12 +39,10 @@ module.exports = (bookshelf) => {
 				options.query.where({master: true});
 			});
 		},
-		defaultAlias() {
-			return this.belongsTo('Alias', 'default_alias_id');
-		},
 		revision() {
 			return this.belongsTo('WorkRevision', 'revision_id');
-		}
+		},
+		tableName: 'bookbrainz.work'
 	});
 
 	return bookshelf.model('Work', Work);

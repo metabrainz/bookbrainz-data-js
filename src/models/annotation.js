@@ -22,13 +22,13 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Annotation = bookshelf.Model.extend({
-		tableName: 'bookbrainz.annotation',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
 		format: util.camelToSnake,
+		idAttribute: 'id',
 		lastRevision() {
 			return this.belongsTo('Revision', 'last_revision_id');
-		}
+		},
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.annotation'
 	});
 
 	return bookshelf.model('Annotation', Annotation);

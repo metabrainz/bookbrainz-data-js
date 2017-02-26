@@ -22,37 +22,37 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const CreatorData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.creator_data',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
-		annotation() {
-			return this.belongsTo('Annotation', 'annotation_id');
-		},
-		disambiguation() {
-			return this.belongsTo('Disambiguation', 'disambiguation_id');
-		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
-		},
 		aliasSet() {
 			return this.belongsTo('AliasSet', 'alias_set_id');
 		},
-		identifierSet() {
-			return this.belongsTo('IdentifierSet', 'identifier_set_id');
-		},
-		gender() {
-			return this.belongsTo('Gender', 'gender_id');
-		},
-		creatorType() {
-			return this.belongsTo('CreatorType', 'type_id');
+		annotation() {
+			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		beginArea() {
 			return this.belongsTo('Area', 'begin_area_id');
 		},
+		creatorType() {
+			return this.belongsTo('CreatorType', 'type_id');
+		},
+		disambiguation() {
+			return this.belongsTo('Disambiguation', 'disambiguation_id');
+		},
 		endArea() {
 			return this.belongsTo('Area', 'end_area_id');
 		},
+		format: util.camelToSnake,
+		gender() {
+			return this.belongsTo('Gender', 'gender_id');
+		},
+		idAttribute: 'id',
+		identifierSet() {
+			return this.belongsTo('IdentifierSet', 'identifier_set_id');
+		},
+		parse: util.snakeToCamel,
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		tableName: 'bookbrainz.creator_data',
 		virtuals: {
 			beginDate: {
 				get() {

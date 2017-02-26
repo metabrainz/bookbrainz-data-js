@@ -22,10 +22,10 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const ReleaseEvent = bookshelf.Model.extend({
-		tableName: 'bookbrainz.release_event',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		tableName: 'bookbrainz.release_event',
 		virtuals: {
 			date: {
 				get() {

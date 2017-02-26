@@ -22,10 +22,10 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const RelationshipType = bookshelf.Model.extend({
-		tableName: 'bookbrainz.relationship_type',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		tableName: 'bookbrainz.relationship_type'
 	});
 
 	return bookshelf.model('RelationshipType', RelationshipType);

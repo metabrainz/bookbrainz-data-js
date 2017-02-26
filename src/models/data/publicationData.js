@@ -22,32 +22,32 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const PublicationData = bookshelf.Model.extend({
-		tableName: 'bookbrainz.publication_data',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		aliasSet() {
+			return this.belongsTo('AliasSet', 'alias_set_id');
+		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
-		relationshipSet() {
-			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		editions() {
+			return this.hasMany('Edition', 'publication_bbid')
+			.query({where: {master: true}});
 		},
-		aliasSet() {
-			return this.belongsTo('AliasSet', 'alias_set_id');
-		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
+		parse: util.snakeToCamel,
 		publicationType() {
 			return this.belongsTo('PublicationType', 'type_id');
 		},
-		editions() {
-			return this.hasMany('Edition', 'publication_bbid')
-				.query({where: {master: true}});
-		}
+		relationshipSet() {
+			return this.belongsTo('RelationshipSet', 'relationship_set_id');
+		},
+		tableName: 'bookbrainz.publication_data'
 	});
 
 	return bookshelf.model('PublicationData', PublicationData);

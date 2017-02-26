@@ -22,10 +22,10 @@ const util = require('../../util');
 
 module.exports = (bookshelf) => {
 	const EditionHeader = bookshelf.Model.extend({
-		tableName: 'bookbrainz.edition_header',
+		format: util.camelToSnake,
 		idAttribute: 'bbid',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake
+		tableName: 'bookbrainz.edition_header'
 	});
 
 	return bookshelf.model('EditionHeader', EditionHeader);

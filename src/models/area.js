@@ -22,10 +22,10 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Area = bookshelf.Model.extend({
-		tableName: 'musicbrainz.area',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
+		tableName: 'musicbrainz.area',
 		virtuals: {
 			bbid() {
 				return this.get('gid');

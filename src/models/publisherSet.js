@@ -22,16 +22,16 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const PublisherSet = bookshelf.Model.extend({
-		tableName: 'bookbrainz.publisher_set',
+		format: util.camelToSnake,
 		idAttribute: 'id',
 		parse: util.snakeToCamel,
-		format: util.camelToSnake,
 		publishers() {
 			return this.belongsToMany(
 				'Publisher', 'bookbrainz.publisher_set__publisher',
 				'set_id', 'publisher_bbid'
 			).query({where: {master: true}});
-		}
+		},
+		tableName: 'bookbrainz.publisher_set'
 	});
 
 	return bookshelf.model('PublisherSet', PublisherSet);

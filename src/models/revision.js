@@ -22,18 +22,8 @@ const util = require('../util');
 
 module.exports = (bookshelf) => {
 	const Revision = bookshelf.Model.extend({
-		tableName: 'bookbrainz.revision',
-		idAttribute: 'id',
-		parse: util.snakeToCamel,
-		format: util.camelToSnake,
 		author() {
 			return this.belongsTo('Editor', 'author_id');
-		},
-		parents() {
-			return this.belongsToMany(
-				'Revision', 'bookbrainz.revision_parent', 'child_id',
-				'parent_id'
-			);
 		},
 		children() {
 			return this.belongsToMany(
@@ -41,9 +31,19 @@ module.exports = (bookshelf) => {
 				'child_id'
 			);
 		},
+		format: util.camelToSnake,
+		idAttribute: 'id',
 		notes() {
 			return this.hasMany('Note', 'revision_id');
-		}
+		},
+		parents() {
+			return this.belongsToMany(
+				'Revision', 'bookbrainz.revision_parent', 'child_id',
+				'parent_id'
+			);
+		},
+		parse: util.snakeToCamel,
+		tableName: 'bookbrainz.revision'
 	});
 
 	return bookshelf.model('Revision', Revision);
