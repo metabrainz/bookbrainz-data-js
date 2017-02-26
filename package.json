@@ -2,7 +2,7 @@
   "name": "bookbrainz-data",
   "version": "0.2.0",
   "description": "A JavaScript data access module for BookBrainz",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "lint": "eslint --ext .js models test *.js",
     "test": "npm run lint && istanbul cover _mocha"
