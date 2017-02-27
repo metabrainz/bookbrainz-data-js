@@ -23,10 +23,10 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Alias = require('../index').Alias;
-const Language = require('../index').Language;
+const Alias = require('../lib/index').Alias;
+const Language = require('../lib/index').Language;
 
 describe('Alias model', () => {
 	const languageAttribs = {

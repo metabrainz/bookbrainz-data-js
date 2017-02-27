@@ -23,10 +23,10 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Identifier = require('../index').Identifier;
-const IdentifierType = require('../index').IdentifierType;
+const Identifier = require('../lib/index').Identifier;
+const IdentifierType = require('../lib/index').IdentifierType;
 
 const idAttribs = {
 	id: 1,

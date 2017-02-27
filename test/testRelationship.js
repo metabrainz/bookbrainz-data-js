@@ -25,10 +25,10 @@ const expect = chai.expect;
 const _ = require('lodash');
 
 const Bookshelf = require('./bookshelf');
-const util = require('../util');
-const Entity = require('../index').Entity;
-const Relationship = require('../index').Relationship;
-const RelationshipType = require('../index').RelationshipType;
+const util = require('../lib/util');
+const Entity = require('../lib/index').Entity;
+const Relationship = require('../lib/index').Relationship;
+const RelationshipType = require('../lib/index').RelationshipType;
 
 const relAttribs = {
 	id: 1,

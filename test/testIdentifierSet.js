@@ -25,11 +25,11 @@ const expect = chai.expect;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const IdentifierSet = require('../index').IdentifierSet;
-const Identifier = require('../index').Identifier;
-const IdentifierType = require('../index').IdentifierType;
+const IdentifierSet = require('../lib/index').IdentifierSet;
+const Identifier = require('../lib/index').Identifier;
+const IdentifierType = require('../lib/index').IdentifierType;
 
 const idAttribs = {
 	id: 1,

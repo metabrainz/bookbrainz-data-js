@@ -23,9 +23,9 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const EditorType = require('../index').EditorType;
+const EditorType = require('../lib/index').EditorType;
 
 describe('EditorType model', () => {
 	afterEach(() =>

@@ -4,9 +4,12 @@
   "description": "A JavaScript data access module for BookBrainz",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint --ext .js models test *.js",
-    "test": "npm run lint && istanbul cover _mocha"
-    "build-js": "babel src --out-dir lib"
+    "build-js": "babel src --out-dir lib",
+    "lint": "eslint src test",
+    "lint-errors": "eslint --quiet src test",
+    "test": "npm run lint && npm run build-js &&  mocha --compilers js:babel-core/register",
+    "test-cov": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false npm run test",
+    "test-ci": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false --report=lcovonly npm test"
   },
   "directories": {
     "test": "tests"

@@ -23,9 +23,9 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Disambiguation = require('../index').Disambiguation;
+const Disambiguation = require('../lib/index').Disambiguation;
 
 describe('Disambiguation model', () => {
 	afterEach(() =>

@@ -23,9 +23,9 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Entity = require('../index').Entity;
+const Entity = require('../lib/index').Entity;
 
 describe('Entity model', () => {
 	afterEach(() =>

@@ -24,12 +24,12 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-const util = require('../util');
-const AchievementType = require('../index').AchievementType;
-const Editor = require('../index').Editor;
-const EditorType = require('../index').EditorType;
-const Gender = require('../index').Gender;
-const AchievementUnlock = require('../index').AchievementUnlock;
+const util = require('../lib/util');
+const AchievementType = require('../lib/index').AchievementType;
+const Editor = require('../lib/index').Editor;
+const EditorType = require('../lib/index').EditorType;
+const Gender = require('../lib/index').Gender;
+const AchievementUnlock = require('../lib/index').AchievementUnlock;
 
 describe('AchievementUnlock model', () => {
 	const editorTypeAttribs = {

@@ -24,12 +24,12 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const Bookshelf = require('./bookshelf');
-const util = require('../util');
-const TitleType = require('../index').TitleType;
-const TitleUnlock = require('../index').TitleUnlock;
-const Editor = require('../index').Editor;
-const EditorType = require('../index').EditorType;
-const Gender = require('../index').Gender;
+const util = require('../lib/util');
+const TitleType = require('../lib/index').TitleType;
+const TitleUnlock = require('../lib/index').TitleUnlock;
+const Editor = require('../lib/index').Editor;
+const EditorType = require('../lib/index').EditorType;
+const Gender = require('../lib/index').Gender;
 
 
 describe('TitleUnlock model', () => {

@@ -25,11 +25,11 @@ const expect = chai.expect;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const AliasSet = require('../index').AliasSet;
-const Alias = require('../index').Alias;
-const Language = require('../index').Language;
+const AliasSet = require('../lib/index').AliasSet;
+const Alias = require('../lib/index').Alias;
+const Language = require('../lib/index').Language;
 
 const aliasAttribs = {
 	id: 1,

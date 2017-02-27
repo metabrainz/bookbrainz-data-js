@@ -24,9 +24,9 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const uuid = require('node-uuid');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Area = require('../index').Area;
+const Area = require('../lib/index').Area;
 
 function createArea(name) {
 	const areaAttribs = {

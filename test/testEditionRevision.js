@@ -25,19 +25,19 @@ const expect = chai.expect;
 
 const Promise = require('bluebird');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Editor = require('../index').Editor;
-const EditorType = require('../index').EditorType;
-const Gender = require('../index').Gender;
-const Revision = require('../index').Revision;
-const Edition = require('../index').Edition;
-const EditionRevision = require('../index').EditionRevision;
-const Annotation = require('../index').Annotation;
-const Disambiguation = require('../index').Disambiguation;
-const AliasSet = require('../index').AliasSet;
-const IdentifierSet = require('../index').IdentifierSet;
-const RelationshipSet = require('../index').RelationshipSet;
+const Editor = require('../lib/index').Editor;
+const EditorType = require('../lib/index').EditorType;
+const Gender = require('../lib/index').Gender;
+const Revision = require('../lib/index').Revision;
+const Edition = require('../lib/index').Edition;
+const EditionRevision = require('../lib/index').EditionRevision;
+const Annotation = require('../lib/index').Annotation;
+const Disambiguation = require('../lib/index').Disambiguation;
+const AliasSet = require('../lib/index').AliasSet;
+const IdentifierSet = require('../lib/index').IdentifierSet;
+const RelationshipSet = require('../lib/index').RelationshipSet;
 
 const data = {
 	gender: {

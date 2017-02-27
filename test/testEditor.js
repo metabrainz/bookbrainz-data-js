@@ -25,12 +25,12 @@ const expect = chai.expect;
 
 const _ = require('lodash');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const Editor = require('../index').Editor;
-const EditorType = require('../index').EditorType;
-const Gender = require('../index').Gender;
-const Revision = require('../index').Revision;
+const Editor = require('../lib/index').Editor;
+const EditorType = require('../lib/index').EditorType;
+const Gender = require('../lib/index').Gender;
+const Revision = require('../lib/index').Revision;
 
 const genderAttribs = {
 	id: 1,

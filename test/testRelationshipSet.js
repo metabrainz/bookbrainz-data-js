@@ -25,12 +25,12 @@ const expect = chai.expect;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
-const util = require('../util');
+const util = require('../lib/util');
 const Bookshelf = require('./bookshelf');
-const RelationshipSet = require('../index').RelationshipSet;
-const Relationship = require('../index').Relationship;
-const RelationshipType = require('../index').RelationshipType;
-const Entity = require('../index').Entity;
+const RelationshipSet = require('../lib/index').RelationshipSet;
+const Relationship = require('../lib/index').Relationship;
+const RelationshipType = require('../lib/index').RelationshipType;
+const Entity = require('../lib/index').Entity;
 
 const relAttribs = {
 	id: 1,
