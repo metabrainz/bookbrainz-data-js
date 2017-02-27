@@ -36,9 +36,9 @@ const editorTypeAttribs = {
 	label: 'test_type'
 };
 const editorAttribs = {
+	genderId: 1,
 	id: 1,
 	name: 'bob',
-	genderId: 1,
 	typeId: 1
 };
 
@@ -81,8 +81,8 @@ describe('Annotation model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const revisionAttribs = {
-			id: 1,
-			authorId: 1
+			authorId: 1,
+			id: 1
 		};
 
 		const revisionPromise = new Revision(revisionAttribs)

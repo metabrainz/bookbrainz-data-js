@@ -47,23 +47,23 @@ const editorTypeData = {
 	label: 'test_type'
 };
 const editorData = {
+	genderId: 1,
 	id: 1,
 	name: 'bob',
-	genderId: 1,
 	typeId: 1
 };
 const setData = {id: 1};
 const revisionAttribs = {
-	id: 1,
-	authorId: 1
+	authorId: 1,
+	id: 1
 };
 const publisherAttribs = {
-	revisionId: 1,
 	aliasSetId: 1,
+	annotationId: 1,
+	disambiguationId: 1,
 	identifierSetId: 1,
 	relationshipSetId: 1,
-	annotationId: 1,
-	disambiguationId: 1
+	revisionId: 1
 };
 
 describe('EditorEntityVisits model', () => {
@@ -81,8 +81,8 @@ describe('EditorEntityVisits model', () => {
 					new IdentifierSet(setData).save(null, {method: 'insert'}),
 					new RelationshipSet(setData).save(null, {method: 'insert'}),
 					new Disambiguation({
-						id: 1,
-						comment: 'Test Disambiguation'
+						comment: 'Test Disambiguation',
+						id: 1
 					})
 						.save(null, {method: 'insert'})
 				])
@@ -92,8 +92,8 @@ describe('EditorEntityVisits model', () => {
 			)
 			.then(() =>
 				new Annotation({
-					id: 1,
 					content: 'Test Annotation',
+					id: 1,
 					lastRevisionId: 1
 				})
 					.save(null, {method: 'insert'}))
@@ -127,9 +127,9 @@ describe('EditorEntityVisits model', () => {
 		const editorVisitsPromise = publisherPromise
 			.then((publisher) =>
 				new EditorEntityVisits({
-					id: 1,
+					bbid: publisher.attributes.bbid,
 					editorId: editorData.id,
-					bbid: publisher.attributes.bbid
+					id: 1
 				})
 				.save(null, {method: 'insert'})
 			);

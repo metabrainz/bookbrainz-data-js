@@ -22,10 +22,10 @@ const config = {
 	database: {
 		client: 'pg',
 		connection: {
-			host: '127.0.0.1',
 			database: 'bookbrainz_test',
-			user: 'postgres',
-			password: ''
+			host: '127.0.0.1',
+			password: '',
+			user: 'postgres'
 		}
 	}
 };

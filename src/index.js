@@ -41,6 +41,7 @@ module.exports = {
 			const modelFile = `./${path.join('models/', file)}`;
 			this[modelName] = require(modelFile)(bookshelf);
 		});
+
 		/* eslint-enable global-require */
 	}
 };

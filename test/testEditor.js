@@ -43,9 +43,9 @@ const editorTypeAttribs = {
 };
 
 const editorAttribs = {
+	genderId: 1,
 	id: 1,
 	name: 'bob',
-	genderId: 1,
 	typeId: 1
 };
 
@@ -78,8 +78,8 @@ describe('Editor model', () => {
 			.save(null, {method: 'insert'})
 			.then(() => {
 				const revisionAttribs = {
-					id: 1,
-					authorId: 1
+					authorId: 1,
+					id: 1
 				};
 
 				return new Revision(revisionAttribs)

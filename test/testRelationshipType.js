@@ -34,9 +34,9 @@ describe('RelationshipType model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const relTypeData = {
-			label: 'test_type',
 			description: 'description',
 			displayTemplate: 'display',
+			label: 'test_type',
 			sourceEntityType: 'Creator',
 			targetEntityType: 'Creator'
 		};

@@ -34,12 +34,12 @@ describe('IdentifierType model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const idTypeData = {
-			label: 'test_type',
 			description: 'description',
 			detectionRegex: 'detection',
-			validationRegex: 'validation',
 			displayTemplate: 'display',
-			entityType: 'Creator'
+			entityType: 'Creator',
+			label: 'test_type',
+			validationRegex: 'validation'
 		};
 
 		const idTypeCreationPromise = new IdentifierType(idTypeData)

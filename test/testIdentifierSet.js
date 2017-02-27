@@ -48,13 +48,13 @@ function createIdentifierSet(identifiers) {
 
 describe('IdentifierSet model', () => {
 	const idTypeAttribs = {
-		id: 1,
-		label: 'test_type',
 		description: 'description',
 		detectionRegex: 'detection',
-		validationRegex: 'validation',
 		displayTemplate: 'display',
-		entityType: 'Creator'
+		entityType: 'Creator',
+		id: 1,
+		label: 'test_type',
+		validationRegex: 'validation'
 	};
 
 	beforeEach(() =>

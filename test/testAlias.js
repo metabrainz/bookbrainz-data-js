@@ -30,13 +30,13 @@ const Language = require('../lib/index').Language;
 
 describe('Alias model', () => {
 	const languageAttribs = {
+		frequency: 1,
 		id: 1,
-		name: 'English',
-		isoCode2t: 'eng',
-		isoCode2b: 'eng',
-		isoCode3: 'eng',
 		isoCode1: 'en',
-		frequency: 1
+		isoCode2b: 'eng',
+		isoCode2t: 'eng',
+		isoCode3: 'eng',
+		name: 'English'
 	};
 
 	beforeEach(() =>
@@ -53,10 +53,10 @@ describe('Alias model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		const aliasAttribs = {
 			id: 1,
-			name: 'Bob Marley',
-			sortName: 'Marley, Bob',
 			languageId: 1,
-			primary: true
+			name: 'Bob Marley',
+			primary: true,
+			sortName: 'Marley, Bob'
 		};
 
 		const aliasPromise = new Alias(aliasAttribs)

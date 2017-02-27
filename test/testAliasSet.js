@@ -33,16 +33,16 @@ const Language = require('../lib/index').Language;
 
 const aliasAttribs = {
 	id: 1,
-	name: 'Bob Marley',
-	sortName: 'Marley, Bob',
 	languageId: 1,
-	primary: true
+	name: 'Bob Marley',
+	primary: true,
+	sortName: 'Marley, Bob'
 };
 
 function createAliasSet(defaultAlias, aliases) {
 	return new AliasSet({
-		id: 1,
-		defaultAliasId: defaultAlias.get('id')
+		defaultAliasId: defaultAlias.get('id'),
+		id: 1
 	})
 		.save(null, {method: 'insert'})
 		.then((model) =>
@@ -53,13 +53,13 @@ function createAliasSet(defaultAlias, aliases) {
 
 describe('AliasSet model', () => {
 	const languageAttribs = {
+		frequency: 1,
 		id: 1,
-		name: 'English',
-		isoCode2t: 'eng',
-		isoCode2b: 'eng',
-		isoCode3: 'eng',
 		isoCode1: 'en',
-		frequency: 1
+		isoCode2b: 'eng',
+		isoCode2t: 'eng',
+		isoCode3: 'eng',
+		name: 'English'
 	};
 
 	beforeEach(() =>

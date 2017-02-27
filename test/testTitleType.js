@@ -33,9 +33,11 @@ describe('TitleType model', () => {
 	);
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const titleTypePromise = new TitleType({id: 1,
-			title: 'testTitle',
-			description: 'test description'})
+		const titleTypePromise = new TitleType({
+			description: 'test description',
+			id: 1,
+			title: 'testTitle'
+		})
 			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())
 			.then((titleType) => titleType.toJSON());

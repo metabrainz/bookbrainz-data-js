@@ -38,15 +38,15 @@ describe('TitleUnlock model', () => {
 		label: 'test_type'
 	};
 	const editorAttribs = {
+		genderId: 1,
 		id: 1,
 		name: 'bob',
-		genderId: 1,
 		typeId: 1
 	};
 	const titleTypeAttribs = {
+		description: 'test_desc',
 		id: 1,
-		title: 'test_title',
-		description: 'test_desc'
+		title: 'test_title'
 	};
 
 	beforeEach(() =>
@@ -79,8 +79,8 @@ describe('TitleUnlock model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const unlockPromise = new TitleUnlock({
-			id: 1,
 			editorId: 1,
+			id: 1,
 			titleId: 1
 		})
 			.save(null, {method: 'insert'})

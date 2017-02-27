@@ -37,16 +37,16 @@ describe('AchievementUnlock model', () => {
 		label: 'test_type'
 	};
 	const editorAttribs = {
+		genderId: 1,
 		id: 1,
 		name: 'bob',
-		genderId: 1,
 		typeId: 1
 	};
 	const AchievementTypeAttribs = {
-		id: 1,
-		name: 'test_type',
+		badgeUrl: 'http://test.com/',
 		description: 'test_desc',
-		badgeUrl: 'http://test.com/'
+		id: 1,
+		name: 'test_type'
 	};
 
 	beforeEach(() =>
@@ -79,9 +79,9 @@ describe('AchievementUnlock model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const unlockPromise = new AchievementUnlock({
-			id: 1,
+			achievementId: 1,
 			editorId: 1,
-			achievementId: 1
+			id: 1
 		})
 			.save(null, {method: 'insert'})
 			.then((model) => model.refresh())

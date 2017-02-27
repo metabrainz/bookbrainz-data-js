@@ -34,16 +34,16 @@ const Entity = require('../lib/index').Entity;
 
 const relAttribs = {
 	id: 1,
-	typeId: 1,
 	sourceBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
-	targetBbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
+	targetBbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
+	typeId: 1
 };
 
 const relTypeAttribs = {
-	id: 1,
-	label: 'test_type',
 	description: 'description',
 	displayTemplate: 'display',
+	id: 1,
+	label: 'test_type',
 	sourceEntityType: 'Creator',
 	targetEntityType: 'Creator'
 };
