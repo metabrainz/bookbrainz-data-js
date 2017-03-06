@@ -21,14 +21,13 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const Editor = require('../lib/index').Editor;
-const EditorType = require('../lib/index').EditorType;
-const Gender = require('../lib/index').Gender;
-const Revision = require('../lib/index').Revision;
+const {
+	bookshelf, Editor, EditorType, Gender, Revision
+} = require('./bookshelf');
+
 
 describe('Revision model', () => {
 	const editorTypeAttribs = {
@@ -59,7 +58,7 @@ describe('Revision model', () => {
 	afterEach(function truncate() {
 		this.timeout(0);
 
-		return util.truncateTables(Bookshelf, [
+		return util.truncateTables(bookshelf, [
 			'bookbrainz.revision',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',

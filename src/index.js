@@ -22,26 +22,28 @@ const _ = require('lodash');
 const glob = require('glob');
 const path = require('path');
 
-module.exports = {
-	init(config) {
-		/* eslint-disable global-require */
-		const bookshelf = require('bookshelf')(require('knex')(config));
-		bookshelf.plugin('registry');
-		bookshelf.plugin('visibility');
-		bookshelf.plugin('virtuals');
+module.exports = function init(config) {
+	/* eslint-disable global-require */
+	const bookshelf = require('bookshelf')(require('knex')(config));
+	bookshelf.plugin('registry');
+	bookshelf.plugin('visibility');
+	bookshelf.plugin('virtuals');
 
-		this.bookshelf = bookshelf;
+	const modelsDirectory = path.join(__dirname, 'models');
+	const modelFiles = glob.sync('**/*.js', {cwd: modelsDirectory});
 
-		const modelsDirectory = path.join(__dirname, 'models');
-		const modelFiles = glob.sync('**/*.js', {cwd: modelsDirectory});
+	const output = {
+		bookshelf
+	};
 
-		modelFiles.forEach((file) => {
-			const modelName =
-				_.upperFirst(path.basename(file, path.extname(file)));
-			const modelFile = `./${path.join('models/', file)}`;
-			this[modelName] = require(modelFile)(bookshelf);
-		});
+	modelFiles.forEach((file) => {
+		const modelName =
+			_.upperFirst(path.basename(file, path.extname(file)));
+		const modelFile = `./${path.join('models/', file)}`;
+		output[modelName] = require(modelFile)(bookshelf);
+	});
 
-		/* eslint-enable global-require */
-	}
+	return output;
+
+	/* eslint-enable global-require */
 };

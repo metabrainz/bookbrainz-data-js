@@ -21,12 +21,10 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const Alias = require('../lib/index').Alias;
-const Language = require('../lib/index').Language;
+const {bookshelf, Alias, Language} = require('./bookshelf');
 
 describe('Alias model', () => {
 	const languageAttribs = {
@@ -44,7 +42,7 @@ describe('Alias model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(Bookshelf, [
+		util.truncateTables(bookshelf, [
 			'bookbrainz.alias',
 			'musicbrainz.language'
 		])

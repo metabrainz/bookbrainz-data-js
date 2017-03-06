@@ -21,15 +21,12 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
-const Bookshelf = require('./bookshelf');
+const {
+	bookshelf, AchievementType, AchievementUnlock, Editor, EditorType, Gender
+} = require('./bookshelf');
 const util = require('../lib/util');
-const AchievementType = require('../lib/index').AchievementType;
-const Editor = require('../lib/index').Editor;
-const EditorType = require('../lib/index').EditorType;
-const Gender = require('../lib/index').Gender;
-const AchievementUnlock = require('../lib/index').AchievementUnlock;
 
 describe('AchievementUnlock model', () => {
 	const editorTypeAttribs = {
@@ -70,7 +67,7 @@ describe('AchievementUnlock model', () => {
 	afterEach(function truncate() {
 		this.timeout();
 
-		return util.truncateTables(Bookshelf, [
+		return util.truncateTables(bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',
 			'bookbrainz.editor', 'bookbrainz.achievement_unlock',
 			'bookbrainz.achievement_type'

@@ -21,15 +21,14 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const AchievementType = require('../lib/index').AchievementType;
+const {bookshelf, AchievementType} = require('./bookshelf');
 
 describe('AchievementType model', () => {
 	afterEach(() =>
-		util.truncateTables(Bookshelf, ['bookbrainz.achievement_type'])
+		util.truncateTables(bookshelf, ['bookbrainz.achievement_type'])
 	);
 
 	it('should return a JSON object with correct keys when saved', () => {

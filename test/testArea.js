@@ -21,12 +21,11 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 const uuid = require('node-uuid');
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const Area = require('../lib/index').Area;
+const {bookshelf, Area} = require('./bookshelf');
 
 function createArea(name) {
 	const areaAttribs = {
@@ -43,7 +42,7 @@ function createArea(name) {
 
 describe('Area model', () => {
 	afterEach(() =>
-		util.truncateTables(Bookshelf, ['musicbrainz.area'])
+		util.truncateTables(bookshelf, ['musicbrainz.area'])
 	);
 
 	it('should return a JSON object with correct keys when saved', () => {

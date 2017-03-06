@@ -21,16 +21,14 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const RelationshipSet = require('../lib/index').RelationshipSet;
-const Relationship = require('../lib/index').Relationship;
-const RelationshipType = require('../lib/index').RelationshipType;
-const Entity = require('../lib/index').Entity;
+const {
+	bookshelf, RelationshipSet, Relationship, RelationshipType, Entity
+} = require('./bookshelf');
 
 const relAttribs = {
 	id: 1,
@@ -79,7 +77,7 @@ describe('RelationshipSet model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(Bookshelf, [
+		util.truncateTables(bookshelf, [
 			'bookbrainz.relationship_set',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',

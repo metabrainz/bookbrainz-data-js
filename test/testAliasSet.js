@@ -21,15 +21,12 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 const _ = require('lodash');
 const Promise = require('bluebird');
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const AliasSet = require('../lib/index').AliasSet;
-const Alias = require('../lib/index').Alias;
-const Language = require('../lib/index').Language;
+const {bookshelf, AliasSet, Alias, Language} = require('./bookshelf');
 
 const aliasAttribs = {
 	id: 1,
@@ -69,7 +66,7 @@ describe('AliasSet model', () => {
 	afterEach(function truncate() {
 		this.timeout(0);
 
-		return util.truncateTables(Bookshelf, [
+		return util.truncateTables(bookshelf, [
 			'bookbrainz.alias_set',
 			'bookbrainz.alias',
 			'musicbrainz.language'

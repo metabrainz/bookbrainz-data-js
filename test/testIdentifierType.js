@@ -21,15 +21,14 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const IdentifierType = require('../lib/index').IdentifierType;
+const {bookshelf, IdentifierType} = require('./bookshelf');
 
 describe('IdentifierType model', () => {
 	afterEach(() =>
-		util.truncateTables(Bookshelf, ['bookbrainz.identifier_type'])
+		util.truncateTables(bookshelf, ['bookbrainz.identifier_type'])
 	);
 
 	it('should return a JSON object with correct keys when saved', () => {

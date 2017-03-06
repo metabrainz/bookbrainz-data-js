@@ -21,15 +21,12 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
-const Bookshelf = require('./bookshelf');
+const {
+	bookshelf, TitleType, TitleUnlock, Editor, EditorType, Gender
+} = require('./bookshelf');
 const util = require('../lib/util');
-const TitleType = require('../lib/index').TitleType;
-const TitleUnlock = require('../lib/index').TitleUnlock;
-const Editor = require('../lib/index').Editor;
-const EditorType = require('../lib/index').EditorType;
-const Gender = require('../lib/index').Gender;
 
 
 describe('TitleUnlock model', () => {
@@ -70,7 +67,7 @@ describe('TitleUnlock model', () => {
 	afterEach(function truncate() {
 		this.timeout();
 
-		return util.truncateTables(Bookshelf, [
+		return util.truncateTables(bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',
 			'bookbrainz.editor', 'bookbrainz.title_unlock',
 			'bookbrainz.title_type'

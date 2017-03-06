@@ -21,12 +21,10 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const Identifier = require('../lib/index').Identifier;
-const IdentifierType = require('../lib/index').IdentifierType;
+const {bookshelf, Identifier, IdentifierType} = require('./bookshelf');
 
 const idAttribs = {
 	id: 1,
@@ -51,7 +49,7 @@ describe('Identifier model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(Bookshelf, [
+		util.truncateTables(bookshelf, [
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
 		])

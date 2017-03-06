@@ -30,7 +30,4 @@ const config = {
 	}
 };
 
-require('../lib/index').init(config.database);
-const bookshelf = require('bookshelf')(require('knex')(config.database));
-
-module.exports = bookshelf;
+module.exports = require('../lib/index')(config.database);

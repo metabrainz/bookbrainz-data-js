@@ -21,15 +21,14 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const Gender = require('../lib/index').Gender;
+const {bookshelf, Gender} = require('./bookshelf');
 
 describe('Gender model', () => {
 	afterEach(() =>
-		util.truncateTables(Bookshelf, ['musicbrainz.gender'])
+		util.truncateTables(bookshelf, ['musicbrainz.gender'])
 	);
 
 	it('should return a JSON object with correct keys when saved', () => {

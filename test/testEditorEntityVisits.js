@@ -21,22 +21,16 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-const expect = chai.expect;
+const {expect} = chai;
 const Promise = require('bluebird');
 
 const util = require('../lib/util');
-const Bookshelf = require('./bookshelf');
-const EditorEntityVisits = require('../lib/index').EditorEntityVisits;
-const Revision = require('../lib/index').Revision;
-const Gender = require('../lib/index').Gender;
-const EditorType = require('../lib/index').EditorType;
-const Editor = require('../lib/index').Editor;
-const Annotation = require('../lib/index').Annotation;
-const Disambiguation = require('../lib/index').Disambiguation;
-const AliasSet = require('../lib/index').AliasSet;
-const IdentifierSet = require('../lib/index').IdentifierSet;
-const RelationshipSet = require('../lib/index').RelationshipSet;
-const Publisher = require('../lib/index').Publisher;
+const {
+	bookshelf, EditorEntityVisits, Revision, Gender, EditorType, Editor,
+	Annotation, Disambiguation, AliasSet, IdentifierSet, RelationshipSet,
+	Publisher
+} = require('./bookshelf');
+
 
 const genderData = {
 	id: 1,
@@ -105,7 +99,7 @@ describe('EditorEntityVisits model', () => {
 
 	afterEach(function truncate() {
 		this.timeout(0);
-		return util.truncateTables(Bookshelf, [
+		return util.truncateTables(bookshelf, [
 			'bookbrainz._editor_entity_visits',
 			'bookbrainz.entity',
 			'bookbrainz.revision',
