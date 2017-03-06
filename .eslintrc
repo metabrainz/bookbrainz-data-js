@@ -1,14 +1,24 @@
 ---
 parserOptions:
-  ecmaVersion: 6
+  ecmaVersion: 8
+  sourceType: module
   ecmaFeatures:
+    jsx: true
+    modules: false
+    generators: true
     experimentalObjectRestSpread: true
+plugins:
+  - import
 env:
   node: true
   es6: true
 rules:
   arrow-body-style: 2
+  class-methods-use-this: 1
   comma-dangle: 2
+  func-call-spacing:
+    - 2
+  lines-around-directive: 2
   no-case-declarations: 2
   no-cond-assign:
     - 2
@@ -25,22 +35,25 @@ rules:
   no-ex-assign: 2
   no-extra-boolean-cast: 2
   no-extra-parens:
-    - 2
+    - 1
     - all
     -
       nestedBinaryExpressions: false
+      ignoreJSX: multi-line
   no-extra-semi: 2
   no-func-assign: 2
+  no-global-assign: 2
   no-inner-declarations:
     - 2
     - both
   no-invalid-regexp: 2
   no-irregular-whitespace: 2
   no-magic-numbers:
-    - 2
+    - 1
     -
       enforceConst: true
       detectObjects: true
+      ignoreArrayIndexes: true
       ignore:
         - 0
         - 1
@@ -52,14 +65,21 @@ rules:
   no-prototype-builtins: 2
   no-regex-spaces: 2
   no-sparse-arrays: 2
+  no-template-curly-in-string: 2
   no-unreachable: 2
   no-unsafe-finally: 2
+  no-unsafe-negation: 2
+  prefer-numeric-literals: 2
+  prefer-destructuring: 1
+  prefer-promise-reject-errors: 2
+  sort-keys: 2
   use-isnan: 2
   valid-jsdoc:
     - 2
     -
       prefer:
         return: returns
+      requireReturn: false
   valid-typeof: 2
   no-unexpected-multiline: 2
 
@@ -68,7 +88,7 @@ rules:
   consistent-return: 2
   block-scoped-var: 2
   complexity:
-    - 2
+    - 1
     - 10
   curly: 2
   default-case: 2
@@ -79,12 +99,12 @@ rules:
   eqeqeq:
     - 2
     - allow-null
+  func-name-matching: 1
   no-alert: 2
-  guard-for-in: 2
+  no-await-in-loop: 1
   no-caller: 2
   no-div-regex: 2
   no-else-return: 2
-  no-empty-function: 2
   no-eq-null: 2
   no-eval: 2
   no-extend-native: 2
@@ -109,19 +129,20 @@ rules:
   no-octal-escape: 2
   no-octal: 2
   no-param-reassign: 2
-  no-process-env: 2
+  no-process-env: 1
   no-proto: 2
   no-redeclare: 2
   no-return-assign: 2
+  no-return-await: 2
   no-script-url: 2
   no-self-compare: 2
   no-sequences: 2
   no-throw-literal: 2
-  no-unused-expressions: 2
   no-unused-labels: 2
   no-useless-call: 2
   no-useless-concat: 2
-  no-useless-escape: 2
+  no-useless-escape: 1
+  no-useless-return: 2
   no-void: 2
   no-warning-comments: 1
   no-with: 2
@@ -134,7 +155,7 @@ rules:
 
   # Strict Mode
   strict:
-    - 2
+    - 1
     - global
 
   # Variables
@@ -147,7 +168,7 @@ rules:
   no-undef-init: 2
   no-undef: 2
   no-undefined: 2
-  no-unused-vars: 2
+  no-unused-vars: 1
   no-use-before-define: 2
 
   # Node and CommonJS
@@ -175,7 +196,10 @@ rules:
     -
       allowSingleLine: true
   # Transitional
-  camelcase: 2
+  camelcase:
+    - 0
+    -
+      properties: always
   comma-spacing: 2
   comma-style: 2
   computed-property-spacing: 2
@@ -210,7 +234,8 @@ rules:
   lines-around-comment:
     - 2
     -
-        beforeBlockComment: false
+      allowBlockStart: true
+      beforeBlockComment: true
   key-spacing: 2
   linebreak-style: 2
   max-nested-callbacks:
@@ -221,24 +246,20 @@ rules:
     -
       capIsNew: false
   new-parens: 2
-  newline-per-chained-call: 2
   no-array-constructor: 2
   no-continue: 2
   no-inline-comments: 2
   no-lonely-if: 2
-  no-mixed-operators: 2
   no-mixed-spaces-and-tabs:
     - 2
     - smart-tabs
   no-multiple-empty-lines: 2
-  no-negated-condition: 2
   no-nested-ternary: 2
   no-new-object: 2
   no-spaced-func: 2
   no-trailing-spaces: 2
   no-unneeded-ternary: 2
   object-curly-spacing: 2
-  object-property-newline: 2
   one-var:
     - 2
     - never
@@ -277,7 +298,6 @@ rules:
   wrap-regex: 2
 
   # ECMAScript 6
-  arrow-parens: 2
   arrow-spacing: 2
   constructor-super: 2
   generator-star-spacing:
@@ -293,12 +313,6 @@ rules:
   object-shorthand: 2
   prefer-arrow-callback: 2
   prefer-const: 2
-  prefer-reflect:
-    - 2
-    -
-      exceptions:
-        - delete
-  prefer-spread: 2
   prefer-template: 2
   rest-spread-spacing: 2
 
@@ -314,18 +328,19 @@ rules:
   max-params:
     - 1
     - 6
-  max-statements-per-line: 2
   max-statements:
     - 1
     - 50
-  multiline-ternary: 2
   no-bitwise: 2
 
   # Project Specific Settings (Node-only)
-  no-console: 2
+  no-console: 0
 
   array-callback-return: 2
-  prefer-rest-params: 2
+  no-confusing-arrow:
+    - 2
+    -
+      allowParens: true
   no-unmodified-loop-condition: 2
   no-useless-constructor: 2
   no-whitespace-before-property: 2
@@ -337,3 +352,33 @@ rules:
   no-self-assign: 2
   template-curly-spacing: 2
   yield-star-spacing: 2
+  import/no-unresolved: 2
+  import/named: 1
+  import/default: 1
+  import/namespace: 2
+  import/no-absolute-path: 2
+  import/no-dynamic-require: 1
+  import/no-internal-modules:
+    - 2
+    -
+      allow:
+        - "**/lib/**"
+  import/export: 2
+  import/no-named-as-default: 2
+  import/no-named-as-default-member: 2
+  import/no-extraneous-dependencies: 2
+  import/no-mutable-exports: 2
+  import/unambiguous: 1
+  import/no-commonjs: 1
+  import/no-amd: 2
+  import/no-nodejs-modules: 0
+  import/first: 2
+  import/no-duplicates: 2
+  import/no-namespace: 1
+  import/newline-after-import:
+    - 1
+    -
+      count: 2
+  import/prefer-default-export: 2
+  import/no-unassigned-import: 1
+  import/no-named-default: 2
