@@ -362,6 +362,7 @@ rules:
     - 2
     -
       allow:
+        - "**/models/**"
         - "**/lib/**"
   import/export: 2
   import/no-named-as-default: 2
