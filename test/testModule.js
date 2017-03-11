@@ -16,17 +16,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import _ from 'lodash';
+import bookshelf from './bookshelf';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import glob from 'glob';
+import path from 'path';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const _ = require('lodash');
-const glob = require('glob');
-const path = require('path');
-
-const bookshelf = require('./bookshelf');
 
 describe('Module', () => {
 	it('should return one model for each file in the models directory', () => {

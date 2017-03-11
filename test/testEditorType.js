@@ -16,15 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import {EditorType, bookshelf} from './bookshelf';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import util from '../lib/util';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const {expect} = chai;
-
-const util = require('../lib/util');
-const {bookshelf, EditorType} = require('./bookshelf');
 
 describe('EditorType model', () => {
 	afterEach(() =>

@@ -16,21 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import {
+	AliasSet, Annotation, Disambiguation, Editor, EditorEntityVisits,
+	EditorType, Gender, IdentifierSet, Publisher, RelationshipSet, Revision,
+	bookshelf
+} from './bookshelf';
+import Promise from 'bluebird';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import util from '../lib/util';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const Promise = require('bluebird');
-
-const util = require('../lib/util');
-const {
-	bookshelf, EditorEntityVisits, Revision, Gender, EditorType, Editor,
-	Annotation, Disambiguation, AliasSet, IdentifierSet, RelationshipSet,
-	Publisher
-} = require('./bookshelf');
-
 
 const genderData = {
 	id: 1,

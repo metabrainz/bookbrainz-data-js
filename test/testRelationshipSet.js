@@ -16,19 +16,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import {
+	Entity, Relationship, RelationshipSet, RelationshipType, bookshelf
+} from './bookshelf';
+import Promise from 'bluebird';
+import _ from 'lodash';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import util from '../lib/util';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const _ = require('lodash');
-const Promise = require('bluebird');
-
-const util = require('../lib/util');
-const {
-	bookshelf, RelationshipSet, Relationship, RelationshipType, Entity
-} = require('./bookshelf');
 
 const relAttribs = {
 	id: 1,

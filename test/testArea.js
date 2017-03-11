@@ -16,16 +16,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import {Area, bookshelf} from './bookshelf';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import util from '../lib/util';
+import uuid from 'node-uuid';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const uuid = require('node-uuid');
-
-const util = require('../lib/util');
-const {bookshelf, Area} = require('./bookshelf');
 
 function createArea(name) {
 	const areaAttribs = {
