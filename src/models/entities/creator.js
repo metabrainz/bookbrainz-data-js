@@ -16,9 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
 
-module.exports = (bookshelf) => {
+export default function(bookshelf) {
 	const CreatorData = bookshelf.model('CreatorData');
 
 	const Creator = CreatorData.extend({
@@ -46,4 +45,4 @@ module.exports = (bookshelf) => {
 	});
 
 	return bookshelf.model('Creator', Creator);
-};
+}

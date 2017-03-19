@@ -17,11 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
-
 import {camelToSnake, snakeToCamel} from '../../util';
 
-module.exports = (bookshelf) => {
+export default function(bookshelf) {
 	const EditionData = bookshelf.Model.extend({
 		aliasSet() {
 			return this.belongsTo('AliasSet', 'alias_set_id');
@@ -63,4 +61,4 @@ module.exports = (bookshelf) => {
 	});
 
 	return bookshelf.model('EditionData', EditionData);
-};
+}

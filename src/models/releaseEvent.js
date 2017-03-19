@@ -16,11 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
 
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../util';
 
-module.exports = (bookshelf) => {
+export default function(bookshelf) {
 	const ReleaseEvent = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
@@ -45,4 +44,4 @@ module.exports = (bookshelf) => {
 	});
 
 	return bookshelf.model('ReleaseEvent', ReleaseEvent);
-};
+}
