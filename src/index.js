@@ -16,66 +16,63 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-'use strict';
+import Bookshelf from 'bookshelf';
+import achievementType from './models/achievementType';
+import achievementUnlock from './models/achievementUnlock';
+import alias from './models/alias';
+import aliasSet from './models/aliasSet';
+import annotation from './models/annotation';
+import area from './models/area';
+import creator from './models/entities/creator';
+import creatorData from './models/data/creatorData';
+import creatorHeader from './models/headers/creatorHeader';
+import creatorRevision from './models/revisions/creatorRevision';
+import creatorType from './models/creatorType';
+import disambiguation from './models/disambiguation';
+import edition from './models/entities/edition';
+import editionData from './models/data/editionData';
+import editionFormat from './models/editionFormat';
+import editionHeader from './models/headers/editionHeader';
+import editionRevision from './models/revisions/editionRevision';
+import editionStatus from './models/editionStatus';
+import editor from './models/editor';
+import editorEntityVisits from './models/editorEntityVisits';
+import editorType from './models/editorType';
+import entity from './models/entity';
+import gender from './models/gender';
+import identifier from './models/identifier';
+import identifierSet from './models/identifierSet';
+import identifierType from './models/identifierType';
+import knex from 'knex';
+import language from './models/language';
+import languageSet from './models/languageSet';
+import note from './models/note';
+import publication from './models/entities/publication';
+import publicationData from './models/data/publicationData';
+import publicationHeader from './models/headers/publicationHeader';
+import publicationRevision from './models/revisions/publicationRevision';
+import publicationType from './models/publicationType';
+import publisher from './models/entities/publisher';
+import publisherData from './models/data/publisherData';
+import publisherHeader from './models/headers/publisherHeader';
+import publisherRevision from './models/revisions/publisherRevision';
+import publisherSet from './models/publisherSet';
+import publisherType from './models/publisherType';
+import relationship from './models/relationship';
+import relationshipSet from './models/relationshipSet';
+import relationshipType from './models/relationshipType';
+import releaseEvent from './models/releaseEvent';
+import releaseEventSet from './models/releaseEventSet';
+import revision from './models/revision';
+import titleType from './models/titleType';
+import titleUnlock from './models/titleUnlock';
+import work from './models/entities/work';
+import workData from './models/data/workData';
+import workHeader from './models/headers/workHeader';
+import workRevision from './models/revisions/workRevision';
+import workType from './models/workType';
 
-const achievementType = require('./models/achievementType');
-const achievementUnlock = require('./models/achievementUnlock');
-const alias = require('./models/alias');
-const aliasSet = require('./models/aliasSet');
-const annotation = require('./models/annotation');
-const area = require('./models/area');
-const creator = require('./models/entities/creator');
-const creatorData = require('./models/data/creatorData');
-const creatorHeader = require('./models/headers/creatorHeader');
-const creatorRevision = require('./models/revisions/creatorRevision');
-const edition = require('./models/entities/edition');
-const editionData = require('./models/data/editionData');
-const editionFormat = require('./models/editionFormat');
-const editionHeader = require('./models/headers/editionHeader');
-const editionRevision = require('./models/revisions/editionRevision');
-const editionStatus = require('./models/editionStatus');
-const editor = require('./models/editor');
-const editorEntityVisits = require('./models/editorEntityVisits');
-const editorType = require('./models/editorType');
-const entity = require('./models/entity');
-const gender = require('./models/gender');
-const disambiguation = require('./models/disambiguation');
-const creatorType = require('./models/creatorType');
-const identifier = require('./models/identifier');
-const identifierSet = require('./models/identifierSet');
-const identifierType = require('./models/identifierType');
-const language = require('./models/language');
-const languageSet = require('./models/languageSet');
-const note = require('./models/note');
-const publication = require('./models/entities/publication');
-const publicationData = require('./models/data/publicationData');
-const publicationHeader = require('./models/headers/publicationHeader');
-const publicationRevision = require('./models/revisions/publicationRevision');
-const publicationType = require('./models/publicationType');
-const publisher = require('./models/entities/publisher');
-const publisherData = require('./models/data/publisherData');
-const publisherHeader = require('./models/headers/publisherHeader');
-const publisherRevision = require('./models/revisions/publisherRevision');
-const publisherSet = require('./models/publisherSet');
-const publisherType = require('./models/publisherType');
-const relationship = require('./models/relationship');
-const relationshipSet = require('./models/relationshipSet');
-const relationshipType = require('./models/relationshipType');
-const releaseEvent = require('./models/releaseEvent');
-const releaseEventSet = require('./models/releaseEventSet');
-const revision = require('./models/revision');
-const titleType = require('./models/titleType');
-const titleUnlock = require('./models/titleUnlock');
-const work = require('./models/entities/work');
-const workData = require('./models/data/workData');
-const workHeader = require('./models/headers/workHeader');
-const workRevision = require('./models/revisions/workRevision');
-const workType = require('./models/workType');
-
-const Bookshelf = require('bookshelf');
-const knex = require('knex');
-
-module.exports = function init(config) {
+export default function init(config) {
 	const bookshelf = Bookshelf(knex(config));
 	bookshelf.plugin('registry');
 	bookshelf.plugin('visibility');
@@ -144,4 +141,4 @@ module.exports = function init(config) {
 		WorkType: workType(bookshelf),
 		bookshelf
 	};
-};
+}
