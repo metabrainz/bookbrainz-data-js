@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const Editor = bookshelf.Model.extend({
@@ -28,7 +28,7 @@ module.exports = (bookshelf) => {
 		area() {
 			return this.belongsTo('Area', 'area_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		gender() {
 			return this.belongsTo('Gender', 'gender_id');
 		},
@@ -37,7 +37,7 @@ module.exports = (bookshelf) => {
 			this.set('totalRevisions', this.get('totalRevisions') + 1);
 			this.set('revisionsApplied', this.get('revisionsApplied') + 1);
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		revisions() {
 			return this.hasMany('Revision', 'author_id');
 		},

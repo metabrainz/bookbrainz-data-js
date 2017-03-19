@@ -18,9 +18,9 @@
 
 'use strict';
 
-const _ = require('lodash');
+import {camelToSnake, snakeToCamel} from '../util';
 
-const util = require('../util');
+const _ = require('lodash');
 
 function formatWithISOFields(attrs) {
 	/* eslint-disable camelcase */
@@ -30,7 +30,7 @@ function formatWithISOFields(attrs) {
 	};
 
 	/* eslint-enable camelcase */
-	return _.mapKeys(util.camelToSnake(attrs), (value, key) => (
+	return _.mapKeys(camelToSnake(attrs), (value, key) => (
 		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
 	));
 }
@@ -41,7 +41,7 @@ function parseWithISOFields(attrs) {
 		isoCode2T: 'isoCode2t'
 	};
 
-	return _.mapKeys(util.snakeToCamel(attrs), (value, key) => (
+	return _.mapKeys(snakeToCamel(attrs), (value, key) => (
 		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
 	));
 }

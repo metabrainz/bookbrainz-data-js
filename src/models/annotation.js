@@ -18,16 +18,16 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const Annotation = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		lastRevision() {
 			return this.belongsTo('Revision', 'last_revision_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.annotation'
 	});
 

@@ -19,7 +19,7 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const EditionData = bookshelf.Model.extend({
@@ -38,7 +38,7 @@ module.exports = (bookshelf) => {
 		editionStatus() {
 			return this.belongsTo('EditionStatus', 'status_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
@@ -46,7 +46,7 @@ module.exports = (bookshelf) => {
 		languageSet() {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		publication() {
 			return this.belongsTo('Publication', 'publication_bbid');
 		},

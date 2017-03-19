@@ -19,7 +19,7 @@
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -66,7 +66,7 @@ describe('AchievementUnlock model', () => {
 	afterEach(function truncate() {
 		this.timeout();
 
-		return util.truncateTables(bookshelf, [
+		return truncateTables(bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',
 			'bookbrainz.editor', 'bookbrainz.achievement_unlock',
 			'bookbrainz.achievement_type'

@@ -21,7 +21,7 @@ import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -60,7 +60,7 @@ describe('IdentifierSet model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(bookshelf, [
+		truncateTables(bookshelf, [
 			'bookbrainz.identifier_set',
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'

@@ -18,13 +18,13 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const ReleaseEvent = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.release_event',
 		virtuals: {
 			date: {
@@ -32,10 +32,10 @@ module.exports = (bookshelf) => {
 					const year = this.get('year');
 					const month = this.get('month');
 					const day = this.get('day');
-					return util.formatDate(year, month, day);
+					return formatDate(year, month, day);
 				},
 				set(value) {
-					const parts = util.parseDate(value);
+					const parts = parseDate(value);
 					this.set('year', parts[0]);
 					this.set('month', parts[1]);
 					this.set('day', parts[2]);

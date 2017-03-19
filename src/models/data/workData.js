@@ -19,7 +19,7 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const WorkData = bookshelf.Model.extend({
@@ -32,7 +32,7 @@ module.exports = (bookshelf) => {
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
@@ -40,7 +40,7 @@ module.exports = (bookshelf) => {
 		languageSet() {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		relationshipSet() {
 			return this.belongsTo('RelationshipSet', 'relationship_set_id');
 		},

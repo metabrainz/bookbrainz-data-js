@@ -18,16 +18,16 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const AchievementType = bookshelf.Model.extend({
 		achievementUnlocks() {
 			return this.hasMany('AchievementUnlock', 'achievement_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.achievement_type'
 	});
 

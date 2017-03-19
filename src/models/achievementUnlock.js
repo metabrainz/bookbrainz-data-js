@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const AchievementUnlock = bookshelf.Model.extend({
@@ -28,9 +28,9 @@ module.exports = (bookshelf) => {
 		editor() {
 			return this.belongsTo('Editor', 'editor_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.achievement_unlock'
 	});
 

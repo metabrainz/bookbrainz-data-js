@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const Revision = bookshelf.Model.extend({
@@ -31,7 +31,7 @@ module.exports = (bookshelf) => {
 				'child_id'
 			);
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		notes() {
 			return this.hasMany('Note', 'revision_id');
@@ -42,7 +42,7 @@ module.exports = (bookshelf) => {
 				'parent_id'
 			);
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.revision'
 	});
 

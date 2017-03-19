@@ -18,13 +18,13 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const WorkHeader = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'bbid',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.work_header'
 	});
 

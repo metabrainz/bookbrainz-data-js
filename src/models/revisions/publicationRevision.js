@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, diffRevisions, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const PublicationRevision = bookshelf.Model.extend({
@@ -26,7 +26,7 @@ module.exports = (bookshelf) => {
 			return this.belongsTo('PublicationData', 'data_id');
 		},
 		diff(other) {
-			return util.diffRevisions(this, other, [
+			return diffRevisions(this, other, [
 				'annotation', 'disambiguation', 'aliasSet.aliases.language',
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships',
@@ -37,7 +37,7 @@ module.exports = (bookshelf) => {
 		entity() {
 			return this.belongsTo('PublicationHeader', 'bbid');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		parent() {
 			return this.related('revision').fetch()
@@ -57,7 +57,7 @@ module.exports = (bookshelf) => {
 						.fetch();
 				});
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		revision() {
 			return this.belongsTo('Revision', 'id');
 		},

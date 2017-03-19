@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const PublicationData = bookshelf.Model.extend({
@@ -35,12 +35,12 @@ module.exports = (bookshelf) => {
 			return this.hasMany('Edition', 'publication_bbid')
 			.query({where: {master: true}});
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		publicationType() {
 			return this.belongsTo('PublicationType', 'type_id');
 		},

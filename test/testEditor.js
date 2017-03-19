@@ -20,7 +20,7 @@ import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -61,7 +61,7 @@ describe('Editor model', () => {
 	afterEach(function truncate() {
 		this.timeout(0);
 
-		return util.truncateTables(bookshelf, [
+		return truncateTables(bookshelf, [
 			'bookbrainz.revision',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',

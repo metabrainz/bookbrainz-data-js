@@ -18,16 +18,16 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const TitleUnlock = bookshelf.Model.extend({
 		editor() {
 			return this.belongsTo('Editor', 'editor_id');
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		tableName: 'bookbrainz.title_unlock',
 		title() {
 			return this.belongsTo('TitleType', 'title_id');

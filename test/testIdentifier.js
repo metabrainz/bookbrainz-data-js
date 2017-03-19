@@ -19,7 +19,7 @@
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -48,7 +48,7 @@ describe('Identifier model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(bookshelf, [
+		truncateTables(bookshelf, [
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
 		])

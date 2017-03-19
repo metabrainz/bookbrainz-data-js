@@ -20,7 +20,7 @@ import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -71,7 +71,7 @@ describe('Publisher model', () => {
 	afterEach(function truncate() {
 		this.timeout(0);
 
-		return util.truncateTables(bookshelf, [
+		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
 			'bookbrainz.revision',
 			'bookbrainz.relationship_set',

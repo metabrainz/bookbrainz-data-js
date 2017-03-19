@@ -18,13 +18,13 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const RelationshipSet = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		relationships() {
 			return this.belongsToMany(
 				'Relationship', 'bookbrainz.relationship_set__relationship',

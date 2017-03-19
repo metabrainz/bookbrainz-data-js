@@ -1,10 +1,9 @@
-'use strict';
 
-const _ = require('lodash');
-const Promise = require('bluebird');
-const diff = require('deep-diff').diff;
+import Promise from 'bluebird';
+import _ from 'lodash';
+import {diff} from 'deep-diff';
 
-function snakeToCamel(attrs) {
+export function snakeToCamel(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
 
@@ -20,9 +19,8 @@ function snakeToCamel(attrs) {
 	},
 	{});
 }
-module.exports.snakeToCamel = snakeToCamel;
 
-function camelToSnake(attrs) {
+export function camelToSnake(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
 
@@ -38,9 +36,8 @@ function camelToSnake(attrs) {
 	},
 	{});
 }
-module.exports.camelToSnake = camelToSnake;
 
-class EntityTypeError extends Error {
+export class EntityTypeError extends Error {
 	constructor(message) {
 		super(message);
 		this.name = 'EntityTypeError';
@@ -49,23 +46,21 @@ class EntityTypeError extends Error {
 	}
 }
 
-module.exports.EntityTypeError = EntityTypeError;
-
-module.exports.validateEntityType = (model) => {
+export function validateEntityType(model) {
 	if (model.get('_type') !== model.typeId) {
 		throw new Error(
 			`Entity ${model.get('bbid')} is not a ${model.typeId}`
 		);
 	}
-};
+}
 
-module.exports.truncateTables =
-	(Bookshelf, tables) =>
-	Promise.each(tables,
+export function truncateTables(Bookshelf, tables) {
+	return Promise.each(tables,
 		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
 	);
+}
 
-module.exports.diffRevisions = (base, other, includes) => {
+export function diffRevisions(base, other, includes) {
 	function diffFilter(path, key) {
 		if (_.isString(key)) {
 			return key.startsWith('_pivot');
@@ -129,12 +124,12 @@ module.exports.diffRevisions = (base, other, includes) => {
 			diffFilter
 		)
 	);
-};
+}
 
 const YEAR_STR_LENGTH = 4;
 const MONTH_STR_LENGTH = 2;
 const DAY_STR_LENGTH = 2;
-module.exports.formatDate = (year, month, day) => {
+export function formatDate(year, month, day) {
 	if (!year) {
 		return null;
 	}
@@ -154,10 +149,10 @@ module.exports.formatDate = (year, month, day) => {
 	const dayString = _.padStart(day.toString(), DAY_STR_LENGTH, '0');
 
 	return `${yearString}-${monthString}-${dayString}`;
-};
+}
 
 
-module.exports.parseDate = (date) => {
+export function parseDate(date) {
 	if (!date) {
 		return [null, null, null];
 	}
@@ -176,4 +171,4 @@ module.exports.parseDate = (date) => {
 	}
 
 	return [null, null, null];
-};
+}

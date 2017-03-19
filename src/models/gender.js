@@ -18,12 +18,12 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const Gender = bookshelf.Model.extend({
-		format: util.camelToSnake,
-		parse: util.snakeToCamel,
+		format: camelToSnake,
+		parse: snakeToCamel,
 		tableName: 'musicbrainz.gender'
 	});
 

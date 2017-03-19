@@ -18,13 +18,13 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const ReleaseEventSet = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		releaseEvents() {
 			return this.belongsToMany(
 				'ReleaseEvent', 'bookbrainz.release_event_set__release_event',

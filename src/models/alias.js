@@ -18,16 +18,16 @@
 
 'use strict';
 
-const util = require('../util');
+import {camelToSnake, snakeToCamel} from '../util';
 
 module.exports = (bookshelf) => {
 	const Alias = bookshelf.Model.extend({
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		language() {
 			return this.belongsTo('Language', 'language_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		sets() {
 			return this.belongsToMany(
 				'AliasSet', 'bookbrainz.alias_set__alias', 'alias_id', 'set_id'

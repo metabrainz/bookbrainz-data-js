@@ -18,7 +18,7 @@
 
 'use strict';
 
-const util = require('../../util');
+import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../../util';
 
 module.exports = (bookshelf) => {
 	const PublisherData = bookshelf.Model.extend({
@@ -56,12 +56,12 @@ module.exports = (bookshelf) => {
 					});
 			}).fetchAll(options);
 		},
-		format: util.camelToSnake,
+		format: camelToSnake,
 		idAttribute: 'id',
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
-		parse: util.snakeToCamel,
+		parse: snakeToCamel,
 		publisherType() {
 			return this.belongsTo('PublisherType', 'type_id');
 		},
@@ -75,10 +75,10 @@ module.exports = (bookshelf) => {
 					const year = this.get('beginYear');
 					const month = this.get('beginMonth');
 					const day = this.get('beginDay');
-					return util.formatDate(year, month, day);
+					return formatDate(year, month, day);
 				},
 				set(value) {
-					const parts = util.parseDate(value);
+					const parts = parseDate(value);
 					this.set('beginYear', parts[0]);
 					this.set('beginMonth', parts[1]);
 					this.set('beginDay', parts[2]);
@@ -89,10 +89,10 @@ module.exports = (bookshelf) => {
 					const year = this.get('endYear');
 					const month = this.get('endMonth');
 					const day = this.get('endDay');
-					return util.formatDate(year, month, day);
+					return formatDate(year, month, day);
 				},
 				set(value) {
-					const parts = util.parseDate(value);
+					const parts = parseDate(value);
 					this.set('endYear', parts[0]);
 					this.set('endMonth', parts[1]);
 					this.set('endDay', parts[2]);

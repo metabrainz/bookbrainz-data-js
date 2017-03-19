@@ -21,7 +21,7 @@ import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import util from '../lib/util';
+import {truncateTables} from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -76,7 +76,7 @@ describe('RelationshipSet model', () => {
 	);
 
 	afterEach(() =>
-		util.truncateTables(bookshelf, [
+		truncateTables(bookshelf, [
 			'bookbrainz.relationship_set',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
