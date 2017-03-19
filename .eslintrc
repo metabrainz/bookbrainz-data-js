@@ -353,11 +353,11 @@ rules:
   template-curly-spacing: 2
   yield-star-spacing: 2
   import/no-unresolved: 2
-  import/named: 1
-  import/default: 1
+  import/named: 2
+  import/default: 2
   import/namespace: 2
   import/no-absolute-path: 2
-  import/no-dynamic-require: 1
+  import/no-dynamic-require: 2
   import/no-internal-modules:
     - 2
     -
@@ -369,17 +369,17 @@ rules:
   import/no-named-as-default-member: 2
   import/no-extraneous-dependencies: 2
   import/no-mutable-exports: 2
-  import/unambiguous: 1
-  import/no-commonjs: 1
+  import/unambiguous: 2
+  import/no-commonjs: 2
   import/no-amd: 2
   import/no-nodejs-modules: 0
   import/first: 2
   import/no-duplicates: 2
-  import/no-namespace: 1
+  import/no-namespace: 2
   import/newline-after-import:
-    - 1
+    - 2
     -
       count: 2
   import/prefer-default-export: 2
-  import/no-unassigned-import: 1
+  import/no-unassigned-import: 2
   import/no-named-default: 2
