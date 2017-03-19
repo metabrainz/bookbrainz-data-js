@@ -16,15 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {
-	AchievementType, AchievementUnlock, Editor, EditorType, Gender, bookshelf
-} from './bookshelf';
+import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import util from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
+const {
+	AchievementType, AchievementUnlock, Editor, EditorType, Gender, bookshelf
+} = bookbrainzData;
 
 describe('AchievementUnlock model', () => {
 	const editorTypeAttribs = {

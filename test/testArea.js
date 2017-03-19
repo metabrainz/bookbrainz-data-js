@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {Area, bookshelf} from './bookshelf';
+import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import util from '../lib/util';
@@ -24,6 +24,7 @@ import uuid from 'node-uuid';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
+const {Area, bookshelf} = bookbrainzData;
 
 function createArea(name) {
 	const areaAttribs = {

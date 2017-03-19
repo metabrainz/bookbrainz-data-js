@@ -16,15 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {Alias, AliasSet, Language, bookshelf} from './bookshelf';
 import Promise from 'bluebird';
 import _ from 'lodash';
+import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import util from '../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
+const {Alias, AliasSet, Language, bookshelf} = bookbrainzData;
 
 const aliasAttribs = {
 	id: 1,
