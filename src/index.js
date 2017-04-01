@@ -66,7 +66,7 @@ import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
-import util from './util';
+import * as util from './util';
 import work from './models/entities/work';
 import workData from './models/data/workData';
 import workHeader from './models/headers/workHeader';
