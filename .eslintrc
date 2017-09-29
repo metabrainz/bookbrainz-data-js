@@ -1,4 +1,5 @@
 ---
+parser: babel-eslint
 parserOptions:
   ecmaVersion: 8
   sourceType: module
@@ -9,6 +10,10 @@ parserOptions:
     experimentalObjectRestSpread: true
 plugins:
   - import
+  - flowtype
+  - babel
+extends:
+  - plugin:flowtype/recommended
 env:
   node: true
   es6: true
@@ -115,7 +120,7 @@ rules:
   no-implicit-coercion: 2
   no-implicit-globals: 2
   no-implied-eval: 2
-  no-invalid-this: 2
+  babel/no-invalid-this: 2
   no-iterator: 2
   no-labels: 2
   no-lone-blocks: 2
@@ -241,7 +246,7 @@ rules:
   max-nested-callbacks:
     - 2
     - 5
-  new-cap:
+  babel/new-cap:
     - 2
     -
       capIsNew: false
@@ -259,7 +264,7 @@ rules:
   no-spaced-func: 2
   no-trailing-spaces: 2
   no-unneeded-ternary: 2
-  object-curly-spacing: 2
+  babel/object-curly-spacing: 2
   one-var:
     - 2
     - never
@@ -283,13 +288,14 @@ rules:
     -
       before: false
       after: true
-  semi: 2
+  babel/semi: 2
   sort-vars: 2
   keyword-spacing: 2
   space-before-blocks: 2
   space-before-function-paren:
     - 2
-    - never
+    -
+      named: never
   space-in-parens: 2
   space-infix-ops: 2
   space-unary-ops: 2
@@ -353,11 +359,11 @@ rules:
   template-curly-spacing: 2
   yield-star-spacing: 2
   import/no-unresolved: 2
-  import/named: 2
-  import/default: 2
+  import/named: 1
+  import/default: 1
   import/namespace: 2
   import/no-absolute-path: 2
-  import/no-dynamic-require: 2
+  import/no-dynamic-require: 1
   import/no-internal-modules:
     - 2
     -
@@ -369,17 +375,14 @@ rules:
   import/no-named-as-default-member: 2
   import/no-extraneous-dependencies: 2
   import/no-mutable-exports: 2
-  import/unambiguous: 2
-  import/no-commonjs: 2
+  import/unambiguous: 1
+  import/no-commonjs: 1
   import/no-amd: 2
   import/no-nodejs-modules: 0
   import/first: 2
   import/no-duplicates: 2
-  import/no-namespace: 2
   import/newline-after-import:
-    - 2
+    - 1
     -
       count: 2
-  import/prefer-default-export: 2
-  import/no-unassigned-import: 2
   import/no-named-default: 2
