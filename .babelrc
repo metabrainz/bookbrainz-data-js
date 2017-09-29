@@ -1,18 +1,21 @@
 {
-  "env": {
-    "cov": {
-      "plugins": ["istanbul"]
-    }
-  },
   "plugins": [
+    "lodash",
     "transform-es2015-modules-commonjs",
     "transform-object-rest-spread",
-    "transform-runtime",
-    "array-includes"
+    "transform-class-properties",
+    "array-includes",
+    [
+        "transform-runtime", {
+            "polyfill": false,
+            "regenerator": true
+        }
+    ]
   ],
   "presets": [
-    "es2015",
-    "es2016",
-    "es2017"
+	  "flow",
+	  "es2015",
+	  "es2016",
+	  "es2017"
   ]
 }
