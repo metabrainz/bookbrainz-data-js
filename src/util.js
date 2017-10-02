@@ -147,6 +147,15 @@ export function diffRevisions(base, other, includes) {
 const YEAR_STR_LENGTH = 4;
 const MONTH_STR_LENGTH = 2;
 const DAY_STR_LENGTH = 2;
+
+/**
+ * Produce an ISO 8601-formatted string for a date.
+ * @param {number} year - A calendar year.
+ * @param {number} [month] - A calendar month.
+ * @param {number} [day] - A calendar day of month.
+ * @returns {string} The provided date formatted as an ISO 8601 year or calendar
+                     date.
+ */
 export function formatDate(year, month, day) {
 	if (!year) {
 		return null;
@@ -169,6 +178,12 @@ export function formatDate(year, month, day) {
 	return `${yearString}-${monthString}-${dayString}`;
 }
 
+/**
+ * Split ISO 8601 calendar dates or years into a numerical array.
+ * @param {string} date - A date of the format 'YYYY', 'YYYY-MM', or
+ *                        'YYYY-MM-DD'.
+ * @returns {number[]} Year, month, and day of month respectively.
+ */
 export function parseDate(date) {
 	if (!date) {
 		return [null, null, null];

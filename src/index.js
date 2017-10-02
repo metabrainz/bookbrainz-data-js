@@ -74,6 +74,11 @@ import workHeader from './models/headers/workHeader';
 import workRevision from './models/revisions/workRevision';
 import workType from './models/workType';
 
+/**
+ * Initialize the database connection and models.
+ * @param {Object} config - A knex.js configuration object.
+ * @returns {Object} All data models.
+ */
 export default function init(config) {
 	const bookshelf = Bookshelf(knex(config));
 	bookshelf.plugin('registry');
