@@ -64,7 +64,7 @@ describe('AchievementUnlock model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout();
+		this.timeout(); // eslint-disable-line babel/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',

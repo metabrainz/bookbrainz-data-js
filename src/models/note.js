@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function note(bookshelf) {
 	const Note = bookshelf.Model.extend({
 		author() {
 			return this.belongsTo('Editor', 'author_id');

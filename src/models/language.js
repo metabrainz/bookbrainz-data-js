@@ -43,7 +43,7 @@ function parseWithISOFields(attrs) {
 	));
 }
 
-export default function(bookshelf) {
+export default function language(bookshelf) {
 	const Language = bookshelf.Model.extend({
 		format: formatWithISOFields,
 		idAttribute: 'id',

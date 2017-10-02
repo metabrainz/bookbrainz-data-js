@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function titleUnlock(bookshelf) {
 	const TitleUnlock = bookshelf.Model.extend({
 		editor() {
 			return this.belongsTo('Editor', 'editor_id');

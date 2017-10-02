@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function aliasSet(bookshelf) {
 	const AliasSet = bookshelf.Model.extend({
 		aliases() {
 			return this.belongsToMany(

@@ -18,7 +18,7 @@
 
 import {camelToSnake, diffRevisions, snakeToCamel} from '../../util';
 
-export default function(bookshelf) {
+export default function workRevision(bookshelf) {
 	const WorkRevision = bookshelf.Model.extend({
 		data() {
 			return this.belongsTo('WorkData', 'data_id');

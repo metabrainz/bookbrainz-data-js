@@ -96,7 +96,8 @@ describe('EditorEntityVisits model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0);
+		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+
 		return truncateTables(bookshelf, [
 			'bookbrainz._editor_entity_visits',
 			'bookbrainz.entity',

@@ -63,7 +63,7 @@ describe('AliasSet model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0);
+		this.timeout(0); // eslint-disable-line babel/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.alias_set',

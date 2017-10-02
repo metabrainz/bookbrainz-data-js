@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function annotation(bookshelf) {
 	const Annotation = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',

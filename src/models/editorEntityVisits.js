@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function editorEntityVisits(bookshelf) {
 	const EditorEntityVisits = bookshelf.Model.extend({
 		achievement() {
 			return this.belongsTo('Entity', 'bbid');

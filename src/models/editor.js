@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function editor(bookshelf) {
 	const Editor = bookshelf.Model.extend({
 		achievements() {
 			return this.hasMany('AchievementType').through('AchievementUnlock');

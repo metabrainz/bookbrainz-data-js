@@ -18,7 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../../util';
 
-export default function(bookshelf) {
+export default function workHeader(bookshelf) {
 	const WorkHeader = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'bbid',
