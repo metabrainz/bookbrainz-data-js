@@ -169,7 +169,6 @@ export function formatDate(year, month, day) {
 	return `${yearString}-${monthString}-${dayString}`;
 }
 
-
 export function parseDate(date) {
 	if (!date) {
 		return [null, null, null];

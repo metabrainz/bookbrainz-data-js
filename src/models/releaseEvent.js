@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../util';
 
 export default function(bookshelf) {

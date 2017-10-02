@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import * as util from './util'; // eslint-disable-line import/no-namespace
+
 import Bookshelf from 'bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
@@ -66,7 +68,6 @@ import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
-import * as util from './util';
 import work from './models/entities/work';
 import workData from './models/data/workData';
 import workHeader from './models/headers/workHeader';
