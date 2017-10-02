@@ -132,15 +132,15 @@ export function diffRevisions(base, other, includes) {
 
 	return Promise.join(baseDataPromise, otherDataPromise,
 		(baseData, otherData) =>
-		diff(
-			otherData ?
-				sortEntityData(otherData.toJSON()) :
-				{},
-			baseData ?
-				sortEntityData(baseData.toJSON()) :
-				{},
-			diffFilter
-		)
+			diff(
+				otherData ?
+					sortEntityData(otherData.toJSON()) :
+					{},
+				baseData ?
+					sortEntityData(baseData.toJSON()) :
+					{},
+				diffFilter
+			)
 	);
 }
 

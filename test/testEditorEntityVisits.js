@@ -115,7 +115,7 @@ describe('EditorEntityVisits model', () => {
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const publisherPromise = new Publisher(publisherAttribs)
-				.save(null, {method: 'insert'});
+			.save(null, {method: 'insert'});
 
 		const editorVisitsPromise = publisherPromise
 			.then((publisher) =>
@@ -124,7 +124,7 @@ describe('EditorEntityVisits model', () => {
 					editorId: editorData.id,
 					id: 1
 				})
-				.save(null, {method: 'insert'})
+					.save(null, {method: 'insert'})
 			);
 
 		const jsonPromise = editorVisitsPromise

@@ -55,7 +55,7 @@ function createRelationshipSet(relationships) {
 		.save(null, {method: 'insert'})
 		.then((model) =>
 			model.relationships().attach(relationships)
-			.then(() => model)
+				.then(() => model)
 		);
 }
 

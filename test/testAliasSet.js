@@ -43,7 +43,7 @@ function createAliasSet(defaultAlias, aliases) {
 		.save(null, {method: 'insert'})
 		.then((model) =>
 			model.aliases().attach(aliases)
-			.then(() => model)
+				.then(() => model)
 		);
 }
 

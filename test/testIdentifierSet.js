@@ -40,7 +40,7 @@ function createIdentifierSet(identifiers) {
 		.save(null, {method: 'insert'})
 		.then((model) =>
 			model.identifiers().attach(identifiers)
-			.then(() => model)
+				.then(() => model)
 		);
 }
 

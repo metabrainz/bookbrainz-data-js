@@ -31,7 +31,7 @@ export default function publicationData(bookshelf) {
 		},
 		editions() {
 			return this.hasMany('Edition', 'publication_bbid')
-			.query({where: {master: true}});
+				.query({where: {master: true}});
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
