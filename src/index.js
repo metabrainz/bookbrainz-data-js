@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import * as util from './util'; // eslint-disable-line import/no-namespace
+
 import Bookshelf from 'bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
@@ -66,13 +68,17 @@ import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
-import * as util from './util';
 import work from './models/entities/work';
 import workData from './models/data/workData';
 import workHeader from './models/headers/workHeader';
 import workRevision from './models/revisions/workRevision';
 import workType from './models/workType';
 
+/**
+ * Initialize the database connection and models.
+ * @param {Object} config - A knex.js configuration object.
+ * @returns {Object} All data models.
+ */
 export default function init(config) {
 	const bookshelf = Bookshelf(knex(config));
 	bookshelf.plugin('registry');

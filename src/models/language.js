@@ -16,10 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 import {camelToSnake, snakeToCamel} from '../util';
 import _ from 'lodash';
-
 
 function formatWithISOFields(attrs) {
 	/* eslint-disable camelcase */
@@ -27,9 +25,9 @@ function formatWithISOFields(attrs) {
 		iso_code_2_b: 'iso_code_2b',
 		iso_code_2_t: 'iso_code_2t'
 	};
-
 	/* eslint-enable camelcase */
-	return _.mapKeys(camelToSnake(attrs), (value, key) => (
+
+	return _.mapKeys(camelToSnake(attrs), (value, key) => ( // eslint-disable-line no-extra-parens,max-len
 		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
 	));
 }
@@ -40,12 +38,12 @@ function parseWithISOFields(attrs) {
 		isoCode2T: 'isoCode2t'
 	};
 
-	return _.mapKeys(snakeToCamel(attrs), (value, key) => (
+	return _.mapKeys(snakeToCamel(attrs), (value, key) => ( // eslint-disable-line no-extra-parens,max-len
 		_.has(REPLACEMENTS, key) ? REPLACEMENTS[key] : key
 	));
 }
 
-export default function(bookshelf) {
+export default function language(bookshelf) {
 	const Language = bookshelf.Model.extend({
 		format: formatWithISOFields,
 		idAttribute: 'id',

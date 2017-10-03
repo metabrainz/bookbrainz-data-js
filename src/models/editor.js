@@ -16,10 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function editor(bookshelf) {
 	const Editor = bookshelf.Model.extend({
 		achievements() {
 			return this.hasMany('AchievementType').through('AchievementUnlock');

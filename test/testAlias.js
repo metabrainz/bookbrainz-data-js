@@ -25,7 +25,6 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Alias, Language, bookshelf} = bookbrainzData;
 
-
 describe('Alias model', () => {
 	const languageAttribs = {
 		frequency: 1,

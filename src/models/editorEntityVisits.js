@@ -16,10 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 import {camelToSnake, snakeToCamel} from '../util';
 
-export default function(bookshelf) {
+export default function editorEntityVisits(bookshelf) {
 	const EditorEntityVisits = bookshelf.Model.extend({
 		achievement() {
 			return this.belongsTo('Entity', 'bbid');
