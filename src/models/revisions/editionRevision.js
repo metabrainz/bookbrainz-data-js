@@ -18,6 +18,7 @@
 
 import {camelToSnake, diffRevisions, snakeToCamel} from '../../util';
 
+
 export default function editionRevision(bookshelf) {
 	const EditionRevision = bookshelf.Model.extend({
 		data() {
@@ -41,12 +42,8 @@ export default function editionRevision(bookshelf) {
 		idAttribute: 'id',
 		parent() {
 			return this.related('revision').fetch()
-				.then((revision) =>
-					revision.related('parents').fetch()
-				)
-				.then((parents) =>
-					parents.map((parent) => parent.get('id'))
-				)
+				.then((revision) => revision.related('parents').fetch())
+				.then((parents) => parents.map((parent) => parent.get('id')))
 				.then((parentIds) => {
 					if (parentIds.length === 0) {
 						return null;

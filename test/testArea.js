@@ -22,6 +22,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 import uuid from 'node-uuid';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Area, bookshelf} = bookbrainzData;
@@ -40,9 +41,7 @@ function createArea(name) {
 }
 
 describe('Area model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['musicbrainz.area'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['musicbrainz.area']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const areaPromise = createArea('Mars');

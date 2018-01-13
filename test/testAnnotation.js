@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -51,17 +52,20 @@ function createAnnotation(lastRevisionId) {
 }
 
 describe('Annotation model', () => {
-	beforeEach(() =>
-		new Gender({
-			id: 1,
-			name: 'test'
-		}).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorAttribs).save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender({
+				id: 1,
+				name: 'test'
+			}).save(null, {method: 'insert'})
+				.then(
+					() => new EditorType(editorTypeAttribs)
+						.save(null, {method: 'insert'})
+				)
+				.then(
+					() => new Editor(editorAttribs)
+						.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {
@@ -87,9 +91,7 @@ describe('Annotation model', () => {
 			.then((revision) => revision.toJSON());
 
 		const annotationPromise = revisionPromise
-			.then((revision) =>
-				createAnnotation(revision.id)
-			);
+			.then((revision) => createAnnotation(revision.id));
 
 		return expect(annotationPromise).to.eventually.have.all.keys([
 			'id', 'content', 'lastRevisionId'

@@ -22,6 +22,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -70,34 +71,45 @@ const data = {
 };
 
 describe('EditionRevision model', () => {
-	beforeEach(() =>
-		new Gender(data.gender)
-			.save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(data.editorType).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(data.editor).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				Promise.all([
-					new AliasSet(data.set).save(null, {method: 'insert'}),
-					new IdentifierSet(data.set).save(null, {method: 'insert'}),
-					new RelationshipSet(data.set)
-						.save(null, {method: 'insert'}),
-					new Disambiguation(data.disambiguation)
-						.save(null, {method: 'insert'})
-				])
-			)
-			.then(() =>
-				new Revision(data.revision).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Annotation(data.annotation).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Edition(data.edition).save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender(data.gender)
+				.save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(data.editorType)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Editor(data.editor).save(null, {method: 'insert'})
+				)
+				.then(
+					() => Promise.all([
+						new AliasSet(data.set).save(null, {method: 'insert'}),
+						new IdentifierSet(data.set)
+							.save(null, {method: 'insert'}),
+						new RelationshipSet(data.set)
+							.save(null, {method: 'insert'}),
+						new Disambiguation(data.disambiguation)
+							.save(null, {method: 'insert'})
+					])
+				)
+				.then(
+					() =>
+						new Revision(data.revision)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Annotation(data.annotation)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Edition(data.edition)
+							.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {

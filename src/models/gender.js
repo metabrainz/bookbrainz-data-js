@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function gender(bookshelf) {
 	const Gender = bookshelf.Model.extend({
 		format: camelToSnake,

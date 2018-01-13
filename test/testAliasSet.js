@@ -23,6 +23,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Alias, AliasSet, Language, bookshelf} = bookbrainzData;
@@ -41,10 +42,7 @@ function createAliasSet(defaultAlias, aliases) {
 		id: 1
 	})
 		.save(null, {method: 'insert'})
-		.then((model) =>
-			model.aliases().attach(aliases)
-				.then(() => model)
-		);
+		.then((model) => model.aliases().attach(aliases).then(() => model));
 }
 
 describe('AliasSet model', () => {
@@ -58,8 +56,8 @@ describe('AliasSet model', () => {
 		name: 'English'
 	};
 
-	beforeEach(() =>
-		new Language(languageAttribs).save(null, {method: 'insert'})
+	beforeEach(
+		() => new Language(languageAttribs).save(null, {method: 'insert'})
 	);
 
 	afterEach(function truncate() {
@@ -75,8 +73,9 @@ describe('AliasSet model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new AliasSet({id: 1})
 			.save(null, {method: 'insert'})
-			.then((model) =>
-				model.refresh({withRelated: ['aliases', 'defaultAlias']})
+			.then(
+				(model) =>
+					model.refresh({withRelated: ['aliases', 'defaultAlias']})
 			)
 			.then((model) => model.toJSON());
 
@@ -88,8 +87,9 @@ describe('AliasSet model', () => {
 	it('should have an empty list of aliases when none are attached', () => {
 		const jsonPromise = new AliasSet({id: 1})
 			.save(null, {method: 'insert'})
-			.then((model) =>
-				model.refresh({withRelated: ['aliases', 'defaultAlias']})
+			.then(
+				(model) =>
+					model.refresh({withRelated: ['aliases', 'defaultAlias']})
 			)
 			.then((model) => model.toJSON().aliases);
 
@@ -100,11 +100,11 @@ describe('AliasSet model', () => {
 		const aliasPromise = new Alias(aliasAttribs)
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = aliasPromise.then((alias) =>
-			createAliasSet(alias, [alias])
-		)
-			.then((model) =>
-				model.refresh({withRelated: ['aliases', 'defaultAlias']})
+		const jsonPromise = aliasPromise
+			.then((alias) => createAliasSet(alias, [alias]))
+			.then(
+				(model) =>
+					model.refresh({withRelated: ['aliases', 'defaultAlias']})
 			)
 			.then((model) => model.toJSON());
 
@@ -127,8 +127,9 @@ describe('AliasSet model', () => {
 			alias1Promise, alias2Promise, (alias1, alias2) =>
 				createAliasSet(alias1, [alias1, alias2])
 		)
-			.then((model) =>
-				model.refresh({withRelated: ['aliases', 'defaultAlias']})
+			.then(
+				(model) =>
+					model.refresh({withRelated: ['aliases', 'defaultAlias']})
 			)
 			.then((model) => model.toJSON());
 

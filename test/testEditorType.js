@@ -21,14 +21,13 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {EditorType, bookshelf} = bookbrainzData;
 
 describe('EditorType model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['bookbrainz.editor_type'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['bookbrainz.editor_type']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const editorTypeCreationPromise = new EditorType({label: 'test_type'})

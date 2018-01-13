@@ -22,6 +22,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -59,40 +60,51 @@ const publisherAttribs = {
 };
 
 describe('EditorEntityVisits model', () => {
-	beforeEach(() =>
-		new Gender(genderData).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				Promise.all([
-					new AliasSet(setData).save(null, {method: 'insert'}),
-					new IdentifierSet(setData).save(null, {method: 'insert'}),
-					new RelationshipSet(setData).save(null, {method: 'insert'}),
-					new Disambiguation({
-						comment: 'Test Disambiguation',
-						id: 1
-					})
-						.save(null, {method: 'insert'})
-				])
-			)
-			.then(() =>
-				new Revision(revisionAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Annotation({
-					content: 'Test Annotation',
-					id: 1,
-					lastRevisionId: 1
-				})
-					.save(null, {method: 'insert'}))
-			.then(() =>
-				new Publisher(publisherAttribs)
-					.save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender(genderData).save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeData)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Editor(editorData).save(null, {method: 'insert'})
+				)
+				.then(
+					() => Promise.all([
+						new AliasSet(setData).save(null, {method: 'insert'}),
+						new IdentifierSet(setData)
+							.save(null, {method: 'insert'}),
+						new RelationshipSet(setData)
+							.save(null, {method: 'insert'}),
+						new Disambiguation({
+							comment: 'Test Disambiguation',
+							id: 1
+						})
+							.save(null, {method: 'insert'})
+					])
+				)
+				.then(
+					() =>
+						new Revision(revisionAttribs)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Annotation({
+							content: 'Test Annotation',
+							id: 1,
+							lastRevisionId: 1
+						})
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Publisher(publisherAttribs)
+							.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {
@@ -118,20 +130,19 @@ describe('EditorEntityVisits model', () => {
 			.save(null, {method: 'insert'});
 
 		const editorVisitsPromise = publisherPromise
-			.then((publisher) =>
-				new EditorEntityVisits({
-					bbid: publisher.attributes.bbid,
-					editorId: editorData.id,
-					id: 1
-				})
-					.save(null, {method: 'insert'})
+			.then(
+				(publisher) =>
+					new EditorEntityVisits({
+						bbid: publisher.attributes.bbid,
+						editorId: editorData.id,
+						id: 1
+					})
+						.save(null, {method: 'insert'})
 			);
 
 		const jsonPromise = editorVisitsPromise
 			.then((model) => model.refresh())
-			.then((editorVisit) =>
-				editorVisit.toJSON()
-			);
+			.then((editorVisit) => editorVisit.toJSON());
 
 		return expect(jsonPromise).to.eventually.have.all.keys([
 			'id', 'editorId', 'bbid'

@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function relationship(bookshelf) {
 	const Relationship = bookshelf.Model.extend({
 		format: camelToSnake,

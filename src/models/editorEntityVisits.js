@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function editorEntityVisits(bookshelf) {
 	const EditorEntityVisits = bookshelf.Model.extend({
 		achievement() {

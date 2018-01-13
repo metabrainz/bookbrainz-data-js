@@ -18,6 +18,7 @@
 
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../../util';
 
+
 export default function creatorData(bookshelf) {
 	const CreatorData = bookshelf.Model.extend({
 		aliasSet() {

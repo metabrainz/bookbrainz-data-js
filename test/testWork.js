@@ -22,6 +22,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -46,26 +47,34 @@ const editorData = {
 const setData = {id: 1};
 
 describe('Work model', () => {
-	beforeEach(() =>
-		new Gender(genderData).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				Promise.all([
-					new AliasSet(setData).save(null, {method: 'insert'}),
-					new IdentifierSet(setData).save(null, {method: 'insert'}),
-					new RelationshipSet(setData).save(null, {method: 'insert'}),
-					new Disambiguation({
-						comment: 'Test Disambiguation',
-						id: 1
-					})
-						.save(null, {method: 'insert'})
-				])
-			)
+	beforeEach(
+		() =>
+			new Gender(genderData).save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeData)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Editor(editorData)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() => Promise.all([
+						new AliasSet(setData)
+							.save(null, {method: 'insert'}),
+						new IdentifierSet(setData)
+							.save(null, {method: 'insert'}),
+						new RelationshipSet(setData)
+							.save(null, {method: 'insert'}),
+						new Disambiguation({
+							comment: 'Test Disambiguation',
+							id: 1
+						})
+							.save(null, {method: 'insert'})
+					])
+				)
 	);
 
 	afterEach(function truncate() {
@@ -103,19 +112,18 @@ describe('Work model', () => {
 			.save(null, {method: 'insert'});
 
 		const annotationPromise = revisionPromise
-			.then(() =>
-				new Annotation({
-					content: 'Test Annotation',
-					id: 1,
-					lastRevisionId: 1
-				})
-					.save(null, {method: 'insert'})
+			.then(
+				() =>
+					new Annotation({
+						content: 'Test Annotation',
+						id: 1,
+						lastRevisionId: 1
+					})
+						.save(null, {method: 'insert'})
 			);
 
 		const entityPromise = annotationPromise
-			.then(() =>
-				new Work(workAttribs).save(null, {method: 'insert'})
-			)
+			.then(() => new Work(workAttribs).save(null, {method: 'insert'}))
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
@@ -135,8 +143,10 @@ describe('Work model', () => {
 
 	it('should return the master revision when multiple revisions exist',
 		() => {
-			/* Revision ID order is reversed so that result is not dependent on
-			row order */
+			/*
+			 * Revision ID order is reversed so that result is not dependent on
+			 * row order
+			 */
 			const revisionAttribs = {
 				authorId: 1,
 				id: 1
@@ -152,9 +162,7 @@ describe('Work model', () => {
 				.save(null, {method: 'insert'});
 
 			const entityPromise = revisionOnePromise
-				.then(() =>
-					new Work(workAttribs).save()
-				)
+				.then(() => new Work(workAttribs).save())
 				.then((model) => model.refresh())
 				.then((entity) => entity.toJSON());
 
@@ -174,9 +182,7 @@ describe('Work model', () => {
 
 					return new Work(entityUpdateAttribs).save();
 				})
-				.then((model) =>
-					new Work({bbid: model.get('bbid')}).fetch()
-				)
+				.then((model) => new Work({bbid: model.get('bbid')}).fetch())
 				.then((entity) => entity.toJSON());
 
 			return Promise.all([

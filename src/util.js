@@ -21,6 +21,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
 
+
 export function snakeToCamel(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
@@ -73,7 +74,8 @@ export function validateEntityType(model) {
 }
 
 export function truncateTables(Bookshelf, tables) {
-	return Promise.each(tables,
+	return Promise.each(
+		tables,
 		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
 	);
 }
@@ -116,12 +118,10 @@ export function diffRevisions(base, other, includes) {
 	const baseDataPromise = base.related('data').fetch({withRelated: includes});
 
 	if (!other) {
-		return baseDataPromise.then((baseData) =>
-			diff(
+		return baseDataPromise.then(
+			(baseData) => diff(
 				{},
-				baseData ?
-					sortEntityData(baseData.toJSON()) :
-					{},
+				baseData ? sortEntityData(baseData.toJSON()) : {},
 				diffFilter
 			)
 		);
@@ -130,17 +130,14 @@ export function diffRevisions(base, other, includes) {
 	const otherDataPromise =
 		other.related('data').fetch({withRelated: includes});
 
-	return Promise.join(baseDataPromise, otherDataPromise,
-		(baseData, otherData) =>
-			diff(
-				otherData ?
-					sortEntityData(otherData.toJSON()) :
-					{},
-				baseData ?
-					sortEntityData(baseData.toJSON()) :
-					{},
-				diffFilter
-			)
+	return Promise.join(
+		baseDataPromise,
+		otherDataPromise,
+		(baseData, otherData) => diff(
+			otherData ? sortEntityData(otherData.toJSON()) : {},
+			baseData ? sortEntityData(baseData.toJSON()) : {},
+			diffFilter
+		)
 	);
 }
 
@@ -154,7 +151,7 @@ const DAY_STR_LENGTH = 2;
  * @param {number} [month] - A calendar month.
  * @param {number} [day] - A calendar day of month.
  * @returns {string} The provided date formatted as an ISO 8601 year or calendar
-                     date.
+ *                   date.
  */
 export function formatDate(year, month, day) {
 	if (!year) {

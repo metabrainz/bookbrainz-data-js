@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function achievementUnlock(bookshelf) {
 	const AchievementUnlock = bookshelf.Model.extend({
 		achievement() {

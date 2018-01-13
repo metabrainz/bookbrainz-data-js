@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Identifier, IdentifierType, bookshelf} = bookbrainzData;
@@ -42,13 +43,12 @@ const idTypeAttribs = {
 };
 
 describe('Identifier model', () => {
-	beforeEach(() =>
-		new IdentifierType(idTypeAttribs)
-			.save(null, {method: 'insert'})
+	beforeEach(
+		() => new IdentifierType(idTypeAttribs).save(null, {method: 'insert'})
 	);
 
-	afterEach(() =>
-		truncateTables(bookshelf, [
+	afterEach(
+		() => truncateTables(bookshelf, [
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
 		])

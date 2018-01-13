@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../../util';
 
+
 export default function publicationData(bookshelf) {
 	const PublicationData = bookshelf.Model.extend({
 		aliasSet() {

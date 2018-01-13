@@ -22,6 +22,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -46,26 +47,32 @@ const editorAttribs = {
 const setData = {id: 1};
 
 describe('Publisher model', () => {
-	beforeEach(() =>
-		new Gender(genderData).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeData).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				Promise.all([
-					new AliasSet(setData).save(null, {method: 'insert'}),
-					new IdentifierSet(setData).save(null, {method: 'insert'}),
-					new RelationshipSet(setData).save(null, {method: 'insert'}),
-					new Disambiguation({
-						comment: 'Test Disambiguation',
-						id: 1
-					})
+	beforeEach(
+		() =>
+			new Gender(genderData).save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeData)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() => new Editor(editorAttribs)
 						.save(null, {method: 'insert'})
-				])
-			)
+				)
+				.then(
+					() => Promise.all([
+						new AliasSet(setData).save(null, {method: 'insert'}),
+						new IdentifierSet(setData)
+							.save(null, {method: 'insert'}),
+						new RelationshipSet(setData)
+							.save(null, {method: 'insert'}),
+						new Disambiguation({
+							comment: 'Test Disambiguation',
+							id: 1
+						})
+							.save(null, {method: 'insert'})
+					])
+				)
 	);
 
 	afterEach(function truncate() {
@@ -103,18 +110,21 @@ describe('Publisher model', () => {
 			.save(null, {method: 'insert'});
 
 		const annotationPromise = revisionPromise
-			.then(() =>
-				new Annotation({
-					content: 'Test Annotation',
-					id: 1,
-					lastRevisionId: 1
-				})
-					.save(null, {method: 'insert'})
+			.then(
+				() =>
+					new Annotation({
+						content: 'Test Annotation',
+						id: 1,
+						lastRevisionId: 1
+					})
+						.save(null, {method: 'insert'})
 			);
 
 		const entityPromise = annotationPromise
-			.then(() =>
-				new Publisher(publisherAttribs).save(null, {method: 'insert'})
+			.then(
+				() =>
+					new Publisher(publisherAttribs)
+						.save(null, {method: 'insert'})
 			)
 			.then((model) => model.refresh({
 				withRelated: [
@@ -136,8 +146,10 @@ describe('Publisher model', () => {
 
 	it('should return the master revision when multiple revisions exist',
 		() => {
-			/* Revision ID order is reversed so that result is not dependent on
-			row order */
+			/*
+			 * Revision ID order is reversed so that result is not dependent on
+			 * row order
+			 */
 			const revisionAttribs = {
 				authorId: 1,
 				id: 1
@@ -153,9 +165,7 @@ describe('Publisher model', () => {
 				.save(null, {method: 'insert'});
 
 			const entityPromise = revisionOnePromise
-				.then(() =>
-					new Publisher(entityAttribs).save()
-				)
+				.then(() => new Publisher(entityAttribs).save())
 				.then((model) => model.refresh())
 				.then((entity) => entity.toJSON());
 
@@ -176,8 +186,8 @@ describe('Publisher model', () => {
 
 					return new Publisher(entityUpdateAttribs).save();
 				})
-				.then((model) =>
-					new Publisher({bbid: model.get('bbid')}).fetch()
+				.then(
+					(model) => new Publisher({bbid: model.get('bbid')}).fetch()
 				)
 				.then((entity) => entity.toJSON());
 

@@ -21,14 +21,13 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {AchievementType, bookshelf} = bookbrainzData;
 
 describe('AchievementType model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['bookbrainz.achievement_type'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['bookbrainz.achievement_type']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const achievementTypePromise = new AchievementType({

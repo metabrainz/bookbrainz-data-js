@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function publisherType(bookshelf) {
 	const PublisherType = bookshelf.Model.extend({
 		format: camelToSnake,

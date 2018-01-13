@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Language, bookshelf} = bookbrainzData;
@@ -28,9 +29,7 @@ const {Language, bookshelf} = bookbrainzData;
 /* eslint camelcase: 0 */
 
 describe('Language model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['musicbrainz.language'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['musicbrainz.language']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save

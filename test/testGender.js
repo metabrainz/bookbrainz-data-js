@@ -21,14 +21,13 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Gender, bookshelf} = bookbrainzData;
 
 describe('Gender model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['musicbrainz.gender'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['musicbrainz.gender']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const genderPromise = new Gender({name: 'Test'})

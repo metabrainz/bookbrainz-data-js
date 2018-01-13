@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function titleType(bookshelf) {
 	const TitleType = bookshelf.Model.extend({
 		format: camelToSnake,

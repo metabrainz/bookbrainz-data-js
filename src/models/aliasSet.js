@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function aliasSet(bookshelf) {
 	const AliasSet = bookshelf.Model.extend({
 		aliases() {

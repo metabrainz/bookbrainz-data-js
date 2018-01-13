@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function editorType(bookshelf) {
 	const EditorType = bookshelf.Model.extend({
 		format: camelToSnake,

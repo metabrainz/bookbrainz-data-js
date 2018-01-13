@@ -18,6 +18,7 @@
 
 import BookBrainzData from '../lib/index';
 
+
 const config = {
 	database: {
 		client: 'pg',

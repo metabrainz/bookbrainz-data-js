@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function editor(bookshelf) {
 	const Editor = bookshelf.Model.extend({
 		achievements() {

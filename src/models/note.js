@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function note(bookshelf) {
 	const Note = bookshelf.Model.extend({
 		author() {

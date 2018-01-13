@@ -23,6 +23,7 @@ import chaiAsPromised from 'chai-as-promised';
 import glob from 'glob';
 import path from 'path';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 
@@ -30,8 +31,8 @@ describe('Module', () => {
 	it('should return one model for each file in the models directory', () => {
 		const modelsDirectory = path.join(__dirname, '../src/models');
 		const modelFiles = glob.sync('**/*.js', {cwd: modelsDirectory});
-		const modelNames = modelFiles.map((file) =>
-			_.upperFirst(path.basename(file, path.extname(file)))
+		const modelNames = modelFiles.map(
+			(file) => _.upperFirst(path.basename(file, path.extname(file)))
 		);
 		return expect(bookshelf)
 			.to.include.keys(modelNames)

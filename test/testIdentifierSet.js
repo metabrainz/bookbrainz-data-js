@@ -23,6 +23,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -38,9 +39,8 @@ const idAttribs = {
 function createIdentifierSet(identifiers) {
 	return new IdentifierSet({id: 1})
 		.save(null, {method: 'insert'})
-		.then((model) =>
-			model.identifiers().attach(identifiers)
-				.then(() => model)
+		.then(
+			(model) => model.identifiers().attach(identifiers).then(() => model)
 		);
 }
 
@@ -55,12 +55,12 @@ describe('IdentifierSet model', () => {
 		validationRegex: 'validation'
 	};
 
-	beforeEach(() =>
-		new IdentifierType(idTypeAttribs).save(null, {method: 'insert'})
+	beforeEach(
+		() => new IdentifierType(idTypeAttribs).save(null, {method: 'insert'})
 	);
 
-	afterEach(() =>
-		truncateTables(bookshelf, [
+	afterEach(
+		() => truncateTables(bookshelf, [
 			'bookbrainz.identifier_set',
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
@@ -70,8 +70,8 @@ describe('IdentifierSet model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new IdentifierSet({id: 1})
 			.save(null, {method: 'insert'})
-			.then((model) =>
-				model.refresh({withRelated: ['identifiers']})
+			.then(
+				(model) => model.refresh({withRelated: ['identifiers']})
 			)
 			.then((model) => model.toJSON());
 
@@ -85,8 +85,8 @@ describe('IdentifierSet model', () => {
 		() => {
 			const jsonPromise = new IdentifierSet({id: 1})
 				.save(null, {method: 'insert'})
-				.then((model) =>
-					model.refresh({withRelated: ['identifiers']})
+				.then(
+					(model) => model.refresh({withRelated: ['identifiers']})
 				)
 				.then((model) => model.toJSON().identifiers);
 
@@ -98,11 +98,11 @@ describe('IdentifierSet model', () => {
 		const idPromise = new Identifier(idAttribs)
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = idPromise.then((identifier) =>
-			createIdentifierSet([identifier])
+		const jsonPromise = idPromise.then(
+			(identifier) => createIdentifierSet([identifier])
 		)
-			.then((model) =>
-				model.refresh({withRelated: ['identifiers']})
+			.then(
+				(model) => model.refresh({withRelated: ['identifiers']})
 			)
 			.then((model) => model.toJSON());
 
@@ -123,8 +123,8 @@ describe('IdentifierSet model', () => {
 			id1Promise, id2Promise, (identifier1, identifier2) =>
 				createIdentifierSet([identifier1, identifier2])
 		)
-			.then((model) =>
-				model.refresh({withRelated: ['identifiers']})
+			.then(
+				(model) => model.refresh({withRelated: ['identifiers']})
 			)
 			.then((model) => model.toJSON());
 

@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Alias, Language, bookshelf} = bookbrainzData;
@@ -36,12 +37,12 @@ describe('Alias model', () => {
 		name: 'English'
 	};
 
-	beforeEach(() =>
-		new Language(languageAttribs).save(null, {method: 'insert'})
+	beforeEach(
+		() => new Language(languageAttribs).save(null, {method: 'insert'})
 	);
 
-	afterEach(() =>
-		truncateTables(bookshelf, [
+	afterEach(
+		() => truncateTables(bookshelf, [
 			'bookbrainz.alias',
 			'musicbrainz.language'
 		])

@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function area(bookshelf) {
 	const Area = bookshelf.Model.extend({
 		format: camelToSnake,

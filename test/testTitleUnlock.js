@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -44,22 +45,24 @@ describe('TitleUnlock model', () => {
 		title: 'test_title'
 	};
 
-	beforeEach(() =>
-		new Gender({
-			id: 1,
-			name: 'test'
-		})
-			.save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new TitleType(titleTypeAttribs)
-					.save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender({id: 1, name: 'test'})
+				.save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeAttribs)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() => new Editor(editorAttribs)
+						.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new TitleType(titleTypeAttribs)
+							.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {

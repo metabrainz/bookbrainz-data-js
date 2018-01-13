@@ -21,6 +21,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -45,22 +46,27 @@ describe('AchievementUnlock model', () => {
 		name: 'test_type'
 	};
 
-	beforeEach(() =>
-		new Gender({
-			id: 1,
-			name: 'test'
-		})
-			.save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Editor(editorAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new AchievementType(AchievementTypeAttribs)
-					.save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender({
+				id: 1,
+				name: 'test'
+			})
+				.save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeAttribs)
+							.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Editor(editorAttribs).save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new AchievementType(AchievementTypeAttribs)
+							.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {

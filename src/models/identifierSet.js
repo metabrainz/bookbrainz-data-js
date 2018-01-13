@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function identifierSet(bookshelf) {
 	const IdentifierSet = bookshelf.Model.extend({
 		format: camelToSnake,

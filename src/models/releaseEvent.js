@@ -18,6 +18,7 @@
 
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../util';
 
+
 export default function releaseEvent(bookshelf) {
 	const ReleaseEvent = bookshelf.Model.extend({
 		format: camelToSnake,

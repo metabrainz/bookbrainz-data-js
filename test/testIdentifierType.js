@@ -21,14 +21,13 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {IdentifierType, bookshelf} = bookbrainzData;
 
 describe('IdentifierType model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['bookbrainz.identifier_type'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['bookbrainz.identifier_type']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		const idTypeData = {

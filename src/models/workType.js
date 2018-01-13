@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function workType(bookshelf) {
 	const WorkType = bookshelf.Model.extend({
 		format: camelToSnake,

@@ -21,14 +21,13 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {Entity, bookshelf} = bookbrainzData;
 
 describe('Entity model', () => {
-	afterEach(() =>
-		truncateTables(bookshelf, ['bookbrainz.entity'])
-	);
+	afterEach(() => truncateTables(bookshelf, ['bookbrainz.entity']));
 
 	it('should return a JSON object with correct keys when saved', () => {
 		// Construct EntityRevision, add to Entity, then save

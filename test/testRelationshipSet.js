@@ -23,6 +23,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -53,30 +54,34 @@ const entityAttribs = {
 function createRelationshipSet(relationships) {
 	return new RelationshipSet({id: 1})
 		.save(null, {method: 'insert'})
-		.then((model) =>
-			model.relationships().attach(relationships)
-				.then(() => model)
+		.then(
+			(model) =>
+				model.relationships().attach(relationships).then(() => model)
 		);
 }
 
 describe('RelationshipSet model', () => {
-	beforeEach(() =>
-		new RelationshipType(relTypeAttribs)
-			.save(null, {method: 'insert'})
-			.then(() =>
-				new Entity(entityAttribs).save(null, {method: 'insert'})
-			)
-			.then(() =>
-				new Entity(
-					_.assign(_.clone(entityAttribs), {
-						bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
-					})
-				).save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new RelationshipType(relTypeAttribs)
+				.save(null, {method: 'insert'})
+				.then(
+					() => new Entity(entityAttribs)
+						.save(null, {method: 'insert'})
+				)
+				.then(
+					() =>
+						new Entity(
+							_.assign(_.clone(entityAttribs), {
+								bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014'
+							})
+						)
+							.save(null, {method: 'insert'})
+				)
 	);
 
-	afterEach(() =>
-		truncateTables(bookshelf, [
+	afterEach(
+		() => truncateTables(bookshelf, [
 			'bookbrainz.relationship_set',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
@@ -87,9 +92,7 @@ describe('RelationshipSet model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		const jsonPromise = new RelationshipSet({id: 1})
 			.save(null, {method: 'insert'})
-			.then((model) =>
-				model.refresh({withRelated: ['relationships']})
-			)
+			.then((model) => model.refresh({withRelated: ['relationships']}))
 			.then((model) => model.toJSON());
 
 		return expect(jsonPromise).to.eventually.have.all.keys([
@@ -102,8 +105,8 @@ describe('RelationshipSet model', () => {
 		() => {
 			const jsonPromise = new RelationshipSet({id: 1})
 				.save(null, {method: 'insert'})
-				.then((model) =>
-					model.refresh({withRelated: ['relationships']})
+				.then(
+					(model) => model.refresh({withRelated: ['relationships']})
 				)
 				.then((model) => model.toJSON().relationships);
 
@@ -115,12 +118,10 @@ describe('RelationshipSet model', () => {
 		const relPromise = new Relationship(relAttribs)
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = relPromise.then((relationship) =>
-			createRelationshipSet([relationship])
+		const jsonPromise = relPromise.then(
+			(relationship) => createRelationshipSet([relationship])
 		)
-			.then((model) =>
-				model.refresh({withRelated: ['relationships']})
-			)
+			.then((model) => model.refresh({withRelated: ['relationships']}))
 			.then((model) => model.toJSON());
 
 		return Promise.all([
@@ -140,9 +141,7 @@ describe('RelationshipSet model', () => {
 			rel1Promise, rel2Promise, (relationship1, relationship2) =>
 				createRelationshipSet([relationship1, relationship2])
 		)
-			.then((model) =>
-				model.refresh({withRelated: ['relationships']})
-			)
+			.then((model) => model.refresh({withRelated: ['relationships']}))
 			.then((model) => model.toJSON());
 
 		return expect(jsonPromise).to.eventually

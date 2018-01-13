@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function languageSet(bookshelf) {
 	const LanguageSet = bookshelf.Model.extend({
 		format: camelToSnake,

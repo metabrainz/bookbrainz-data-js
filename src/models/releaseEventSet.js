@@ -18,6 +18,7 @@
 
 import {camelToSnake, snakeToCamel} from '../util';
 
+
 export default function releaseEventSet(bookshelf) {
 	const ReleaseEventSet = bookshelf.Model.extend({
 		format: camelToSnake,

@@ -22,6 +22,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -51,11 +52,14 @@ const editorAttribsWithOptional = _.assign(_.clone(editorAttribs), {
 });
 
 describe('Editor model', () => {
-	beforeEach(() =>
-		new Gender(genderAttribs).save(null, {method: 'insert'})
-			.then(() =>
-				new EditorType(editorTypeAttribs).save(null, {method: 'insert'})
-			)
+	beforeEach(
+		() =>
+			new Gender(genderAttribs).save(null, {method: 'insert'})
+				.then(
+					() =>
+						new EditorType(editorTypeAttribs)
+							.save(null, {method: 'insert'})
+				)
 	);
 
 	afterEach(function truncate() {
@@ -81,15 +85,16 @@ describe('Editor model', () => {
 				return new Revision(revisionAttribs)
 					.save(null, {method: 'insert'});
 			})
-			.then(() =>
-				new Editor({id: 1})
-					.fetch({
-						withRelated: [
-							'type',
-							'gender',
-							'revisions'
-						]
-					})
+			.then(
+				() =>
+					new Editor({id: 1})
+						.fetch({
+							withRelated: [
+								'type',
+								'gender',
+								'revisions'
+							]
+						})
 			)
 			.then((editor) => editor.toJSON());
 
