@@ -8,7 +8,7 @@
     "lint": "eslint src test",
     "lint-errors": "eslint --quiet src test",
     "prepublish": "npm run build-js",
-    "test": "npm run lint && npm run build-js &&  mocha --compilers js:babel-core/register",
+    "test": "npm run lint && npm run build-js && mocha",
     "test-cov": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false npm run test",
     "test-ci": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false --report=lcovonly npm test"
   },
