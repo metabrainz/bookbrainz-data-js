@@ -38,9 +38,10 @@ const relAttribs = {
 
 const relTypeAttribs = {
 	description: 'description',
-	displayTemplate: 'display',
 	id: 1,
 	label: 'test_type',
+	linkPhrase: 'linkPhrase',
+	reverseLinkPhrase: 'reverseLinkPhrase',
 	sourceEntityType: 'Creator',
 	targetEntityType: 'Creator'
 };

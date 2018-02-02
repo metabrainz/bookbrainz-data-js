@@ -34,8 +34,9 @@ describe('RelationshipType model', () => {
 	it('should return a JSON object with correct keys when saved', () => {
 		const relTypeData = {
 			description: 'description',
-			displayTemplate: 'display',
 			label: 'test_type',
+			linkPhrase: 'linkPhrase',
+			reverseLinkPhrase: 'reverseLinkPhrase',
 			sourceEntityType: 'Creator',
 			targetEntityType: 'Creator'
 		};
@@ -46,8 +47,9 @@ describe('RelationshipType model', () => {
 			.then((relType) => relType.toJSON());
 
 		return expect(relTypeCreationPromise).to.eventually.have.all.keys([
-			'id', 'label', 'description', 'displayTemplate', 'sourceEntityType',
-			'targetEntityType', 'parentId', 'childOrder', 'deprecated'
+			'id', 'label', 'description', 'linkPhrase', 'reverseLinkPhrase',
+			'sourceEntityType', 'targetEntityType', 'parentId', 'childOrder',
+			'deprecated'
 		]);
 	});
 });
