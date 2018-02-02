@@ -110,9 +110,9 @@ describe('AliasSet model', () => {
 
 		return Promise.all([
 			expect(jsonPromise).to.eventually
-				.have.deep.property('aliases[0].id', 1),
+				.have.nested.property('aliases[0].id', 1),
 			expect(jsonPromise).to.eventually
-				.have.deep.property('defaultAlias.id', 1)
+				.have.nested.property('defaultAlias.id', 1)
 		]);
 	});
 
@@ -135,9 +135,9 @@ describe('AliasSet model', () => {
 
 		return Promise.all([
 			expect(jsonPromise).to.eventually
-				.have.deep.property('aliases.length', 2),
+				.have.nested.property('aliases.length', 2),
 			expect(jsonPromise).to.eventually
-				.have.deep.property('defaultAlias.id', 1)
+				.have.nested.property('defaultAlias.id', 1)
 		]);
 	});
 });
