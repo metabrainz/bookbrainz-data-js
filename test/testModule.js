@@ -34,8 +34,16 @@ describe('Module', () => {
 		const modelNames = modelFiles.map(
 			(file) => _.upperFirst(path.basename(file, path.extname(file)))
 		);
-		return expect(bookshelf)
-			.to.include.keys(modelNames)
-			.and.to.include.keys('bookshelf');
+		return expect(bookshelf).to.include.keys(modelNames);
 	});
+
+	it(
+		'should have bookshelf and utils properties',
+		() => expect(bookshelf).to.include.keys('bookshelf', 'util')
+	);
+
+	it(
+		'should have a bookshelf property with a knex property',
+		() => expect(bookshelf.bookshelf).to.have.property('knex')
+	);
 });
