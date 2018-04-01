@@ -45,6 +45,7 @@
     "bluebird": "^3.5.1",
     "bookshelf": "^0.13.3",
     "deep-diff": "^0.3.8",
+    "immutable": "^3.8.2",
     "knex": "^0.14.2",
     "lodash": "^4.13.1",
     "pg": "^7.4.1"
