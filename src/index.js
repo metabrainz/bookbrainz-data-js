@@ -121,6 +121,7 @@ export default function init(config) {
 		IdentifierType: identifierType(bookshelf),
 		Language: language(bookshelf),
 		LanguageSet: languageSet(bookshelf),
+		MapRevisionsToAlias: revision.mapRevisionsToAlias(bookshelf),
 		Note: note(bookshelf),
 		Publication: publication(bookshelf),
 		PublicationData,
