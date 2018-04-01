@@ -19,7 +19,7 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function entity(bookshelf) {
+export function entity(bookshelf) {
 	const Entity = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'bbid',
