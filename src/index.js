@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import * as revision from './models/revision';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 
 import Bookshelf from 'bookshelf';
@@ -65,7 +66,6 @@ import relationshipSet from './models/relationshipSet';
 import relationshipType from './models/relationshipType';
 import releaseEvent from './models/releaseEvent';
 import releaseEventSet from './models/releaseEventSet';
-import revision from './models/revision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
 import work from './models/entities/work';
@@ -138,7 +138,7 @@ export default function init(config) {
 		RelationshipType: relationshipType(bookshelf),
 		ReleaseEvent: releaseEvent(bookshelf),
 		ReleaseEventSet: releaseEventSet(bookshelf),
-		Revision: revision(bookshelf),
+		Revision: revision.revision(bookshelf),
 		TitleType: titleType(bookshelf),
 		TitleUnlock: titleUnlock(bookshelf),
 		Work: work(bookshelf),
