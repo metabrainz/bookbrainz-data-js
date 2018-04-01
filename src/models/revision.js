@@ -17,6 +17,8 @@
  */
 
 import {camelToSnake, snakeToCamel} from '../util';
+import Immutable from 'immutable';
+import _ from 'lodash';
 
 
 export function revision(bookshelf) {
@@ -46,4 +48,45 @@ export function revision(bookshelf) {
 	});
 
 	return bookshelf.model('Revision', Revision);
+}
+
+/**
+ * Produce a mapping of revisionIds and their default alias names.
+ * @param {object} bookshelf - The Bookshelf object.
+ * @returns {function} The returned function which takes in entityType and array
+ * 					   of revisionIds and returns array of
+ * 					   {revisionId: defaultAlias}
+ */
+export function mapRevisionsToAlias(bookshelf) {
+	return (entityType, revisions) => {
+		function rawSql(revisionIds) {
+			return `
+				SELECT alias.name, en.revision_id
+				  FROM ${entityType} as en
+				  JOIN alias ON alias.id = en.default_alias_id
+				 WHERE en.revision_id IN (${revisionIds})
+			`;
+		}
+
+		// Construct comma separated string of revisionIds
+		const parameters = revisions.reduce((prev, pres) => `${prev}, ${pres}`);
+
+		return bookshelf.knex.raw(rawSql(parameters)).then(
+			rawQueryResults => {
+				// Object to store {parentId : aliasName} pair
+				const names = {};
+				// Convert query result keys to camelCase
+				const queryResults = rawQueryResults.rows.map(row =>
+					_.mapKeys(
+						row,
+						(value, key) => _.camelCase(key)
+					));
+
+				queryResults.forEach(queryResult => {
+					names[queryResult.revisionId] = queryResult.name;
+				});
+				return Immutable.fromJS(names);
+			}
+		);
+	};
 }
