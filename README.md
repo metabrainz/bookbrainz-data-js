@@ -1,4 +1,6 @@
 # BookBrainz Node ORM
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/bookbrainz/bookbrainz-data-js.svg)](https://greenkeeper.io/)
 [![Build Status](https://img.shields.io/travis/bookbrainz/bookbrainz-data-js.svg)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
 [![Dependency Status](https://img.shields.io/david/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
 [![devDependency Status](https://img.shields.io/david/dev/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js#info=devDependencies)
