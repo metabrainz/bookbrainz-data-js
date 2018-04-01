@@ -43,7 +43,7 @@
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "bookshelf": "^0.12.1",
+    "bookshelf": "^0.13.3",
     "deep-diff": "^0.3.8",
     "knex": "^0.14.2",
     "lodash": "^4.13.1",
@@ -65,12 +65,12 @@
     "chai-as-promised": "^7.1.1",
     "codeclimate-test-reporter": "^0.5.0",
     "eslint": "^4.15.0",
-    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-babel": "^5.0.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-import": "^2.8.0",
     "glob": "^7.1.2",
     "istanbul": "^0.4.2",
-    "mocha": "^4.1.0",
+    "mocha": "^5.0.5",
     "node-uuid": "^1.4.8",
     "path": "^0.12.7",
     "rimraf": "^2.6.2"
