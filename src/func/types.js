@@ -3,7 +3,7 @@
 import * as Immutable from 'immutable';
 
 
-type EntityTypeString =
+export type EntityTypeString =
 	'Creator' | 'Edition' | 'Work' | 'Publisher' | 'Publication';
 
 type AliasProps = {
@@ -71,3 +71,33 @@ type EntityProps = {
 	relationships: Immutable.Set<RelationshipRecordT>
 };
 export type EntityRecordT = Immutable.Record<EntityProps>;
+
+
+export type FormAliasT = {
+	id: number,
+	name: string,
+	sortName: string,
+	languageId: number,
+	primary: boolean
+};
+
+export type FormAliasWithDefaultT = {
+	id: number,
+	name: string,
+	sortName: string,
+	languageId: number,
+	primary: boolean,
+	default: boolean
+};
+
+export type FormIdentifierT = {
+	value: string,
+	typeId: number
+};
+
+export type FormRelationshipT = {
+	ID: number,
+	typeID: number,
+	sourceBBID: string,
+	targetBBID: string
+};
