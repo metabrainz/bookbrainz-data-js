@@ -31,6 +31,11 @@ export default function aliasSet(bookshelf) {
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
+		items() {
+			return this.belongsToMany(
+				'Alias', 'bookbrainz.alias_set__alias', 'set_id', 'alias_id'
+			);
+		},
 		parse: snakeToCamel,
 		tableName: 'bookbrainz.alias_set'
 	});
