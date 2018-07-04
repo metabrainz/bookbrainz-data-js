@@ -84,17 +84,7 @@ export function getRemovedItems<Item: SetItemT>(
 	);
 }
 
-export function removeItemsFromSet<Item: SetItemT>(
-	oldSet: Array<Item>, itemsToRemove: Array<Item>,
-	comparisonFunc: (objValue: Item, otherValue: Item) => boolean
-): Array<Item> {
-	return _.differenceWith(
-		oldSet, itemsToRemove,
-		(objValue, otherValue) =>
-			_.isEqualWith(objValue, otherValue, comparisonFunc)
-	);
-}
-
+export const removeItemsFromSet = getRemovedItems;
 
 export async function createNewSetWithItems<Item: SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
