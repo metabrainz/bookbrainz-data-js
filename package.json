@@ -71,6 +71,7 @@
     "eslint-plugin-babel": "^5.0.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-import": "^2.8.0",
+    "faker": "^4.1.0",
     "flow-bin": "^0.75.0",
     "glob": "^7.1.2",
     "istanbul": "^0.4.2",
