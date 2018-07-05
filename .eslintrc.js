@@ -411,6 +411,7 @@ const flowTypeRules = {
 	'flowtype/semi': ERROR
 };
 
+/* eslint-disable-next-line no-unused-vars */
 const reactRules = {
 	'react/boolean-prop-naming': ERROR,
 	'react/button-has-type': ERROR,
@@ -539,18 +540,20 @@ const es6ImportRules = {
 	'import/no-unassigned-import': ERROR
 };
 
-options.rules = {
-	...possibleErrorsRules,
-	...bestPracticesRules,
-	...strictModeRules,
-	...variablesRules,
-	...nodeAndCommonJSRules,
-	...stylisticIssuesRules,
-	...ecmaScript6Rules,
-	...babelRules,
-	...flowTypeRules,
-	...es6ImportRules
-};
+/* eslint-disable-next-line prefer-object-spread */
+options.rules = Object.assign(
+	{},
+	possibleErrorsRules,
+	bestPracticesRules,
+	strictModeRules,
+	variablesRules,
+	nodeAndCommonJSRules,
+	stylisticIssuesRules,
+	ecmaScript6Rules,
+	babelRules,
+	flowTypeRules,
+	es6ImportRules
+);
 
 
 module.exports = options;
