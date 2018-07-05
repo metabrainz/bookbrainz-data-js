@@ -41,7 +41,7 @@ export async function updateAliasSet(
 		);
 	}
 
-	const AliasSet: any = {orm};
+	const {AliasSet} = orm;
 
 	const newSetItems: Array<Alias> =
 		newSetItemsWithDefault.map((item) => _.omit(item, 'default'));
@@ -80,7 +80,7 @@ export async function updateAliasSet(
 	}
 
 	const newSetItemCollection = await newSet.related('aliases')
-		.fetch(null, {transacting});
+		.fetch({transacting});
 
 	const defaultAlias = newSetItemCollection.find(
 		(alias) =>
