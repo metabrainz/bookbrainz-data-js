@@ -140,6 +140,7 @@ describe('createNewSetWithItems', () => {
 		expect(result).to.be.null;
 	});
 
+	/* eslint-disable-next-line max-len */
 	it('should error out if non-existent unchanged items are provided', function () {
 		const resultPromise = bookshelf.transaction(
 			(trx) =>
@@ -155,6 +156,7 @@ describe('createNewSetWithItems', () => {
 		expect(resultPromise).to.be.rejected;
 	});
 
+	/* eslint-disable-next-line max-len */
 	it('should return a new set with one item if an item is added', async function () {
 		const aliasData = getAliasData();
 		const resultSet = await bookshelf.transaction(
@@ -180,6 +182,7 @@ describe('createNewSetWithItems', () => {
 		});
 	});
 
+	/* eslint-disable-next-line max-len */
 	it('should return a new set with two items if an item is added to an existing unchanged item', async function () {
 		const firstAliasData = getAliasData();
 		const firstSet = await bookshelf.transaction(
