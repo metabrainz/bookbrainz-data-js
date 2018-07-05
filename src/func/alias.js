@@ -49,6 +49,10 @@ export async function updateAliasSet(
 	const oldSetItems: Array<Alias> =
 		oldSet ? oldSet.related('aliases').toJSON() : [];
 
+	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
+		return oldSet;
+	}
+
 	const addedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
 	const removedItems =
@@ -68,7 +72,7 @@ export async function updateAliasSet(
 
 	if (isSetUnmodified) {
 		// No action - set has not changed
-		return Promise.resolve(oldSet);
+		return oldSet;
 	}
 
 	const newSet = await createNewSetWithItems(
