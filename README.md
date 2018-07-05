@@ -1,6 +1,6 @@
 # BookBrainz Node ORM
 
-![npm](https://img.shields.io/npm/v/bookbrainz-data.svg)(https://www.npmjs.com/package/bookbrainz-data)
+[![npm](https://img.shields.io/npm/v/bookbrainz-data.svg)](https://www.npmjs.com/package/bookbrainz-data)
 [![Greenkeeper badge](https://badges.greenkeeper.io/bookbrainz/bookbrainz-data-js.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/bookbrainz/bookbrainz-data-js.svg?branch=master)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
 [![dependencies Status](https://david-dm.org/bookbrainz/bookbrainz-data-js/status.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
