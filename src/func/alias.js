@@ -79,10 +79,6 @@ export async function updateAliasSet(
 		orm, transacting, AliasSet, unchangedItems, addedItems
 	);
 
-	if (newSet === null) {
-		throw new Error('Alias set cannot be empty');
-	}
-
 	const newSetItemCollection = await newSet.related('aliases')
 		.fetch({transacting});
 
