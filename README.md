@@ -4,8 +4,7 @@
 [![Build Status](https://img.shields.io/travis/bookbrainz/bookbrainz-data-js.svg)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
 [![Dependency Status](https://img.shields.io/david/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
 [![devDependency Status](https://img.shields.io/david/dev/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js#info=devDependencies)
-[![Code Climate](https://img.shields.io/codeclimate/github/bookbrainz/bookbrainz-data-js.svg)](https://codeclimate.com/github/bookbrainz/bookbrainz-data-js)
-[![Code Climate](https://img.shields.io/codeclimate/coverage/github/bookbrainz/bookbrainz-data-js.svg)](https://codeclimate.com/github/bookbrainz/bookbrainz-data-js/coverage)
+[![Coverage Status](https://coveralls.io/repos/github/bookbrainz/bookbrainz-data-js/badge.svg?branch=master)](https://coveralls.io/github/bookbrainz/bookbrainz-data-js?branch=master)
 
 bookbrainz-data-js provides a node package to allow manipulation of data in a BookBrainz database using a set
 of [bookshelf.js](http://bookshelfjs.org/) models. The module is only for accessing data in an existing database - for schema creation, see [bookbrainz-sql](https://github.com/bookbrainz/bookbrainz-sql).
