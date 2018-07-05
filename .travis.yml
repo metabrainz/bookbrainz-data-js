@@ -14,8 +14,8 @@ notifications:
   irc:
     channels:
       - "chat.freenode.net#metabrainz"
-    on_success: always
-    on_failure: always
+    on_success: change
+    on_failure: change
     template:
       - "Project %{repository_name} build #%{build_number}: %{result} in %{elapsed_time}: %{build_url}"
 
