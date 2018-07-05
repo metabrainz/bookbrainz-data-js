@@ -29,7 +29,7 @@ import _ from 'lodash';
 
 
 export async function updateAliasSet(
-	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: number,
+	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: ?number,
 	newSetItemsWithDefault: Array<AliasWithDefault>
 ) {
 	function comparisonFunc(obj: Alias, other: Alias) {
