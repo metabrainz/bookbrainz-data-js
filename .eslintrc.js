@@ -165,7 +165,7 @@ const variablesRules = {
 	'no-shadow': ERROR,
 	'no-shadow-restricted-names': ERROR,
 	'no-undef-init': ERROR,
-	'no-undefined': ERROR,
+	'no-undefined': WARNING,
 	'no-unused-vars': WARNING,
 	'no-use-before-define': ERROR
 };
