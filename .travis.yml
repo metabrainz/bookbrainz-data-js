@@ -35,6 +35,9 @@ before_script:
   - psql -f bookbrainz-sql/scripts/create_triggers.sql -d bookbrainz_test -U postgres
   - greenkeeper-lockfile-update
 
+script:
+  - npm run-script test-ci
+
 after_script:
   - npm install -g coveralls && coveralls < coverage/lcov.info
   - greenkeeper-lockfile-upload
