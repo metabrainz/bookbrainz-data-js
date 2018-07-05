@@ -15,11 +15,10 @@ const options = {
 	parser: 'babel-eslint',
 	parserOptions: {
 		ecmaFeatures: {
-			experimentalObjectRestSpread: true,
 			generators: true,
 			modules: false
 		},
-		ecmaVersion: 8,
+		ecmaVersion: 2018,
 		sourceType: 'module'
 	},
 	plugins: [
@@ -38,8 +37,6 @@ const TRANSITION_IGNORE = 0; // ignores that should be reviewed soon
 
 // These should not be removed at all.
 const possibleErrorsRules = {
-	'for-direction': ERROR,
-	'getter-return': ERROR,
 	'no-await-in-loop': ERROR,
 	'no-console': ERROR,
 	'no-extra-parens': [
@@ -281,6 +278,7 @@ const stylisticIssuesRules = {
 		}
 	],
 	'max-lines': TRANSITION_IGNORE,
+	'max-lines-per-function': TRANSITION_WARNING,
 	'max-nested-callbacks': [
 		ERROR,
 		5
@@ -309,10 +307,7 @@ const stylisticIssuesRules = {
 	'no-trailing-spaces': ERROR,
 	'no-unneeded-ternary': ERROR,
 	'no-whitespace-before-property': ERROR,
-	'object-curly-newline': [
-		ERROR,
-		{consistent: true}
-	],
+	'object-curly-newline': ERROR,
 	'one-var': [
 		ERROR,
 		'never'
@@ -326,6 +321,7 @@ const stylisticIssuesRules = {
 		ERROR,
 		'never'
 	],
+	'prefer-object-spread': ERROR,
 	'quote-props': [
 		ERROR,
 		'as-needed'
@@ -543,19 +539,18 @@ const es6ImportRules = {
 	'import/no-unassigned-import': ERROR
 };
 
-options.rules = Object.assign(
-	{},
-	possibleErrorsRules,
-	bestPracticesRules,
-	strictModeRules,
-	variablesRules,
-	nodeAndCommonJSRules,
-	stylisticIssuesRules,
-	ecmaScript6Rules,
-	babelRules,
-	flowTypeRules,
-	es6ImportRules
-);
+options.rules = {
+	...possibleErrorsRules,
+	...bestPracticesRules,
+	...strictModeRules,
+	...variablesRules,
+	...nodeAndCommonJSRules,
+	...stylisticIssuesRules,
+	...ecmaScript6Rules,
+	...babelRules,
+	...flowTypeRules,
+	...es6ImportRules
+};
 
 
 module.exports = options;
