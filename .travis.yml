@@ -36,8 +36,10 @@ before_script:
   - greenkeeper-lockfile-update
 
 after_script:
-  - codeclimate-test-reporter < coverage/lcov.info
+  - npm install -g coveralls && coveralls < coverage/lcov.info
   - greenkeeper-lockfile-upload
+
+install: npm install
 
 env:
   - CXX=g++-4.8
@@ -48,13 +50,9 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-  code_climate:
-    repo_token: 8547e9682c4141e5760860284de84ac38c7a7ad047b347b020a8487bb831fea8
   postgresql: "9.4"
 
 branches:
   only:
     - master
     - /^greenkeeper/.*$/
-dd:
-  secure: 0Rja088ucuglUXpFgXFNvRSMIfy/C9TSl1euAlrh17FyWSwNHfATI2CKRbr61AIsmx+ib6qTlKh5JP4Utn+4JtYZdXxndW6oOsEGPx3E5W16raEwJOhFjGOQ9b5X9YmJb6Ik7QEfC1Od+1BX3veuIc1cg9KyLmn84xcrPENtzzaBNSEh6KTEOTaIoQyLoOHmDeEjJ07tgfgSHyxtjSfCpq4+rNrebw8NeshbzgUT5tfczEDFZUBCsF+vFABLbBSspRqIg33g96cKUrrsmxDEwR5nyEXM56EzJfccg5aPMl26RK6PDYH3E3dpC5G908IvoZ6noysjXL1d9Gn3fEQyaukqUMJjtue3rzi5Nq/VkYLLDVzwowiRiSKUXwb0bLsMTVgr2rInemGOEz7gCzRCViV9nFKTRCVt8C5O/opPDQEJCVyeVRjcbyhzvpNKLIeXvjDsRVrXPdtZm1z+phQAOR+XZTz4VZfmVlzl3tIjkg81NTku9Mlc9R+jdfxoyejJTTZpJjnkb4RutDiX+0Js5nVA9CQ+Ezrd6HfhpU+8+YXzhQTEKHhq2iUakBLvrNq44/PMo381X4LHwhaYiwjN136wbjjCPK45r8Yhp7PFQ7Rg+R+z2Ln4t/U+ssh8phSxIA/c3ddd6zRTfG5Nu7lU3FlG4pSu5Jbwv0GHb6RX0MM=
