@@ -1,9 +1,9 @@
 # BookBrainz Node ORM
 
+![npm](https://img.shields.io/npm/v/bookbrainz-data.svg)(https://www.npmjs.com/package/bookbrainz-data)
 [![Greenkeeper badge](https://badges.greenkeeper.io/bookbrainz/bookbrainz-data-js.svg)](https://greenkeeper.io/)
-[![Build Status](https://img.shields.io/travis/bookbrainz/bookbrainz-data-js.svg)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
-[![Dependency Status](https://img.shields.io/david/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
-[![devDependency Status](https://img.shields.io/david/dev/bookbrainz/bookbrainz-data-js.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js#info=devDependencies)
+[![Build Status](https://travis-ci.org/bookbrainz/bookbrainz-data-js.svg?branch=master)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
+[![dependencies Status](https://david-dm.org/bookbrainz/bookbrainz-data-js/status.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
 [![Coverage Status](https://coveralls.io/repos/github/bookbrainz/bookbrainz-data-js/badge.svg?branch=master)](https://coveralls.io/github/bookbrainz/bookbrainz-data-js?branch=master)
 
 bookbrainz-data-js provides a node package to allow manipulation of data in a BookBrainz database using a set
