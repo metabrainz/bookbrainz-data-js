@@ -29,7 +29,7 @@ import _ from 'lodash';
 
 
 export async function updateAliasSet(
-	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: number,
+	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: ?number,
 	newSetItemsWithDefault: Array<AliasWithDefault>
 ) {
 	function comparisonFunc(obj: Alias, other: Alias) {
@@ -41,13 +41,17 @@ export async function updateAliasSet(
 		);
 	}
 
-	const AliasSet: any = {orm};
+	const {AliasSet} = orm;
 
 	const newSetItems: Array<Alias> =
 		newSetItemsWithDefault.map((item) => _.omit(item, 'default'));
 
 	const oldSetItems: Array<Alias> =
 		oldSet ? oldSet.related('aliases').toJSON() : [];
+
+	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
+		return oldSet;
+	}
 
 	const addedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
@@ -68,19 +72,15 @@ export async function updateAliasSet(
 
 	if (isSetUnmodified) {
 		// No action - set has not changed
-		return Promise.resolve(oldSet);
+		return oldSet;
 	}
 
 	const newSet = await createNewSetWithItems(
 		orm, transacting, AliasSet, unchangedItems, addedItems
 	);
 
-	if (newSet === null) {
-		throw new Error('Alias set cannot be empty');
-	}
-
 	const newSetItemCollection = await newSet.related('aliases')
-		.fetch(null, {transacting});
+		.fetch({transacting});
 
 	const defaultAlias = newSetItemCollection.find(
 		(alias) =>
