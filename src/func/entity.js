@@ -51,3 +51,48 @@ export function getAdditionalEntityProps(data, entityType) {
 		default: return null;
 	}
 }
+
+
+export function getAdditionalEntitySets(orm, entityType) {
+	const {LanguageSet, PublisherSet, ReleaseEventSet} = orm;
+
+	switch (entityType) {
+		case entityTypes.EDITION:
+			return [
+				{
+					entityIdField: 'languageSetId',
+					idField: 'id',
+					model: LanguageSet,
+					name: 'languageSet',
+					propName: 'languages'
+				},
+				{
+					entityIdField: 'publisherSetId',
+					idField: 'bbid',
+					model: PublisherSet,
+					name: 'publisherSet',
+					propName: 'publishers'
+				},
+				{
+					entityIdField: 'releaseEventSetId',
+					idField: 'id',
+					model: ReleaseEventSet,
+					mutableFields: [
+						'date',
+						'areaId'
+					],
+					name: 'releaseEventSet',
+					propName: 'releaseEvents'
+				}
+			];
+		case entityTypes.WORK:
+			return [{
+				entityIdField: 'languageSetId',
+				idField: 'id',
+				model: LanguageSet,
+				name: 'languageSet',
+				propName: 'languages'
+			}];
+		default: return null;
+	}
+}
