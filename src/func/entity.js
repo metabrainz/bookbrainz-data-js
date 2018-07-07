@@ -28,3 +28,26 @@ export const WORK = 'Work';
 export const entityTypes = {
 	CREATOR, EDITION, PUBLICATION, PUBLISHER, WORK
 };
+
+export function getAdditionalEntityProps(data, entityType) {
+	switch (entityType) {
+		case entityTypes.CREATOR:
+			return _.pick(data, [
+				'typeId', 'genderId', 'beginAreaId', 'beginDate', 'endDate',
+				'ended', 'endAreaId'
+			]);
+		case entityTypes.EDITION:
+			return _.pick(data, [
+				'publicationBbid', 'width', 'height', 'depth', 'weight',
+				'pages', 'formatId', 'statusId'
+			]);
+		case entityTypes.PUBLISHER:
+			return _.pick(data, [
+				'typeId', 'areaId', 'beginDate', 'endDate', 'ended'
+			]);
+		case entityTypes.PUBLICATION:
+		case entityTypes.WORK:
+			return _.pick(data, ['typeId']);
+		default: return null;
+	}
+}
