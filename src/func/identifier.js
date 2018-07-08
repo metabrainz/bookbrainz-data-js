@@ -33,7 +33,7 @@ export function updateIdentifierSet(
 		return obj.value === other.value && obj.typeId === other.typeId;
 	}
 
-	const IdentifierSet: any = {orm};
+	const {IdentifierSet} = orm;
 
 	const oldSetItems: Array<Identifier> =
 		oldSet ? oldSet.related('items').toJSON() : [];
@@ -45,7 +45,9 @@ export function updateIdentifierSet(
 	const unchangedItems =
 		getUnchangedItems(oldSetItems, newSetItems, comparisonFunc);
 
-	if (_.isEmpty(addedItems) && _.isEmpty(removedItems)) {
+	const isSetUnmodified = _.isEmpty(addedItems) && _.isEmpty(removedItems);
+
+	if (isSetUnmodified) {
 		// No action - set has not changed
 		return Promise.resolve(oldSet);
 	}
