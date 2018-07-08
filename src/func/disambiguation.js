@@ -18,7 +18,7 @@
 
 
 export function updateDisambiguation(
-	orm, trx, oldDisambiguation, newComment
+	orm, transacting, oldDisambiguation, newComment
 ) {
 	const {Disambiguation} = orm;
 	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
@@ -29,5 +29,5 @@ export function updateDisambiguation(
 
 	return newComment ? new Disambiguation({
 		comment: newComment
-	}).save(null, {trx}) : null;
+	}).save(null, {transacting}) : null;
 }
