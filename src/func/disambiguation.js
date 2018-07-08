@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2018 Ben Ockmore
  * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,21 +17,17 @@
  */
 
 
-import * as alias from './alias';
-import * as disambiguation from './disambiguation';
-import * as entity from './entity';
-import * as identifier from './identifier';
-import * as relationship from './relationship';
-import * as set from './set';
+export function updateDisambiguation(
+	orm, transacting, oldDisambiguation, newComment
+) {
+	const {Disambiguation} = orm;
+	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
 
+	if (newComment === oldComment) {
+		return oldDisambiguation;
+	}
 
-export default function init() {
-	return {
-		alias,
-		disambiguation,
-		entity,
-		identifier,
-		relationship,
-		set
-	};
+	return newComment ? new Disambiguation({
+		comment: newComment
+	}).save(null, {transacting}) : null;
 }
