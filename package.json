@@ -14,7 +14,8 @@
     "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
     "flow": "flow",
     "dupreport": "jsinspect src/ || true",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'"
   },
   "lint-staged": {
     "*.js": [
@@ -57,6 +58,7 @@
     "immutable": "^3.8.2",
     "knex": "^0.15.0",
     "lodash": "^4.17.10",
+    "nodemon": "^1.17.5",
     "pg": "^7.4.1"
   },
   "devDependencies": {
