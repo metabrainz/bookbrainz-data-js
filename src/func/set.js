@@ -19,12 +19,13 @@
 // @flow
 
 import type {
-	FormAliasT, FormIdentifierT, FormRelationshipT, Transaction
+	FormAliasT, FormIdentifierT, FormLanguageT, FormRelationshipT, Transaction
 } from './types';
 import _ from 'lodash';
 
 
-type SetItemT = FormAliasT | FormIdentifierT | FormRelationshipT;
+type SetItemT = FormAliasT | FormIdentifierT | FormLanguageT |
+	FormRelationshipT;
 
 /**
  * Get the intersection of two arrays of objects using a custom comparison
