@@ -54,3 +54,7 @@ export type FormRelationshipT = {
 	sourceBBID: string,
 	targetBBID: string
 };
+
+export type FormLanguageT = {
+	id: number
+};
