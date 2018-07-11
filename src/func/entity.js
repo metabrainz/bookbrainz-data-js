@@ -18,6 +18,7 @@
  */
 
 import _ from 'lodash';
+import {parseDate} from '../util';
 
 
 export const CREATOR = 'Creator';
@@ -31,24 +32,39 @@ export const entityTypes = {
 };
 
 export function getAdditionalEntityProps(data, entityType) {
-	switch (entityType) {
-		case entityTypes.CREATOR:
-			return _.pick(data, [
-				'typeId', 'genderId', 'beginAreaId', 'beginDate', 'endDate',
-				'ended', 'endAreaId'
-			]);
-		case entityTypes.EDITION:
-			return _.pick(data, [
-				'publicationBbid', 'width', 'height', 'depth', 'weight',
-				'pages', 'formatId', 'statusId'
-			]);
-		case entityTypes.PUBLISHER:
-			return _.pick(data, [
-				'typeId', 'areaId', 'beginDate', 'endDate', 'ended'
-			]);
-		case entityTypes.PUBLICATION:
-		case entityTypes.WORK:
-			return _.pick(data, ['typeId']);
-		default: return null;
+	if (entityType === entityTypes.CREATOR) {
+		const {typeId, genderId, beginAreaId, beginDate, endDate,
+			ended, endAreaId} = data;
+
+		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
+		const [endYear, endMonth, endDay] = parseDate(endDate);
+		return {
+			beginAreaId, beginDay, beginMonth, beginYear, endAreaId, endDay,
+			endMonth, endYear, ended, genderId, typeId
+		};
 	}
+
+	if (entityType === entityTypes.EDITION) {
+		return _.pick(data, [
+			'publicationBbid', 'width', 'height', 'depth', 'weight',
+			'pages', 'formatId', 'statusId'
+		]);
+	}
+
+	if (entityType === entityTypes.PUBLISHER) {
+		const {typeId, areaId, beginDate, endDate, ended} = data;
+
+		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
+		const [endYear, endMonth, endDay] = parseDate(endDate);
+
+		return {areaId, beginDay, beginMonth, beginYear, endDay, endMonth,
+			endYear, ended, typeId};
+	}
+
+	if (entityType === entityTypes.PUBLICATION ||
+		entityType === entityTypes.WORK) {
+		return _.pick(data, ['typeId']);
+	}
+
+	return null;
 }
