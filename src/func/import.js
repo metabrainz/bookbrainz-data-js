@@ -100,7 +100,7 @@ function createImportHeader(transacting, record, entityType) {
 
 async function updateEntityDataSets(orm, transacting, importData) {
 	// Extract all entity data sets related fields
-	const {languages, releaseEvents, publishers} = importData;
+	const {languages, releaseEvents} = importData;
 
 	// Create an empty entityDataSet
 	const entityDataSet = {};
