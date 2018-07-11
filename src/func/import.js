@@ -149,7 +149,7 @@ export default function createImport(orm, importData) {
 		);
 
 		// Create import entity
-		const importId =
+		const [importId] =
 			await createImportRecord(transacting, [{type: entityType}]);
 
 		// Get origin_source
