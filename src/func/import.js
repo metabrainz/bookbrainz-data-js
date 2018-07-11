@@ -168,7 +168,11 @@ export default function createImport(orm, importData) {
 			})]
 		);
 
-		await createImportHeader([camelToSnake({dataId, importId})]);
+		await createImportHeader(
+			transacting,
+			[camelToSnake({dataId, importId})],
+			entityType
+		);
 
 		return importId;
 	});
