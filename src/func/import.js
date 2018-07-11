@@ -67,6 +67,12 @@ function createLinkTableRecord(transacting, record) {
 
 function createImportDataRecord(transacting, dataSets, importData) {
 	const {entityType} = importData;
+
+	// Safe check if entityType is one among the expected
+	if (!_.includes(entityTypes, entityType)) {
+		throw new Error('Invalid entity type');
+	}
+
 	const additionalEntityProps =
 		getAdditionalEntityProps(importData, entityType);
 
@@ -75,7 +81,9 @@ function createImportDataRecord(transacting, dataSets, importData) {
 		...additionalEntityProps
 	};
 
-	return transacting.insert([camelToSnake(dataRecordProps)]);
+	return transacting.insert([camelToSnake(dataRecordProps)])
+		.into(`bookbrainz.${_.toLower(entityType)}_data`)
+		.returning('id');
 }
 
 function createImportHeader(transacting, record, entityType) {
