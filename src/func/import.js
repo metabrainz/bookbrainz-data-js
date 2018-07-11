@@ -131,7 +131,7 @@ export default function createImport(orm, importData) {
 			await Promise.all([
 				updateAliasSet(orm, transacting, null, null, alias),
 				updateIdentifierSet(orm, transacting, null, identifiers),
-				updateDisambiguation(orm, null, disambiguation),
+				updateDisambiguation(orm, transacting, null, disambiguation),
 				updateEntityDataSets(orm, transacting, importData)
 			]);
 
