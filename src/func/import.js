@@ -62,7 +62,7 @@ function createImportRecord(transacting, data) {
 }
 
 function createLinkTableRecord(transacting, record) {
-	return transacting.insert(record).into('link-import');
+	return transacting.insert(record).into('link_import');
 }
 
 function createImportDataRecord(transacting, dataSets, importData) {
@@ -163,7 +163,6 @@ export default function createImport(orm, importData) {
 				importId,
 				importMetadata: importData.metadata,
 				lastEdited: importData.lastEdited,
-				metadata: importData.metadata,
 				originId: importData.originId,
 				originSourceId: originSource.id
 
