@@ -157,13 +157,16 @@ export default function createImport(orm, importData) {
 			await getOriginSourceRecord(transacting, source);
 
 		// Set up link_import table
-		await createLinkTableRecord(transacting, [
-			camelToSnake({
+		await createLinkTableRecord(
+			transacting,
+			[camelToSnake({
 				importId,
 				importMetadata: importData.metadata,
 				lastEdited: importData.lastEdited,
 				originId: importData.originId,
 				originSourceId: originSource.id
+			})]
+		);
 
 		await createImportHeader([camelToSnake({dataId, importId})]);
 
