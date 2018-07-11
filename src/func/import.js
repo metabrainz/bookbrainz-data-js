@@ -27,33 +27,34 @@ import {updateLanguageSet} from './language';
 import {updateReleaseEventSet} from './releaseEvent';
 
 
-export async function getOriginSourceRecord(orm, source) {
+export async function getOriginSourceRecord(transacting, source) {
 	let idArr = null;
-	const {bookshelf} = orm;
 
 	try {
-		idArr = await bookshelf.knex.select('id')
+		[idArr] = await transacting.select('id')
 			.from('bookbrainz.origin_source')
 			.where('name', '=', source);
 	}
 	catch (err) {
-		return idArr;
+		return null;
 	}
 
 	// Create the data source if it does not exist
 	if (!idArr || !idArr.length) {
 		try {
-			idArr = await bookshelf.knex.insert([{name: source}])
+			const [id] = await transacting.insert([{name: source}])
 				.into('bookbrainz.origin_source')
 				.returning('id');
+
+			idArr = {id};
 		}
 		catch (err) {
-			return idArr;
+			return null;
 		}
 	}
 
-	// Retuning the id of the origin source (knex returns an array)
-	return idArr[0];
+	// Retuning the {id} of the origin source (knex returns an array)
+	return idArr;
 }
 
 function createImportRecord(transacting, data) {
@@ -153,8 +154,8 @@ export default function createImport(orm, importData) {
 			await createImportRecord(transacting, [{type: entityType}]);
 
 		// Get origin_source
-		const originSourceId =
-			await getOriginSourceRecord(orm, source);
+		const originSource =
+			await getOriginSourceRecord(transacting, source);
 
 		// Set up link_import table
 		await createLinkTableRecord(transacting, [
@@ -164,9 +165,7 @@ export default function createImport(orm, importData) {
 				lastEdited: importData.lastEdited,
 				metadata: importData.metadata,
 				originId: importData.originId,
-				originSourceId
-			})
-		]);
+				originSourceId: originSource.id
 
 		await createImportHeader([camelToSnake({dataId, importId})]);
 
