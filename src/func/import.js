@@ -17,9 +17,14 @@
  */
 
 
+import {entityTypes, getAdditionalEntityProps} from './entity';
 import _ from 'lodash';
+import {camelToSnake} from '../util';
+import {updateAliasSet} from './alias';
+import {updateDisambiguation} from './disambiguation';
+import {updateIdentifierSet} from './identifier';
 import {updateLanguageSet} from './language';
-import {updateReleaseEventSet} from './derivedSets';
+import {updateReleaseEventSet} from './releaseEvent';
 
 
 export async function getOriginSourceRecord(orm, source) {
@@ -51,64 +56,120 @@ export async function getOriginSourceRecord(orm, source) {
 	return idArr[0];
 }
 
-function createImportRecord({trx, data}) {
-	return trx.insert(data).into('import').returning('id');
+function createImportRecord(transacting, data) {
+	return transacting.insert(data).into('import').returning('id');
 }
 
-function createLinkTableRecord(trx, record) {
-	return trx.insert(record).into('link-import');
+function createLinkTableRecord(transacting, record) {
+	return transacting.insert(record).into('link-import');
 }
 
-async function importSetup(orm, transaction, importData) {
-	const {entityType, source} = importData;
+function createImportDataRecord(transacting, dataSets, importData) {
+	const {entityType} = importData;
+	const additionalEntityProps =
+		getAdditionalEntityProps(importData, entityType);
 
-	// Create import entity
-	const importId = await createImportRecord({
-		data: [{type: entityType}],
-		transaction
-	});
+	const dataRecordProps = {
+		...dataSets,
+		...additionalEntityProps
+	};
 
-	// Get origin_source
-	const originSourceId =
-		await getOriginSourceRecord(orm, source);
-
-	// Set up link_import table
-	await createLinkTableRecord(transaction, [{
-		/* eslint-disable camelcase */
-		import_id: importId,
-		import_metadata: importData.metadata,
-		last_edited: importData.lastEdited,
-		metadata: importData.metadata,
-		origin_id: importData.originId,
-		origin_source_id: originSourceId
-		/* eslint-enable */
-	}]);
-
-	return importId;
+	return transacting.insert([camelToSnake(dataRecordProps)]);
 }
 
-async function updateEntityDataSets(orm, transaction, importData) {
+function createImportHeader(transacting, record, entityType) {
+	// Switch entity type instead of using the varibale to construct the query
+	let table = null;
+	if (entityType === entityTypes.CREATOR) {
+		table = 'bookbrainz.creator_import_header';
+	}
+	if (entityType === entityTypes.EDITION) {
+		table = 'bookbrainz.edition_import_header';
+	}
+	if (entityType === entityTypes.PUBLISHER) {
+		table = 'bookbrainz.publisher_import_header';
+	}
+	if (entityType === entityTypes.PUBLICATION) {
+		table = 'bookbrainz.publication_import_header';
+	}
+	if (entityType === entityTypes.WORK) {
+		table = 'bookbrainz.work_import_header';
+	}
+
+	if (table) {
+		return transacting.insert(record).into(table).returning('import_id');
+	}
+
+	return null;
+}
+
+async function updateEntityDataSets(orm, transacting, importData) {
 	// Extract all entity data sets related fields
 	const {languages, releaseEvents, publishers} = importData;
 
 	// Create an empty entityDataSet
 	const entityDataSet = {};
 
-	// Set entityDataSets for Work entityType
 	if (languages) {
 		entityDataSet.languageSetId =
-			await updateLanguageSet(transaction, null, languages);
+			await updateLanguageSet(transacting, null, languages);
 	}
 
-	// Set entityDataSets for Work entityType
 	if (releaseEvents) {
+		const releaseEventSet =
+			await updateReleaseEventSet(orm, transacting, null, releaseEvents);
 		entityDataSet.releaseEventSetId =
-			await updateReleaseEventSet(orm, transaction, null, releaseEvents);
+			releaseEventSet && releaseEventSet.get('id');
 	}
 
-	// Todo: Publihser field
+	// Todo: Publisher field
 
 	return entityDataSet;
 }
 
-// Todo: Add import creator default export function and entityType_data function
+export default function createImport(orm, importData) {
+	return orm.bookshelf.transaction(async (transacting) => {
+		const {alias, identifiers, disambiguation, entityType, source} =
+			importData;
+
+		const [aliasSet, identifierSet, disambiguationObj, entityDataSets] =
+			await Promise.all([
+				updateAliasSet(orm, transacting, null, null, alias),
+				updateIdentifierSet(orm, transacting, null, identifiers),
+				updateDisambiguation(orm, null, disambiguation),
+				updateEntityDataSets(orm, transacting, importData)
+			]);
+
+		// Create entityTypedataId
+		const dataId = await createImportDataRecord(camelToSnake({
+			aliasSetId: aliasSet && aliasSet.get('id'),
+			disambiguationId: disambiguationObj && disambiguation.get('id'),
+			identifierSetId: identifierSet && identifierSet.get('id'),
+			...entityDataSets
+		}), importData);
+
+		// Create import entity
+		const importId =
+			await createImportRecord(transacting, [{type: entityType}]);
+
+		// Get origin_source
+		const originSourceId =
+			await getOriginSourceRecord(orm, source);
+
+		// Set up link_import table
+		await createLinkTableRecord(transacting, [
+			camelToSnake({
+				importId,
+				importMetadata: importData.metadata,
+				lastEdited: importData.lastEdited,
+				metadata: importData.metadata,
+				originId: importData.originId,
+				originSourceId
+			})
+		]);
+
+		await createImportHeader([camelToSnake({dataId, importId})]);
+
+		return importId;
+	});
+}
