@@ -136,12 +136,17 @@ export default function createImport(orm, importData) {
 			]);
 
 		// Create entityTypedataId
-		const dataId = await createImportDataRecord(camelToSnake({
+		const [dataId] = await createImportDataRecord(
+			transacting,
+			camelToSnake({
 			aliasSetId: aliasSet && aliasSet.get('id'),
-			disambiguationId: disambiguationObj && disambiguation.get('id'),
+				disambiguationId:
+					disambiguationObj && disambiguationObj.get('id'),
 			identifierSetId: identifierSet && identifierSet.get('id'),
 			...entityDataSets
-		}), importData);
+			}),
+			importData
+		);
 
 		// Create import entity
 		const importId =
