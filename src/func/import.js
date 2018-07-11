@@ -87,30 +87,16 @@ function createImportDataRecord(transacting, dataSets, importData) {
 }
 
 function createImportHeader(transacting, record, entityType) {
-	// Switch entity type instead of using the varibale to construct the query
-	let table = null;
-	if (entityType === entityTypes.CREATOR) {
-		table = 'bookbrainz.creator_import_header';
-	}
-	if (entityType === entityTypes.EDITION) {
-		table = 'bookbrainz.edition_import_header';
-	}
-	if (entityType === entityTypes.PUBLISHER) {
-		table = 'bookbrainz.publisher_import_header';
-	}
-	if (entityType === entityTypes.PUBLICATION) {
-		table = 'bookbrainz.publication_import_header';
-	}
-	if (entityType === entityTypes.WORK) {
-		table = 'bookbrainz.work_import_header';
+	// Safe check if entityType is one among the expected
+
+	if (!_.includes(entityTypes, entityType)) {
+		throw new Error('Invalid entity type');
 	}
 
-	if (table) {
+
+	const table = `bookbrainz.${_.toLower(entityType)}_import_header`;
 		return transacting.insert(record).into(table).returning('import_id');
 	}
-
-	return null;
-}
 
 async function updateEntityDataSets(orm, transacting, importData) {
 	// Extract all entity data sets related fields
