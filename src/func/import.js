@@ -95,8 +95,8 @@ function createImportHeader(transacting, record, entityType) {
 
 
 	const table = `bookbrainz.${_.toLower(entityType)}_import_header`;
-		return transacting.insert(record).into(table).returning('import_id');
-	}
+	return transacting.insert(record).into(table).returning('import_id');
+}
 
 async function updateEntityDataSets(orm, transacting, importData) {
 	// Extract all entity data sets related fields
@@ -139,11 +139,11 @@ export default function createImport(orm, importData) {
 		const [dataId] = await createImportDataRecord(
 			transacting,
 			camelToSnake({
-			aliasSetId: aliasSet && aliasSet.get('id'),
+				aliasSetId: aliasSet && aliasSet.get('id'),
 				disambiguationId:
 					disambiguationObj && disambiguationObj.get('id'),
-			identifierSetId: identifierSet && identifierSet.get('id'),
-			...entityDataSets
+				identifierSetId: identifierSet && identifierSet.get('id'),
+				...entityDataSets
 			}),
 			importData
 		);
