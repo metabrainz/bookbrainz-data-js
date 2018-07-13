@@ -24,10 +24,13 @@ export function updateDisambiguation(
 	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
 
 	if (newComment === oldComment) {
-		return oldDisambiguation;
+		return Promise.resolve(oldDisambiguation);
 	}
 
-	return newComment ? new Disambiguation({
-		comment: newComment
-	}).save(null, {transacting}) : null;
+	if (newComment) {
+		new Disambiguation({
+			comment: newComment
+		}).save(null, {transacting});
+	}
+	return Promise.resolve(null);
 }
