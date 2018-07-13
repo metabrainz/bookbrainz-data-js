@@ -24,11 +24,14 @@ export function updateAnnotation(
 	const oldContent = oldAnnotation && oldAnnotation.get('content');
 
 	if (newContent === oldContent) {
-		return oldAnnotation;
+		return Promise.resolve(oldAnnotation);
 	}
 
-	return newContent ? new Annotation({
-		content: newContent,
-		lastRevisionId: revision.get('id')
-	}).save(null, {transacting}) : null;
+	if (newContent) {
+		return new Annotation({
+			content: newContent,
+			lastRevisionId: revision.get('id')
+		}).save(null, {transacting});
+	}
+	return Promise.resolve(null);
 }
