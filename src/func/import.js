@@ -58,11 +58,11 @@ export async function getOriginSourceRecord(transacting, source) {
 }
 
 function createImportRecord(transacting, data) {
-	return transacting.insert(data).into('import').returning('id');
+	return transacting.insert(data).into('bookbrainz.import').returning('id');
 }
 
 function createLinkTableRecord(transacting, record) {
-	return transacting.insert(record).into('link_import');
+	return transacting.insert(record).into('bookbrainz.link_import');
 }
 
 function createImportDataRecord(transacting, dataSets, importData) {
