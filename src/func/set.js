@@ -19,13 +19,15 @@
 // @flow
 
 import type {
-	FormAliasT, FormIdentifierT, FormLanguageT, FormRelationshipT, Transaction
+	FormAliasT, FormIdentifierT, FormLanguageT, FormPublisherT,
+	FormRelationshipT, Transaction
 } from './types';
 import _ from 'lodash';
 
 
-type SetItemT = FormAliasT | FormIdentifierT | FormLanguageT |
-	FormRelationshipT;
+type SetItemT =
+	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
+	FormPublisherT;
 
 /**
  * Get the intersection of two arrays of objects using a custom comparison
@@ -106,7 +108,8 @@ export const removeItemsFromSet = getRemovedItems;
 
 export async function createNewSetWithItems<Item: SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
-	unchangedItems: Array<Item>, addedItems: Array<Item>
+	unchangedItems: Array<Item>, addedItems: Array<Item>,
+	idAttribute: string = 'id'
 ): Promise<any> {
 	if (_.isEmpty(unchangedItems) && _.isEmpty(addedItems)) {
 		return null;
@@ -117,12 +120,12 @@ export async function createNewSetWithItems<Item: SetItemT>(
 		await newSet.related('items').fetch({transacting});
 
 	newSetItemsCollection = await newSetItemsCollection.attach(
-		_.map(unchangedItems, 'id'), {transacting}
+		_.map(unchangedItems, idAttribute), {transacting}
 	);
 
 	await Promise.all(
 		_.map(addedItems, (ident) => newSetItemsCollection.create(
-			_.omit(ident, 'id'), {transacting}
+			_.omit(ident, idAttribute), {transacting}
 		))
 	);
 
