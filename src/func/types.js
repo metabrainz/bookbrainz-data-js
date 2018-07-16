@@ -58,3 +58,7 @@ export type FormRelationshipT = {
 export type FormLanguageT = {
 	id: number
 };
+
+export type FormPublisherT = {
+	bbid: string
+};
