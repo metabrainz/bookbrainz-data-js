@@ -122,7 +122,7 @@ async function updateEntityDataSets(orm, transacting, importData) {
 	return entityDataSet;
 }
 
-export default function createImport(orm, importData) {
+export function createImport(orm, importData) {
 	return orm.bookshelf.transaction(async (transacting) => {
 		const {alias, identifiers, disambiguation, entityType, source} =
 			importData;
@@ -141,7 +141,7 @@ export default function createImport(orm, importData) {
 			camelToSnake({
 				aliasSetId: aliasSet && aliasSet.get('id'),
 				disambiguationId:
-					disambiguationObj && disambiguationObj.get('id'),
+				disambiguationObj && disambiguationObj.get('id'),
 				identifierSetId: identifierSet && identifierSet.get('id'),
 				...entityDataSets
 			}),
@@ -150,22 +150,24 @@ export default function createImport(orm, importData) {
 
 		// Create import entity
 		const [importId] =
-			await createImportRecord(transacting, [{type: entityType}]);
+		await createImportRecord(transacting, [{type: entityType}]);
 
 		// Get origin_source
 		const originSource =
-			await getOriginSourceRecord(transacting, source);
+		await getOriginSourceRecord(transacting, source);
+
+		const linkTableData = camelToSnake({
+			importId,
+			importMetadata: importData.metadata,
+			lastEdited: importData.lastEdited,
+			originId: importData.originId,
+			originSourceId: originSource.id
+		});
 
 		// Set up link_import table
 		await createLinkTableRecord(
 			transacting,
-			[camelToSnake({
-				importId,
-				importMetadata: importData.metadata,
-				lastEdited: importData.lastEdited,
-				originId: importData.originId,
-				originSourceId: originSource.id
-			})]
+			[linkTableData]
 		);
 
 		await createImportHeader(
