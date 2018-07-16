@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Shivam Tripathi
+ * Copyright (C) 2018  Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,67 +18,42 @@
 
 // @flow
 
-import type {
-	FormLanguageT as Language, Transaction
-} from './types';
-import {getAddedItems, getRemovedItems} from './set';
+import type {FormLanguageT as Language, Transaction} from './types';
+import {
+	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
+} from './set';
 import _ from 'lodash';
-import {camelToSnake} from '../util';
 
 
-export async function updateLanguageSet(transacting: Transaction,
-	currentEntity: ?object, newLanguageItems: Array<Language>) {
-	function cmpLanguageItems(obj, other) {
+export function updateLanguageSet(
+	orm: any, transacting: Transaction, oldSet: any,
+	newSetItems: Array<Language>
+) {
+	function comparisonFunc(obj: Language, other: Language) {
 		return obj.id === other.id;
 	}
 
-	const oldLanguageSetId: number =
-		currentEntity && currentEntity.languageSetId;
+	const {LanguageSet} = orm;
 
-	// All errors are expected to be handled on the usage side
-	if (oldLanguageSetId) {
-		// Extract old language_ids
-		// The format is an array of {language_id} objects
-		const oldLanguageItemSetConstruct =
-			await transacting.select('language_id')
-				.from('language_set__language')
-				.where('set_id', oldLanguageSetId);
+	const oldSetItems: Array<Language> =
+		oldSet ? oldSet.related('languages').toJSON() : [];
 
-		// Construct an array of old items of Language type
-		const oldLanguageItemSet: Array<Language> =
-				oldLanguageItemSetConstruct.map(
-					({language_id}) => ({id: language_id}) // eslint-disable-line camelcase, max-len
-				);
+	const addedItems =
+		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
+	const removedItems =
+		getRemovedItems(oldSetItems, newSetItems, comparisonFunc);
+	const unchangedItems =
+		getUnchangedItems(oldSetItems, newSetItems, comparisonFunc);
 
-		// Contruct an array of new items of Language type
-		const newLanguageItemSet: Array<Language> =
-			newLanguageItems.map(item => ({id: item}));
+	const isSetUnmodified = _.isEmpty(addedItems) && _.isEmpty(removedItems);
 
-		// Use the above arrays of objects to check if there has been any change
-		const addedItems = getAddedItems(
-			oldLanguageItemSet, newLanguageItemSet, cmpLanguageItems
-		);
-		const removedItems = getRemovedItems(
-			oldLanguageItemSet, newLanguageItemSet, cmpLanguageItems
-		);
-
-		const isSetUnmodified: boolean =
-			_.isEmpty(removedItems) && _.isEmpty(addedItems);
-		if (isSetUnmodified) {
-			return oldLanguageSetId;
-		}
+	if (isSetUnmodified) {
+		// No action - set has not changed
+		return Promise.resolve(oldSet);
 	}
 
-	const [setId] = await transacting.insert({})
-		.into('language_set')
-		.returning('id');
-
-	const queryArgs = newLanguageItems.map(item =>
-		camelToSnake({languageId: item, setId})
+	// addedItems combined with unchangedItems since lanuguages are read-only
+	return createNewSetWithItems(
+		orm, transacting, LanguageSet, [...unchangedItems, ...addedItems], []
 	);
-
-	await transacting.insert(queryArgs)
-		.into('language_set__language');
-
-	return setId;
 }
