@@ -278,7 +278,6 @@ const stylisticIssuesRules = {
 		}
 	],
 	'max-lines': TRANSITION_IGNORE,
-	'max-lines-per-function': TRANSITION_WARNING,
 	'max-nested-callbacks': [
 		ERROR,
 		5
