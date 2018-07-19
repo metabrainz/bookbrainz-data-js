@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  Sean Burke
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamel} from '../util';
 
+export function updateDisambiguation(
+	orm, transacting, oldDisambiguation, newComment
+) {
+	const {Disambiguation} = orm;
+	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
 
-export default function languageSet(bookshelf) {
-	const LanguageSet = bookshelf.Model.extend({
-		format: camelToSnake,
-		idAttribute: 'id',
-		items() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.language_set__language',
-				'set_id', 'language_id'
-			);
-		},
-		languages() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.language_set__language',
-				'set_id', 'language_id'
-			);
-		},
-		parse: snakeToCamel,
-		tableName: 'bookbrainz.language_set'
-	});
+	if (newComment === oldComment) {
+		return Promise.resolve(oldDisambiguation);
+	}
 
-	return bookshelf.model('LanguageSet', LanguageSet);
+	if (newComment) {
+		new Disambiguation({
+			comment: newComment
+		}).save(null, {transacting});
+	}
+	return Promise.resolve(null);
 }

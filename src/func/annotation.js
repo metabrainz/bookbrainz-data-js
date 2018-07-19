@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  Sean Burke
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamel} from '../util';
 
+export function updateAnnotation(
+	orm, transacting, oldAnnotation, newContent, revision
+) {
+	const {Annotation} = orm;
+	const oldContent = oldAnnotation && oldAnnotation.get('content');
 
-export default function languageSet(bookshelf) {
-	const LanguageSet = bookshelf.Model.extend({
-		format: camelToSnake,
-		idAttribute: 'id',
-		items() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.language_set__language',
-				'set_id', 'language_id'
-			);
-		},
-		languages() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.language_set__language',
-				'set_id', 'language_id'
-			);
-		},
-		parse: snakeToCamel,
-		tableName: 'bookbrainz.language_set'
-	});
+	if (newContent === oldContent) {
+		return Promise.resolve(oldAnnotation);
+	}
 
-	return bookshelf.model('LanguageSet', LanguageSet);
+	if (newContent) {
+		return new Annotation({
+			content: newContent,
+			lastRevisionId: revision.get('id')
+		}).save(null, {transacting});
+	}
+	return Promise.resolve(null);
 }
