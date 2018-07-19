@@ -28,6 +28,7 @@ import area from './models/area';
 import creator from './models/entities/creator';
 import creatorData from './models/data/creatorData';
 import creatorHeader from './models/headers/creatorHeader';
+import creatorImport from './models/imports/creatorImport';
 import creatorRevision from './models/revisions/creatorRevision';
 import creatorType from './models/creatorType';
 import disambiguation from './models/disambiguation';
@@ -35,6 +36,7 @@ import edition from './models/entities/edition';
 import editionData from './models/data/editionData';
 import editionFormat from './models/editionFormat';
 import editionHeader from './models/headers/editionHeader';
+import editionImport from './models/imports/editionImport';
 import editionRevision from './models/revisions/editionRevision';
 import editionStatus from './models/editionStatus';
 import editor from './models/editor';
@@ -53,11 +55,13 @@ import note from './models/note';
 import publication from './models/entities/publication';
 import publicationData from './models/data/publicationData';
 import publicationHeader from './models/headers/publicationHeader';
+import publicationImport from './models/imports/publicationImport';
 import publicationRevision from './models/revisions/publicationRevision';
 import publicationType from './models/publicationType';
 import publisher from './models/entities/publisher';
 import publisherData from './models/data/publisherData';
 import publisherHeader from './models/headers/publisherHeader';
+import publisherImport from './models/imports/publisherImport';
 import publisherRevision from './models/revisions/publisherRevision';
 import publisherSet from './models/publisherSet';
 import publisherType from './models/publisherType';
@@ -72,6 +76,7 @@ import titleUnlock from './models/titleUnlock';
 import work from './models/entities/work';
 import workData from './models/data/workData';
 import workHeader from './models/headers/workHeader';
+import workImport from './models/imports/workImport';
 import workRevision from './models/revisions/workRevision';
 import workType from './models/workType';
 
@@ -103,6 +108,7 @@ export default function init(config) {
 		Creator: creator(bookshelf),
 		CreatorData,
 		CreatorHeader: creatorHeader(bookshelf),
+		CreatorImport: creatorImport(bookshelf),
 		CreatorRevision: creatorRevision(bookshelf),
 		CreatorType: creatorType(bookshelf),
 		Disambiguation: disambiguation(bookshelf),
@@ -110,6 +116,7 @@ export default function init(config) {
 		EditionData,
 		EditionFormat: editionFormat(bookshelf),
 		EditionHeader: editionHeader(bookshelf),
+		EditionImport: editionImport(bookshelf),
 		EditionRevision: editionRevision(bookshelf),
 		EditionStatus: editionStatus(bookshelf),
 		Editor: editor(bookshelf),
@@ -126,11 +133,13 @@ export default function init(config) {
 		Publication: publication(bookshelf),
 		PublicationData,
 		PublicationHeader: publicationHeader(bookshelf),
+		PublicationImport: publicationImport(bookshelf),
 		PublicationRevision: publicationRevision(bookshelf),
 		PublicationType: publicationType(bookshelf),
 		Publisher: publisher(bookshelf),
 		PublisherData,
 		PublisherHeader: publisherHeader(bookshelf),
+		PublisherImport: publisherImport(bookshelf),
 		PublisherRevision: publisherRevision(bookshelf),
 		PublisherSet: publisherSet(bookshelf),
 		PublisherType: publisherType(bookshelf),
@@ -145,6 +154,7 @@ export default function init(config) {
 		Work: work(bookshelf),
 		WorkData,
 		WorkHeader: workHeader(bookshelf),
+		WorkImport: workImport(bookshelf),
 		WorkRevision: workRevision(bookshelf),
 		WorkType: workType(bookshelf),
 		bookshelf,
