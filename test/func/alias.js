@@ -88,9 +88,7 @@ describe('updateAliasSet', () => {
 
 		expect(aliases).to.have.lengthOf(1);
 		expect(result.get('defaultAliasId')).to.equal(aliases[0].id);
-		expect(aliases[0]).to.include({
-			...aliasData
-		});
+		expect(aliases[0]).to.include(aliasData);
 	});
 
 	/* eslint-disable-next-line max-len */
@@ -113,6 +111,7 @@ describe('updateAliasSet', () => {
 		const firstSetAliases = firstSet.related('aliases').toJSON();
 
 		const thirdAliasData = getAliasData();
+		thirdAliasData.id = firstSetAliases[1].id;
 
 		firstSetAliases[1] = thirdAliasData;
 
@@ -134,12 +133,8 @@ describe('updateAliasSet', () => {
 		expect(result.get('id')).to.not.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[0].id);
 		expect(aliases).to.have.lengthOf(2);
-		expect(aliases[0]).to.include({
-			...firstAliasData
-		});
-		expect(aliases[1]).to.include({
-			...thirdAliasData
-		});
+		expect(aliases[0]).to.include(firstAliasData);
+		expect(aliases[1]).to.include(_.omit(thirdAliasData, 'id'));
 	});
 
 	it('should return the old set if no changes are made', async function () {
@@ -178,12 +173,8 @@ describe('updateAliasSet', () => {
 		expect(result.get('id')).to.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[0].id);
 		expect(aliases).to.have.lengthOf(2);
-		expect(aliases[0]).to.include({
-			...firstAliasData
-		});
-		expect(aliases[1]).to.include({
-			...secondAliasData
-		});
+		expect(aliases[0]).to.include(firstAliasData);
+		expect(aliases[1]).to.include(secondAliasData);
 	});
 
 	/* eslint-disable-next-line max-len */
@@ -225,12 +216,8 @@ describe('updateAliasSet', () => {
 		expect(result.get('id')).to.not.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[1].id);
 		expect(aliases).to.have.lengthOf(2);
-		expect(aliases[0]).to.include({
-			...firstAliasData
-		});
-		expect(aliases[1]).to.include({
-			...secondAliasData
-		});
+		expect(aliases[0]).to.include(firstAliasData);
+		expect(aliases[1]).to.include(secondAliasData);
 	});
 
 	/* eslint-disable-next-line max-len */
@@ -244,7 +231,7 @@ describe('updateAliasSet', () => {
 				trx,
 				null,
 				null,
-				[{...firstAliasData}, secondAliasData]
+				[firstAliasData, secondAliasData]
 			);
 
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
