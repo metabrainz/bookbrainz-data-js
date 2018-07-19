@@ -54,6 +54,8 @@ describe('updateIdentifierSet', () => {
 
 	afterEach(function () {
 		return truncateTables(bookshelf, [
+			'bookbrainz.identifier_set__identifier',
+			'bookbrainz.identifier_set',
 			'bookbrainz.identifier',
 			'bookbrainz.identifier_type'
 		]);

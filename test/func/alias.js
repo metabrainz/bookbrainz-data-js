@@ -58,6 +58,8 @@ describe('updateAliasSet', () => {
 
 	afterEach(function () {
 		return truncateTables(bookshelf, [
+			'bookbrainz.alias_set__alias',
+			'bookbrainz.alias_set',
 			'bookbrainz.alias',
 			'musicbrainz.language'
 		]);
