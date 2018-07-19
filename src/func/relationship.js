@@ -97,8 +97,26 @@ async function updateRelationshipSetForEntity(
 	);
 }
 
+
+/**
+ * Takes an array of relationships that should be set for the entity, and
+ * compares it to the currently set list of relationships to determine the
+ * difference. Compiles a list of affected entity BBIDs from this difference,
+ * and then updates the relationship sets for all affected entities, and returns
+ * these. If no entities are affected (there are no changes), an empty object
+ * is returned.
+ *
+ * @param {any} orm - an initialized instance of bookbrainz-data-js
+ * @param {Transaction} transacting - the current transaction
+ * @param {any} oldSet - the RelationshipSet object for the old entity data
+ * @param {Array<Relationship>} newSetItems - the edited RelationshipSet for the
+ *        entity
+ *
+ * @returns {Promise<any>} a promise which resolves to a {BBID: RelationshipSet}
+ *          map
+ */
 export function updateRelationshipSets(
-	orm: {}, transacting: Transaction, oldSet: any,
+	orm: any, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Relationship>
 ): Promise<any> {
 	function comparisonFunc(obj: Relationship, other: Relationship) {
@@ -118,7 +136,7 @@ export function updateRelationshipSets(
 
 	if (_.isEmpty(allAddedItems) && _.isEmpty(allRemovedItems)) {
 		// No action - set has not changed
-		return oldSet;
+		return Promise.resolve({});
 	}
 
 	const affectedBBIDs = getAffectedBBIDs(allAddedItems, allRemovedItems);
