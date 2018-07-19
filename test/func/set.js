@@ -153,7 +153,7 @@ describe('createNewSetWithItems', () => {
 				)
 		);
 
-		expect(resultPromise).to.be.rejected;
+		return expect(resultPromise).to.be.rejected;
 	});
 
 	/* eslint-disable-next-line max-len */
