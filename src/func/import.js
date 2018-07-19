@@ -40,7 +40,7 @@ export async function getOriginSourceRecord(transacting, source) {
 	}
 
 	// Create the data source if it does not exist
-	if (!idArr || !idArr.length) {
+	if (!idArr) {
 		try {
 			const [id] = await transacting.insert([{name: source}])
 				.into('bookbrainz.origin_source')
