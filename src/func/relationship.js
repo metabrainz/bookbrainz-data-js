@@ -61,8 +61,13 @@ async function getMasterRelationshipSetForEntity(
 	const entity = await typeModelMap[type].forge({bbid})
 		.fetch({require: true}, {transacting});
 
+	const relationshipSetId = entity.get('relationshipSetId');
+	if (!relationshipSetId) {
+		return null;
+	}
+
 	// Return relationship set
-	return RelationshipSet.forge({id: entity.get('relationshipSetId')})
+	return RelationshipSet.forge({id: relationshipSetId})
 		.fetch({
 			require: true,
 			withRelated: ['items']
