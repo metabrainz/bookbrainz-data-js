@@ -151,7 +151,7 @@ export function updateRelationshipSets(
 
 	const newSetPromises = affectedBBIDs.reduce((result, bbid) => ({
 		...result,
-		bbid: updateRelationshipSetForEntity(
+		[bbid]: updateRelationshipSetForEntity(
 			orm, transacting, bbid, allAddedItems, allRemovedItems,
 			comparisonFunc
 		)
