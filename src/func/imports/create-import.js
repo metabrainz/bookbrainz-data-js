@@ -17,14 +17,14 @@
  */
 
 
-import {entityTypes, getAdditionalEntityProps} from './entity';
+import {entityTypes, getAdditionalEntityProps} from '../entity';
 import _ from 'lodash';
-import {camelToSnake} from '../util';
-import {updateAliasSet} from './alias';
-import {updateDisambiguation} from './disambiguation';
-import {updateIdentifierSet} from './identifier';
-import {updateLanguageSet} from './language';
-import {updateReleaseEventSet} from './releaseEvent';
+import {camelToSnake} from '../../util';
+import {updateAliasSet} from '../alias';
+import {updateDisambiguation} from '../disambiguation';
+import {updateIdentifierSet} from '../identifier';
+import {updateLanguageSet} from '../language';
+import {updateReleaseEventSet} from '../releaseEvent';
 
 
 export async function getOriginSourceRecord(transacting, source) {
