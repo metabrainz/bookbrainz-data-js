@@ -17,11 +17,13 @@
  */
 
 import {createImport, getOriginSourceRecord} from './create-import';
+import discard from './discard';
 import getRecentImports from './recent-imports';
 
 
 export default {
 	createImport,
+	discard,
 	getOriginSourceRecord,
 	getRecentImports
 };
