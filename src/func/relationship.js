@@ -35,10 +35,10 @@ function getAffectedBBIDs(
 	addedItems: Array<Relationship>, removedItems: Array<Relationship>
 ) {
 	const affectedSourceBBIDs = [...addedItems, ...removedItems].map(
-		(relationship) => relationship.sourceBBID
+		(relationship) => relationship.sourceBbid
 	);
 	const affectedTargetBBIDs = [...addedItems, ...removedItems].map(
-		(relationship) => relationship.targetBBID
+		(relationship) => relationship.targetBbid
 	);
 	return _.uniq([...affectedSourceBBIDs, ...affectedTargetBBIDs]);
 }
@@ -86,8 +86,8 @@ async function updateRelationshipSetForEntity(
 
 	const addedItems = allAddedItems.filter(
 		(relationship) =>
-			relationship.sourceBBID === bbid ||
-			relationship.targetBBID === bbid
+			relationship.sourceBbid === bbid ||
+			relationship.targetBbid === bbid
 	);
 	const unchangedItems =
 		removeItemsFromSet(oldSetItems, allRemovedItems, comparisonFunc);
@@ -120,9 +120,9 @@ export function updateRelationshipSets(
 	newSetItems: Array<Relationship>
 ): Promise<any> {
 	function comparisonFunc(obj: Relationship, other: Relationship) {
-		return obj.typeID === other.typeID &&
-			obj.sourceBBID === other.sourceBBID &&
-			obj.targetBBID === other.targetBBID;
+		return obj.typeId === other.typeId &&
+			obj.sourceBbid === other.sourceBbid &&
+			obj.targetBbid === other.targetBbid;
 	}
 
 	const oldSetItems =

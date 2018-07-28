@@ -49,10 +49,10 @@ export type FormIdentifierT = {
 };
 
 export type FormRelationshipT = {
-	ID: number,
-	typeID: number,
-	sourceBBID: string,
-	targetBBID: string
+	id: number,
+	typeId: number,
+	sourceBbid: string,
+	targetBbid: string
 };
 
 export type FormLanguageT = {
