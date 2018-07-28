@@ -61,6 +61,15 @@ describe('getAddedItems', () => {
 
 		return expect(result).to.deep.equal([diffArrayB[1]]);
 	});
+
+	/* eslint-disable-next-line max-len */
+	it('should return a single element when one element is different and duplicated', function () {
+		const result = getAddedItems(
+			arrayA, [...diffArrayB, ...diffArrayB], compare
+		);
+
+		return expect(result).to.deep.equal([diffArrayB[1]]);
+	});
 });
 
 describe('getUnchangedItems', () => {
@@ -72,6 +81,15 @@ describe('getUnchangedItems', () => {
 
 	it('should return a single element when one element is different', () => {
 		const result = getUnchangedItems(arrayA, diffArrayB, compare);
+
+		return expect(result).to.deep.equal([diffArrayB[0]]);
+	});
+
+	/* eslint-disable-next-line max-len */
+	it('should return a single element when one duplicated element is the same', function () {
+		const result = getUnchangedItems(
+			[...arrayA, ...arrayA], diffArrayB, compare
+		);
 
 		return expect(result).to.deep.equal([diffArrayB[0]]);
 	});
@@ -92,6 +110,15 @@ function removeTests(removeFunc) {
 
 				return expect(result).to.deep.equal([arrayA[1]]);
 			});
+
+		/* eslint-disable-next-line max-len */
+		it('should return a single element when one element is different and duplicated', function () {
+			const result = removeFunc(
+				[...arrayA, ...arrayA], diffArrayB, compare
+			);
+
+			return expect(result).to.deep.equal([arrayA[1]]);
+		});
 	};
 }
 

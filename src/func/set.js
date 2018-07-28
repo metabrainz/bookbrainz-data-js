@@ -47,11 +47,9 @@ export function getUnchangedItems<Item: SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
-	return _.intersectionWith(
-		oldSet, newSet,
-		(objValue, otherValue) =>
-			_.isEqualWith(objValue, otherValue, comparisonFunc)
-	);
+	return _.uniqWith(_.intersectionWith(
+		oldSet, newSet, comparisonFunc
+	), comparisonFunc);
 }
 
 /**
@@ -72,11 +70,9 @@ export function getAddedItems<Item: SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
-	return _.differenceWith(
-		newSet, oldSet,
-		(objValue, otherValue) =>
-			_.isEqualWith(objValue, otherValue, comparisonFunc)
-	);
+	return _.uniqWith(_.differenceWith(
+		newSet, oldSet, comparisonFunc
+	), comparisonFunc);
 }
 
 /**
@@ -97,11 +93,9 @@ export function getRemovedItems<Item: SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
-	return _.differenceWith(
-		oldSet, newSet,
-		(objValue, otherValue) =>
-			_.isEqualWith(objValue, otherValue, comparisonFunc)
-	);
+	return _.uniqWith(_.differenceWith(
+		oldSet, newSet, comparisonFunc
+	), comparisonFunc);
 }
 
 export const removeItemsFromSet = getRemovedItems;
