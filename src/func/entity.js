@@ -75,3 +75,85 @@ export function getAdditionalEntityProps(data: Object, entityType: string) {
 
 	return null;
 }
+
+/**
+ * @param  {string} entityType - Entity type string
+ * @returns {Object} - Returns entitySetMetadata (derivedSets)
+ */
+export function getEntitySetMetadataByType(entityType: string) {
+	if (entityType === EDITION) {
+		return [
+			{
+				entityIdField: 'languageSetId',
+				idField: 'id',
+				name: 'languageSet',
+				propName: 'languages'
+			},
+			{
+				entityIdField: 'publisherSetId',
+				idField: 'bbid',
+				name: 'publisherSet',
+				propName: 'publishers'
+			},
+			{
+				entityIdField: 'releaseEventSetId',
+				idField: 'id',
+				mutableFields: [
+					'date',
+					'areaId'
+				],
+				name: 'releaseEventSet',
+				propName: 'releaseEvents'
+			}
+		];
+	}
+	else if (entityType === WORK) {
+		return [
+			{
+				entityIdField: 'languageSetId',
+				idField: 'id',
+				name: 'languageSet',
+				propName: 'languages'
+			}
+		];
+	}
+
+	return null;
+}
+
+/**
+ * Returns all entity models defined in bookbrainz-data-js
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @returns {object} - Object mapping model name to the entity model
+ */
+export function getEntityModels(orm: Object): Object {
+	const {Creator, Edition, Publication, Publisher, Work} = orm;
+	return {
+		Creator,
+		Edition,
+		Publication,
+		Publisher,
+		Work
+	};
+}
+
+/**
+ * Retrieves the Bookshelf entity model with the given the model name
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} type - Name or type of model
+ * @throws {Error} Throws a custom error if the param 'type' does not
+ * map to a model
+ * @returns {object} - Bookshelf model object with the type specified in the
+ * single param
+ */
+export function getEntityModelByType(orm: Object, type: string): Object {
+	const entityModels = getEntityModels(orm);
+
+	if (!entityModels[type]) {
+		throw new Error('Unrecognized entity type');
+	}
+
+	return entityModels[type];
+}
