@@ -20,29 +20,31 @@
 
 import type {Transaction} from './types';
 
-
 /**
- * @param  {Object} orm - The BookBrainz orm wrapper containing all models
- * @param  {Transaction} transacting - The current knex transaction object
- * @param  {Object} oldDisambiguation - The previous disambiguation object
- * @param  {string} newComment - The new disambiguation string
- * @returns {Promise<Object>} - Returns Promise holding Disambiguation object
+ * @param  {Object} orm - Bookbrainz orm wrapper containing all models
+ * @param  {String} content - Note content
+ * @param  {number} editorId - Editor's Id
+ * @param  {Object} revision - Revision object created using orm.Revision model
+ * @param  {Transaction} transacting - The transaction model
+ * @returns {?Object} Returns the created Note object or returns null
  */
-export function updateDisambiguation(
-	orm: Object, transacting: Transaction, oldDisambiguation: ?Object,
-	newComment: string
+export function createNote(
+	orm: Object,
+	content: string,
+	editorId: string,
+	revision: Object,
+	transacting: Transaction
 ) {
-	const {Disambiguation} = orm;
-	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
-
-	if (newComment === oldComment) {
-		return Promise.resolve(oldDisambiguation);
+	const {Note} = orm;
+	if (content) {
+		const revisionId = revision.get('id');
+		return new Note({
+			authorId: editorId,
+			content,
+			revisionId
+		})
+			.save(null, {transacting});
 	}
 
-	if (newComment) {
-		new Disambiguation({
-			comment: newComment
-		}).save(null, {transacting});
-	}
-	return Promise.resolve(null);
+	return null;
 }

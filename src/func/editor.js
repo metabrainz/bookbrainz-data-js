@@ -20,29 +20,25 @@
 
 import type {Transaction} from './types';
 
-
 /**
- * @param  {Object} orm - The BookBrainz orm wrapper containing all models
- * @param  {Transaction} transacting - The current knex transaction object
- * @param  {Object} oldDisambiguation - The previous disambiguation object
- * @param  {string} newComment - The new disambiguation string
- * @returns {Promise<Object>} - Returns Promise holding Disambiguation object
+ * Adds 1 to the edit count of the specified editor
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} id - row ID of editor to be updated
+ * @param {object} transacting - Bookshelf transaction object (must be in
+ * progress)
+ * @returns {Promise} - Resolves to the updated editor model
  */
-export function updateDisambiguation(
-	orm: Object, transacting: Transaction, oldDisambiguation: ?Object,
-	newComment: string
-) {
-	const {Disambiguation} = orm;
-	const oldComment = oldDisambiguation && oldDisambiguation.get('comment');
-
-	if (newComment === oldComment) {
-		return Promise.resolve(oldDisambiguation);
-	}
-
-	if (newComment) {
-		new Disambiguation({
-			comment: newComment
-		}).save(null, {transacting});
-	}
-	return Promise.resolve(null);
+export function incrementEditorEditCountById(
+	orm: Object,
+	id: string,
+	transacting: Transaction
+): Promise<Object> {
+	const {Editor} = orm;
+	return new Editor({id})
+		.fetch({transacting})
+		.then((editor) => {
+			editor.incrementEditCount();
+			return editor.save(null, {transacting});
+		});
 }
