@@ -19,10 +19,10 @@
 // @flow
 
 import type {Transaction} from '../types';
+import deleteImport from './delete-import';
 
 
-/* The maximum number of count of votes (in favour of discarding) till which we
-	hold the record */
+/* The maximum allowed limit of count of votes (in favour of discarding) */
 const DISCARD_LIMIT = 1;
 
 export default async function discard(
@@ -41,30 +41,7 @@ export default async function discard(
 
 	// If cast vote is decisive one, delete the records
 	if (votesCast.length === DISCARD_LIMIT) {
-		// Get the type of the import
-		const importType = await transacting.select('type')
-			.from('bookbrainz.import').where('id', importId);
-
-		// Get the dataId of the import
-		const dataId = await transacting.select('data_id')
-			.from('bookbrainz.import').where('import_id', importId);
-
-		// DELETE ALL TRACES OF THE IMPORT
-		// Delete the import header
-		await transacting(`bookbrainz.${importType.toLowerCase()}_header`)
-			.where('importId', importId).del();
-		// Delete the discard votes
-		await transacting('bookbrainz.discard_votes')
-			.where('import_id', importId).del();
-		// Delete the link import record
-		await transacting('bookbrainz.link_import')
-			.where('import_id', importId).del();
-		// Finally delete the associated data and import table record
-		await Promise.all([
-			transacting('bookbrainz.import').where('id', importId).del(),
-			transacting(`bookbrainz.${importType.toLowerCase()}_data`)
-				.where('id', dataId).del()
-		]);
+		await deleteImport(transacting, importId);
 	}
 	else if (votesCast.length < DISCARD_LIMIT) {
 		// Cast vote if it's below the limit
@@ -72,7 +49,7 @@ export default async function discard(
 			.into('bookbrainz.discard_votes');
 	}
 	else {
-		throw new Error('Cast votes already greater than the set limit');
+		throw new Error('Cast votes greater than the limit. Check database.');
 	}
 
 	// Deletion successful
