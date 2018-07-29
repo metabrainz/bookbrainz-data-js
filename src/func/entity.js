@@ -17,21 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+// @flow
+
 import _ from 'lodash';
 import {parseDate} from '../util';
 
 
-export const CREATOR = 'Creator';
-export const EDITION = 'Edition';
-export const PUBLICATION = 'Publication';
-export const PUBLISHER = 'Publisher';
-export const WORK = 'Work';
+export const CREATOR: string = 'Creator';
+export const EDITION: string = 'Edition';
+export const PUBLICATION: string = 'Publication';
+export const PUBLISHER: string = 'Publisher';
+export const WORK: string = 'Work';
 
-export const entityTypes = {
+export const entityTypes: Object = {
 	CREATOR, EDITION, PUBLICATION, PUBLISHER, WORK
 };
 
-export function getAdditionalEntityProps(data, entityType) {
+/**
+ * @param  {Object} data - Object holding all data related to an entity
+ * @param  {string} entityType - The type of the entity
+ * @returns {Object} - Returns all the additional entity specific data
+ */
+export function getAdditionalEntityProps(data: Object, entityType: string) {
 	if (entityType === entityTypes.CREATOR) {
 		const {typeId, genderId, beginAreaId, beginDate, endDate,
 			ended, endAreaId} = data;
