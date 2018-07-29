@@ -77,39 +77,38 @@ function getRecentImportsByType(transacting, type, importIds) {
 		.whereIn('import_id', importIds);
 }
 
-export default function getRecentImports(
-	orm: Object, limit: number = 10, offset: number = 0
+export default async function getRecentImports(
+	orm: Object, transacting: Transaction, limit: number = 10,
+	offset: number = 0
 ) {
-	return orm.bookshelf.transaction(async (transacting: Transaction) => {
-		// Fetch most recent ImportIds classified by importTypes
-		const {importHolder: recentImportIdsByType, timeStampMap} =
-			await getRecentImportIdsByType(transacting, limit, offset);
+	// Fetch most recent ImportIds classified by importTypes
+	const {importHolder: recentImportIdsByType, timeStampMap} =
+		await getRecentImportIdsByType(transacting, limit, offset);
 
-		const importTypes: Array<EntityTypeString> = _.values(entityTypes);
-		// Fetch imports for each importType using their importIds
-		const recentImports = _.flatten(
-			await Promise.all(
-				importTypes.map(type =>
-					getRecentImportsByType(transacting, type,
-						recentImportIdsByType[type]))
-			)
-		);
+	const importTypes: Array<EntityTypeString> = _.values(entityTypes);
+	// Fetch imports for each importType using their importIds
+	const recentImports = _.flatten(
+		await Promise.all(
+			importTypes.map(type =>
+				getRecentImportsByType(transacting, type,
+					recentImportIdsByType[type]))
+		)
+	);
 
-		const defaultAliasIds = _.map(recentImports, 'default_alias_id');
-		const defaultAliases =
-			await getAliasByIds(transacting, defaultAliasIds);
-		// Append defaultAlias objects to the recentImports
-		defaultAliases.forEach((defaultAlias, index) => {
-			recentImports[index].defaultAlias = defaultAlias;
-		});
-
-		// Add timestamp to the recentImports
-		recentImports.forEach(recentImport => {
-			recentImport.importedAt =
-				moment(timeStampMap[recentImport.import_id])
-					.format('YYYY-MM-DD');
-		});
-
-		return recentImports;
+	const defaultAliasIds = _.map(recentImports, 'default_alias_id');
+	const defaultAliases =
+		await getAliasByIds(transacting, defaultAliasIds);
+	// Append defaultAlias objects to the recentImports
+	defaultAliases.forEach((defaultAlias, index) => {
+		recentImports[index].defaultAlias = defaultAlias;
 	});
+
+	// Add timestamp to the recentImports
+	recentImports.forEach(recentImport => {
+		recentImport.importedAt =
+			moment(timeStampMap[recentImport.import_id])
+				.format('YYYY-MM-DD');
+	});
+
+	return recentImports;
 }
