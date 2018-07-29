@@ -34,7 +34,7 @@ function updateEntitySet(
 		oldSet ? oldSet.related(derivedSet.propName).toJSON() : [];
 
 	const comparisonFunc = getComparisonFunc(
-		[derivedSet.idField, ...derivedSet.mutableFields]
+		[derivedSet.idField, ...derivedSet.mutableFields || []]
 	);
 
 	if (_.isEmpty(oldItems) && _.isEmpty(newItems)) {
