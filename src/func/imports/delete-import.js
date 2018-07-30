@@ -42,7 +42,8 @@ export default async function deleteImport(
 
 	// Delete the link import record
 	await transacting('bookbrainz.link_import')
-		.where('import_id', importId).del();
+		.where('import_id', importId)
+		.update('importId', null);
 
 	// Finally delete the associated data and import table record
 	return Promise.all([
