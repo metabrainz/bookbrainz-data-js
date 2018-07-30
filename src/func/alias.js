@@ -93,3 +93,11 @@ export async function updateAliasSet(
 
 	return newSet.save(null, {transacting});
 }
+
+export function getAliasByIds(
+	transacting: Transaction, ids: Array<number>
+): Promise<Object> {
+	return transacting.select('*')
+		.from('bookbrainz.alias')
+		.whereIn('id', ids);
+}
