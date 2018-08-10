@@ -26,6 +26,7 @@ import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
 import _ from 'lodash';
+import {snakeToCamel} from '../util';
 
 
 export async function updateAliasSet(
@@ -94,10 +95,12 @@ export async function updateAliasSet(
 	return newSet.save(null, {transacting});
 }
 
-export function getAliasByIds(
+export async function getAliasByIds(
 	transacting: Transaction, ids: Array<number>
 ): Promise<Object> {
-	return transacting.select('*')
+	const aliases = await transacting.select('*')
 		.from('bookbrainz.alias')
 		.whereIn('id', ids);
+	return aliases.reduce((aliasesMap, alias) =>
+		_.extend(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
 }
