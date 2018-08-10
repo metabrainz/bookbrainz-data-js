@@ -22,7 +22,9 @@ import type {
 	FormAliasWithDefaultT as AliasWithDefault, FormIdentifierT as Identifier,
 	Transaction
 } from './types';
-import {getEntityModelByType, getEntitySetMetadataByType} from './entity';
+import {
+	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
+} from './entity';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import {createNote} from './note';
@@ -38,21 +40,26 @@ type createEntityPropsType = {
 	orm: Object,
 	transacting: Transaction,
 	editorId: string,
-	note: string,
-	aliases: Array<AliasWithDefault>,
-	identifiers: Array<Identifier>,
-	annotation: string,
-	disambiguation: string,
 	entityData: Object,
-	derivedProps: Object,
 	entityType: string
 };
 
+type entityDataType = {
+	aliases: Array<AliasWithDefault>,
+	annotation: string,
+	disambiguation: string,
+	identifiers: Array<Identifier>,
+	note: string,
+	type: string
+};
+
 export async function createEntity({
-	orm, transacting, editorId, note, aliases, identifiers, annotation,
-	disambiguation, entityData, derivedProps, entityType
+	editorId, entityData, orm, transacting
 }: createEntityPropsType) {
 	const {Revision} = orm;
+
+	const {aliases, annotation, disambiguation, identifiers, note,
+		type: entityType, ...entitySetData}: entityDataType = entityData;
 
 	// Increase user edit count
 	const editorUpdatePromise =
@@ -91,18 +98,21 @@ export async function createEntity({
 		orm, transacting, null, disambiguation
 	);
 
-	// Create derivedProps
-	const derivedSets = getEntitySetMetadataByType(entityType);
-	const derivedPropsPromise = Promise.resolve(
-		updateEntitySets(derivedSets, null, entityData, transacting, orm)
-	).then((derivedSetProps) => _.merge({}, derivedProps, derivedSetProps));
+	// Get additional props
+	const additionalProps = getAdditionalEntityProps(entityData, entityType);
+
+	// Create entitySets
+	const entitySetMetadata = getEntitySetMetadataByType(entityType);
+	const entitySetsPromise = updateEntitySets(
+		entitySetMetadata, null, entitySetData, transacting, orm
+	);
 
 	const [
 		revisionRecord, aliasSetRecord, identSetRecord, annotationRecord,
-		disambiguationRecord, ...allProps
+		disambiguationRecord, entitySets
 	] = await Promise.all([
 		revisionPromise, aliasSetPromise, identSetPromise,
-		annotationPromise, disambiguationPromise, derivedPropsPromise,
+		annotationPromise, disambiguationPromise, entitySetsPromise,
 		editorUpdatePromise, notePromise
 	]);
 
@@ -112,8 +122,8 @@ export async function createEntity({
 		disambiguationId:
 			disambiguationRecord && disambiguationRecord.get('id'),
 		identifierSetId: identSetRecord && identSetRecord.get('id'),
-		revisionId: revisionRecord.get('id')
-	}, allProps);
+		revisionId: revisionRecord && revisionRecord.get('id')
+	}, entitySets, additionalProps);
 
 	const model = getEntityModelByType(orm, entityType);
 
