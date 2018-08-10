@@ -34,43 +34,46 @@ export const entityTypes: Object = {
 };
 
 /**
- * @param  {Object} data - Object holding all data related to an entity
+ * @param  {Object} entityData - Object holding all data related to an entity
  * @param  {string} entityType - The type of the entity
  * @returns {Object} - Returns all the additional entity specific data
  */
-export function getAdditionalEntityProps(data: Object, entityType: string) {
+export function getAdditionalEntityProps(
+	entityData: Object, entityType: string
+) {
 	if (entityType === entityTypes.CREATOR) {
 		const {typeId, genderId, beginAreaId, beginDate, endDate,
-			ended, endAreaId} = data;
+			ended, endAreaId} = entityData;
 
 		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
 		const [endYear, endMonth, endDay] = parseDate(endDate);
 		return {
-			beginAreaId, beginDay, beginMonth, beginYear, endAreaId, endDay,
-			endMonth, endYear, ended, genderId, typeId
+			beginAreaId, beginDate, beginDay, beginMonth, beginYear,
+			endAreaId, endDate, endDay, endMonth, endYear,
+			ended, genderId, typeId
 		};
 	}
 
 	if (entityType === entityTypes.EDITION) {
-		return _.pick(data, [
+		return _.pick(entityData, [
 			'publicationBbid', 'width', 'height', 'depth', 'weight',
 			'pages', 'formatId', 'statusId'
 		]);
 	}
 
 	if (entityType === entityTypes.PUBLISHER) {
-		const {typeId, areaId, beginDate, endDate, ended} = data;
+		const {typeId, areaId, beginDate, endDate, ended} = entityData;
 
 		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
 		const [endYear, endMonth, endDay] = parseDate(endDate);
 
-		return {areaId, beginDay, beginMonth, beginYear, endDay, endMonth,
-			endYear, ended, typeId};
+		return {areaId, beginDate, beginDay, beginMonth, beginYear,
+			endDate, endDay, endMonth, endYear, ended, typeId};
 	}
 
 	if (entityType === entityTypes.PUBLICATION ||
 		entityType === entityTypes.WORK) {
-		return _.pick(data, ['typeId']);
+		return _.pick(entityData, ['typeId']);
 	}
 
 	return null;
@@ -80,7 +83,7 @@ export function getAdditionalEntityProps(data: Object, entityType: string) {
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
  */
-export function getEntitySetMetadataByType(entityType: string) {
+export function getEntitySetMetadataByType(entityType: string): Array<Object> {
 	if (entityType === EDITION) {
 		return [
 			{
@@ -118,7 +121,7 @@ export function getEntitySetMetadataByType(entityType: string) {
 		];
 	}
 
-	return null;
+	return [];
 }
 
 /**
