@@ -18,34 +18,57 @@
 
 // @flow
 
+import {camelToSnake, snakeToCamel} from '../../util';
 import type {Transaction} from '../types';
-import deleteImport from './delete-import';
+import {deleteImport} from './delete-import';
 
 
 /* The maximum allowed limit of count of votes (in favour of discarding) */
-const DISCARD_LIMIT = 1;
+export const DISCARD_LIMIT = 1;
 
-export default async function discard(
-	transacting: Transaction, importId: number, editorId: number
-): Promise<boolean> {
-	const votesCast = await transacting.select('*')
+export async function discardVotesCast(
+	transacting: Transaction, importId: number
+): Promise<Object> {
+	const votes = await transacting.select('*')
 		.from('bookbrainz.discard_votes')
 		.where('import_id', importId);
+
+	return votes.map(snakeToCamel);
+}
+
+/** This function casts a discard vote. In case of it has already been cast,
+ * it raises an error. If the vote is decisive one (and the record is deleted),
+ * it returns a Promise that resolves to true, else it returns an promise that
+ * resolves to false.
+ * @param  {Transaction} transacting - The knex Transacting object
+ * @param  {number} importId - Id of the import
+ * @param  {number} editorId - Id of the user casting the vote
+ * @returns {Promise<boolean>} - Promise<true> if records has been deleted or
+ * 		Promise<false> if the record is still present
+ */
+export async function castDiscardVote(
+	transacting: Transaction, importId: number, editorId: number
+): Promise<boolean> {
+	const votesCast = await discardVotesCast(transacting, importId);
 
 	// If editor has already cast the vote, reject the vote
 	for (const vote of votesCast) {
 		if (vote.editor_id === editorId) {
-			return Promise.resolve(false);
+			throw new Error('Already cast the vote');
 		}
 	}
+
+	// Has the record been deleted?
+	let isDeleted = false;
 
 	// If cast vote is decisive one, delete the records
 	if (votesCast.length === DISCARD_LIMIT) {
 		await deleteImport(transacting, importId);
+		isDeleted = true;
 	}
 	else if (votesCast.length < DISCARD_LIMIT) {
 		// Cast vote if it's below the limit
-		await transacting.insert({editorId, importId})
+		await transacting.insert(camelToSnake({editorId, importId}))
 			.into('bookbrainz.discard_votes');
 	}
 	else {
@@ -53,5 +76,5 @@ export default async function discard(
 	}
 
 	// Deletion successful
-	return Promise.resolve(true);
+	return Promise.resolve(isDeleted);
 }
