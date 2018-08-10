@@ -61,7 +61,8 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "nodemon": "^1.18.3",
-    "pg": "^7.4.1"
+    "pg": "^7.4.1",
+    "pg-native": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
