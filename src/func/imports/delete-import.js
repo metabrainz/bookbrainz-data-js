@@ -19,22 +19,31 @@
 // @flow
 
 import type {Transaction} from '../types';
+import {snakeToCamel} from '../../util';
 
 
-export default async function deleteImport(
+export async function deleteImport(
 	transacting: Transaction, importId: number
 ) {
+	/* For future purposes - deletion order followed is as in the migration
+		 script for imports - bookbrainz-sql/migrations/import/down.sql */
+
 	// Get the type of the import
-	const importType = await transacting.select('type')
+	const [typeRecord] = await transacting.select('type')
 		.from('bookbrainz.import').where('id', importId);
+	const {type: importType} = typeRecord;
 
 	// Get the dataId of the import
-	const dataId = await transacting.select('data_id')
-		.from('bookbrainz.import').where('import_id', importId);
+	const [dataIdRecord] =
+		await transacting.select('data_id')
+			.from(`bookbrainz.${importType.toLowerCase()}_import_header`)
+			.where('import_id', importId);
+	const {dataId} = snakeToCamel(dataIdRecord);
+
 
 	// Delete the import header
-	await transacting(`bookbrainz.${importType.toLowerCase()}_header`)
-		.where('importId', importId).del();
+	await transacting(`bookbrainz.${importType.toLowerCase()}_import_header`)
+		.where('import_id', importId).del();
 
 	// Delete the discard votes
 	await transacting('bookbrainz.discard_votes')
@@ -43,7 +52,7 @@ export default async function deleteImport(
 	// Delete the link import record
 	await transacting('bookbrainz.link_import')
 		.where('import_id', importId)
-		.update('importId', null);
+		.update('import_id', null);
 
 	// Finally delete the associated data and import table record
 	return Promise.all([
