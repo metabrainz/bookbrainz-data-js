@@ -16,14 +16,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {createImport, getOriginSourceRecord} from './create-import';
-import discard from './discard';
-import getRecentImports from './recent-imports';
+import {DISCARD_LIMIT, castDiscardVote, discardVotesCast} from './discard';
+import {
+	getImportDetails, getOriginSourceFromId, getOriginSourceId,
+	originSourceMapping
+} from './misc';
+import {getRecentImports, getTotalImports} from './recent-imports';
+import {approveImport} from './approve-import';
+import {createImport} from './create-import';
+import {deleteImport} from './delete-import';
 
 
 export default {
+	DISCARD_LIMIT,
+	approveImport,
+	castDiscardVote,
 	createImport,
-	discard,
-	getOriginSourceRecord,
-	getRecentImports
+	deleteImport,
+	discardVotesCast,
+	getImportDetails,
+	getOriginSourceFromId,
+	getOriginSourceId,
+	getRecentImports,
+	getTotalImports,
+	originSourceMapping
 };
