@@ -20,42 +20,13 @@
 import {entityTypes, getAdditionalEntityProps} from '../entity';
 import _ from 'lodash';
 import {camelToSnake} from '../../util';
+import {getOriginSourceId} from './misc';
 import {updateAliasSet} from '../alias';
 import {updateDisambiguation} from '../disambiguation';
 import {updateIdentifierSet} from '../identifier';
 import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
-
-export async function getOriginSourceRecord(transacting, source) {
-	let idArr = null;
-
-	try {
-		[idArr] = await transacting.select('id')
-			.from('bookbrainz.origin_source')
-			.where('name', '=', source);
-	}
-	catch (err) {
-		return null;
-	}
-
-	// Create the data source if it does not exist
-	if (!idArr) {
-		try {
-			const [id] = await transacting.insert([{name: source}])
-				.into('bookbrainz.origin_source')
-				.returning('id');
-
-			idArr = {id};
-		}
-		catch (err) {
-			return null;
-		}
-	}
-
-	// Retuning the {id} of the origin source (knex returns an array)
-	return idArr;
-}
 
 function createImportRecord(transacting, data) {
 	return transacting.insert(data).into('bookbrainz.import').returning('id');
@@ -154,7 +125,7 @@ export function createImport(orm, importData) {
 
 		// Get origin_source
 		const originSource =
-		await getOriginSourceRecord(transacting, source);
+			await getOriginSourceId(transacting, source);
 
 		const linkTableData = camelToSnake({
 			importId,
