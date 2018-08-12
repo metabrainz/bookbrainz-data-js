@@ -94,9 +94,9 @@ export async function approveImport(
 	const entity = await entityModel.refresh({
 		transacting,
 		withRelated: ['defaultAlias']
-	});
+	}).then(entityObject => entityObject.toJSON());
 
-	await deleteImport(transacting, importId);
+	await deleteImport(transacting, importId, entity.bbid);
 
-	return entity.toJSON();
+	return entity;
 }

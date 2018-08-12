@@ -18,12 +18,12 @@
 
 // @flow
 
+import {camelToSnake, snakeToCamel} from '../../util';
 import type {Transaction} from '../types';
-import {snakeToCamel} from '../../util';
 
 
 export async function deleteImport(
-	transacting: Transaction, importId: number
+	transacting: Transaction, importId: number, entityId: ?string
 ) {
 	/* For future purposes - deletion order followed is as in the migration
 		 script for imports - bookbrainz-sql/migrations/import/down.sql */
@@ -49,10 +49,17 @@ export async function deleteImport(
 	await transacting('bookbrainz.discard_votes')
 		.where('import_id', importId).del();
 
-	// Delete the link import record
+	/* Update the link import record:
+		-> set importId as null
+		-> if entityId provided, update it */
+	const updateLinkImportObj: {importId: null, entityId?: string} =
+		{importId: null};
+	if (entityId) {
+		updateLinkImportObj.entityId = entityId;
+	}
 	await transacting('bookbrainz.link_import')
 		.where('import_id', importId)
-		.update('import_id', null);
+		.update(camelToSnake(updateLinkImportObj));
 
 	// Finally delete the associated data and import table record
 	return Promise.all([
