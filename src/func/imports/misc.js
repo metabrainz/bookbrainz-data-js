@@ -38,40 +38,47 @@ export async function originSourceMapping(
 	);
 }
 
-export async function getOriginSourceId(transacting, source) {
-	let idArr = null;
+export async function getOriginSourceId(
+	transacting: Transaction, source: string
+): Promise<?number> {
+	let originSourceId: ?number = null;
 
 	try {
-		[idArr] = await transacting.select('id')
+		const [idObj] = await transacting.select('id')
 			.from('bookbrainz.origin_source')
 			.where('name', '=', source);
+		originSourceId = _.get(idObj, 'id');
 	}
 	catch (err) {
-		return null;
+		// Should error loudly if anything goes wrong
+		throw new Error(
+			`Error while extracting origin source using ${source} - ${err}`
+		);
 	}
 
 	// Create the data source if it does not exist
-	if (!idArr) {
+	if (!originSourceId) {
 		try {
-			const [id] = await transacting.insert([{name: source}])
+			[originSourceId] = await transacting.insert([{name: source}])
 				.into('bookbrainz.origin_source')
 				.returning('id');
-
-			idArr = {id};
 		}
 		catch (err) {
-			return null;
+			// Should error loudly if anything goes wrong
+			throw new Error(
+				`Error while creating a new source ${source} - ${err}`
+			);
 		}
 	}
 
 	// Returning the {id} of the origin source
-	return idArr;
+	return originSourceId || null;
 }
 
 export async function getOriginSourceFromId(
 	transacting: Transaction, originSourceId: number
 ): Promise<?string> {
-	// If anything goes wrong, it should error loudly
+	// Should error loudly if anything goes wrong
 	const [nameObj] = await transacting.select('name')
 		.from('bookbrainz.origin_source')
 		.where('id', originSourceId);
@@ -88,7 +95,7 @@ export async function getOriginSourceFromId(
 export async function getImportDetails(
 	transacting: Transaction, importId: number
 ): Promise<Object> {
-	// If anything goes wrong, it should error loudly
+	// Should error loudly if anything goes wrong
 	const [details] = snakeToCamel(await transacting.select('*')
 		.from('bookbrainz.link_import')
 		.where('import_id', importId));

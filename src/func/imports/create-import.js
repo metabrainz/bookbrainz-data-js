@@ -124,7 +124,7 @@ export function createImport(orm, importData) {
 		await createImportRecord(transacting, [{type: entityType}]);
 
 		// Get origin_source
-		const originSource =
+		const originSourceId =
 			await getOriginSourceId(transacting, source);
 
 		const linkTableData = camelToSnake({
@@ -132,7 +132,7 @@ export function createImport(orm, importData) {
 			importMetadata: importData.metadata,
 			lastEdited: importData.lastEdited,
 			originId: importData.originId,
-			originSourceId: originSource.id
+			originSourceId
 		});
 
 		// Set up link_import table
