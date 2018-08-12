@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018  Ben Ockmore
+ *           (C) 2018  Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,5 +103,5 @@ export async function getAliasByIds(
 		.from('bookbrainz.alias')
 		.whereIn('id', ids);
 	return aliases.reduce((aliasesMap, alias) =>
-		_.extend(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
 }
