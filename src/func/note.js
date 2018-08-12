@@ -1,5 +1,9 @@
 /*
- * Copyright (C) 2018 Shivam Tripathi
+ * Copied from bookbrainz-site
+ * Copyright (C) 2016  Sean Burke
+ *               2016  Ben Ockmore
+ *               2017  Daniel Hsing
+ *               2018  Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
