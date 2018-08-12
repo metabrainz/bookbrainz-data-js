@@ -25,46 +25,43 @@ import type {Transaction} from '../types';
 export async function deleteImport(
 	transacting: Transaction, importId: number, entityId: ?string
 ) {
-	/* For future purposes - deletion order followed is as in the migration
-		 script for imports - bookbrainz-sql/migrations/import/down.sql */
-
 	// Get the type of the import
-	const [typeRecord] = await transacting.select('type')
+	const [typeObj] = await transacting.select('type')
 		.from('bookbrainz.import').where('id', importId);
-	const {type: importType} = typeRecord;
+	const {type} = typeObj;
+	const importType = type.toLowerCase();
 
 	// Get the dataId of the import
-	const [dataIdRecord] =
+	const [dataIdObj] =
 		await transacting.select('data_id')
-			.from(`bookbrainz.${importType.toLowerCase()}_import_header`)
+			.from(`bookbrainz.${importType}_import_header`)
 			.where('import_id', importId);
-	const {dataId} = snakeToCamel(dataIdRecord);
+	const {dataId}: {dataId: number} = snakeToCamel(dataIdObj);
 
+	// Update link table arguments - if entityId present add it to the args obj
+	const linkUpdateObj: {importId: null, entityId?: string} =
+		entityId ? {entityId, importId: null} : {importId: null};
 
-	// Delete the import header
-	await transacting(`bookbrainz.${importType.toLowerCase()}_import_header`)
-		.where('import_id', importId).del();
+	await Promise.all([
+		// Delete the import header and entity data table records
+		transacting(`bookbrainz.${importType}_import_header`)
+			.where('import_id', importId).del()
+			.then(() =>
+				transacting(`bookbrainz.${importType}_data`)
+					.where('id', dataId).del()),
 
-	// Delete the discard votes
-	await transacting('bookbrainz.discard_votes')
-		.where('import_id', importId).del();
+		// Delete the discard votes
+		transacting('bookbrainz.discard_votes')
+			.where('import_id', importId).del(),
 
-	/* Update the link import record:
-		-> set importId as null
-		-> if entityId provided, update it */
-	const updateLinkImportObj: {importId: null, entityId?: string} =
-		{importId: null};
-	if (entityId) {
-		updateLinkImportObj.entityId = entityId;
-	}
-	await transacting('bookbrainz.link_import')
-		.where('import_id', importId)
-		.update(camelToSnake(updateLinkImportObj));
-
-	// Finally delete the associated data and import table record
-	return Promise.all([
-		transacting('bookbrainz.import').where('id', importId).del(),
-		transacting(`bookbrainz.${importType.toLowerCase()}_data`)
-			.where('id', dataId).del()
+		/* Update the link import record:
+			-> set importId as null
+			-> if entityId provided, update it */
+		transacting('bookbrainz.link_import')
+			.where('import_id', importId)
+			.update(camelToSnake(linkUpdateObj))
 	]);
+
+	// Finally delete the import table record
+	return transacting('bookbrainz.import').where('id', importId).del();
 }
