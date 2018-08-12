@@ -16,11 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+// @flow
+
+import type {Transaction} from '../types';
 import _ from 'lodash';
 import {snakeToCamel} from '../../util';
 
 
-export async function originSourceMapping(transacting, idAsKey) {
+export async function originSourceMapping(
+	transacting: Transaction, idAsKey?: boolean
+) {
 	const mappingRecord = await transacting.select('*')
 		.from('bookbrainz.origin_source');
 	return mappingRecord.reduce(
@@ -63,21 +68,38 @@ export async function getOriginSourceId(transacting, source) {
 	return idArr;
 }
 
-export async function getOriginSourceFromId(transacting, originSourceId) {
-	const [{name}] = await transacting.select('name')
+export async function getOriginSourceFromId(
+	transacting: Transaction, originSourceId: number
+): Promise<?string> {
+	// If anything goes wrong, it should error loudly
+	const [nameObj] = await transacting.select('name')
 		.from('bookbrainz.origin_source')
 		.where('id', originSourceId);
 
-	return name;
+	if (!nameObj || !nameObj.name) {
+		throw new Error(
+			`No source found with the given source Id ${originSourceId}`
+		);
+	}
+
+	return nameObj.name;
 }
 
-export async function getImportDetails(transacting, importId) {
-	const [details] = await transacting.select('*')
+export async function getImportDetails(
+	transacting: Transaction, importId: number
+): Promise<Object> {
+	// If anything goes wrong, it should error loudly
+	const [details] = snakeToCamel(await transacting.select('*')
 		.from('bookbrainz.link_import')
-		.where('import_id', importId);
+		.where('import_id', importId));
+
+	if (!details) {
+		throw new Error(`Details for the import ${importId} not found`);
+	}
 
 	details.source = await getOriginSourceFromId(
-		transacting, details.origin_source_id
+		transacting, details.originSourceId
 	);
-	return snakeToCamel(details);
+
+	return details;
 }
