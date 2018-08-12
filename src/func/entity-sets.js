@@ -68,7 +68,7 @@ export async function updateEntitySets(
 ): Promise<?Object> {
 	// If no entity sets, return null
 	if (!derivedSets) {
-		return Promise.resolve(null);
+		return null;
 	}
 
 	// Process each entitySet
