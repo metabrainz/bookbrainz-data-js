@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018  Ben Ockmore
+ *           (C) 2018  Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
 import _ from 'lodash';
+import {snakeToCamel} from '../util';
 
 
 export async function updateAliasSet(
@@ -92,4 +94,14 @@ export async function updateAliasSet(
 	newSet.set('defaultAliasId', defaultAlias.get('id'));
 
 	return newSet.save(null, {transacting});
+}
+
+export async function getAliasByIds(
+	transacting: Transaction, ids: Array<number>
+): Promise<Object> {
+	const aliases = await transacting.select('*')
+		.from('bookbrainz.alias')
+		.whereIn('id', ids);
+	return aliases.reduce((aliasesMap, alias) =>
+		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
 }

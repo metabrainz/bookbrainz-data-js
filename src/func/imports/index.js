@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2018  Ben Ockmore
- *               2018 Shivam Tripathi
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +16,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as alias from './alias';
-import * as entity from './entity';
-import * as identifier from './identifier';
-import * as language from './language';
-import * as relationship from './relationship';
-import * as set from './set';
-import {createEntity} from './create-entity';
-import imports from './imports';
+import {DISCARD_LIMIT, castDiscardVote, discardVotesCast} from './discard';
+import {
+	getImportDetails, getOriginSourceFromId, getOriginSourceId,
+	originSourceMapping
+} from './misc';
+import {getRecentImports, getTotalImports} from './recent-imports';
+import {approveImport} from './approve-import';
+import {createImport} from './create-import';
+import {deleteImport} from './delete-import';
 
 
-export default function init() {
-	return {
-		alias,
-		createEntity,
-		entity,
-		identifier,
-		imports,
-		language,
-		relationship,
-		set
-	};
-}
+export default {
+	DISCARD_LIMIT,
+	approveImport,
+	castDiscardVote,
+	createImport,
+	deleteImport,
+	discardVotesCast,
+	getImportDetails,
+	getOriginSourceFromId,
+	getOriginSourceId,
+	getRecentImports,
+	getTotalImports,
+	originSourceMapping
+};
