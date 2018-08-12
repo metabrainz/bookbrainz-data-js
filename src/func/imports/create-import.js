@@ -44,8 +44,10 @@ function createImportDataRecord(transacting, dataSets, importData) {
 		throw new Error('Invalid entity type');
 	}
 
-	const additionalEntityProps =
-		getAdditionalEntityProps(importData, entityType);
+	const additionalEntityProps = _.omit(
+		getAdditionalEntityProps(importData, entityType),
+		['beginDate', 'endDate']
+	);
 
 	const dataRecordProps = {
 		...dataSets,
@@ -107,25 +109,43 @@ export function createImport(orm, importData) {
 			]);
 
 		// Create entityTypedataId
-		const [dataId] = await createImportDataRecord(
-			transacting,
-			camelToSnake({
-				aliasSetId: aliasSet && aliasSet.get('id'),
-				disambiguationId:
-				disambiguationObj && disambiguationObj.get('id'),
-				identifierSetId: identifierSet && identifierSet.get('id'),
-				...entityDataSets
-			}),
-			importData
-		);
+		let dataId = null;
+		try {
+			[dataId] = await createImportDataRecord(
+				transacting,
+				camelToSnake({
+					aliasSetId: aliasSet && aliasSet.get('id'),
+					disambiguationId:
+					disambiguationObj && disambiguationObj.get('id'),
+					identifierSetId: identifierSet && identifierSet.get('id'),
+					...entityDataSets
+				}),
+				importData
+			);
+		}
+		catch (err) {
+			throw new Error(`Error during dataId creation ${err}`);
+		}
 
 		// Create import entity
-		const [importId] =
-		await createImportRecord(transacting, [{type: entityType}]);
+		let importId = null;
+		try {
+			[importId] =
+				await createImportRecord(transacting, [{type: entityType}]);
+		}
+		catch (err) {
+			throw new Error(`Error during creation of importId ${err}`);
+		}
 
 		// Get origin_source
-		const originSourceId =
-			await getOriginSourceId(transacting, source);
+		let originSourceId = null;
+
+		try {
+			originSourceId = await getOriginSourceId(transacting, source);
+		}
+		catch (err) {
+			throw new Error(`Error during getting source id - ${err}`);
+		}
 
 		const linkTableData = camelToSnake({
 			importId,
@@ -135,17 +155,28 @@ export function createImport(orm, importData) {
 			originSourceId
 		});
 
-		// Set up link_import table
-		await createLinkTableRecord(
-			transacting,
-			[linkTableData]
-		);
 
-		await createImportHeader(
-			transacting,
-			[camelToSnake({dataId, importId})],
-			entityType
-		);
+		// Set up link_import table
+		try {
+			await createLinkTableRecord(
+				transacting,
+				[linkTableData]
+			);
+		}
+		catch (err) {
+			throw new Error(`Error during link import table creation - ${err}`);
+		}
+
+		try {
+			await createImportHeader(
+				transacting,
+				[camelToSnake({dataId, importId})],
+				entityType
+			);
+		}
+		catch (err) {
+			throw new Error(`Error during importHeader creation - ${err}`);
+		}
 
 		return importId;
 	});
