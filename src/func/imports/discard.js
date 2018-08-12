@@ -58,13 +58,11 @@ export async function castDiscardVote(
 		}
 	}
 
-	// Has the record been deleted?
-	let isDeleted = false;
-
 	// If cast vote is decisive one, delete the records
 	if (votesCast.length === DISCARD_LIMIT) {
 		await deleteImport(transacting, importId);
-		isDeleted = true;
+		// The record been deleted
+		return true;
 	}
 	else if (votesCast.length < DISCARD_LIMIT) {
 		// Cast vote if it's below the limit
@@ -75,6 +73,6 @@ export async function castDiscardVote(
 		throw new Error('Cast votes greater than the limit. Check database.');
 	}
 
-	// Deletion successful
-	return Promise.resolve(isDeleted);
+	// The record has not been deleted
+	return false;
 }
