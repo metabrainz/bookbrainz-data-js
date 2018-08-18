@@ -96,17 +96,17 @@ export async function getImportDetails(
 	transacting: Transaction, importId: number
 ): Promise<Object> {
 	// Should error loudly if anything goes wrong
-	const [details] = snakeToCamel(await transacting.select('*')
+	const [details] = await transacting.select('*')
 		.from('bookbrainz.link_import')
-		.where('import_id', importId));
+		.where('import_id', importId);
 
 	if (!details) {
 		throw new Error(`Details for the import ${importId} not found`);
 	}
 
 	details.source = await getOriginSourceFromId(
-		transacting, details.originSourceId
+		transacting, details.origin_source_id
 	);
 
-	return details;
+	return snakeToCamel(details);
 }
