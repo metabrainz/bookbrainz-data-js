@@ -44,6 +44,12 @@ function createImportDataRecord(transacting, dataSets, importData) {
 		throw new Error('Invalid entity type');
 	}
 
+	/* We omit all extra props which are not taken in as args when creating an
+	entity_data record, else it will raise error (of there being no such
+	column in the table).
+	Entity data props use split versions of dates into (day, month and year)
+		and not directly dates, so we omit them.
+	*/
 	const additionalEntityProps = _.omit(
 		getAdditionalEntityProps(importData, entityType),
 		['beginDate', 'endDate']
@@ -89,8 +95,7 @@ async function updateEntityDataSets(orm, transacting, importData) {
 		entityDataSet.releaseEventSetId =
 			releaseEventSet && releaseEventSet.get('id');
 	}
-
-	// Todo: Publisher field
+	// Skipping publisher field, as they're not required in imports.
 
 	return entityDataSet;
 }
