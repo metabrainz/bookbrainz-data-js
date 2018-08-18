@@ -53,6 +53,7 @@ async function getRecentImportUtilData(
 					)
 						.from('bookbrainz.link_import')
 						.orderBy('imported_at')
+						.whereNot('import_id', null)
 						.limit(limit)
 						.offset(offset)
 						.as('link'),
