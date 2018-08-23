@@ -81,7 +81,8 @@ export async function updateAliasSet(
 		orm, transacting, AliasSet, unchangedItems, addedItems, 'aliases'
 	);
 
-	const newSetItemCollection = await newSet.related('aliases');
+	const newSetItemCollection =
+		await newSet.related('aliases').fetch({transacting});
 
 	const defaultAlias = newSetItemCollection.find(
 		(alias) =>
