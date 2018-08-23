@@ -23,12 +23,6 @@ export default function releaseEventSet(bookshelf) {
 	const ReleaseEventSet = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
-		items() {
-			return this.belongsToMany(
-				'ReleaseEvent', 'bookbrainz.release_event_set__release_event',
-				'set_id', 'release_event_id'
-			);
-		},
 		parse: snakeToCamel,
 		releaseEvents() {
 			return this.belongsToMany(

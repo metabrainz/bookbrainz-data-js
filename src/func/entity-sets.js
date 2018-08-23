@@ -57,7 +57,7 @@ function updateEntitySet(
 
 	return createNewSetWithItems(
 		orm, transacting, derivedSet.model, [...unchangedItems, ...addedItems],
-		[], derivedSet.idField
+		[], derivedSet.propName, derivedSet.idField
 	);
 }
 

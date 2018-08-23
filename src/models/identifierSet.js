@@ -29,12 +29,6 @@ export default function identifierSet(bookshelf) {
 				'set_id', 'identifier_id'
 			);
 		},
-		items() {
-			return this.belongsToMany(
-				'Identifier', 'bookbrainz.identifier_set__identifier',
-				'set_id', 'identifier_id'
-			);
-		},
 		parse: snakeToCamel,
 		tableName: 'bookbrainz.identifier_set'
 	});

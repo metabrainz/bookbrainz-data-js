@@ -23,12 +23,6 @@ export default function languageSet(bookshelf) {
 	const LanguageSet = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
-		items() {
-			return this.belongsToMany(
-				'Language', 'bookbrainz.language_set__language',
-				'set_id', 'language_id'
-			);
-		},
 		languages() {
 			return this.belongsToMany(
 				'Language', 'bookbrainz.language_set__language',

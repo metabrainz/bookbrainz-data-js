@@ -86,8 +86,9 @@ async function updateRelationshipSetForEntity(
 
 	const oldSet =
 		await getMasterRelationshipSetForEntity(orm, transacting, bbid);
+
 	const oldSetItems: Array<Relationship> =
-		oldSet ? oldSet.related('items').toJSON() : [];
+		oldSet ? oldSet.related('relationships').toJSON() : [];
 
 	const addedItems = allAddedItems.filter(
 		(relationship) =>
@@ -98,7 +99,8 @@ async function updateRelationshipSetForEntity(
 		removeItemsFromSet(oldSetItems, allRemovedItems, comparisonFunc);
 
 	return createNewSetWithItems(
-		orm, transacting, RelationshipSet, unchangedItems, addedItems
+		orm, transacting, RelationshipSet, unchangedItems, addedItems,
+		'relationships'
 	);
 }
 
@@ -131,7 +133,7 @@ export function updateRelationshipSets(
 	}
 
 	const oldSetItems =
-		oldSet ? oldSet.related('items').toJSON() : [];
+		oldSet ? oldSet.related('relationships').toJSON() : [];
 
 	const allAddedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);

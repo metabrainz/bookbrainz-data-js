@@ -36,7 +36,7 @@ export function updateIdentifierSet(
 	const {IdentifierSet} = orm;
 
 	const oldSetItems: Array<Identifier> =
-		oldSet ? oldSet.related('items').toJSON() : [];
+		oldSet ? oldSet.related('identifiers').toJSON() : [];
 
 	const addedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
@@ -53,6 +53,7 @@ export function updateIdentifierSet(
 	}
 
 	return createNewSetWithItems(
-		orm, transacting, IdentifierSet, unchangedItems, addedItems
+		orm, transacting, IdentifierSet, unchangedItems, addedItems,
+		'identifiers'
 	);
 }

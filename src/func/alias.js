@@ -78,11 +78,10 @@ export async function updateAliasSet(
 	}
 
 	const newSet = await createNewSetWithItems(
-		orm, transacting, AliasSet, unchangedItems, addedItems
+		orm, transacting, AliasSet, unchangedItems, addedItems, 'aliases'
 	);
 
-	const newSetItemCollection = await newSet.related('aliases')
-		.fetch({transacting});
+	const newSetItemCollection = await newSet.related('aliases');
 
 	const defaultAlias = newSetItemCollection.find(
 		(alias) =>

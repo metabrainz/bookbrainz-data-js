@@ -54,6 +54,7 @@ export function updateLanguageSet(
 
 	// addedItems combined with unchangedItems since lanuguages are read-only
 	return createNewSetWithItems(
-		orm, transacting, LanguageSet, [...unchangedItems, ...addedItems], []
+		orm, transacting, LanguageSet, [...unchangedItems, ...addedItems], [],
+		'languages'
 	);
 }

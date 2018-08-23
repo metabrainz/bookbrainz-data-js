@@ -50,7 +50,8 @@ export async function updateReleaseEventSet(orm, transacting, oldSet,
 	}
 
 	const newSet = await createNewSetWithItems(
-		orm, transacting, ReleaseEventSet, unchangedItems, addedItems
+		orm, transacting, ReleaseEventSet, unchangedItems, addedItems,
+		'releaseEvents'
 	);
 
 	return newSet.save(null, {transacting});

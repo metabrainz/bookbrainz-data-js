@@ -23,12 +23,6 @@ export default function relationshipSet(bookshelf) {
 	const RelationshipSet = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
-		items() {
-			return this.belongsToMany(
-				'Relationship', 'bookbrainz.relationship_set__relationship',
-				'set_id', 'relationship_id'
-			);
-		},
 		parse: snakeToCamel,
 		relationships() {
 			return this.belongsToMany(

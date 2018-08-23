@@ -125,7 +125,7 @@ export const removeItemsFromSet = getRemovedItems;
 export async function createNewSetWithItems<Item: SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
-	idAttribute: string = 'id'
+	itemsAttribute: string, idAttribute: string = 'id'
 ): Promise<any> {
 	if (_.isEmpty(unchangedItems) && _.isEmpty(addedItems)) {
 		return null;
@@ -133,7 +133,7 @@ export async function createNewSetWithItems<Item: SetItemT>(
 
 	const newSet = await new SetModel().save(null, {transacting});
 	let newSetItemsCollection =
-		await newSet.related('items').fetch({transacting});
+		await newSet.related(itemsAttribute).fetch({transacting});
 
 	newSetItemsCollection = await newSetItemsCollection.attach(
 		_.map(unchangedItems, idAttribute), {transacting}
