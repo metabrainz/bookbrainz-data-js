@@ -161,7 +161,9 @@ describe('createNewSetWithItems', () => {
 	it('should return null if no items are provided', async function () {
 		const result = await bookshelf.transaction(
 			(trx) =>
-				createNewSetWithItems(bookbrainzData, trx, AliasSet, [], [])
+				createNewSetWithItems(
+					bookbrainzData, trx, AliasSet, [], [], 'aliases'
+				)
 		);
 
 		expect(result).to.be.null;
@@ -176,7 +178,8 @@ describe('createNewSetWithItems', () => {
 					trx,
 					AliasSet,
 					[getAliasData()],
-					[]
+					[],
+					'aliases'
 				)
 		);
 
@@ -193,14 +196,15 @@ describe('createNewSetWithItems', () => {
 					trx,
 					AliasSet,
 					[],
-					[aliasData]
+					[aliasData],
+					'aliases'
 				);
 
-				return set.refresh({transacting: trx, withRelated: 'items'});
+				return set.refresh({transacting: trx, withRelated: 'aliases'});
 			}
 		);
 
-		const items = resultSet.related('items').toJSON();
+		const items = resultSet.related('aliases').toJSON();
 
 		expect(items).to.have.lengthOf(1);
 		expect(items[0]).to.include({
@@ -219,14 +223,15 @@ describe('createNewSetWithItems', () => {
 					trx,
 					AliasSet,
 					[],
-					[firstAliasData]
+					[firstAliasData],
+					'aliases'
 				);
 
-				return set.refresh({transacting: trx, withRelated: 'items'});
+				return set.refresh({transacting: trx, withRelated: 'aliases'});
 			}
 		);
 
-		const firstSetItems = firstSet.related('items').toJSON();
+		const firstSetItems = firstSet.related('aliases').toJSON();
 
 		const secondAliasData = getAliasData();
 		const resultSet = await bookshelf.transaction(
@@ -236,14 +241,15 @@ describe('createNewSetWithItems', () => {
 					trx,
 					AliasSet,
 					firstSetItems,
-					[secondAliasData]
+					[secondAliasData],
+					'aliases'
 				);
 
-				return set.refresh({transacting: trx, withRelated: 'items'});
+				return set.refresh({transacting: trx, withRelated: 'aliases'});
 			}
 		);
 
-		const items = resultSet.related('items').toJSON();
+		const items = resultSet.related('aliases').toJSON();
 
 		expect(items).to.have.lengthOf(2);
 		expect(items[0]).to.include({

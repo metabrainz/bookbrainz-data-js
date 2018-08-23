@@ -74,7 +74,7 @@ async function getMasterRelationshipSetForEntity(
 		.fetch({
 			require: true,
 			transacting,
-			withRelated: ['items']
+			withRelated: ['relationships']
 		});
 }
 
