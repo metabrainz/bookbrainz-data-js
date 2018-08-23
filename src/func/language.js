@@ -49,7 +49,7 @@ export function updateLanguageSet(
 
 	if (isSetUnmodified) {
 		// No action - set has not changed
-		return Promise.resolve(oldSet);
+		return Promise.resolve(oldSet || null);
 	}
 
 	// addedItems combined with unchangedItems since lanuguages are read-only

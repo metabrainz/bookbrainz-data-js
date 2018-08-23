@@ -52,7 +52,7 @@ export async function updateAliasSet(
 		oldSet ? oldSet.related('aliases').toJSON() : [];
 
 	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
-		return oldSet;
+		return oldSet || null;
 	}
 
 	const addedItems =

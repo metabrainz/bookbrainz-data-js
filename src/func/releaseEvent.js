@@ -50,7 +50,7 @@ export function updateReleaseEventSet(
 
 	if (isSetUnmodified) {
 		// No action - set has not changed
-		return oldSet;
+		return Promise.resolve(oldSet || null);
 	}
 
 	return createNewSetWithItems(

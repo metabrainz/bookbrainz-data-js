@@ -49,7 +49,7 @@ export function updateIdentifierSet(
 
 	if (isSetUnmodified) {
 		// No action - set has not changed
-		return Promise.resolve(oldSet);
+		return Promise.resolve(oldSet || null);
 	}
 
 	return createNewSetWithItems(
