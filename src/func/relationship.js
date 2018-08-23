@@ -50,7 +50,7 @@ async function getMasterRelationshipSetForEntity(
 		Entity, Creator, Edition, Publication, Publisher, RelationshipSet, Work
 	} = orm;
 	const entityHeader = await Entity.forge({bbid})
-		.fetch({require: true}, {transacting});
+		.fetch({require: true, transacting});
 
 	const typeModelMap = {Creator, Edition, Publication, Publisher, Work};
 
@@ -59,7 +59,7 @@ async function getMasterRelationshipSetForEntity(
 
 	// Fetch master revision of entity
 	const entity = await typeModelMap[type].forge({bbid})
-		.fetch({require: true}, {transacting});
+       .fetch({require: true, transacting});
 
 	const relationshipSetId = entity.get('relationshipSetId');
 	if (!relationshipSetId) {
@@ -70,8 +70,9 @@ async function getMasterRelationshipSetForEntity(
 	return RelationshipSet.forge({id: relationshipSetId})
 		.fetch({
 			require: true,
+			transacting,
 			withRelated: ['items']
-		}, {transacting});
+		});
 }
 
 async function updateRelationshipSetForEntity(

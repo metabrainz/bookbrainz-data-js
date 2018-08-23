@@ -43,7 +43,7 @@ export function updateDisambiguation(
 	}
 
 	if (newComment) {
-		new Disambiguation({
+		return new Disambiguation({
 			comment: newComment
 		}).save(null, {transacting});
 	}
