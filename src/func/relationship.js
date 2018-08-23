@@ -58,8 +58,11 @@ async function getMasterRelationshipSetForEntity(
 	const type: EntityTypeString = entityHeader.get('type');
 
 	// Fetch master revision of entity
-	const entity = await typeModelMap[type].forge({bbid})
-       .fetch({require: true, transacting});
+	const entity = await typeModelMap[type].forge({bbid}).fetch({transacting});
+
+	if (!entity) {
+		return null;
+	}
 
 	const relationshipSetId = entity.get('relationshipSetId');
 	if (!relationshipSetId) {
