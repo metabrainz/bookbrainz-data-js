@@ -18,10 +18,14 @@
  */
 
 import * as alias from './alias';
+import * as annotation from './annotation';
+import * as disambiguation from './disambiguation';
 import * as entity from './entity';
 import * as identifier from './identifier';
 import * as language from './language';
+import * as publisher from './publisher';
 import * as relationship from './relationship';
+import * as releaseEvent from './releaseEvent';
 import * as set from './set';
 import {createEntity} from './create-entity';
 import imports from './imports';
@@ -30,12 +34,16 @@ import imports from './imports';
 export default function init() {
 	return {
 		alias,
+		annotation,
 		createEntity,
+		disambiguation,
 		entity,
 		identifier,
 		imports,
 		language,
+		publisher,
 		relationship,
+		releaseEvent,
 		set
 	};
 }
