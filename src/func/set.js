@@ -119,6 +119,10 @@ export async function createNewSetWithItems<Item: SetItemT>(
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
 	itemsAttribute: string, idAttribute: string = 'id'
 ): Promise<any> {
+	if (!itemsAttribute) {
+		throw Error('itemsAttribute must be set in createNewSetWithItems');
+	}
+
 	if (_.isEmpty(unchangedItems) && _.isEmpty(addedItems)) {
 		return null;
 	}
