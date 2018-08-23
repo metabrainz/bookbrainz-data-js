@@ -16,22 +16,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+// @flow
 
+import type {FormReleaseEventT as ReleaseEvent, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
 import _ from 'lodash';
 
 
-export async function updateReleaseEventSet(orm, transacting, oldSet,
-	newSetItems) {
+export function updateReleaseEventSet(
+	orm: any, transacting: Transaction, oldSet: any,
+	newSetItems: Array<ReleaseEvent>
+): Promise<any> {
 	function cmpFunc(obj, other) {
 		return obj.date === other.date && obj.area_id === other.area_id;
 	}
 
 	const {ReleaseEventSet} = orm;
 
-	const oldSetItems =
+	const oldSetItems: Array<ReleaseEvent> =
 		oldSet ? await oldSet.related('releaseEvents').toJSON() : [];
 
 	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
