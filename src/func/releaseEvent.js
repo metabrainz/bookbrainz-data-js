@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 Shivam Tripathi
+ *               2018 Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,22 +30,21 @@ export function updateReleaseEventSet(
 	orm: any, transacting: Transaction, oldSet: any,
 	newSetItems: Array<ReleaseEvent>
 ): Promise<any> {
-	function cmpFunc(obj, other) {
-		return obj.date === other.date && obj.area_id === other.area_id;
+	function comparisonFunc(obj, other) {
+		return obj.date === other.date && obj.areaId === other.areaId;
 	}
 
 	const {ReleaseEventSet} = orm;
 
 	const oldSetItems: Array<ReleaseEvent> =
-		oldSet ? await oldSet.related('releaseEvents').toJSON() : [];
+		oldSet ? oldSet.related('releaseEvents').toJSON() : [];
 
-	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
-		return oldSet;
-	}
-
-	const addedItems = getAddedItems(oldSetItems, newSetItems, cmpFunc);
-	const removedItems = getRemovedItems(oldSetItems, newSetItems, cmpFunc);
-	const unchangedItems = getUnchangedItems(oldSetItems, newSetItems, cmpFunc);
+	const addedItems =
+		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
+	const removedItems =
+		getRemovedItems(oldSetItems, newSetItems, comparisonFunc);
+	const unchangedItems =
+		getUnchangedItems(oldSetItems, newSetItems, comparisonFunc);
 
 	const isSetUnmodified = _.isEmpty(addedItems) && _.isEmpty(removedItems);
 
@@ -53,10 +53,8 @@ export function updateReleaseEventSet(
 		return oldSet;
 	}
 
-	const newSet = await createNewSetWithItems(
+	return createNewSetWithItems(
 		orm, transacting, ReleaseEventSet, unchangedItems, addedItems,
 		'releaseEvents'
 	);
-
-	return newSet.save(null, {transacting});
 }
