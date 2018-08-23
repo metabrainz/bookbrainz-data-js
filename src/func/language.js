@@ -28,7 +28,7 @@ import _ from 'lodash';
 export function updateLanguageSet(
 	orm: any, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Language>
-) {
+): Promise<any> {
 	function comparisonFunc(obj: Language, other: Language) {
 		return obj.id === other.id;
 	}

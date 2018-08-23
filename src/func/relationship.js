@@ -33,7 +33,7 @@ type RelationshipComparisonFunc =
 
 function getAffectedBBIDs(
 	addedItems: Array<Relationship>, removedItems: Array<Relationship>
-) {
+): Array<string> {
 	const affectedSourceBBIDs = [...addedItems, ...removedItems].map(
 		(relationship) => relationship.sourceBbid
 	);
@@ -147,12 +147,13 @@ export function updateRelationshipSets(
 		return Promise.resolve({});
 	}
 
-	const affectedBBIDs = getAffectedBBIDs(allAddedItems, allRemovedItems);
+	const affectedBBIDs: Array<string> =
+		getAffectedBBIDs(allAddedItems, allRemovedItems);
 
 	// For each BBID, get the entity and the old relationship set, then apply
 	// the relevant changes to create a new set.
 
-	const newSetPromises = affectedBBIDs.reduce((result, bbid) => ({
+	const newSetPromises = affectedBBIDs.reduce((result, bbid: string) => ({
 		...result,
 		[bbid]: updateRelationshipSetForEntity(
 			orm, transacting, bbid, allAddedItems, allRemovedItems,

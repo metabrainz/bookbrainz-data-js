@@ -28,7 +28,7 @@ import _ from 'lodash';
 export function updateIdentifierSet(
 	orm: any, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Identifier>
-) {
+): Promise<any> {
 	function comparisonFunc(obj: Identifier, other: Identifier) {
 		return obj.value === other.value && obj.typeId === other.typeId;
 	}
