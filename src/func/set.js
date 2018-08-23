@@ -18,16 +18,8 @@
 
 // @flow
 
-import type {
-	FormAliasT, FormIdentifierT, FormLanguageT, FormPublisherT,
-	FormRelationshipT, Transaction
-} from './types';
+import type {SetItemT, Transaction} from './types';
 import _ from 'lodash';
-
-
-type SetItemT =
-	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
-	FormPublisherT;
 
 /**
  * Returns a function which compares two object provided to it using the

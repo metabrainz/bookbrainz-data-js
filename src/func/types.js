@@ -63,3 +63,12 @@ export type FormLanguageT = {
 export type FormPublisherT = {
 	bbid: string
 };
+
+export type FormReleaseEventT = {
+	date: string,
+	areaId?: any
+};
+
+export type SetItemT =
+	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
+	FormPublisherT | FormReleaseEventT;
