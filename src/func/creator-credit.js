@@ -22,12 +22,6 @@ import type {CreatorCreditNameT, Transaction} from './types';
 import _ from 'lodash';
 
 
-/*
-
-86f86a31-7c51-49ed-af71-9523cca30265
-88ff6f70-392d-45f2-a4c4-2db4e67bdab7
-*/
-
 function findCreatorCredit(
 	orm: any, transacting: Transaction, creatorCredit: Array<CreatorCreditNameT>
 ) {

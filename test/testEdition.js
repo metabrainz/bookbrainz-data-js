@@ -137,7 +137,7 @@ describe('Edition model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'creatorCredit'
 				]
 			}))
 			.then((edition) => edition.toJSON());
