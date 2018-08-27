@@ -20,6 +20,7 @@ import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
 
@@ -27,8 +28,8 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Editor, EditorEntityVisits,
-	EditorType, Gender, IdentifierSet, Publisher, RelationshipSet, Revision,
-	bookshelf
+	EditorType, Entity, Gender, IdentifierSet, Publisher, RelationshipSet,
+	Revision, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -50,9 +51,11 @@ const revisionAttribs = {
 	authorId: 1,
 	id: 1
 };
+const aBBID = faker.random.uuid();
 const publisherAttribs = {
 	aliasSetId: 1,
 	annotationId: 1,
+	bbid: aBBID,
 	disambiguationId: 1,
 	identifierSetId: 1,
 	relationshipSetId: 1,
@@ -83,6 +86,8 @@ describe('EditorEntityVisits model', () => {
 							comment: 'Test Disambiguation',
 							id: 1
 						})
+							.save(null, {method: 'insert'}),
+						new Entity({bbid: aBBID, type: 'Publisher'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -126,19 +131,12 @@ describe('EditorEntityVisits model', () => {
 	});
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const publisherPromise = new Publisher(publisherAttribs)
+		const editorVisitsPromise = new EditorEntityVisits({
+			bbid: aBBID,
+			editorId: editorData.id,
+			id: 1
+		})
 			.save(null, {method: 'insert'});
-
-		const editorVisitsPromise = publisherPromise
-			.then(
-				(publisher) =>
-					new EditorEntityVisits({
-						bbid: publisher.attributes.bbid,
-						editorId: editorData.id,
-						id: 1
-					})
-						.save(null, {method: 'insert'})
-			);
 
 		const jsonPromise = editorVisitsPromise
 			.then((model) => model.refresh())

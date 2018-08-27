@@ -101,6 +101,8 @@ async function makeEntity(bbid) {
 	})
 		.save(null, {method: 'insert'});
 
+	await new Entity({bbid, type: 'Work'}).save(null, {method: 'insert'});
+
 	const entity = await new Work(workAttribs).save(null, {method: 'insert'});
 
 	const refreshedEntity = await entity.refresh({

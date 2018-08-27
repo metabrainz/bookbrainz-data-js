@@ -27,7 +27,8 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Edition, EditionRevision, Editor,
-	EditorType, Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
+	Entity, EditorType, Gender, IdentifierSet, RelationshipSet, Revision,
+	bookshelf
 } = bookbrainzData;
 
 const data = {
@@ -92,6 +93,11 @@ describe('EditionRevision model', () => {
 						new RelationshipSet(data.set)
 							.save(null, {method: 'insert'}),
 						new Disambiguation(data.disambiguation)
+							.save(null, {method: 'insert'}),
+						new Entity({
+							bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
+							type: 'Edition'
+						})
 							.save(null, {method: 'insert'})
 					])
 				)

@@ -20,14 +20,15 @@ import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Creator, Disambiguation, Editor, EditorType, Gender,
-	IdentifierSet, RelationshipSet, Revision, bookshelf
+	AliasSet, Annotation, Creator, Disambiguation, Editor, EditorType, Entity,
+	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -45,6 +46,8 @@ const editorAttribs = {
 	typeId: 1
 };
 const setData = {id: 1};
+
+const aBBID = faker.random.uuid();
 
 describe('Creator model', () => {
 	beforeEach(
@@ -70,6 +73,8 @@ describe('Creator model', () => {
 							comment: 'Test Disambiguation',
 							id: 1
 						})
+							.save(null, {method: 'insert'}),
+						new Entity({bbid: aBBID, type: 'Creator'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -100,6 +105,7 @@ describe('Creator model', () => {
 		const creatorAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
+			bbid: aBBID,
 			disambiguationId: 1,
 			identifierSetId: 1,
 			relationshipSetId: 1,
@@ -156,6 +162,7 @@ describe('Creator model', () => {
 			};
 			const creatorAttribs = {
 				aliasSetId: 1,
+				bbid: aBBID,
 				identifierSetId: 1,
 				relationshipSetId: 1,
 				revisionId: 1
@@ -165,7 +172,11 @@ describe('Creator model', () => {
 				.save(null, {method: 'insert'});
 
 			const creatorPromise = revisionOnePromise
-				.then(() => new Creator(creatorAttribs).save())
+				.then(
+					() =>
+						new Creator(creatorAttribs)
+							.save(null, {method: 'insert'})
+				)
 				.then((model) => model.refresh())
 				.then((creator) => creator.toJSON());
 
