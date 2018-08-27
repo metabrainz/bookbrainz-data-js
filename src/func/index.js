@@ -19,6 +19,7 @@
 
 import * as alias from './alias';
 import * as annotation from './annotation';
+import * as creatorCredit from './creator-credit';
 import * as disambiguation from './disambiguation';
 import * as entity from './entity';
 import * as identifier from './identifier';
@@ -36,6 +37,7 @@ export default function init() {
 		alias,
 		annotation,
 		createEntity,
+		creatorCredit,
 		disambiguation,
 		entity,
 		identifier,

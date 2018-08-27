@@ -26,6 +26,8 @@ import aliasSet from './models/aliasSet';
 import annotation from './models/annotation';
 import area from './models/area';
 import creator from './models/entities/creator';
+import creatorCredit from './models/creatorCredit';
+import creatorCreditName from './models/creatorCreditName';
 import creatorData from './models/data/creatorData';
 import creatorHeader from './models/headers/creatorHeader';
 import creatorImport from './models/imports/creatorImport';
@@ -106,6 +108,8 @@ export default function init(config) {
 		Annotation: annotation(bookshelf),
 		Area: area(bookshelf),
 		Creator: creator(bookshelf),
+		CreatorCredit: creatorCredit(bookshelf),
+		CreatorCreditName: creatorCreditName(bookshelf),
 		CreatorData,
 		CreatorHeader: creatorHeader(bookshelf),
 		CreatorImport: creatorImport(bookshelf),

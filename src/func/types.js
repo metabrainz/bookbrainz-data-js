@@ -72,3 +72,9 @@ export type FormReleaseEventT = {
 export type SetItemT =
 	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
 	FormPublisherT | FormReleaseEventT;
+
+export type CreatorCreditNameT = {
+	creatorBBID: string,
+	name: string,
+	joinPhrase: string
+};
