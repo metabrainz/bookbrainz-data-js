@@ -1,16 +1,27 @@
 {
   "name": "bookbrainz-data",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
   "scripts": {
     "build-js": "rimraf lib/* && babel src --out-dir lib",
-    "lint": "eslint src test",
-    "lint-errors": "eslint --quiet src test",
-    "prepublish": "npm run build-js",
-    "test": "npm run lint && npm run build-js && mocha",
-    "test-cov": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false npm run test",
-    "test-ci": "cross-env BABEL_ENV=cov nyc --require=babel-register --source-maps=false --instrument=false --report=lcovonly npm test"
+    "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline",
+    "lint": "eslint .",
+    "lint-errors": "eslint --quiet .",
+    "prepublish": "npm run build-js && npm run copy-flow",
+    "test": "npm run lint-errors && npm run build-js-for-test && mocha",
+    "test-cov": "nyc --reporter=text npm test",
+    "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
+    "flow": "flow",
+    "dupreport": "jsinspect src/ || true",
+    "precommit": "lint-staged",
+    "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'",
+    "copy-flow": "flow-copy-source src lib"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
   },
   "directories": {
     "test": "tests"
@@ -34,7 +45,7 @@
     }
   ],
   "engines": {
-    "node": ">=6.0"
+    "node": ">=8.0"
   },
   "license": "GPL-2.0+",
   "bugs": {
@@ -44,11 +55,14 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "bookshelf": "^0.13.3",
-    "deep-diff": "^0.3.8",
+    "deep-diff": "^1.0.0",
     "immutable": "^3.8.2",
-    "knex": "^0.14.2",
-    "lodash": "^4.13.1",
-    "pg": "^7.4.1"
+    "knex": "^0.15.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "nodemon": "^1.18.3",
+    "pg": "^7.4.1",
+    "pg-native": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -64,15 +78,20 @@
     "babel-runtime": "^6.26.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "codeclimate-test-reporter": "^0.5.0",
-    "eslint": "^4.15.0",
+    "eslint": "^5.0.0",
     "eslint-plugin-babel": "^5.0.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-import": "^2.8.0",
+    "faker": "^4.1.0",
+    "flow-bin": "^0.76.0",
+    "flow-copy-source": "^2.0.1",
     "glob": "^7.1.2",
-    "istanbul": "^0.4.2",
+    "husky": "^0.14.3",
+    "jsinspect": "^0.12.7",
+    "lint-staged": "^7.2.0",
     "mocha": "^5.0.5",
     "node-uuid": "^1.4.8",
+    "nyc": "^12.0.2",
     "path": "^0.12.7",
     "rimraf": "^2.6.2"
   }

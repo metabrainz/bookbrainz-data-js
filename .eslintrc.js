@@ -15,11 +15,10 @@ const options = {
 	parser: 'babel-eslint',
 	parserOptions: {
 		ecmaFeatures: {
-			experimentalObjectRestSpread: true,
 			generators: true,
 			modules: false
 		},
-		ecmaVersion: 8,
+		ecmaVersion: 2018,
 		sourceType: 'module'
 	},
 	plugins: [
@@ -38,8 +37,6 @@ const TRANSITION_IGNORE = 0; // ignores that should be reviewed soon
 
 // These should not be removed at all.
 const possibleErrorsRules = {
-	'for-direction': ERROR,
-	'getter-return': ERROR,
 	'no-await-in-loop': ERROR,
 	'no-console': ERROR,
 	'no-extra-parens': [
@@ -165,7 +162,7 @@ const variablesRules = {
 	'no-shadow': ERROR,
 	'no-shadow-restricted-names': ERROR,
 	'no-undef-init': ERROR,
-	'no-undefined': ERROR,
+	'no-undefined': WARNING,
 	'no-unused-vars': WARNING,
 	'no-use-before-define': ERROR
 };
@@ -309,10 +306,7 @@ const stylisticIssuesRules = {
 	'no-trailing-spaces': ERROR,
 	'no-unneeded-ternary': ERROR,
 	'no-whitespace-before-property': ERROR,
-	'object-curly-newline': [
-		ERROR,
-		{consistent: true}
-	],
+	'object-curly-newline': ERROR,
 	'one-var': [
 		ERROR,
 		'never'
@@ -326,6 +320,7 @@ const stylisticIssuesRules = {
 		ERROR,
 		'never'
 	],
+	'prefer-object-spread': ERROR,
 	'quote-props': [
 		ERROR,
 		'as-needed'
@@ -415,6 +410,7 @@ const flowTypeRules = {
 	'flowtype/semi': ERROR
 };
 
+/* eslint-disable-next-line no-unused-vars */
 const reactRules = {
 	'react/boolean-prop-naming': ERROR,
 	'react/button-has-type': ERROR,
@@ -543,6 +539,7 @@ const es6ImportRules = {
 	'import/no-unassigned-import': ERROR
 };
 
+/* eslint-disable-next-line prefer-object-spread */
 options.rules = Object.assign(
 	{},
 	possibleErrorsRules,

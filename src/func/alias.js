@@ -1,148 +1,107 @@
+/*
+ * Copyright (C) 2018  Ben Ockmore
+ *           (C) 2018  Shivam Tripathi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 // @flow
 
-import * as Immutable from 'immutable';
-import type {AliasRecordT, EntityRecordT} from './types';
-import type {Transaction} from 'knex';
+import type {
+	FormAliasT as Alias, FormAliasWithDefaultT as AliasWithDefault,
+	Transaction
+} from './types';
+import {
+	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
+} from './set';
+import _ from 'lodash';
+import {snakeToCamel} from '../util';
 
-/* eslint-disable no-undefined */
-const AliasRecord = Immutable.Record({
-	ID: null,
-	languageID: undefined,
-	name: undefined,
-	primary: undefined,
-	sortName: undefined
-});
-/* eslint-enable no-undefined */
 
-function createAliasSet(): number {
-	// TODO: write this function
-	return 1;
-}
-
-function getOrCreateAlias(trx: Transaction, alias: AliasRecordT) {
-	if (alias.get('ID') === null) {
-		return trx;
-	}
-
-	/* eslint-disable camelcase */
-	const insertData = {
-		language_id: alias.get('languageID'),
-		name: alias.get('name'),
-		primary: alias.get('primary'),
-		sort_name: alias.get('sortName')
-	};
-	/* eslint-enable camelcase */
-
-	const selectData = {
-		id: parseInt(alias.get('ID'), 10),
-		...insertData
-	};
-
-	const returning = [
-		{ID: 'id'},
-		'name',
-		{sortName: 'sort_name'},
-		{languageID: 'language_id'},
-		'primary'
-	];
-
-	return trx
-		.select(...returning)
-		.from('bookbrainz.alias')
-		.where(selectData)
-		.then((selectRows) => {
-			if (selectRows.length > 0) {
-				return new AliasRecord({
-					...selectRows[0],
-					ID: selectRows[0].ID.toString()
-				});
-			}
-
-			return trx
-				.returning(returning)
-				.insert(insertData).into('bookbrainz.alias')
-				.then((insertRows) => new AliasRecord({
-					...insertRows[0],
-					ID: insertRows[0].ID.toString()
-				}));
-		});
-}
-
-function linkAliases(
-	trx: Transaction, setID: number, aliasesToLink: Immutable.Set<AliasRecordT>
+export async function updateAliasSet(
+	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: ?number,
+	newSetItemsWithDefault: Array<AliasWithDefault>
 ) {
-	// TODO: write this function
-	return trx;
-}
-
-/**
- * Update an existing alias set, using the provided data.
- * The existing alias set is fetched and checked against the new set to
- * determine any differences. If there are no differences, the function
- * does nothing, and returns the existing set. If there are differences,
- * a new set it created, and this is returned.
- *
- * @param {Transaction} trx - active Knex transaction object
- * @param {EntityRecordT} originalEntity - the entity being edited
- * @param {Immutable.Set<AliaseRecordT>} newAliases - the new set of aliases
- *        for the entity
- * @returns {Transaction} - the active transaction with alias updates applied
- */
-export function updateAliases(
-	trx: Transaction,
-	originalEntity: EntityRecordT,
-	newAliases: Immutable.Set<AliasRecordT>
-): Transaction {
-	const originalAliases = originalEntity.get('aliases');
-	if (newAliases === originalAliases) {
-		// Nothing to do, return
-		return trx;
+	function comparisonFunc(obj: Alias, other: Alias) {
+		return (
+			obj.name === other.name &&
+			obj.sortName === other.sortName &&
+			obj.languageId === other.languageId &&
+			obj.primary === other.primary
+		);
 	}
 
-	if (newAliases.isEmpty()) {
-		// This will be handled at parent level by setting the set field to
-		// null.
-		return trx;
+	const {AliasSet} = orm;
+
+	const newSetItems: Array<Alias> =
+		newSetItemsWithDefault.map((item) => _.omit(item, 'default'));
+
+	const oldSetItems: Array<Alias> =
+		oldSet ? oldSet.related('aliases').toJSON() : [];
+
+	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
+		return oldSet || null;
 	}
 
-	// Create a new set
-	const setID = createAliasSet();
+	const addedItems =
+		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
+	const removedItems =
+		getRemovedItems(oldSetItems, newSetItems, comparisonFunc);
+	const unchangedItems =
+		getUnchangedItems(oldSetItems, newSetItems, comparisonFunc);
 
-	// Subtract originalAliases from newAliases to get new aliases
-	const addedAliases = newAliases.subtract(originalAliases);
-	const promiseA = linkAliases(trx, setID, addedAliases);
+	const newDefaultAlias = _.find(newSetItemsWithDefault, 'default');
 
-	// Intersect newAliases with originalAliases to get preserved aliases
-	const preservedAliases = originalAliases.subtract(newAliases);
-	const promiseB = linkAliases(trx, setID, preservedAliases);
+	if (newDefaultAlias === undefined) {
+		throw new Error('Default alias must be defined within alias set');
+	}
 
-	return promiseA.then(() => promiseB);
+	const isSetUnmodified = newDefaultAlias.id === oldDefaultAliasId &&
+		_.isEmpty(addedItems) &&
+		_.isEmpty(removedItems);
+
+	if (isSetUnmodified) {
+		// No action - set has not changed
+		return oldSet;
+	}
+
+	const newSet = await createNewSetWithItems(
+		orm, transacting, AliasSet, unchangedItems, addedItems, 'aliases'
+	);
+
+	const newSetItemCollection =
+		await newSet.related('aliases').fetch({transacting});
+
+	const defaultAlias = newSetItemCollection.find(
+		(alias) =>
+			alias.get('name') === newDefaultAlias.name &&
+			alias.get('sortName') === newDefaultAlias.sortName &&
+			alias.get('languageId') === newDefaultAlias.languageId
+	);
+
+	newSet.set('defaultAliasId', defaultAlias.get('id'));
+
+	return newSet.save(null, {transacting});
 }
 
-
-/*
-type AliasProps = {
-	ID: string,
-	name: string,
-	sortName: string,
-	languageID: string,
-	primary: boolean
-} | {ID: null};
-type AliasRecord = Immutable.Record<AliasProps>;
-
-
-type EntityProps = {
-	BBID: ?string,
-	dataID: string,
-	revisionID: string,
-	master: boolean,
-	type: EntityTypeString,
-	annotation: string,
-	disambiguation: string,
-	aliases: Immutable.Set<AliasRecord>,
-	identifiers: Immutable.Set<IdentifierRecord>,
-	relationships: Immutable.Set<RelationshipRecord>
-};
-
-export type EntityRecord = Immutable.Record<EntityProps>;
-*/
+export async function getAliasByIds(
+	transacting: Transaction, ids: Array<number>
+): Promise<Object> {
+	const aliases = await transacting.select('*')
+		.from('bookbrainz.alias')
+		.whereIn('id', ids);
+	return aliases.reduce((aliasesMap, alias) =>
+		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+}

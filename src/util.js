@@ -39,6 +39,27 @@ export function snakeToCamel(attrs) {
 	{});
 }
 
+export function snakeToCamelID(attrs) {
+	return _.reduce(attrs, (result, val, key) => {
+		let newKey;
+
+		if (key.indexOf('_') === 0) {
+			newKey = `_${_.camelCase(key.substr(1))}`;
+		}
+		else {
+			newKey = _.camelCase(key);
+		}
+
+		if (newKey !== 'bbid' && newKey !== 'id') {
+			newKey = newKey.replace('Bbid', 'BBID').replace('Id', 'ID');
+		}
+
+		result[newKey] = val;
+		return result;
+	},
+	{});
+}
+
 export function camelToSnake(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;

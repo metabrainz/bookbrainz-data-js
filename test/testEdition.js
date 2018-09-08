@@ -20,14 +20,15 @@ import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Edition, Editor, EditorType, Gender,
-	IdentifierSet, RelationshipSet, Revision, bookshelf
+	AliasSet, Annotation, Disambiguation, Edition, Editor, EditorType, Entity,
+	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -45,6 +46,8 @@ const editorAttribs = {
 	typeId: 1
 };
 const setData = {id: 1};
+
+const aBBID = faker.random.uuid();
 
 describe('Edition model', () => {
 	beforeEach(
@@ -70,6 +73,8 @@ describe('Edition model', () => {
 							comment: 'Test Disambiguation',
 							id: 1
 						})
+							.save(null, {method: 'insert'}),
+						new Entity({bbid: aBBID, type: 'Edition'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -103,6 +108,7 @@ describe('Edition model', () => {
 		const editionAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
+			bbid: aBBID,
 			disambiguationId: 1,
 			identifierSetId: 1,
 			relationshipSetId: 1,
@@ -131,7 +137,7 @@ describe('Edition model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'creatorCredit'
 				]
 			}))
 			.then((edition) => edition.toJSON());
@@ -159,6 +165,7 @@ describe('Edition model', () => {
 			};
 			const editionAttribs = {
 				aliasSetId: 1,
+				bbid: aBBID,
 				identifierSetId: 1,
 				relationshipSetId: 1,
 				revisionId: 1
@@ -168,7 +175,11 @@ describe('Edition model', () => {
 				.save(null, {method: 'insert'});
 
 			const editionPromise = revisionOnePromise
-				.then(() => new Edition(editionAttribs).save())
+				.then(
+					() =>
+						new Edition(editionAttribs)
+							.save(null, {method: 'insert'})
+				)
 				.then((model) => model.refresh())
 				.then((creator) => creator.toJSON());
 

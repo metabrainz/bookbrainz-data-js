@@ -20,13 +20,14 @@ import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Editor, EditorType, Gender,
+	AliasSet, Annotation, Disambiguation, Editor, EditorType, Entity, Gender,
 	IdentifierSet, Publisher, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
@@ -45,6 +46,8 @@ const editorAttribs = {
 	typeId: 1
 };
 const setData = {id: 1};
+
+const aBBID = faker.random.uuid();
 
 describe('Publisher model', () => {
 	beforeEach(
@@ -70,6 +73,8 @@ describe('Publisher model', () => {
 							comment: 'Test Disambiguation',
 							id: 1
 						})
+							.save(null, {method: 'insert'}),
+						new Entity({bbid: aBBID, type: 'Publisher'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -100,6 +105,7 @@ describe('Publisher model', () => {
 		const publisherAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
+			bbid: aBBID,
 			disambiguationId: 1,
 			identifierSetId: 1,
 			relationshipSetId: 1,
@@ -156,6 +162,7 @@ describe('Publisher model', () => {
 			};
 			const entityAttribs = {
 				aliasSetId: 1,
+				bbid: aBBID,
 				identifierSetId: 1,
 				relationshipSetId: 1,
 				revisionId: 1
@@ -165,7 +172,11 @@ describe('Publisher model', () => {
 				.save(null, {method: 'insert'});
 
 			const entityPromise = revisionOnePromise
-				.then(() => new Publisher(entityAttribs).save())
+				.then(
+					() =>
+						new Publisher(entityAttribs)
+							.save(null, {method: 'insert'})
+				)
 				.then((model) => model.refresh())
 				.then((entity) => entity.toJSON());
 
