@@ -87,3 +87,35 @@ export async function fetchOrCreateCredit(
 
 	return newCredit.refresh({transacting, withRelated: 'names'});
 }
+
+export function updateCreatorCredit(
+	orm: any, transacting: Transaction, oldCredit: any,
+	newCreditNames: Array<CreatorCreditNameT>
+): Promise<any> {
+	/* eslint-disable consistent-return */
+	function comparisonFunc(
+		obj: CreatorCreditNameT, other: CreatorCreditNameT
+	) {
+		// Check for arrays here, so that the comparison func is only used
+		// for individual creator credits
+		if (!_.isArray(obj) && !_.isArray(other)) {
+			return (
+				obj.creatorBBID === other.creatorBBID &&
+				obj.name === other.name &&
+				obj.joinPhrase === other.joinPhrase
+			);
+		}
+		// return undefined - to indicate that the default comparison should
+		// be used for arrays, which will end up recursing to the item level
+	}
+	/* eslint-enable consistent-return */
+
+	const oldCreditNames: Array<CreatorCreditNameT> =
+		oldCredit ? oldCredit.related('names').toJSON() : [];
+
+	if (_.isEqualWith(oldCreditNames, newCreditNames, comparisonFunc)) {
+		return Promise.resolve(oldCredit || null);
+	}
+
+	return fetchOrCreateCredit(orm, transacting, newCreditNames);
+}
