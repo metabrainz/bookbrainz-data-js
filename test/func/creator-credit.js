@@ -64,8 +64,8 @@ describe('fetchOrCreateCredit', () => {
 	/* eslint-disable-next-line max-len */
 	it('should create a single creator credit if called twice', async function () {
 		const data = [
-			{bbid: aBBID, joinPhrase: ' and ', name: 'Creator A'},
-			{bbid: bBBID, joinPhrase: '', name: 'Creator B'}
+			{creatorBBID: aBBID, joinPhrase: ' and ', name: 'Creator A'},
+			{creatorBBID: bBBID, joinPhrase: '', name: 'Creator B'}
 		];
 
 		const firstCredit = await bookshelf.transaction(

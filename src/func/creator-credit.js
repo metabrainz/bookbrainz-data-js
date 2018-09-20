@@ -40,7 +40,7 @@ function findCreatorCredit(
 		creatorCredit,
 		(result: {}, creatorCreditName: CreatorCreditNameT, index: number) => {
 			result[`ccn${index}.position`] = index;
-			result[`ccn${index}.creator_bbid`] = creatorCreditName.bbid;
+			result[`ccn${index}.creator_bbid`] = creatorCreditName.creatorBBID;
 			result[`ccn${index}.name`] = creatorCreditName.name;
 			result[`ccn${index}.join_phrase`] = creatorCreditName.joinPhrase;
 			return result;
@@ -76,7 +76,7 @@ export async function fetchOrCreateCredit(
 	await transacting('bookbrainz.creator_credit_name')
 		.insert(
 			_.map(creatorCredit, (creatorCreditName, index) => ({
-				creator_bbid: creatorCreditName.bbid,
+				creator_bbid: creatorCreditName.creatorBBID,
 				creator_credit_id: newCredit.get('id'),
 				join_phrase: creatorCreditName.joinPhrase,
 				name: creatorCreditName.name,
