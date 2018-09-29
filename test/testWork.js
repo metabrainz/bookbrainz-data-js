@@ -133,17 +133,17 @@ describe('Work model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'creatorCredit'
+					'annotation', 'disambiguation'
 				]
 			}))
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'dataId', 'defaultAliasId', 'disambiguation',
-			'disambiguationId', 'identifierSet', 'identifierSetId',
-			'languageSetId', 'master', 'relationshipSet', 'relationshipSetId',
-			'revisionId', 'type', 'typeId'
+			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
+			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
+			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
+			'typeId'
 		]);
 	});
 
