@@ -21,7 +21,7 @@
 
 import type {
 	FormAliasT as Alias, FormAliasWithDefaultT as AliasWithDefault,
-	Transaction
+	EntityTypeString, Transaction
 } from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
@@ -104,4 +104,44 @@ export async function getAliasByIds(
 		.whereIn('id', ids);
 	return aliases.reduce((aliasesMap, alias) =>
 		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+}
+
+export function getAliasIds(transacting: Transaction, name: string) {
+	return transacting.select('id').from('alias').where('name', name);
+}
+
+export async function getEntitiesWithMatchingAlias(
+	transacting: Transaction,
+	entityType: EntityTypeString,
+	name: string
+) {
+	const aliasIds = _.map(await getAliasIds(transacting, name), 'id');
+
+	const aliasSetIds = _.map(
+		await transacting.distinct('set_id')
+			.select()
+			.from('bookbrainz.alias_set__alias')
+			.whereIn('alias_id', aliasIds),
+		'set_id'
+	);
+
+	const bbids = _.map(
+		await transacting.select('bbid')
+			.from(entityType)
+			.whereIn('alias_set_id', aliasSetIds)
+			.where('master', true),
+		'bbid'
+	);
+
+	return bbids;
+}
+
+export async function doesAliasExist(
+	transacting: Transaction,
+	entityType: EntityTypeString,
+	name: string
+) {
+	const bbids =
+		await getEntitiesWithMatchingAlias(transacting, entityType, name);
+	return bbids.length > 0;
 }
