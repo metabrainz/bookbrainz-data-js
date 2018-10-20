@@ -106,16 +106,29 @@ export async function getAliasByIds(
 		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
 }
 
-export function getAliasIds(transacting: Transaction, name: string) {
-	return transacting.select('id').from('alias').where('name', name);
+export function getAliasIds(
+	transacting: Transaction, name: string, caseSensitive: boolean = false
+): Promise<Array<Object>> {
+	if (caseSensitive) {
+		return transacting.select('id')
+			.from('bookbrainz.alias')
+			.where('name', name);
+	}
+	return transacting.select('id').from('alias').where(
+		transacting.raw('LOWER("name") = ?', name.toLowerCase())
+	);
 }
 
 export async function getEntitiesWithMatchingAlias(
 	transacting: Transaction,
 	entityType: EntityTypeString,
-	name: string
+	name: string,
+	caseSensitive: boolean = false,
 ) {
-	const aliasIds = _.map(await getAliasIds(transacting, name), 'id');
+	const aliasIds = _.map(
+		await getAliasIds(transacting, name, caseSensitive),
+		'id'
+	);
 
 	const aliasSetIds = _.map(
 		await transacting.distinct('set_id')
@@ -139,9 +152,11 @@ export async function getEntitiesWithMatchingAlias(
 export async function doesAliasExist(
 	transacting: Transaction,
 	entityType: EntityTypeString,
-	name: string
+	name: string,
+	caseSensitive: boolean = false,
 ) {
-	const bbids =
-		await getEntitiesWithMatchingAlias(transacting, entityType, name);
+	const bbids = await getEntitiesWithMatchingAlias(
+		transacting, entityType, name, caseSensitive
+	);
 	return bbids.length > 0;
 }
