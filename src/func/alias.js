@@ -114,7 +114,7 @@ export function getAliasIds(
 			.from('bookbrainz.alias')
 			.where('name', name);
 	}
-	return transacting.select('id').from('alias').where(
+	return transacting.select('id').from('bookbrainz.alias').where(
 		transacting.raw('LOWER("name") = ?', name.toLowerCase())
 	);
 }
@@ -140,7 +140,7 @@ export async function getEntitiesWithMatchingAlias(
 
 	const bbids = _.map(
 		await transacting.select('bbid')
-			.from(entityType)
+			.from(`bookbrainz.${entityType}`)
 			.whereIn('alias_set_id', aliasSetIds)
 			.where('master', true),
 		'bbid'
