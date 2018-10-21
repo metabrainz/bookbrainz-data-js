@@ -181,7 +181,7 @@ describe('Edition model', () => {
 							.save(null, {method: 'insert'})
 				)
 				.then((model) => model.refresh())
-				.then((creator) => creator.toJSON());
+				.then((author) => author.toJSON());
 
 			const revisionTwoPromise = editionPromise
 				.then(() => {

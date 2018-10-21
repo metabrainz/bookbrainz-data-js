@@ -248,15 +248,13 @@ describe('updateRelationshipSet', () => {
 			);
 
 			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets
-			);
+				(refreshedSets) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = firstSet.related('relationships').toJSON()
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid'])
-			);
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
 
 		firstSetRelationships[1].targetBbid = dBBID;
 		const thirdRelationshipData = firstSetRelationships[1];
@@ -318,15 +316,13 @@ describe('updateRelationshipSet', () => {
 			);
 
 			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets
-			);
+				(refreshedSets) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = firstSet.related('relationships').toJSON()
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid'])
-			);
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(

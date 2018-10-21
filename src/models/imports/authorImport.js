@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamel} from '../../util';
+export default function author(bookshelf) {
+	const AuthorData = bookshelf.model('AuthorData');
 
-
-export default function creatorHeader(bookshelf) {
-	const CreatorHeader = bookshelf.Model.extend({
-		format: camelToSnake,
-		idAttribute: 'bbid',
-		parse: snakeToCamel,
-		tableName: 'bookbrainz.creator_header'
+	const AuthorImport = AuthorData.extend({
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
+		idAttribute: 'import_id',
+		tableName: 'bookbrainz.creator_import'
 	});
 
-	return bookshelf.model('CreatorHeader', CreatorHeader);
+	return bookshelf.model('AuthorImport', AuthorImport);
 }

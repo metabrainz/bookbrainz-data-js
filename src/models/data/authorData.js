@@ -19,19 +19,19 @@
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../../util';
 
 
-export default function creatorData(bookshelf) {
-	const CreatorData = bookshelf.Model.extend({
+export default function authorData(bookshelf) {
+	const AuthorData = bookshelf.Model.extend({
 		aliasSet() {
 			return this.belongsTo('AliasSet', 'alias_set_id');
 		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
+		authorType() {
+			return this.belongsTo('AuthorType', 'type_id');
+		},
 		beginArea() {
 			return this.belongsTo('Area', 'begin_area_id');
-		},
-		creatorType() {
-			return this.belongsTo('CreatorType', 'type_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
@@ -84,5 +84,5 @@ export default function creatorData(bookshelf) {
 		}
 	});
 
-	return bookshelf.model('CreatorData', CreatorData);
+	return bookshelf.model('AuthorData', AuthorData);
 }

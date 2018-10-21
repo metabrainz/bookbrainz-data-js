@@ -16,10 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-export default function creator(bookshelf) {
-	const CreatorData = bookshelf.model('CreatorData');
+export default function author(bookshelf) {
+	const AuthorData = bookshelf.model('AuthorData');
 
-	const Creator = CreatorData.extend({
+	const Author = AuthorData.extend({
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
@@ -38,10 +38,10 @@ export default function creator(bookshelf) {
 			});
 		},
 		revision() {
-			return this.belongsTo('CreatorRevision', 'revision_id');
+			return this.belongsTo('AuthorRevision', 'revision_id');
 		},
 		tableName: 'bookbrainz.creator'
 	});
 
-	return bookshelf.model('Creator', Creator);
+	return bookshelf.model('Author', Author);
 }

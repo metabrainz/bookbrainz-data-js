@@ -23,12 +23,10 @@ import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../../lib/util';
 
-
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {fetchOrCreateCredit, updateCreatorCredit} =
-	bookbrainzData.func.creatorCredit;
-const {Entity, CreatorHeader, bookshelf} = bookbrainzData;
+const {fetchOrCreateCredit, updateCreatorCredit} = bookbrainzData.func.creatorCredit;
+const {Entity, AuthorHeader, bookshelf} = bookbrainzData;
 
 const aBBID = faker.random.uuid();
 const bBBID = faker.random.uuid();
@@ -43,11 +41,11 @@ describe('fetchOrCreateCredit', () => {
 				.save(null, {method: 'insert'});
 			await new Entity({bbid: cBBID, type: 'Creator'})
 				.save(null, {method: 'insert'});
-			await new CreatorHeader({bbid: aBBID})
+			await new AuthorHeader({bbid: aBBID})
 				.save(null, {method: 'insert'});
-			await new CreatorHeader({bbid: bBBID})
+			await new AuthorHeader({bbid: bBBID})
 				.save(null, {method: 'insert'});
-			await new CreatorHeader({bbid: cBBID})
+			await new AuthorHeader({bbid: cBBID})
 				.save(null, {method: 'insert'});
 		}
 	);
@@ -66,8 +64,8 @@ describe('fetchOrCreateCredit', () => {
 	/* eslint-disable-next-line max-len */
 	it('should create a single creator credit if called twice', async function () {
 		const data = [
-			{creatorBBID: aBBID, joinPhrase: ' and ', name: 'Creator A'},
-			{creatorBBID: bBBID, joinPhrase: '', name: 'Creator B'}
+			{authorBBID: aBBID, joinPhrase: ' and ', name: 'Author A'},
+			{authorBBID: bBBID, joinPhrase: '', name: 'Author B'}
 		];
 
 		const firstCredit = await bookshelf.transaction(
@@ -114,8 +112,8 @@ describe('updateCreateCredit', () => {
 	/* eslint-disable-next-line max-len */
 	it('should return the original credit if the credit is unchanged', async function () {
 		const data = [
-			{creatorBBID: aBBID, joinPhrase: ' and ', name: 'Creator A'},
-			{creatorBBID: bBBID, joinPhrase: '', name: 'Creator B'}
+			{authorBBID: aBBID, joinPhrase: ' and ', name: 'Author A'},
+			{authorBBID: bBBID, joinPhrase: '', name: 'Author B'}
 		];
 
 		const firstCredit = await bookshelf.transaction(
@@ -132,15 +130,15 @@ describe('updateCreateCredit', () => {
 	/* eslint-disable-next-line max-len */
 	it('should return a new credit if the credit is updated', async function () {
 		const data = [
-			{creatorBBID: aBBID, joinPhrase: ' and ', name: 'Creator A'},
-			{creatorBBID: bBBID, joinPhrase: '', name: 'Creator B'}
+			{authorBBID: aBBID, joinPhrase: ' and ', name: 'Author A'},
+			{authorBBID: bBBID, joinPhrase: '', name: 'Author B'}
 		];
 
 		const firstCredit = await bookshelf.transaction(
 			(trx) => fetchOrCreateCredit(bookbrainzData, trx, data)
 		);
 
-		data[0].creatorBBID = cBBID;
+		data[0].authorBBID = cBBID;
 
 		const secondCredit = await bookshelf.transaction(
 			(trx) => updateCreatorCredit(bookbrainzData, trx, firstCredit, data)
@@ -150,7 +148,7 @@ describe('updateCreateCredit', () => {
 		const secondCreditJSON = secondCredit.toJSON();
 
 		expect(firstCreditJSON.id).to.not.equal(secondCreditJSON.id);
-		expect(_.get(secondCreditJSON, 'names[0].creatorBBID')).to.equal(cBBID);
+		expect(_.get(secondCreditJSON, 'names[0].authorBBID')).to.equal(cBBID);
 		expect(_.get(firstCreditJSON, 'names[0].creatorCreditID')).to.not
 			.equal(_.get(secondCreditJSON, 'names[0].creatorCreditID'));
 		expect(_.get(firstCreditJSON, 'names[1].creatorCreditID')).to.not
@@ -160,21 +158,21 @@ describe('updateCreateCredit', () => {
 	/* eslint-disable-next-line max-len */
 	it('should return the original credit if changed, and then reverted', async function () {
 		const data = [
-			{creatorBBID: aBBID, joinPhrase: ' and ', name: 'Creator A'},
-			{creatorBBID: bBBID, joinPhrase: '', name: 'Creator B'}
+			{authorBBID: aBBID, joinPhrase: ' and ', name: 'Author A'},
+			{authorBBID: bBBID, joinPhrase: '', name: 'Author B'}
 		];
 
 		const firstCredit = await bookshelf.transaction(
 			(trx) => fetchOrCreateCredit(bookbrainzData, trx, data)
 		);
 
-		data[0].creatorBBID = cBBID;
+		data[0].authorBBID = cBBID;
 
 		const secondCredit = await bookshelf.transaction(
 			(trx) => updateCreatorCredit(bookbrainzData, trx, firstCredit, data)
 		);
 
-		data[0].creatorBBID = aBBID;
+		data[0].authorBBID = aBBID;
 
 		const thirdCredit = await bookshelf.transaction(
 			(trx) =>
@@ -185,7 +183,7 @@ describe('updateCreateCredit', () => {
 		const thirdCreditJSON = thirdCredit.toJSON();
 
 		expect(firstCreditJSON.id).to.equal(thirdCreditJSON.id);
-		expect(_.get(thirdCreditJSON, 'names[0].creatorBBID')).to.equal(aBBID);
+		expect(_.get(thirdCreditJSON, 'names[0].authorBBID')).to.equal(aBBID);
 		expect(_.get(firstCreditJSON, 'names[0].creatorCreditID')).to
 			.equal(_.get(thirdCreditJSON, 'names[0].creatorCreditID'));
 		expect(_.get(firstCreditJSON, 'names[1].creatorCreditID')).to

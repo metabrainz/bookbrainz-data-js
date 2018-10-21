@@ -270,9 +270,9 @@ const stylisticIssuesRules = {
 		6
 	],
 	'max-len': [
-		ERROR,
+		WARNING,
 		{
-			code: 80,
+			code: 100,
 			ignoreUrls: true,
 			tabWidth: 4
 		}

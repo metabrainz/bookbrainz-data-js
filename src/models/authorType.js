@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function creatorType(bookshelf) {
-	const CreatorType = bookshelf.Model.extend({
+export default function authorType(bookshelf) {
+	const AuthorType = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
 		tableName: 'bookbrainz.creator_type'
 	});
 
-	return bookshelf.model('CreatorType', CreatorType);
+	return bookshelf.model('AuthorType', AuthorType);
 }
