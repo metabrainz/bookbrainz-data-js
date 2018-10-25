@@ -56,7 +56,7 @@ export default function authorRevision(bookshelf) {
 		revision() {
 			return this.belongsTo('Revision', 'id');
 		},
-		tableName: 'bookbrainz.creator_revision'
+		tableName: 'bookbrainz.author_revision'
 
 	});
 

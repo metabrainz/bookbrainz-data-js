@@ -24,7 +24,7 @@ export default function authorHeader(bookshelf) {
 		format: camelToSnake,
 		idAttribute: 'bbid',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.creator_header'
+		tableName: 'bookbrainz.author_header'
 	});
 
 	return bookshelf.model('AuthorHeader', AuthorHeader);

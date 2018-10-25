@@ -40,7 +40,7 @@ export default function author(bookshelf) {
 		revision() {
 			return this.belongsTo('AuthorRevision', 'revision_id');
 		},
-		tableName: 'bookbrainz.creator'
+		tableName: 'bookbrainz.author'
 	});
 
 	return bookshelf.model('Author', Author);

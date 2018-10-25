@@ -24,7 +24,7 @@ export default function author(bookshelf) {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
 		idAttribute: 'import_id',
-		tableName: 'bookbrainz.creator_import'
+		tableName: 'bookbrainz.author_import'
 	});
 
 	return bookshelf.model('AuthorImport', AuthorImport);

@@ -74,7 +74,7 @@ describe('Author model', () => {
 							id: 1
 						})
 							.save(null, {method: 'insert'}),
-						new Entity({bbid: aBBID, type: 'Creator'})
+						new Entity({bbid: aBBID, type: 'Author'})
 							.save(null, {method: 'insert'})
 					])
 				)

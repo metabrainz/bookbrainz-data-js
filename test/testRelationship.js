@@ -42,13 +42,13 @@ const relTypeAttribs = {
 	label: 'test_type',
 	linkPhrase: 'linkPhrase',
 	reverseLinkPhrase: 'reverseLinkPhrase',
-	sourceEntityType: 'Creator',
-	targetEntityType: 'Creator'
+	sourceEntityType: 'Author',
+	targetEntityType: 'Author'
 };
 
 const entityAttribs = {
 	bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
-	type: 'Creator'
+	type: 'Author'
 };
 
 describe('Relationship model', () => {

@@ -35,11 +35,11 @@ const cBBID = faker.random.uuid();
 describe('fetchOrCreateCredit', () => {
 	beforeEach(
 		async () => {
-			await new Entity({bbid: aBBID, type: 'Creator'})
+			await new Entity({bbid: aBBID, type: 'Author'})
 				.save(null, {method: 'insert'});
-			await new Entity({bbid: bBBID, type: 'Creator'})
+			await new Entity({bbid: bBBID, type: 'Author'})
 				.save(null, {method: 'insert'});
-			await new Entity({bbid: cBBID, type: 'Creator'})
+			await new Entity({bbid: cBBID, type: 'Author'})
 				.save(null, {method: 'insert'});
 			await new AuthorHeader({bbid: aBBID})
 				.save(null, {method: 'insert'});
@@ -55,7 +55,7 @@ describe('fetchOrCreateCredit', () => {
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
-			'bookbrainz.creator_header',
+			'bookbrainz.author_header',
 			'bookbrainz.creator_credit_name',
 			'bookbrainz.creator_credit'
 		]);

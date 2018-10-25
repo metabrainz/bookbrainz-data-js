@@ -51,7 +51,7 @@ export default function authorData(bookshelf) {
 		relationshipSet() {
 			return this.belongsTo('RelationshipSet', 'relationship_set_id');
 		},
-		tableName: 'bookbrainz.creator_data',
+		tableName: 'bookbrainz.author_data',
 		virtuals: {
 			beginDate: {
 				get() {

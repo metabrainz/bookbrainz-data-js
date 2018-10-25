@@ -50,7 +50,7 @@ function getEntityData(bbid) {
 	return {
 		bbid,
 		type: faker.random.arrayElement([
-			'Creator', 'Edition', 'Publication', 'Publisher', 'Work'
+			'Author', 'Edition', 'Publication', 'Publisher', 'Work'
 		])
 	};
 }
@@ -63,10 +63,10 @@ function getRelationshipTypeData(id) {
 		linkPhrase: faker.random.words(3),
 		reverseLinkPhrase: faker.random.words(3),
 		sourceEntityType: faker.random.arrayElement([
-			'Creator', 'Edition', 'Publication', 'Publisher', 'Work'
+			'Author', 'Edition', 'Publication', 'Publisher', 'Work'
 		]),
 		targetEntityType: faker.random.arrayElement([
-			'Creator', 'Edition', 'Publication', 'Publisher', 'Work'
+			'Author', 'Edition', 'Publication', 'Publisher', 'Work'
 		])
 	};
 }

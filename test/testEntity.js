@@ -33,7 +33,7 @@ describe('Entity model', () => {
 		// Construct EntityRevision, add to Entity, then save
 		const entityAttribs = {
 			bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
-			type: 'Creator'
+			type: 'Author'
 		};
 
 		const entityPromise = new Entity(entityAttribs)

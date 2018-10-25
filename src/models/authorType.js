@@ -24,7 +24,7 @@ export default function authorType(bookshelf) {
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.creator_type'
+		tableName: 'bookbrainz.author_type'
 	});
 
 	return bookshelf.model('AuthorType', AuthorType);
