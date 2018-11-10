@@ -119,7 +119,7 @@ export function getAliasIds(
 	);
 }
 
-export async function getEntitiesWithMatchingAlias(
+export async function getBBIDsWithMatchingAlias(
 	transacting: Transaction,
 	entityType: EntityTypeString,
 	name: string,
@@ -155,7 +155,7 @@ export async function doesAliasExist(
 	name: string,
 	caseSensitive: boolean = false,
 ) {
-	const bbids = await getEntitiesWithMatchingAlias(
+	const bbids = await getBBIDsWithMatchingAlias(
 		transacting, entityType, name, caseSensitive
 	);
 	return bbids.length > 0;
