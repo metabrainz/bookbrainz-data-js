@@ -28,9 +28,6 @@ export default function workData(bookshelf) {
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
-		creatorCredit() {
-			return this.belongsTo('CreatorCredit', 'creator_credit_id');
-		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
