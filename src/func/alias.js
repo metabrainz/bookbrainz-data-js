@@ -106,12 +106,12 @@ export async function getAliasByIds(
 	transacting: Transaction, ids: Array<number>
 ): Promise<Object> {
 	try {
-	const aliases = await transacting.select('*')
-		.from('bookbrainz.alias')
-		.whereIn('id', ids);
-	return aliases.reduce((aliasesMap, alias) =>
-		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
-}
+		const aliases = await transacting.select('*')
+			.from('bookbrainz.alias')
+			.whereIn('id', ids);
+		return aliases.reduce((aliasesMap, alias) =>
+			_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+	}
 	catch (error) {
 		throw error;
 	}
@@ -120,13 +120,14 @@ export async function getAliasByIds(
 export function getAliasIds(
 	transacting: Transaction, name: string, caseSensitive: boolean = false
 ): Promise<Array<Object>> {
+	const trimmedName = _.trim(name);
 	if (caseSensitive) {
 		return transacting.select('id')
 			.from('bookbrainz.alias')
-			.where('name', name);
+			.where('name', trimmedName);
 	}
 	return transacting.select('id').from('bookbrainz.alias').where(
-		transacting.raw('LOWER("name") = ?', name.toLowerCase())
+		transacting.raw('LOWER(TRIM("name")) = ?', trimmedName.toLowerCase())
 	);
 }
 
@@ -137,29 +138,29 @@ export async function getBBIDsWithMatchingAlias(
 	caseSensitive: boolean = false,
 ) {
 	try {
-	const aliasIds = _.map(
-		await getAliasIds(transacting, name, caseSensitive),
-		'id'
-	);
+		const aliasIds = _.map(
+			await getAliasIds(transacting, name, caseSensitive),
+			'id'
+		);
 
-	const aliasSetIds = _.map(
-		await transacting.distinct('set_id')
-			.select()
-			.from('bookbrainz.alias_set__alias')
-			.whereIn('alias_id', aliasIds),
-		'set_id'
-	);
+		const aliasSetIds = _.map(
+			await transacting.distinct('set_id')
+				.select()
+				.from('bookbrainz.alias_set__alias')
+				.whereIn('alias_id', aliasIds),
+			'set_id'
+		);
 
-	const bbids = _.map(
-		await transacting.select('bbid')
-			.from(`bookbrainz.${entityType}`)
-			.whereIn('alias_set_id', aliasSetIds)
-			.where('master', true),
-		'bbid'
-	);
+		const bbids = _.map(
+			await transacting.select('bbid')
+				.from(`bookbrainz.${entityType}`)
+				.whereIn('alias_set_id', aliasSetIds)
+				.where('master', true),
+			'bbid'
+		);
 
-	return bbids;
-}
+		return bbids;
+	}
 	catch (error) {
 		throw error;
 	}
@@ -172,11 +173,11 @@ export async function doesAliasExist(
 	caseSensitive: boolean = false,
 ) {
 	try {
-	const bbids = await getBBIDsWithMatchingAlias(
-		transacting, entityType, name, caseSensitive
-	);
-	return bbids.length > 0;
-}
+		const bbids = await getBBIDsWithMatchingAlias(
+			transacting, entityType, name, caseSensitive
+		);
+		return bbids.length > 0;
+	}
 	catch (error) {
 		throw error;
 	}
