@@ -20,12 +20,18 @@
 // @flow
 
 import type {
-	FormAliasT as Alias, FormAliasWithDefaultT as AliasWithDefault,
+	FormAliasT as Alias,
+	FormAliasWithDefaultT as AliasWithDefault,
+	EntityTypeString,
 	Transaction
 } from './types';
 import {
-	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
+	createNewSetWithItems,
+	getAddedItems,
+	getRemovedItems,
+	getUnchangedItems
 } from './set';
+
 import _ from 'lodash';
 import {snakeToCamel} from '../util';
 
@@ -99,9 +105,80 @@ export async function updateAliasSet(
 export async function getAliasByIds(
 	transacting: Transaction, ids: Array<number>
 ): Promise<Object> {
-	const aliases = await transacting.select('*')
-		.from('bookbrainz.alias')
-		.whereIn('id', ids);
-	return aliases.reduce((aliasesMap, alias) =>
-		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+	try {
+		const aliases = await transacting.select('*')
+			.from('bookbrainz.alias')
+			.whereIn('id', ids);
+		return aliases.reduce((aliasesMap, alias) =>
+			_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
+	}
+	catch (error) {
+		throw error;
+	}
+}
+
+export function getAliasIds(
+	transacting: Transaction, name: string, caseSensitive: boolean = false
+): Promise<Array<Object>> {
+	const trimmedName = _.trim(name);
+	if (caseSensitive) {
+		return transacting.select('id')
+			.from('bookbrainz.alias')
+			.where('name', trimmedName);
+	}
+	return transacting.select('id').from('bookbrainz.alias').where(
+		transacting.raw('LOWER(TRIM("name")) = ?', trimmedName.toLowerCase())
+	);
+}
+
+export async function getBBIDsWithMatchingAlias(
+	transacting: Transaction,
+	entityType: EntityTypeString,
+	name: string,
+	caseSensitive: boolean = false,
+) {
+	try {
+		const aliasIds = _.map(
+			await getAliasIds(transacting, name, caseSensitive),
+			'id'
+		);
+
+		const aliasSetIds = _.map(
+			await transacting.distinct('set_id')
+				.select()
+				.from('bookbrainz.alias_set__alias')
+				.whereIn('alias_id', aliasIds),
+			'set_id'
+		);
+
+		const bbids = _.map(
+			await transacting.select('bbid')
+				.from(`bookbrainz.${entityType}`)
+				.whereIn('alias_set_id', aliasSetIds)
+				.where('master', true),
+			'bbid'
+		);
+
+		return bbids;
+	}
+	catch (error) {
+		throw error;
+	}
+}
+
+export async function doesAliasExist(
+	transacting: Transaction,
+	entityType: EntityTypeString,
+	name: string,
+	caseSensitive: boolean = false,
+) {
+	try {
+		const bbids = await getBBIDsWithMatchingAlias(
+			transacting, entityType, name, caseSensitive
+		);
+		return bbids.length > 0;
+	}
+	catch (error) {
+		throw error;
+	}
 }

@@ -160,3 +160,15 @@ export function getEntityModelByType(orm: Object, type: string): Object {
 
 	return entityModels[type];
 }
+
+export function getEntity(
+	orm: Object, modelType: string, bbid: string, relations: Array<String> = []
+): Object {
+	const model = getEntityModelByType(orm, modelType);
+	return model.forge({bbid})
+		.fetch({
+			require: true,
+			withRelated: relations
+		})
+		.then((entity) => entity.toJSON());
+}
