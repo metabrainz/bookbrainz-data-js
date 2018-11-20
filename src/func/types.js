@@ -25,7 +25,7 @@ import {type $Transaction} from 'knex';
 export type Transaction = $Transaction<any>;
 
 export type EntityTypeString =
-	'Author' | 'Edition' | 'Work' | 'Publisher' | 'Publication';
+	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup';
 
 export type FormAliasT = {
 	id: number,

@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function publicationType(bookshelf) {
-	const PublicationType = bookshelf.Model.extend({
+export default function editionGroupType(bookshelf) {
+	const EditionGroupType = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.publication_type'
+		tableName: 'bookbrainz.edition_group_type'
 	});
 
-	return bookshelf.model('PublicationType', PublicationType);
+	return bookshelf.model('EditionGroupType', EditionGroupType);
 }

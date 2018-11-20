@@ -37,6 +37,9 @@ export default function editionData(bookshelf) {
 		editionFormat() {
 			return this.belongsTo('EditionFormat', 'format_id');
 		},
+		editionGroup() {
+			return this.belongsTo('EditionGroup', 'edition_group_bbid');
+		},
 		editionStatus() {
 			return this.belongsTo('EditionStatus', 'status_id');
 		},
@@ -49,9 +52,6 @@ export default function editionData(bookshelf) {
 			return this.belongsTo('LanguageSet', 'language_set_id');
 		},
 		parse: snakeToCamel,
-		publication() {
-			return this.belongsTo('Publication', 'publication_bbid');
-		},
 		publisherSet() {
 			return this.belongsTo('PublisherSet', 'publisher_set_id');
 		},

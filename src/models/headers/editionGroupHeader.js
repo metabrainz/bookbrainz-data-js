@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../../util';
 
 
-export default function publicationHeader(bookshelf) {
-	const PublicationHeader = bookshelf.Model.extend({
+export default function editionGroupHeader(bookshelf) {
+	const EditionGroupHeader = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'bbid',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.publication_header'
+		tableName: 'bookbrainz.edition_group_header'
 	});
 
-	return bookshelf.model('PublicationHeader', PublicationHeader);
+	return bookshelf.model('EditionGroupHeader', EditionGroupHeader);
 }

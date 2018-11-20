@@ -107,7 +107,7 @@ export async function getRecentImports(
 
 
 	/* Qs. What are all import types? Ans => Extract the values from entityTypes
-		[Author, Edition, Publication, Publisher, Work] */
+		[Author, Edition, EditionGroup, Publisher, Work] */
 	const importTypes: Array<EntityTypeString> = _.values(entityTypes);
 
 	/* Fetch imports for each importType using their importIds

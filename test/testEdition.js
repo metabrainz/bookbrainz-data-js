@@ -147,7 +147,7 @@ describe('Edition model', () => {
 			'creatorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
-			'pages', 'publicationBbid', 'publisherSetId', 'relationshipSet',
+			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
 			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
 			'type', 'weight', 'width'
 		]);

@@ -30,7 +30,7 @@ export default function editionRevision(bookshelf) {
 				'aliasSet.defaultAlias',
 				'relationshipSet.relationships',
 				'relationshipSet.relationships.type', 'publisherSet.publishers',
-				'publication', 'editionFormat', 'editionStatus',
+				'editionGroup', 'editionFormat', 'editionStatus',
 				'releaseEventSet.releaseEvents', 'languageSet.languages',
 				'identifierSet.identifiers.type'
 			]);

@@ -24,12 +24,12 @@ import {parseDate} from '../util';
 
 export const AUTHOR: string = 'Author';
 export const EDITION: string = 'Edition';
-export const PUBLICATION: string = 'Edition Group';
+export const EDITION_GROUP: string = 'Edition Group';
 export const PUBLISHER: string = 'Publisher';
 export const WORK: string = 'Work';
 
 export const entityTypes: Object = {
-	AUTHOR, EDITION, PUBLICATION, PUBLISHER, WORK
+	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, WORK
 };
 
 /**
@@ -55,7 +55,7 @@ export function getAdditionalEntityProps(
 
 	if (entityType === entityTypes.EDITION) {
 		return _.pick(entityData, [
-			'publicationBbid', 'width', 'height', 'depth', 'weight',
+			'editionGroupBbid', 'width', 'height', 'depth', 'weight',
 			'pages', 'formatId', 'statusId'
 		]);
 	}
@@ -70,7 +70,7 @@ export function getAdditionalEntityProps(
 			endDate, endDay, endMonth, endYear, ended, typeId};
 	}
 
-	if (entityType === entityTypes.PUBLICATION ||
+	if (entityType === entityTypes.EDITION_GROUP ||
 					entityType === entityTypes.WORK) {
 		return _.pick(entityData, ['typeId']);
 	}
@@ -130,11 +130,11 @@ export function getEntitySetMetadataByType(entityType: string): Array<Object> {
 				* @returns {object} - Object mapping model name to the entity model
 				*/
 export function getEntityModels(orm: Object): Object {
-	const {Author, Edition, Publication, Publisher, Work} = orm;
+	const {Author, Edition, EditionGroup, Publisher, Work} = orm;
 	return {
 		Author,
 		Edition,
-		Publication,
+		EditionGroup,
 		Publisher,
 		Work
 	};
