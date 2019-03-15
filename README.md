@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/bookbrainz/bookbrainz-data-js/badge.svg?branch=master)](https://coveralls.io/github/bookbrainz/bookbrainz-data-js?branch=master)
 
 bookbrainz-data-js provides a node package to allow manipulation of data in a BookBrainz database using a set
-of [bookshelf.js](http://bookshelfjs.org/) models. The module is only for accessing data in an existing database - for schema creation, see [bookbrainz-sql](https://github.com/bookbrainz/bookbrainz-sql).
+of [bookshelf.js](http://bookshelfjs.org/) models. The module is only for accessing data in an existing database - for schema creation, see the [`sql` folder in bookbrainz-site](https://github.com/bookbrainz/bookbrainz-site/tree/master/sql).
 
 Each model has its own source file in the "models" directory. These models can be accessed via index.js, which provides a function returning the models, taking an initialized bookshelf.js instance as a single parameter.
 
