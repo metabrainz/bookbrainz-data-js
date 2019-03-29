@@ -23,7 +23,6 @@ import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
-
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
@@ -136,14 +135,14 @@ describe('EditionGroup model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'creatorCredit'
+					'annotation', 'disambiguation', 'authorCredit'
 				]
 			}))
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'dataId', 'defaultAliasId', 'disambiguation',
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'authorCreditId',
+			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
 			'typeId'
