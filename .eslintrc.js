@@ -508,7 +508,7 @@ const reactRules = {
 const es6ImportRules = {
 	'import/first': ERROR,
 	'import/newline-after-import': [
-		ERROR,
+		WARNING,
 		{
 			count: 2
 		}
