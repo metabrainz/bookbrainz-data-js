@@ -137,14 +137,14 @@ describe('Edition model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'creatorCredit'
+					'annotation', 'disambiguation', 'authorCredit'
 				]
 			}))
 			.then((edition) => edition.toJSON());
 
 		return expect(editionPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',

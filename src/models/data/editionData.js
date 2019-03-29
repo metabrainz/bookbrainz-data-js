@@ -28,8 +28,8 @@ export default function editionData(bookshelf) {
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
-		creatorCredit() {
-			return this.belongsTo('CreatorCredit', 'creator_credit_id');
+		authorCredit() {
+			return this.belongsTo('AuthorCredit', 'author_credit_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');

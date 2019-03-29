@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamelID} from '../util';
 
 
-export default function creatorCreditName(bookshelf) {
-	const CreatorCreditName = bookshelf.Model.extend({
+export default function authorCreditName(bookshelf) {
+	const AuthorCreditName = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: null,
 		parse: snakeToCamelID,
-		tableName: 'bookbrainz.creator_credit_name'
+		tableName: 'bookbrainz.author_credit_name'
 	});
 
-	return bookshelf.model('CreatorCreditName', CreatorCreditName);
+	return bookshelf.model('AuthorCreditName', AuthorCreditName);
 }

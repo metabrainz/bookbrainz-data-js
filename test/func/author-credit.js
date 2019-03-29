@@ -55,14 +55,14 @@ describe('fetchOrCreateCredit', () => {
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
-			'bookbrainz.author_header',
-			'bookbrainz.author_credit_name',
-			'bookbrainz.author_credit'
+			'bookbrainz.creator_header',
+			'bookbrainz.creator_credit_name',
+			'bookbrainz.creator_credit'
 		]);
 	});
 
 	/* eslint-disable-next-line max-len */
-	it('should create a single author credit if called twice', async function () {
+	it('should create a single creator credit if called twice', async function () {
 		const data = [
 			{authorBBID: aBBID, joinPhrase: ' and ', name: 'Author A'},
 			{authorBBID: bBBID, joinPhrase: '', name: 'Author B'}
@@ -103,9 +103,9 @@ describe('updateCreateCredit', () => {
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
-			'bookbrainz.author_header',
-			'bookbrainz.author_credit_name',
-			'bookbrainz.author_credit'
+			'bookbrainz.creator_header',
+			'bookbrainz.creator_credit_name',
+			'bookbrainz.creator_credit'
 		]);
 	});
 
@@ -149,10 +149,10 @@ describe('updateCreateCredit', () => {
 
 		expect(firstCreditJSON.id).to.not.equal(secondCreditJSON.id);
 		expect(_.get(secondCreditJSON, 'names[0].authorBBID')).to.equal(cBBID);
-		expect(_.get(firstCreditJSON, 'names[0].authorCreditID')).to.not
-			.equal(_.get(secondCreditJSON, 'names[0].authorCreditID'));
-		expect(_.get(firstCreditJSON, 'names[1].authorCreditID')).to.not
-			.equal(_.get(secondCreditJSON, 'names[1].authorCreditID'));
+		expect(_.get(firstCreditJSON, 'names[0].creatorCreditID')).to.not
+			.equal(_.get(secondCreditJSON, 'names[0].creatorCreditID'));
+		expect(_.get(firstCreditJSON, 'names[1].creatorCreditID')).to.not
+			.equal(_.get(secondCreditJSON, 'names[1].creatorCreditID'));
 	});
 
 	/* eslint-disable-next-line max-len */
@@ -184,9 +184,9 @@ describe('updateCreateCredit', () => {
 
 		expect(firstCreditJSON.id).to.equal(thirdCreditJSON.id);
 		expect(_.get(thirdCreditJSON, 'names[0].authorBBID')).to.equal(aBBID);
-		expect(_.get(firstCreditJSON, 'names[0].authorCreditID')).to
-			.equal(_.get(thirdCreditJSON, 'names[0].authorCreditID'));
-		expect(_.get(firstCreditJSON, 'names[1].authorCreditID')).to
-			.equal(_.get(thirdCreditJSON, 'names[1].authorCreditID'));
+		expect(_.get(firstCreditJSON, 'names[0].creatorCreditID')).to
+			.equal(_.get(thirdCreditJSON, 'names[0].creatorCreditID'));
+		expect(_.get(firstCreditJSON, 'names[1].creatorCreditID')).to
+			.equal(_.get(thirdCreditJSON, 'names[1].creatorCreditID'));
 	});
 });

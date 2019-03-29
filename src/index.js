@@ -26,13 +26,13 @@ import aliasSet from './models/aliasSet';
 import annotation from './models/annotation';
 import area from './models/area';
 import author from './models/entities/author';
+import authorCredit from './models/authorCredit';
+import authorCreditName from './models/authorCreditName';
 import authorData from './models/data/authorData';
 import authorHeader from './models/headers/authorHeader';
 import authorImport from './models/imports/authorImport';
 import authorRevision from './models/revisions/authorRevision';
 import authorType from './models/authorType';
-import creatorCredit from './models/creatorCredit';
-import creatorCreditName from './models/creatorCreditName';
 import disambiguation from './models/disambiguation';
 import edition from './models/entities/edition';
 import editionData from './models/data/editionData';
@@ -108,13 +108,13 @@ export default function init(config) {
 		Annotation: annotation(bookshelf),
 		Area: area(bookshelf),
 		Author: author(bookshelf),
+		AuthorCredit: authorCredit(bookshelf),
+		AuthorCreditName: authorCreditName(bookshelf),
 		AuthorData,
 		AuthorHeader: authorHeader(bookshelf),
 		AuthorImport: authorImport(bookshelf),
 		AuthorRevision: authorRevision(bookshelf),
 		AuthorType: authorType(bookshelf),
-		CreatorCredit: creatorCredit(bookshelf),
-		CreatorCreditName: creatorCreditName(bookshelf),
 		Disambiguation: disambiguation(bookshelf),
 		Edition: edition(bookshelf),
 		EditionData,
