@@ -24,7 +24,7 @@ import {parseDate} from '../util';
 
 export const AUTHOR: string = 'Author';
 export const EDITION: string = 'Edition';
-export const EDITION_GROUP: string = 'Edition Group';
+export const EDITION_GROUP: string = 'EditionGroup';
 export const PUBLISHER: string = 'Publisher';
 export const WORK: string = 'Work';
 
