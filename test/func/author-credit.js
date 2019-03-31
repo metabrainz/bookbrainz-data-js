@@ -55,9 +55,9 @@ describe('fetchOrCreateCredit', () => {
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
-			'bookbrainz.creator_header',
-			'bookbrainz.creator_credit_name',
-			'bookbrainz.creator_credit'
+			'bookbrainz.author_header',
+			'bookbrainz.author_credit_name',
+			'bookbrainz.author_credit'
 		]);
 	});
 
@@ -103,9 +103,9 @@ describe('updateCreateCredit', () => {
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
-			'bookbrainz.creator_header',
-			'bookbrainz.creator_credit_name',
-			'bookbrainz.creator_credit'
+			'bookbrainz.author_header',
+			'bookbrainz.author_credit_name',
+			'bookbrainz.author_credit'
 		]);
 	});
 
