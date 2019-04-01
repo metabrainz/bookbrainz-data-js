@@ -82,6 +82,7 @@
     "eslint-plugin-babel": "^5.0.0",
     "eslint-plugin-flowtype": "3.1.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-react": "^7.12.4",
     "faker": "^4.1.0",
     "flow-bin": "^0.77.0",
     "flow-copy-source": "^2.0.1",
