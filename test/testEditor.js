@@ -99,7 +99,7 @@ describe('Editor model', () => {
 			.then((editor) => editor.toJSON());
 
 		return expect(editorPromise).to.eventually.have.all.keys([
-			'id', 'name', 'reputation', 'bio', 'birthDate',
+			'id', 'name', 'reputation', 'bio',
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
 			'areaId', 'revisionsApplied', 'revisionsReverted',
 			'totalRevisions', 'type', 'revisions', 'titleUnlockId',
