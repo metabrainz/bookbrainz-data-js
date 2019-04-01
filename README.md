@@ -11,7 +11,13 @@ of [bookshelf.js](http://bookshelfjs.org/) models. The module is only for access
 
 Each model has its own source file in the "models" directory. These models can be accessed via index.js, which provides a function returning the models, taking an initialized bookshelf.js instance as a single parameter.
 
-A suite of simple tests is provided in the tests directory - the command for running the tests, following dependency installation, is the standard:
+## Tests
+
+A suite of simple tests is provided in the tests directory, using the Mocha and Chai libraries.
+
+Copy the file `test/bookshelf.example.js` to `test/bookshelf.js` and modify it according to your local postgres setup. For instructions on setting up the postgres test database, refer to the [bookbrainz-site repo](https://github.com/bookbrainz/bookbrainz-site/blob/master/README.md#testing).
+
+The command for running the tests, following dependency installation, is the standard:
 
     npm test
 

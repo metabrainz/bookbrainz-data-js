@@ -27,7 +27,7 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Creator, Disambiguation, Editor, EditorType, Entity,
+	AliasSet, Annotation, Author, Disambiguation, Editor, EditorType, Entity,
 	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
@@ -49,7 +49,7 @@ const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
 
-describe('Creator model', () => {
+describe('Author model', () => {
 	beforeEach(
 		() =>
 			new Gender(genderData).save(null, {method: 'insert'})
@@ -74,7 +74,7 @@ describe('Creator model', () => {
 							id: 1
 						})
 							.save(null, {method: 'insert'}),
-						new Entity({bbid: aBBID, type: 'Creator'})
+						new Entity({bbid: aBBID, type: 'Author'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -102,7 +102,7 @@ describe('Creator model', () => {
 			authorId: 1,
 			id: 1
 		};
-		const creatorAttribs = {
+		const authorAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
 			bbid: aBBID,
@@ -126,10 +126,10 @@ describe('Creator model', () => {
 						.save(null, {method: 'insert'})
 			);
 
-		const creatorPromise = annotationPromise
+		const authorPromise = annotationPromise
 			.then(
 				() =>
-					new Creator(creatorAttribs).save(null, {method: 'insert'})
+					new Author(authorAttribs).save(null, {method: 'insert'})
 			)
 			.then((model) => model.refresh({
 				withRelated: [
@@ -137,9 +137,9 @@ describe('Creator model', () => {
 					'annotation', 'disambiguation'
 				]
 			}))
-			.then((creator) => creator.toJSON());
+			.then((author) => author.toJSON());
 
-		return expect(creatorPromise).to.eventually.have.all.keys([
+		return expect(authorPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'areaId',
 			'bbid', 'beginAreaId', 'beginDate', 'beginDay', 'beginMonth',
 			'beginYear', 'dataId', 'defaultAliasId', 'disambiguation',
@@ -160,7 +160,7 @@ describe('Creator model', () => {
 				authorId: 1,
 				id: 1
 			};
-			const creatorAttribs = {
+			const authorAttribs = {
 				aliasSetId: 1,
 				bbid: aBBID,
 				identifierSetId: 1,
@@ -171,43 +171,43 @@ describe('Creator model', () => {
 			const revisionOnePromise = new Revision(revisionAttribs)
 				.save(null, {method: 'insert'});
 
-			const creatorPromise = revisionOnePromise
+			const authorPromise = revisionOnePromise
 				.then(
 					() =>
-						new Creator(creatorAttribs)
+						new Author(authorAttribs)
 							.save(null, {method: 'insert'})
 				)
 				.then((model) => model.refresh())
-				.then((creator) => creator.toJSON());
+				.then((author) => author.toJSON());
 
-			const revisionTwoPromise = creatorPromise
+			const revisionTwoPromise = authorPromise
 				.then(() => {
 					revisionAttribs.id = 2;
 					return new Revision(revisionAttribs)
 						.save(null, {method: 'insert'});
 				});
 
-			const creatorUpdatePromise = Promise.join(creatorPromise,
-				revisionTwoPromise, (creator) => {
-					const creatorUpdateAttribs = {
-						bbid: creator.bbid,
+			const authorUpdatePromise = Promise.join(authorPromise,
+				revisionTwoPromise, (author) => {
+					const authorUpdateAttribs = {
+						bbid: author.bbid,
 						ended: true,
 						revisionId: 2
 					};
 
-					return new Creator(creatorUpdateAttribs).save();
+					return new Author(authorUpdateAttribs).save();
 				})
 				.then(
-					(model) => new Creator({bbid: model.get('bbid')}).fetch()
+					(model) => new Author({bbid: model.get('bbid')}).fetch()
 				)
-				.then((creator) => creator.toJSON());
+				.then((author) => author.toJSON());
 
 			return Promise.all([
-				expect(creatorUpdatePromise)
+				expect(authorUpdatePromise)
 					.to.eventually.have.property('revisionId', 2),
-				expect(creatorUpdatePromise)
+				expect(authorUpdatePromise)
 					.to.eventually.have.property('master', true),
-				expect(creatorUpdatePromise)
+				expect(authorUpdatePromise)
 					.to.eventually.have.property('ended', true)
 			]);
 		});

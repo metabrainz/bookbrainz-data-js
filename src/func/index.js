@@ -19,7 +19,7 @@
 
 import * as alias from './alias';
 import * as annotation from './annotation';
-import * as creatorCredit from './creator-credit';
+import * as authorCredit from './author-credit';
 import * as disambiguation from './disambiguation';
 import * as editor from './editor';
 import * as entity from './entity';
@@ -29,6 +29,7 @@ import * as publisher from './publisher';
 import * as relationship from './relationship';
 import * as releaseEvent from './releaseEvent';
 import * as set from './set';
+
 import {createEntity} from './create-entity';
 import imports from './imports';
 
@@ -37,8 +38,8 @@ export default function init() {
 	return {
 		alias,
 		annotation,
+		authorCredit,
 		createEntity,
-		creatorCredit,
 		disambiguation,
 		editor,
 		entity,

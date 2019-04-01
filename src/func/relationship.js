@@ -19,11 +19,17 @@
 // @flow
 
 import type {
-	EntityTypeString, FormRelationshipT as Relationship, Transaction
+	EntityTypeString,
+	FormRelationshipT as Relationship,
+	Transaction
 } from './types';
 import {
-	createNewSetWithItems, getAddedItems, getRemovedItems, removeItemsFromSet
+	createNewSetWithItems,
+	getAddedItems,
+	getRemovedItems,
+	removeItemsFromSet
 } from './set';
+
 import Promise from 'bluebird';
 import _ from 'lodash';
 
@@ -47,12 +53,12 @@ async function getMasterRelationshipSetForEntity(
 	orm, transacting: Transaction, bbid: string
 ) {
 	const {
-		Entity, Creator, Edition, Publication, Publisher, RelationshipSet, Work
+		Entity, Author, Edition, EditionGroup, Publisher, RelationshipSet, Work
 	} = orm;
 	const entityHeader = await Entity.forge({bbid})
 		.fetch({require: true, transacting});
 
-	const typeModelMap = {Creator, Edition, Publication, Publisher, Work};
+	const typeModelMap = {Author, Edition, EditionGroup, Publisher, Work};
 
 	// Extract entity type
 	const type: EntityTypeString = entityHeader.get('type');

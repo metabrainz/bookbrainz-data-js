@@ -137,17 +137,17 @@ describe('Edition model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'creatorCredit'
+					'annotation', 'disambiguation', 'authorCredit'
 				]
 			}))
 			.then((edition) => edition.toJSON());
 
 		return expect(editionPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
-			'pages', 'publicationBbid', 'publisherSetId', 'relationshipSet',
+			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
 			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
 			'type', 'weight', 'width'
 		]);
@@ -181,7 +181,7 @@ describe('Edition model', () => {
 							.save(null, {method: 'insert'})
 				)
 				.then((model) => model.refresh())
-				.then((creator) => creator.toJSON());
+				.then((author) => author.toJSON());
 
 			const revisionTwoPromise = editionPromise
 				.then(() => {

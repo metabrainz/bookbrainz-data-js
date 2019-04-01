@@ -23,12 +23,11 @@ import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
-
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Editor, EditorType, Entity, Gender,
-	IdentifierSet, Publication, RelationshipSet, Revision, bookshelf
+	IdentifierSet, EditionGroup, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -49,7 +48,7 @@ const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
 
-describe('Publication model', () => {
+describe('EditionGroup model', () => {
 	beforeEach(
 		() =>
 			new Gender(genderData).save(null, {method: 'insert'})
@@ -75,7 +74,7 @@ describe('Publication model', () => {
 							id: 1
 						})
 							.save(null, {method: 'insert'}),
-						new Entity({bbid: aBBID, type: 'Publication'})
+						new Entity({bbid: aBBID, type: 'EditionGroup'})
 							.save(null, {method: 'insert'})
 					])
 				)
@@ -103,7 +102,7 @@ describe('Publication model', () => {
 			authorId: 1,
 			id: 1
 		};
-		const publicationAttribs = {
+		const editionGroupAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
 			bbid: aBBID,
@@ -130,20 +129,20 @@ describe('Publication model', () => {
 		const entityPromise = annotationPromise
 			.then(
 				() =>
-					new Publication(publicationAttribs)
+					new EditionGroup(editionGroupAttribs)
 						.save(null, {method: 'insert'})
 			)
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'creatorCredit'
+					'annotation', 'disambiguation', 'authorCredit'
 				]
 			}))
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'creatorCreditId', 'dataId', 'defaultAliasId', 'disambiguation',
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'authorCreditId',
+			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
 			'typeId'
@@ -160,7 +159,7 @@ describe('Publication model', () => {
 				authorId: 1,
 				id: 1
 			};
-			const publicationAttribs = {
+			const editionGroupAttribs = {
 				aliasSetId: 1,
 				bbid: aBBID,
 				identifierSetId: 1,
@@ -174,7 +173,7 @@ describe('Publication model', () => {
 			const entityPromise = revisionOnePromise
 				.then(
 					() =>
-						new Publication(publicationAttribs)
+						new EditionGroup(editionGroupAttribs)
 							.save(null, {method: 'insert'})
 				)
 				.then((model) => model.refresh())
@@ -194,11 +193,11 @@ describe('Publication model', () => {
 						revisionId: 2
 					};
 
-					return new Publication(entityUpdateAttribs).save();
+					return new EditionGroup(entityUpdateAttribs).save();
 				})
 				.then(
 					(model) =>
-						new Publication({bbid: model.get('bbid')}).fetch()
+						new EditionGroup({bbid: model.get('bbid')}).fetch()
 				)
 				.then((entity) => entity.toJSON());
 

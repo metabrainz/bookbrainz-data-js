@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-export default function creator(bookshelf) {
-	const CreatorData = bookshelf.model('CreatorData');
+export default function editionGroup(bookshelf) {
+	const EditionGroupData = bookshelf.model('EditionGroupData');
 
-	const Creator = CreatorData.extend({
+	const EditionGroupImport = EditionGroupData.extend({
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
-		idAttribute: 'bbid',
-		initialize() {
-			this.on('fetching', (model, col, options) => {
-				// If no revision is specified, fetch the master revision
-				if (!model.get('revisionId')) {
-					options.query.where({master: true});
-				}
-			});
-
-			this.on('updating', (model, attrs, options) => {
-				// Always update the master revision.
-				options.query.where({master: true});
-			});
-		},
-		revision() {
-			return this.belongsTo('CreatorRevision', 'revision_id');
-		},
-		tableName: 'bookbrainz.creator'
+		idAttribute: 'import_id',
+		tableName: 'bookbrainz.edition_group_import'
 	});
 
-	return bookshelf.model('Creator', Creator);
+	return bookshelf.model('EditionGroupImport', EditionGroupImport);
 }

@@ -42,7 +42,7 @@ describe('updateIdentifierSet', () => {
 		description: 'description',
 		detectionRegex: 'detection',
 		displayTemplate: 'display',
-		entityType: 'Creator',
+		entityType: 'Author',
 		id: 1,
 		label: 'test_type',
 		validationRegex: 'validation'

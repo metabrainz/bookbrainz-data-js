@@ -25,7 +25,7 @@ import {type $Transaction} from 'knex';
 export type Transaction = $Transaction<any>;
 
 export type EntityTypeString =
-	'Creator' | 'Edition' | 'Work' | 'Publisher' | 'Publication';
+	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup';
 
 export type FormAliasT = {
 	id: number,
@@ -73,8 +73,8 @@ export type SetItemT =
 	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
 	FormPublisherT | FormReleaseEventT;
 
-export type CreatorCreditNameT = {
-	creatorBBID: string,
+export type AuthorCreditNameT = {
+	authorBBID: string,
 	name: string,
 	joinPhrase: string
 };

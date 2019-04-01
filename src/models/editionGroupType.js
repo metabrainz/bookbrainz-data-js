@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Ben Ockmore
+ * Copyright (C) 2015  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamelID} from '../util';
+import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function creatorCreditName(bookshelf) {
-	const CreatorCreditName = bookshelf.Model.extend({
+export default function editionGroupType(bookshelf) {
+	const EditionGroupType = bookshelf.Model.extend({
 		format: camelToSnake,
-		idAttribute: null,
-		parse: snakeToCamelID,
-		tableName: 'bookbrainz.creator_credit_name'
+		idAttribute: 'id',
+		parse: snakeToCamel,
+		tableName: 'bookbrainz.edition_group_type'
 	});
 
-	return bookshelf.model('CreatorCreditName', CreatorCreditName);
+	return bookshelf.model('EditionGroupType', EditionGroupType);
 }

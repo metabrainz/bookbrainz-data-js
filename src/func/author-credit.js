@@ -18,31 +18,32 @@
 
 // @flow
 
-import type {CreatorCreditNameT, Transaction} from './types';
+import type {AuthorCreditNameT, Transaction} from './types';
+
 import _ from 'lodash';
 
 
-function findCreatorCredit(
-	orm: any, transacting: Transaction, creatorCredit: Array<CreatorCreditNameT>
+function findAuthorCredit(
+	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
-	const tables = {cc: 'bookbrainz.creator_credit'};
+	const tables = {cc: 'bookbrainz.author_credit'};
 
 	const joins = _.map(
-		creatorCredit,
-		(creatorCreditName: CreatorCreditNameT, index: number) =>
+		authorCredit,
+		(authorCreditName: AuthorCreditNameT, index: number) =>
 			[
-				`JOIN bookbrainz.creator_credit_name ccn${index} ` +
-				`ON ccn${index}.creator_credit_id = cc.id`
+				`JOIN bookbrainz.author_credit_name ccn${index} ` +
+				`ON ccn${index}.author_credit_id = cc.id`
 			]
 	);
 
 	const wheres = _.reduce(
-		creatorCredit,
-		(result: {}, creatorCreditName: CreatorCreditNameT, index: number) => {
+		authorCredit,
+		(result: {}, authorCreditName: AuthorCreditNameT, index: number) => {
 			result[`ccn${index}.position`] = index;
-			result[`ccn${index}.creator_bbid`] = creatorCreditName.creatorBBID;
-			result[`ccn${index}.name`] = creatorCreditName.name;
-			result[`ccn${index}.join_phrase`] = creatorCreditName.joinPhrase;
+			result[`ccn${index}.author_bbid`] = authorCreditName.authorBBID;
+			result[`ccn${index}.name`] = authorCreditName.name;
+			result[`ccn${index}.join_phrase`] = authorCreditName.joinPhrase;
 			return result;
 		},
 		{}
@@ -59,48 +60,48 @@ function findCreatorCredit(
 
 
 export async function fetchOrCreateCredit(
-	orm: any, transacting: Transaction, creatorCredit: Array<CreatorCreditNameT>
+	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
-	const result = await findCreatorCredit(orm, transacting, creatorCredit);
+	const result = await findAuthorCredit(orm, transacting, authorCredit);
 
 	if (result) {
-		return orm.CreatorCredit.forge({id: result.id})
+		return orm.AuthorCredit.forge({id: result.id})
 			.fetch({transacting, withRelated: 'names'});
 	}
 
-	const newCredit = await new orm.CreatorCredit(
-		{creatorCount: creatorCredit.length}
+	const newCredit = await new orm.AuthorCredit(
+		{authorCount: authorCredit.length}
 	).save(null, {transacting});
 
 	/* eslint-disable camelcase */
-	await transacting('bookbrainz.creator_credit_name')
+	await transacting('bookbrainz.author_credit_name')
 		.insert(
-			_.map(creatorCredit, (creatorCreditName, index) => ({
-				creator_bbid: creatorCreditName.creatorBBID,
-				creator_credit_id: newCredit.get('id'),
-				join_phrase: creatorCreditName.joinPhrase,
-				name: creatorCreditName.name,
+			_.map(authorCredit, (authorCreditName, index) => ({
+				author_bbid: authorCreditName.authorBBID,
+				author_credit_id: newCredit.get('id'),
+				join_phrase: authorCreditName.joinPhrase,
+				name: authorCreditName.name,
 				position: index
 			}))
-		).returning(['creator_bbid', 'join_phrase', 'name', 'position']);
+		).returning(['author_bbid', 'join_phrase', 'name', 'position']);
 	/* eslint-enable camelcase */
 
 	return newCredit.refresh({transacting, withRelated: 'names'});
 }
 
-export function updateCreatorCredit(
+export function updateAuthorCredit(
 	orm: any, transacting: Transaction, oldCredit: any,
-	newCreditNames: Array<CreatorCreditNameT>
+	newCreditNames: Array<AuthorCreditNameT>
 ): Promise<any> {
 	/* eslint-disable consistent-return */
 	function comparisonFunc(
-		obj: CreatorCreditNameT, other: CreatorCreditNameT
+		obj: AuthorCreditNameT, other: AuthorCreditNameT
 	) {
 		// Check for arrays here, so that the comparison func is only used
-		// for individual creator credits
+		// for individual author credits
 		if (!_.isArray(obj) && !_.isArray(other)) {
 			return (
-				obj.creatorBBID === other.creatorBBID &&
+				obj.authorBBID === other.authorBBID &&
 				obj.name === other.name &&
 				obj.joinPhrase === other.joinPhrase
 			);
@@ -110,7 +111,7 @@ export function updateCreatorCredit(
 	}
 	/* eslint-enable consistent-return */
 
-	const oldCreditNames: Array<CreatorCreditNameT> =
+	const oldCreditNames: Array<AuthorCreditNameT> =
 		oldCredit ? oldCredit.related('names').toJSON() : [];
 
 	if (_.isEqualWith(oldCreditNames, newCreditNames, comparisonFunc)) {

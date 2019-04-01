@@ -70,7 +70,7 @@ export async function updateAliasSet(
 
 	const newDefaultAlias = _.find(newSetItemsWithDefault, 'default');
 
-	if (newDefaultAlias === undefined) {
+	if (_.isUndefined(newDefaultAlias)) {
 		throw new Error('Default alias must be defined within alias set');
 	}
 

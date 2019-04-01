@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2018 Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-export default function publication(bookshelf) {
-	const PublicationData = bookshelf.model('PublicationData');
+export default function author(bookshelf) {
+	const AuthorData = bookshelf.model('AuthorData');
 
-	const Publication = PublicationData.extend({
+	const AuthorImport = AuthorData.extend({
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
-		idAttribute: 'bbid',
-		initialize() {
-			this.on('fetching', (model, col, options) => {
-				// If no revision is specified, fetch the master revision
-				if (!model.get('revisionId')) {
-					options.query.where({master: true});
-				}
-			});
-
-			this.on('updating', (model, attrs, options) => {
-				// Always update the master revision.
-				options.query.where({master: true});
-			});
-		},
-		revision() {
-			return this.belongsTo('PublicationRevision', 'revision_id');
-		},
-		tableName: 'bookbrainz.publication'
+		idAttribute: 'import_id',
+		tableName: 'bookbrainz.author_import'
 	});
 
-	return bookshelf.model('Publication', Publication);
+	return bookshelf.model('AuthorImport', AuthorImport);
 }

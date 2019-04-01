@@ -19,6 +19,7 @@
 // @flow
 
 import type {EntityTypeString, Transaction} from '../types';
+
 import _ from 'lodash';
 import {entityTypes} from '../entity';
 import {getAliasByIds} from '../alias';
@@ -106,7 +107,7 @@ export async function getRecentImports(
 
 
 	/* Qs. What are all import types? Ans => Extract the values from entityTypes
-		[Creator, Edition, Publication, Publisher, Work] */
+		[Author, Edition, EditionGroup, Publisher, Work] */
 	const importTypes: Array<EntityTypeString> = _.values(entityTypes);
 
 	/* Fetch imports for each importType using their importIds

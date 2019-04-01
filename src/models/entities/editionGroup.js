@@ -16,16 +16,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamel} from '../../util';
+export default function editionGroup(bookshelf) {
+	const EditionGroupData = bookshelf.model('EditionGroupData');
 
-
-export default function creatorHeader(bookshelf) {
-	const CreatorHeader = bookshelf.Model.extend({
-		format: camelToSnake,
+	const EditionGroup = EditionGroupData.extend({
+		defaultAlias() {
+			return this.belongsTo('Alias', 'default_alias_id');
+		},
 		idAttribute: 'bbid',
-		parse: snakeToCamel,
-		tableName: 'bookbrainz.creator_header'
+		initialize() {
+			this.on('fetching', (model, col, options) => {
+				// If no revision is specified, fetch the master revision
+				if (!model.get('revisionId')) {
+					options.query.where({master: true});
+				}
+			});
+
+			this.on('updating', (model, attrs, options) => {
+				// Always update the master revision.
+				options.query.where({master: true});
+			});
+		},
+		revision() {
+			return this.belongsTo('EditionGroupRevision', 'revision_id');
+		},
+		tableName: 'bookbrainz.edition_group'
 	});
 
-	return bookshelf.model('CreatorHeader', CreatorHeader);
+	return bookshelf.model('EditionGroup', EditionGroup);
 }

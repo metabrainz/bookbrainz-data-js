@@ -109,7 +109,8 @@ describe('updateLanguageSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'languages'});
 		});
 
-		const languages = result.related('languages').toJSON();
+		let languages = result.related('languages').toJSON();
+		languages = languages.sort((a, b) => a.id - b.id);
 
 		expect(result.get('id')).to.equal(firstSet.get('id'));
 		expect(languages).to.have.lengthOf(2);

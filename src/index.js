@@ -25,18 +25,24 @@ import alias from './models/alias';
 import aliasSet from './models/aliasSet';
 import annotation from './models/annotation';
 import area from './models/area';
-import creator from './models/entities/creator';
-import creatorCredit from './models/creatorCredit';
-import creatorCreditName from './models/creatorCreditName';
-import creatorData from './models/data/creatorData';
-import creatorHeader from './models/headers/creatorHeader';
-import creatorImport from './models/imports/creatorImport';
-import creatorRevision from './models/revisions/creatorRevision';
-import creatorType from './models/creatorType';
+import author from './models/entities/author';
+import authorCredit from './models/authorCredit';
+import authorCreditName from './models/authorCreditName';
+import authorData from './models/data/authorData';
+import authorHeader from './models/headers/authorHeader';
+import authorImport from './models/imports/authorImport';
+import authorRevision from './models/revisions/authorRevision';
+import authorType from './models/authorType';
 import disambiguation from './models/disambiguation';
 import edition from './models/entities/edition';
 import editionData from './models/data/editionData';
 import editionFormat from './models/editionFormat';
+import editionGroup from './models/entities/editionGroup';
+import editionGroupData from './models/data/editionGroupData';
+import editionGroupHeader from './models/headers/editionGroupHeader';
+import editionGroupImport from './models/imports/editionGroupImport';
+import editionGroupRevision from './models/revisions/editionGroupRevision';
+import editionGroupType from './models/editionGroupType';
 import editionHeader from './models/headers/editionHeader';
 import editionImport from './models/imports/editionImport';
 import editionRevision from './models/revisions/editionRevision';
@@ -54,12 +60,6 @@ import knex from 'knex';
 import language from './models/language';
 import languageSet from './models/languageSet';
 import note from './models/note';
-import publication from './models/entities/publication';
-import publicationData from './models/data/publicationData';
-import publicationHeader from './models/headers/publicationHeader';
-import publicationImport from './models/imports/publicationImport';
-import publicationRevision from './models/revisions/publicationRevision';
-import publicationType from './models/publicationType';
 import publisher from './models/entities/publisher';
 import publisherData from './models/data/publisherData';
 import publisherHeader from './models/headers/publisherHeader';
@@ -94,9 +94,9 @@ export default function init(config) {
 	bookshelf.plugin('virtuals');
 
 	// Initialize these here to set up dependencies
-	const CreatorData = creatorData(bookshelf);
+	const AuthorData = authorData(bookshelf);
 	const EditionData = editionData(bookshelf);
-	const PublicationData = publicationData(bookshelf);
+	const EditionGroupData = editionGroupData(bookshelf);
 	const PublisherData = publisherData(bookshelf);
 	const WorkData = workData(bookshelf);
 
@@ -107,18 +107,24 @@ export default function init(config) {
 		AliasSet: aliasSet(bookshelf),
 		Annotation: annotation(bookshelf),
 		Area: area(bookshelf),
-		Creator: creator(bookshelf),
-		CreatorCredit: creatorCredit(bookshelf),
-		CreatorCreditName: creatorCreditName(bookshelf),
-		CreatorData,
-		CreatorHeader: creatorHeader(bookshelf),
-		CreatorImport: creatorImport(bookshelf),
-		CreatorRevision: creatorRevision(bookshelf),
-		CreatorType: creatorType(bookshelf),
+		Author: author(bookshelf),
+		AuthorCredit: authorCredit(bookshelf),
+		AuthorCreditName: authorCreditName(bookshelf),
+		AuthorData,
+		AuthorHeader: authorHeader(bookshelf),
+		AuthorImport: authorImport(bookshelf),
+		AuthorRevision: authorRevision(bookshelf),
+		AuthorType: authorType(bookshelf),
 		Disambiguation: disambiguation(bookshelf),
 		Edition: edition(bookshelf),
 		EditionData,
 		EditionFormat: editionFormat(bookshelf),
+		EditionGroup: editionGroup(bookshelf),
+		EditionGroupData,
+		EditionGroupHeader: editionGroupHeader(bookshelf),
+		EditionGroupImport: editionGroupImport(bookshelf),
+		EditionGroupRevision: editionGroupRevision(bookshelf),
+		EditionGroupType: editionGroupType(bookshelf),
 		EditionHeader: editionHeader(bookshelf),
 		EditionImport: editionImport(bookshelf),
 		EditionRevision: editionRevision(bookshelf),
@@ -134,12 +140,6 @@ export default function init(config) {
 		Language: language(bookshelf),
 		LanguageSet: languageSet(bookshelf),
 		Note: note(bookshelf),
-		Publication: publication(bookshelf),
-		PublicationData,
-		PublicationHeader: publicationHeader(bookshelf),
-		PublicationImport: publicationImport(bookshelf),
-		PublicationRevision: publicationRevision(bookshelf),
-		PublicationType: publicationType(bookshelf),
 		Publisher: publisher(bookshelf),
 		PublisherData,
 		PublisherHeader: publisherHeader(bookshelf),

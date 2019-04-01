@@ -19,22 +19,22 @@
 import {camelToSnake, diffRevisions, snakeToCamel} from '../../util';
 
 
-export default function creatorRevision(bookshelf) {
-	const CreatorRevision = bookshelf.Model.extend({
+export default function editionGroupRevision(bookshelf) {
+	const EditionGroupRevision = bookshelf.Model.extend({
 		data() {
-			return this.belongsTo('CreatorData', 'data_id');
+			return this.belongsTo('EditionGroupData', 'data_id');
 		},
 		diff(other) {
 			return diffRevisions(this, other, [
 				'annotation', 'disambiguation', 'aliasSet.aliases.language',
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
-				'relationshipSet.relationships', 'beginArea', 'endArea',
-				'relationshipSet.relationships.type', 'gender', 'creatorType',
-				'identifierSet.identifiers.type'
+				'relationshipSet.relationships',
+				'relationshipSet.relationships.type',
+				'identifierSet.identifiers.type', 'editionGroupType'
 			]);
 		},
 		entity() {
-			return this.belongsTo('CreatorHeader', 'bbid');
+			return this.belongsTo('EditionGroupHeader', 'bbid');
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
@@ -47,7 +47,7 @@ export default function creatorRevision(bookshelf) {
 						return null;
 					}
 
-					return new CreatorRevision({bbid: this.get('bbid')})
+					return new EditionGroupRevision({bbid: this.get('bbid')})
 						.query('whereIn', 'id', parentIds)
 						.fetch();
 				});
@@ -56,9 +56,8 @@ export default function creatorRevision(bookshelf) {
 		revision() {
 			return this.belongsTo('Revision', 'id');
 		},
-		tableName: 'bookbrainz.creator_revision'
-
+		tableName: 'bookbrainz.edition_group_revision'
 	});
 
-	return bookshelf.model('CreatorRevision', CreatorRevision);
+	return bookshelf.model('EditionGroupRevision', EditionGroupRevision);
 }

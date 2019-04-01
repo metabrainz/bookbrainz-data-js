@@ -270,9 +270,9 @@ const stylisticIssuesRules = {
 		6
 	],
 	'max-len': [
-		ERROR,
+		WARNING,
 		{
-			code: 80,
+			code: 100,
 			ignoreUrls: true,
 			tabWidth: 4
 		}
@@ -410,105 +410,11 @@ const flowTypeRules = {
 	'flowtype/semi': ERROR
 };
 
-/* eslint-disable-next-line no-unused-vars */
-const reactRules = {
-	'react/boolean-prop-naming': ERROR,
-	'react/button-has-type': ERROR,
-	'react/default-props-match-prop-types': ERROR,
-	'react/forbid-component-props': TRANSITION_IGNORE,
-	'react/forbid-foreign-prop-types': ERROR,
-	'react/jsx-boolean-value': ERROR,
-	'react/jsx-closing-bracket-location': [
-		ERROR,
-		'tag-aligned'
-	],
-	'react/jsx-closing-tag-location': ERROR,
-	'react/jsx-curly-brace-presence': ERROR,
-	'react/jsx-curly-spacing': [
-		ERROR,
-		{
-			children: true
-		}
-	],
-	'react/jsx-equals-spacing': ERROR,
-	'react/jsx-first-prop-new-line': ERROR,
-	'react/jsx-handler-names': ERROR,
-	'react/jsx-indent-props': [
-		ERROR,
-		'tab'
-	],
-	'react/jsx-no-bind': [
-		ERROR,
-		{
-			ignoreRefs: true
-		}
-	],
-	'react/jsx-no-literals': TRANSITION_IGNORE,
-	'react/jsx-one-expression-per-line': TRANSITION_IGNORE,
-	'react/jsx-pascal-case': ERROR,
-	'react/jsx-sort-props': [
-		ERROR,
-		{
-			callbacksLast: true,
-			ignoreCase: false,
-			shorthandFirst: true
-		}
-	],
-	'react/jsx-tag-spacing': [
-		ERROR,
-		{
-			beforeSelfClosing: 'never'
-		}
-	],
-	'react/jsx-wrap-multilines': ERROR,
-	'react/no-access-state-in-setstate': ERROR,
-	'react/no-array-index-key': TRANSITION_WARNING,
-	'react/no-danger': TRANSITION_WARNING,
-	'react/no-did-mount-set-state': ERROR,
-	'react/no-did-update-set-state': ERROR,
-	'react/no-direct-mutation-state': ERROR,
-	'react/no-multi-comp': [
-		ERROR,
-		{
-			ignoreStateless: true
-		}
-	],
-	'react/no-redundant-should-component-update': ERROR,
-	'react/no-set-state': TRANSITION_IGNORE,
-	'react/no-typos': ERROR,
-	'react/no-unused-prop-types': ERROR,
-	'react/no-unused-state': TRANSITION_WARNING,
-	'react/no-will-update-set-state': ERROR,
-	'react/prefer-es6-class': [
-		ERROR,
-		'always'
-	],
-	'react/prefer-stateless-function': ERROR,
-	'react/require-default-props': [
-		ERROR,
-		{
-			forbidDefaultForRequired: true
-		}
-	],
-	'react/self-closing-comp': ERROR,
-	'react/sort-comp': ERROR,
-	'react/sort-prop-types': [
-		ERROR,
-		{
-			callbacksLast: false,
-			ignoreCase: false,
-			requiredFirst: false,
-			sortShapeProp: true
-		}
-	],
-	'react/style-prop-object': ERROR,
-	'react/void-dom-elements-no-children': ERROR
-};
 
 const es6ImportRules = {
 	'import/first': ERROR,
 	'import/newline-after-import': [
-		ERROR,
+		WARNING,
 		{
 			count: 2
 		}

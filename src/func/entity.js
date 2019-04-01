@@ -15,33 +15,32 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+*/
 
 // @flow
 
 import _ from 'lodash';
 import {parseDate} from '../util';
 
-
-export const CREATOR: string = 'Creator';
+export const AUTHOR: string = 'Author';
 export const EDITION: string = 'Edition';
-export const PUBLICATION: string = 'Publication';
+export const EDITION_GROUP: string = 'EditionGroup';
 export const PUBLISHER: string = 'Publisher';
 export const WORK: string = 'Work';
 
 export const entityTypes: Object = {
-	CREATOR, EDITION, PUBLICATION, PUBLISHER, WORK
+	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, WORK
 };
 
 /**
  * @param  {Object} entityData - Object holding all data related to an entity
  * @param  {string} entityType - The type of the entity
  * @returns {Object} - Returns all the additional entity specific data
- */
+*/
 export function getAdditionalEntityProps(
 	entityData: Object, entityType: string
 ) {
-	if (entityType === entityTypes.CREATOR) {
+	if (entityType === entityTypes.AUTHOR) {
 		const {typeId, genderId, beginAreaId, beginDate, endDate,
 			ended, endAreaId} = entityData;
 
@@ -56,7 +55,7 @@ export function getAdditionalEntityProps(
 
 	if (entityType === entityTypes.EDITION) {
 		return _.pick(entityData, [
-			'publicationBbid', 'width', 'height', 'depth', 'weight',
+			'editionGroupBbid', 'width', 'height', 'depth', 'weight',
 			'pages', 'formatId', 'statusId'
 		]);
 	}
@@ -71,7 +70,7 @@ export function getAdditionalEntityProps(
 			endDate, endDay, endMonth, endYear, ended, typeId};
 	}
 
-	if (entityType === entityTypes.PUBLICATION ||
+	if (entityType === entityTypes.EDITION_GROUP ||
 		entityType === entityTypes.WORK) {
 		return _.pick(entityData, ['typeId']);
 	}
@@ -82,7 +81,7 @@ export function getAdditionalEntityProps(
 /**
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
- */
+*/
 export function getEntitySetMetadataByType(entityType: string): Array<Object> {
 	if (entityType === EDITION) {
 		return [
@@ -129,13 +128,13 @@ export function getEntitySetMetadataByType(entityType: string): Array<Object> {
  *
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @returns {object} - Object mapping model name to the entity model
- */
+*/
 export function getEntityModels(orm: Object): Object {
-	const {Creator, Edition, Publication, Publisher, Work} = orm;
+	const {Author, Edition, EditionGroup, Publisher, Work} = orm;
 	return {
-		Creator,
+		Author,
 		Edition,
-		Publication,
+		EditionGroup,
 		Publisher,
 		Work
 	};
@@ -150,7 +149,7 @@ export function getEntityModels(orm: Object): Object {
  * map to a model
  * @returns {object} - Bookshelf model object with the type specified in the
  * single param
- */
+*/
 export function getEntityModelByType(orm: Object, type: string): Object {
 	const entityModels = getEntityModels(orm);
 

@@ -34,7 +34,7 @@ describe('IdentifierType model', () => {
 			description: 'description',
 			detectionRegex: 'detection',
 			displayTemplate: 'display',
-			entityType: 'Creator',
+			entityType: 'Author',
 			label: 'test_type',
 			validationRegex: 'validation'
 		};

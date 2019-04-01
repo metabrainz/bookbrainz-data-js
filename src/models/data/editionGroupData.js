@@ -19,22 +19,25 @@
 import {camelToSnake, snakeToCamel} from '../../util';
 
 
-export default function publicationData(bookshelf) {
-	const PublicationData = bookshelf.Model.extend({
+export default function editionGroupData(bookshelf) {
+	const EditionGroupData = bookshelf.Model.extend({
 		aliasSet() {
 			return this.belongsTo('AliasSet', 'alias_set_id');
 		},
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
-		creatorCredit() {
-			return this.belongsTo('CreatorCredit', 'creator_credit_id');
+		authorCredit() {
+			return this.belongsTo('AuthorCredit', 'author_credit_id');
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');
 		},
+		editionGroupType() {
+			return this.belongsTo('EditionGroupType', 'type_id');
+		},
 		editions() {
-			return this.hasMany('Edition', 'publication_bbid')
+			return this.hasMany('Edition', 'edition_group_bbid')
 				.query({where: {master: true}});
 		},
 		format: camelToSnake,
@@ -43,14 +46,11 @@ export default function publicationData(bookshelf) {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
 		parse: snakeToCamel,
-		publicationType() {
-			return this.belongsTo('PublicationType', 'type_id');
-		},
 		relationshipSet() {
 			return this.belongsTo('RelationshipSet', 'relationship_set_id');
 		},
-		tableName: 'bookbrainz.publication_data'
+		tableName: 'bookbrainz.edition_group_data'
 	});
 
-	return bookshelf.model('PublicationData', PublicationData);
+	return bookshelf.model('EditionGroupData', EditionGroupData);
 }

@@ -37,8 +37,8 @@ describe('RelationshipType model', () => {
 			label: 'test_type',
 			linkPhrase: 'linkPhrase',
 			reverseLinkPhrase: 'reverseLinkPhrase',
-			sourceEntityType: 'Creator',
-			targetEntityType: 'Creator'
+			sourceEntityType: 'Author',
+			targetEntityType: 'Author'
 		};
 
 		const relTypeCreationPromise = new RelationshipType(relTypeData)
