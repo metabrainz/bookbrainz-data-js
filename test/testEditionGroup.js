@@ -105,7 +105,6 @@ describe('EditionGroup model', () => {
 		const editionGroupAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
-			// authorCredit: 1, // not implemented yet on edition group?
 			bbid: aBBID,
 			disambiguationId: 1,
 			identifierSetId: 1,
@@ -136,20 +135,18 @@ describe('EditionGroup model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'authorCredit'
 				]
-				// 'authorCredit' not implemented yet on edition group?
 			}))
 			.then((entity) => entity.toJSON());
 
 		return expect(entityPromise).to.eventually.have.all.keys([
-			'aliasSet', 'aliasSetId', 'annotation', 'annotationId',
+			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'authorCreditId',
 			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
 			'typeId'
 		]);
-		// 'authorCreditId' not implemented yet on edition group?
 	});
 
 	it('should return the master revision when multiple revisions exist',
