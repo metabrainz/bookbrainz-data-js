@@ -175,13 +175,13 @@ export function getEntity(
 /**
  * Fetches an entity's last known default alias from its revision parent.
  * This is necessary to display the name of a 'deleted' entity
- * @param {object} bookshelf - The Bookshelf object.
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @param {string} entityType - The entity model name.
  * @param {string} bbid - The target entity's bbid.
  * @returns {function} The returned Promise returns the entity's
  * 					   parent default alias
  */
-export async function getEntityParentAlias(bookshelf, entityType, bbid) {
+export async function getEntityParentAlias(orm, entityType, bbid) {
 	const rawSql = `
 		SELECT alias.name,
 			alias.sort_name,
@@ -196,7 +196,7 @@ export async function getEntityParentAlias(bookshelf, entityType, bbid) {
 	`;
 
 	// Query the database to get the parent revision default alias
-	const queryResult = await bookshelf.knex.raw(rawSql);
+	const queryResult = await orm.bookshelf.knex.raw(rawSql);
 	if (!Array.isArray(queryResult.rows)) {
 		return null;
 	}
