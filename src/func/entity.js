@@ -171,3 +171,42 @@ export function getEntity(
 		})
 		.then((entity) => entity.toJSON());
 }
+
+/**
+ * Fetches an entity's last known default alias from its revision parent.
+ * This is necessary to display the name of a 'deleted' entity
+ * @param {object} bookshelf - The Bookshelf object.
+ * @param {string} entityType - The entity model name.
+ * @param {string} bbid - The target entity's bbid.
+ * @returns {function} The returned Promise returns the entity's
+ * 					   parent default alias
+ */
+export async function getEntityParentAlias(bookshelf, entityType, bbid) {
+	const rawSql = `
+		SELECT alias.name,
+			alias.sort_name,
+			alias.id,
+			alias.language_id,
+			alias.primary
+		FROM bookbrainz.${entityType}
+		LEFT JOIN bookbrainz.alias ON alias.id = default_alias_id
+		WHERE bbid = '${bbid}' AND master = FALSE
+		ORDER BY revision_id DESC
+		LIMIT 1;
+	`;
+
+	// Query the database to get the parent revision default alias
+	const queryResult = await bookshelf.knex.raw(rawSql);
+	if (!Array.isArray(queryResult.rows)) {
+		return null;
+	}
+	const rows = queryResult.rows.map((rawQueryResult) => {
+		// Convert query keys to camelCase
+		const queriedResult = _.mapKeys(
+			rawQueryResult,
+			(value, key) => _.camelCase(key)
+		);
+		return queriedResult;
+	});
+	return rows[0];
+}
