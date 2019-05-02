@@ -1,6 +1,6 @@
 {
   "name": "bookbrainz-data",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
   "scripts": {
@@ -42,6 +42,10 @@
     {
       "name": "Sean Burke",
       "email": "leftmostcat+bookbrainz@gmail.com"
+    },
+    {
+      "name": "Nicolas Pelletier",
+      "email": "monkey@metabrainz.org"
     }
   ],
   "engines": {
