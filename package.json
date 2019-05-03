@@ -14,9 +14,13 @@
     "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
     "flow": "flow",
     "dupreport": "jsinspect src/ || true",
-    "precommit": "lint-staged",
     "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'",
     "copy-flow": "flow-copy-source src lib"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.js": [
