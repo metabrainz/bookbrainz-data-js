@@ -19,8 +19,9 @@
 // @flow
 
 import {camelToSnake, snakeToCamel} from '../../util';
-import type {Transaction} from '../types';
 
+import type {Transaction} from '../types';
+import _ from 'lodash';
 
 export async function deleteImport(
 	transacting: Transaction, importId: number, entityId: ?string
@@ -34,7 +35,7 @@ export async function deleteImport(
 	// Get the dataId of the import
 	const [dataIdObj] =
 		await transacting.select('data_id')
-			.from(`bookbrainz.${importType}_import_header`)
+			.from(`bookbrainz.${_.snakeCase(importType)}_import_header`)
 			.where('import_id', importId);
 	const {dataId}: {dataId: number} = snakeToCamel(dataIdObj);
 
@@ -44,10 +45,10 @@ export async function deleteImport(
 
 	await Promise.all([
 		// Delete the import header and entity data table records
-		transacting(`bookbrainz.${importType}_import_header`)
+		transacting(`bookbrainz.${_.snakeCase(importType)}_import_header`)
 			.where('import_id', importId).del()
 			.then(() =>
-				transacting(`bookbrainz.${importType}_data`)
+				transacting(`bookbrainz.${_.snakeCase(importType)}_data`)
 					.where('id', dataId).del()),
 
 		// Delete the discard votes
