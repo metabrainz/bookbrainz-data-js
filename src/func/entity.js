@@ -188,7 +188,7 @@ export async function getEntityParentAlias(orm, entityType, bbid) {
 			alias.id,
 			alias.language_id,
 			alias.primary
-		FROM bookbrainz.${entityType}
+		FROM bookbrainz.${_.snakeCase(entityType)}
 		LEFT JOIN bookbrainz.alias ON alias.id = default_alias_id
 		WHERE bbid = '${bbid}' AND master = FALSE
 		ORDER BY revision_id DESC

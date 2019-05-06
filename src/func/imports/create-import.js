@@ -18,6 +18,7 @@
 
 
 import {entityTypes, getAdditionalEntityProps} from '../entity';
+
 import _ from 'lodash';
 import {camelToSnake} from '../../util';
 import {getOriginSourceId} from './misc';
@@ -26,7 +27,6 @@ import {updateDisambiguation} from '../disambiguation';
 import {updateIdentifierSet} from '../identifier';
 import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
-
 
 function createImportRecord(transacting, data) {
 	return transacting.insert(data).into('bookbrainz.import').returning('id');
@@ -61,7 +61,7 @@ function createImportDataRecord(transacting, dataSets, importData) {
 	};
 
 	return transacting.insert([camelToSnake(dataRecordProps)])
-		.into(`bookbrainz.${_.toLower(entityType)}_data`)
+		.into(`bookbrainz.${_.snakeCase(entityType)}_data`)
 		.returning('id');
 }
 
@@ -73,7 +73,7 @@ function createImportHeader(transacting, record, entityType) {
 	}
 
 
-	const table = `bookbrainz.${_.toLower(entityType)}_import_header`;
+	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
 	return transacting.insert(record).into(table).returning('import_id');
 }
 

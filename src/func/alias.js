@@ -153,7 +153,7 @@ export async function getBBIDsWithMatchingAlias(
 
 		const bbids = _.map(
 			await transacting.select('bbid')
-				.from(`bookbrainz.${entityType}`)
+				.from(`bookbrainz.${_.snakeCase(entityType)}`)
 				.whereIn('alias_set_id', aliasSetIds)
 				.where('master', true),
 			'bbid'

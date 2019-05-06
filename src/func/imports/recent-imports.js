@@ -87,7 +87,7 @@ async function getRecentImportUtilData(
 
 function getRecentImportsByType(transacting, type, importIds) {
 	return transacting.select('*')
-		.from(`bookbrainz.${type.toLowerCase()}_import`)
+		.from(`bookbrainz.${_.snakeCase(type)}_import`)
 		.whereIn('import_id', importIds);
 }
 
