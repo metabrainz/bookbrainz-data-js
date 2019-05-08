@@ -66,7 +66,6 @@ function clearEditorByID(trx, editorID) {
 		.update({
 			area_id: null,
 			bio: '',
-			birth_date: null,
 			cached_metabrainz_name: '<deleted>',
 			gender_id: null,
 			name: `Deleted Editor #${editorID}`
@@ -93,7 +92,7 @@ export function deleteEditorByMetaBrainzID(knex) {
 
 			// Set the editor name to "Deleted Editor #ID"
 			// Set cached MetaBrainz name to "<deleted>"
-			// Also clear bio, birth_date, gender, area
+			// Also clear bio, gender, area
 			const clearEditorPromise =
 				clearEditorByID(trx, editorID);
 
