@@ -65,7 +65,7 @@
     "bookshelf": "^0.13.3",
     "deep-diff": "^1.0.0",
     "immutable": "^3.8.2",
-    "knex": "^0.15.0",
+    "knex": "^0.16.6",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "nodemon": "^1.18.3",
