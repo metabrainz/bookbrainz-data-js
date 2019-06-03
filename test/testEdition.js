@@ -153,6 +153,48 @@ describe('Edition model', () => {
 		]);
 	});
 
+	it('should automatically create an Edition Group if none has been passed', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const editionAttribs = {
+			aliasSetId: 1,
+			annotationId: 1,
+			bbid: aBBID,
+			disambiguationId: 1,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+
+		await new Revision(revisionAttribs)
+			.save(null, {method: 'insert'});
+
+		await new Annotation({
+			content: 'Test Annotation',
+			id: 1,
+			lastRevisionId: 1
+		})
+			.save(null, {method: 'insert'});
+
+		const edition = await new Edition(editionAttribs)
+			.save(null, {method: 'insert'});
+		await edition.refresh({
+			withRelated: [
+				'relationshipSet', 'aliasSet', 'identifierSet',
+				'annotation', 'disambiguation', 'authorCredit',
+				'editionGroup'
+			]
+		});
+		const editionJSON = edition.toJSON();
+
+		expect(editionJSON.editionGroupBbid).to.be.a('string');
+		expect(editionJSON.editionGroup.aliasSetId).to.equal(1);
+		expect(editionJSON.editionGroup.revisionId).to.equal(1);
+		expect(editionJSON.editionGroup.dataId).to.not.be.null;
+	});
+
 	it('should return the master revision when multiple revisions exist',
 		() => {
 			/*
