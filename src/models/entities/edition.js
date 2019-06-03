@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2019  Nicolas Pelletier
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +16,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+import {createEditionGroupForNewEdition} from '../../util';
+
 
 export default function edition(bookshelf) {
 	const EditionData = bookshelf.model('EditionData');
@@ -35,6 +38,22 @@ export default function edition(bookshelf) {
 			this.on('updating', (model, attrs, options) => {
 				// Always update the master revision.
 				options.query.where({master: true});
+			});
+
+			this.on('creating', async (model, attrs, options) => {
+				// Automatically create a new Edition Group if there is none selected,
+				// in the same transaction
+				if (!model.get('editionGroupBbid')) {
+					const aliasSetId = model.get('aliasSetId');
+					const revisionId = model.get('revisionId');
+					try {
+						const newEditionGroupBBID = await createEditionGroupForNewEdition(bookshelf, options.transacting, aliasSetId, revisionId);
+						model.set('editionGroupBbid', newEditionGroupBBID);
+					}
+					catch (error) {
+						throw error;
+					}
+				}
 			});
 		},
 		revision() {
