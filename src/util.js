@@ -174,7 +174,7 @@ const DAY_STR_LENGTH = 2;
  *                   date.
  */
 export function formatDate(year, month, day) {
-	if (!year) {
+	if (!year || isNaN(parseInt(year, 10))) {
 		return null;
 	}
 	let yearString;
@@ -186,13 +186,13 @@ export function formatDate(year, month, day) {
 		yearString = `-${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
 	}
 
-	if (!month) {
+	if (!month || isNaN(parseInt(month, 10))) {
 		return `${yearString}`;
 	}
 
 	const monthString = _.padStart(month.toString(), MONTH_STR_LENGTH, '0');
 
-	if (!day) {
+	if (!day || isNaN(parseInt(day, 10))) {
 		return `${yearString}-${monthString}`;
 	}
 
@@ -216,21 +216,26 @@ export function parseDate(date) {
 	// A leading minus sign denotes a BC date
 	// This creates an empty part that needs to be removed,
 	// and requires us to add the negative sign back for the year
+	// We ensure parts[0] is a number and not for example an empty string
 	if (parts[0] === '') {
 		parts.shift();
-		parts[0] = -parts[0];
+		parts[0] = -parseInt(parts[0], 10);
 	}
-	if (parts.length === 3) {
-		return parts.map((part) => parseInt(part, 10));
-	}
-
-	if (parts.length === 2) {
-		return parts.map((part) => parseInt(part, 10)).concat([null]);
+	// Incorrect format
+	if (parts.length < 1 || parts.length > 3) {
+		return [null, null, null];
 	}
 
+	let padding = [];
 	if (parts.length === 1) {
-		return parts.map((part) => parseInt(part, 10)).concat([null, null]);
+		padding = [null, null];
+	}
+	else if (parts.length === 2) {
+		padding = [null];
 	}
 
-	return [null, null, null];
+	return parts.map((part) => {
+		const parsed = parseInt(part, 10);
+		return isNaN(parsed) ? null : parsed;
+	}).concat(padding);
 }
