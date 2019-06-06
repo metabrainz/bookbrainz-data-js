@@ -16,6 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+import _ from 'lodash';
 import {createEditionGroupForNewEdition} from '../../util';
 
 
@@ -38,6 +39,11 @@ export default function edition(bookshelf) {
 			this.on('updating', (model, attrs, options) => {
 				// Always update the master revision.
 				options.query.where({master: true});
+				if (_.has(model, 'changed.editionGroupBbid') &&
+					!model.get('editionGroupBbid')
+				) {
+					throw new Error('EditionGroupBbid required in Edition update');
+				}
 			});
 
 			this.on('creating', async (model, attrs, options) => {
