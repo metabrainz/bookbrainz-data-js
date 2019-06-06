@@ -21,7 +21,6 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
 
-
 export function snakeToCamel(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;
@@ -167,27 +166,33 @@ const MONTH_STR_LENGTH = 2;
 const DAY_STR_LENGTH = 2;
 
 /**
- * Produce an ISO 8601-formatted string for a date.
+ * Produce an ISO 8601-2004 formatted string for a date.
  * @param {number} year - A calendar year.
  * @param {number} [month] - A calendar month.
  * @param {number} [day] - A calendar day of month.
- * @returns {string} The provided date formatted as an ISO 8601 year or calendar
+ * @returns {string} The provided date formatted as an ISO 8601-2004 year or calendar
  *                   date.
  */
 export function formatDate(year, month, day) {
-	if (!year) {
+	if (!year || isNaN(parseInt(year, 10))) {
 		return null;
 	}
+	let yearString;
+	const isCommonEraDate = Math.sign(year) === 1;
+	if (isCommonEraDate) {
+		yearString = _.padStart(year.toString(), YEAR_STR_LENGTH, '0');
+	}
+	else {
+		yearString = `-${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
+	}
 
-	const yearString = _.padStart(year.toString(), YEAR_STR_LENGTH, '0');
-
-	if (!month) {
+	if (!month || isNaN(parseInt(month, 10))) {
 		return `${yearString}`;
 	}
 
 	const monthString = _.padStart(month.toString(), MONTH_STR_LENGTH, '0');
 
-	if (!day) {
+	if (!day || isNaN(parseInt(day, 10))) {
 		return `${yearString}-${monthString}`;
 	}
 
@@ -207,20 +212,32 @@ export function parseDate(date) {
 		return [null, null, null];
 	}
 
-	const parts = date.split('-');
-	if (parts.length === 3) {
-		return parts.map((part) => parseInt(part, 10));
+	const parts = date.toString().split('-');
+	// A leading minus sign denotes a BC date
+	// This creates an empty part that needs to be removed,
+	// and requires us to add the negative sign back for the year
+	// We ensure parts[0] is a number and not for example an empty string
+	if (parts[0] === '') {
+		parts.shift();
+		parts[0] = -parseInt(parts[0], 10);
+	}
+	// Incorrect format
+	if (parts.length < 1 || parts.length > 3) {
+		return [null, null, null];
 	}
 
-	if (parts.length === 2) {
-		return parts.map((part) => parseInt(part, 10)).concat([null]);
-	}
-
+	let padding = [];
 	if (parts.length === 1) {
-		return parts.map((part) => parseInt(part, 10)).concat([null, null]);
+		padding = [null, null];
+	}
+	else if (parts.length === 2) {
+		padding = [null];
 	}
 
-	return [null, null, null];
+	return parts.map((part) => {
+		const parsed = parseInt(part, 10);
+		return isNaN(parsed) ? null : parsed;
+	}).concat(padding);
 }
 
 /**
