@@ -19,9 +19,8 @@ const INVALID_DATES_TO_FORMAT = [
 	[],
 	['a'],
 	['a', 1],
-	null,
-	// eslint-disable-next-line no-undefined
-	undefined
+	[null, 1, 3],
+	[undefined, 1, 3]
 ];
 
 function isDateInvalid(invalidDate) {
