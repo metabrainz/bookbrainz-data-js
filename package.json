@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^10.0.2",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.24.1",
