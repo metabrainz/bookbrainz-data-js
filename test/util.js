@@ -112,26 +112,26 @@ describe('Utils', () => {
 
 		it('should return the date as ISO 8601 for a full date object', () => {
 			const parsedDate = formatDate(1925, 4, '28');
-			expect(parsedDate).to.equal('1925-04-28');
+			expect(parsedDate).to.equal('+001925-04-28');
 		});
 
 		it('should return the date as ISO 8601 for a date object with missing month', () => {
-			const parsedDate = formatDate('1925', '4');
-			expect(parsedDate).to.equal('1925-04');
+			const parsedDate = formatDate('+001925', '4');
+			expect(parsedDate).to.equal('+001925-04');
 		});
 
 		it('should return the date as ISO 8601 for a date object with missing month and day', () => {
 			const parsedDate = formatDate(1925);
-			expect(parsedDate).to.equal('1925');
+			expect(parsedDate).to.equal('+001925');
 		});
 
 		it('should allow negative years for full date and with missing month and/or day', () => {
 			let parsedDate = formatDate(-1925);
-			expect(parsedDate).to.equal('-1925');
-			parsedDate = formatDate('-1925', 4);
-			expect(parsedDate).to.equal('-1925-04');
+			expect(parsedDate).to.equal('-001925');
+			parsedDate = formatDate('-001925', 4);
+			expect(parsedDate).to.equal('-001925-04');
 			parsedDate = formatDate(-1925, '4', '04');
-			expect(parsedDate).to.equal('-1925-04-04');
+			expect(parsedDate).to.equal('-001925-04-04');
 		});
 	});
 });
