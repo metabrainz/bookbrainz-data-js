@@ -161,7 +161,7 @@ export function diffRevisions(base, other, includes) {
 	);
 }
 
-const YEAR_STR_LENGTH = 4;
+const YEAR_STR_LENGTH = 6;
 const MONTH_STR_LENGTH = 2;
 const DAY_STR_LENGTH = 2;
 
@@ -177,14 +177,9 @@ export function formatDate(year, month, day) {
 	if (!year || isNaN(parseInt(year, 10))) {
 		return null;
 	}
-	let yearString;
 	const isCommonEraDate = Math.sign(year) === 1;
-	if (isCommonEraDate) {
-		yearString = _.padStart(year.toString(), YEAR_STR_LENGTH, '0');
-	}
-	else {
-		yearString = `-${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
-	}
+	// eslint-disable-next-line max-len
+	const yearString = `${isCommonEraDate ? '+' : '-'}${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
 
 	if (!month || isNaN(parseInt(month, 10))) {
 		return `${yearString}`;
