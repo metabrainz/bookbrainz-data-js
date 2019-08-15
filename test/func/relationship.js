@@ -30,7 +30,7 @@ const {expect} = chai;
 const {updateRelationshipSets} = bookbrainzData.func.relationship;
 const {
 	RelationshipType, Entity, Gender, EditorType, Revision, Annotation, Work,
-	Editor, AliasSet, IdentifierSet, RelationshipSet, Disambiguation, bookshelf
+	Editor, AliasSet, bookshelf
 } = bookbrainzData;
 
 const aBBID = faker.random.uuid();
@@ -43,15 +43,6 @@ function getRelationshipData(typeId, sourceBbid, targetBbid) {
 		sourceBbid,
 		targetBbid,
 		typeId
-	};
-}
-
-function getEntityData(bbid) {
-	return {
-		bbid,
-		type: faker.random.arrayElement([
-			'Author', 'Edition', 'EditionGroup', 'Publisher', 'Work'
-		])
 	};
 }
 

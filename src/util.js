@@ -21,6 +21,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
 
+
 export function snakeToCamel(attrs) {
 	return _.reduce(attrs, (result, val, key) => {
 		let newKey;

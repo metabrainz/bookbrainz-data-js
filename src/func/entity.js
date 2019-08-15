@@ -23,6 +23,7 @@
 import _ from 'lodash';
 import {parseDate} from '../util';
 
+
 export const AUTHOR: string = 'Author';
 export const EDITION: string = 'Edition';
 export const EDITION_GROUP: string = 'EditionGroup';

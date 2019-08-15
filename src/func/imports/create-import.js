@@ -28,6 +28,7 @@ import {updateIdentifierSet} from '../identifier';
 import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
+
 function createImportRecord(transacting, data) {
 	return transacting.insert(data).into('bookbrainz.import').returning('id');
 }

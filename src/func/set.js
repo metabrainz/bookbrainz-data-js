@@ -128,15 +128,15 @@ export async function createNewSetWithItems<Item: SetItemT>(
 	}
 
 	const newSet = await new SetModel().save(null, {transacting});
-	let newSetItemsCollection =
+	const newSetItemsCollection =
 		await newSet.related(itemsAttribute).fetch({transacting});
 
-	newSetItemsCollection = await newSetItemsCollection.attach(
+	const newSetItemsCollectionAttached = await newSetItemsCollection.attach(
 		_.map(unchangedItems, idAttribute), {transacting}
 	);
 
 	await Promise.all(
-		_.map(addedItems, (ident) => newSetItemsCollection.create(
+		_.map(addedItems, (ident) => newSetItemsCollectionAttached.create(
 			_.omit(ident, idAttribute), {transacting}
 		))
 	);

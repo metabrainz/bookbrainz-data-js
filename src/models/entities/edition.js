@@ -52,13 +52,9 @@ export default function edition(bookshelf) {
 				if (!model.get('editionGroupBbid')) {
 					const aliasSetId = model.get('aliasSetId');
 					const revisionId = model.get('revisionId');
-					try {
-						const newEditionGroupBBID = await createEditionGroupForNewEdition(bookshelf, options.transacting, aliasSetId, revisionId);
-						model.set('editionGroupBbid', newEditionGroupBBID);
-					}
-					catch (error) {
-						throw error;
-					}
+					const newEditionGroupBBID =
+						await createEditionGroupForNewEdition(bookshelf, options.transacting, aliasSetId, revisionId);
+					model.set('editionGroupBbid', newEditionGroupBBID);
 				}
 			});
 		},

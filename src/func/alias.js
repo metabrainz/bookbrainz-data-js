@@ -105,16 +105,11 @@ export async function updateAliasSet(
 export async function getAliasByIds(
 	transacting: Transaction, ids: Array<number>
 ): Promise<Object> {
-	try {
-		const aliases = await transacting.select('*')
-			.from('bookbrainz.alias')
-			.whereIn('id', ids);
-		return aliases.reduce((aliasesMap, alias) =>
-			_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
-	}
-	catch (error) {
-		throw error;
-	}
+	const aliases = await transacting.select('*')
+		.from('bookbrainz.alias')
+		.whereIn('id', ids);
+	return aliases.reduce((aliasesMap, alias) =>
+		_.assign(aliasesMap, {[alias.id]: snakeToCamel(alias)}), {});
 }
 
 export function getAliasIds(
@@ -135,50 +130,40 @@ export async function getBBIDsWithMatchingAlias(
 	transacting: Transaction,
 	entityType: EntityTypeString,
 	name: string,
-	caseSensitive: boolean = false,
+	caseSensitive: boolean = false
 ) {
-	try {
-		const aliasIds = _.map(
-			await getAliasIds(transacting, name, caseSensitive),
-			'id'
-		);
+	const aliasIds = _.map(
+		await getAliasIds(transacting, name, caseSensitive),
+		'id'
+	);
 
-		const aliasSetIds = _.map(
-			await transacting.distinct('set_id')
-				.select()
-				.from('bookbrainz.alias_set__alias')
-				.whereIn('alias_id', aliasIds),
-			'set_id'
-		);
+	const aliasSetIds = _.map(
+		await transacting.distinct('set_id')
+			.select()
+			.from('bookbrainz.alias_set__alias')
+			.whereIn('alias_id', aliasIds),
+		'set_id'
+	);
 
-		const bbids = _.map(
-			await transacting.select('bbid')
-				.from(`bookbrainz.${_.snakeCase(entityType)}`)
-				.whereIn('alias_set_id', aliasSetIds)
-				.where('master', true),
-			'bbid'
-		);
+	const bbids = _.map(
+		await transacting.select('bbid')
+			.from(`bookbrainz.${_.snakeCase(entityType)}`)
+			.whereIn('alias_set_id', aliasSetIds)
+			.where('master', true),
+		'bbid'
+	);
 
-		return bbids;
-	}
-	catch (error) {
-		throw error;
-	}
+	return bbids;
 }
 
 export async function doesAliasExist(
 	transacting: Transaction,
 	entityType: EntityTypeString,
 	name: string,
-	caseSensitive: boolean = false,
+	caseSensitive: boolean = false
 ) {
-	try {
-		const bbids = await getBBIDsWithMatchingAlias(
-			transacting, entityType, name, caseSensitive
-		);
-		return bbids.length > 0;
-	}
-	catch (error) {
-		throw error;
-	}
+	const bbids = await getBBIDsWithMatchingAlias(
+		transacting, entityType, name, caseSensitive
+	);
+	return bbids.length > 0;
 }
