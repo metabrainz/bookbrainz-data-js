@@ -23,6 +23,7 @@ import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../../lib/util';
 
+
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {recursivelyGetRedirectBBID, getEntity} = bookbrainzData.func.entity;

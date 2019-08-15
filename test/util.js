@@ -20,6 +20,7 @@ const INVALID_DATES_TO_FORMAT = [
 	['a'],
 	['a', 1],
 	[null, 1, 3],
+	// eslint-disable-next-line no-undefined
 	[undefined, 1, 3]
 ];
 
