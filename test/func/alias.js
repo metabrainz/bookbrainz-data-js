@@ -110,7 +110,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const firstSetAliases = firstSet.related('aliases').toJSON();
+		const firstSetAliases = _.sortBy(firstSet.related('aliases').toJSON(), 'id');
 
 		const thirdAliasData = getAliasData();
 		thirdAliasData.id = firstSetAliases[1].id;
@@ -130,7 +130,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const aliases = result.related('aliases').toJSON();
+		const aliases = _.sortBy(result.related('aliases').toJSON(), 'id');
 
 		expect(result.get('id')).to.not.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[0].id);
@@ -155,7 +155,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const firstSetAliases = firstSet.related('aliases').toJSON();
+		const firstSetAliases = _.orderBy(firstSet.related('aliases').toJSON(), 'id');
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const [defaultAlias, ...others] = firstSetAliases;
@@ -170,7 +170,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const aliases = result.related('aliases').toJSON();
+		const aliases = _.orderBy(result.related('aliases').toJSON(), 'id');
 
 		expect(result.get('id')).to.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[0].id);
@@ -196,7 +196,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const firstSetAliases = firstSet.related('aliases').toJSON();
+		const firstSetAliases = _.orderBy(firstSet.related('aliases').toJSON(), 'id');
 
 		const others = _.initial(firstSetAliases);
 		const defaultAlias = _.last(firstSetAliases);
@@ -213,7 +213,7 @@ describe('updateAliasSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'aliases'});
 		});
 
-		const aliases = result.related('aliases').toJSON();
+		const aliases = _.orderBy(result.related('aliases').toJSON(), 'id');
 
 		expect(result.get('id')).to.not.equal(firstSet.get('id'));
 		expect(result.get('defaultAliasId')).to.equal(aliases[1].id);

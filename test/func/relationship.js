@@ -243,7 +243,7 @@ describe('updateRelationshipSet', () => {
 		});
 
 		const firstSet = firstResult[aBBID];
-		const firstSetRelationships = firstSet.related('relationships').toJSON()
+		const firstSetRelationships = _.orderBy(firstSet.related('relationships').toJSON(), 'id')
 			.map((relationship) =>
 				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
 
@@ -263,15 +263,18 @@ describe('updateRelationshipSet', () => {
 				}, {})
 			);
 		});
+		const aBBIDRelationships = _.orderBy(result[aBBID].related('relationships').toJSON(), 'id');
+		const cBBIDRelationships = result[cBBID];
+		const dBBIDRelationships = _.orderBy(result[dBBID].related('relationships').toJSON(), 'id');
 
 		expect(result)
 			.to.be.an('object').that.has.all.keys(aBBID, cBBID, dBBID);
-		expect(result[aBBID].related('relationships').toJSON()[0])
+		expect(aBBIDRelationships[0])
 			.to.be.an('object').to.include(firstRelationshipData);
-		expect(result[aBBID].related('relationships').toJSON()[1])
+		expect(aBBIDRelationships[1])
 			.to.be.an('object').to.include(thirdRelationshipData);
-		expect(result[cBBID]).to.be.null;
-		expect(result[dBBID].related('relationships').toJSON()[0])
+		expect(cBBIDRelationships).to.be.null;
+		expect(dBBIDRelationships[0])
 			.to.be.an('object').to.include(thirdRelationshipData);
 	});
 

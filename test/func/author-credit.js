@@ -145,15 +145,16 @@ describe('updateCreateCredit', () => {
 			(trx) => updateAuthorCredit(bookbrainzData, trx, firstCredit, data)
 		);
 
-		const firstCreditJSON = firstCredit.toJSON();
-		const secondCreditJSON = secondCredit.toJSON();
 
-		expect(firstCreditJSON.id).to.not.equal(secondCreditJSON.id);
-		expect(_.get(secondCreditJSON, 'names[0].authorBBID')).to.equal(cBBID);
-		expect(_.get(firstCreditJSON, 'names[0].authorCreditID')).to.not
-			.equal(_.get(secondCreditJSON, 'names[0].authorCreditID'));
-		expect(_.get(firstCreditJSON, 'names[1].authorCreditID')).to.not
-			.equal(_.get(secondCreditJSON, 'names[1].authorCreditID'));
+		const firstCreditNames = _.orderBy(firstCredit.related('names').toJSON(), 'position');
+		const secondCreditNames = _.orderBy(secondCredit.related('names').toJSON(), 'position');
+
+		expect(firstCredit.get('id')).to.not.equal(secondCredit.get('id'));
+		expect(_.get(secondCreditNames, '[0].authorBBID')).to.equal(cBBID);
+		expect(_.get(firstCreditNames, '[0].authorCreditID')).to.not
+			.equal(_.get(secondCreditNames, '[0].authorCreditID'));
+		expect(_.get(firstCreditNames, '[1].authorCreditID')).to.not
+			.equal(_.get(secondCreditNames, '[1].authorCreditID'));
 	});
 
 	/* eslint-disable-next-line max-len */
@@ -180,14 +181,14 @@ describe('updateCreateCredit', () => {
 				updateAuthorCredit(bookbrainzData, trx, secondCredit, data)
 		);
 
-		const firstCreditJSON = firstCredit.toJSON();
-		const thirdCreditJSON = thirdCredit.toJSON();
+		const firstCreditNames = _.orderBy(firstCredit.related('names').toJSON(), 'position');
+		const thirdCreditNames = _.orderBy(thirdCredit.related('names').toJSON(), 'position');
 
-		expect(firstCreditJSON.id).to.equal(thirdCreditJSON.id);
-		expect(_.get(thirdCreditJSON, 'names[0].authorBBID')).to.equal(aBBID);
-		expect(_.get(firstCreditJSON, 'names[0].authorCreditID')).to
-			.equal(_.get(thirdCreditJSON, 'names[0].authorCreditID'));
-		expect(_.get(firstCreditJSON, 'names[1].authorCreditID')).to
-			.equal(_.get(thirdCreditJSON, 'names[1].authorCreditID'));
+		expect(firstCredit.get('id')).to.equal(thirdCredit.get('id'));
+		expect(_.get(thirdCreditNames, '[0].authorBBID')).to.equal(aBBID);
+		expect(_.get(firstCreditNames, '[0].authorCreditID')).to
+			.equal(_.get(thirdCreditNames, '[0].authorCreditID'));
+		expect(_.get(firstCreditNames, '[1].authorCreditID')).to
+			.equal(_.get(thirdCreditNames, '[1].authorCreditID'));
 	});
 });

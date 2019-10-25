@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import _ from 'lodash';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -231,7 +232,7 @@ describe('createNewSetWithItems', () => {
 			}
 		);
 
-		const firstSetItems = firstSet.related('aliases').toJSON();
+		const firstSetItems = _.orderBy(firstSet.related('aliases').toJSON(), 'id');
 
 		const secondAliasData = getAliasData();
 		const resultSet = await bookshelf.transaction(
@@ -249,7 +250,7 @@ describe('createNewSetWithItems', () => {
 			}
 		);
 
-		const items = resultSet.related('aliases').toJSON();
+		const items = _.orderBy(resultSet.related('aliases').toJSON(), 'id');
 
 		expect(items).to.have.lengthOf(2);
 		expect(items[0]).to.include({

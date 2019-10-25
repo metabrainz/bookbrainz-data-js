@@ -112,11 +112,11 @@ export function updateAuthorCredit(
 	/* eslint-enable consistent-return */
 
 	const oldCreditNames: Array<AuthorCreditNameT> =
-		oldCredit ? oldCredit.related('names').toJSON() : [];
-
-	if (_.isEqualWith(oldCreditNames, newCreditNames, comparisonFunc)) {
+		oldCredit ? _.orderBy(oldCredit.related('names').toJSON(), 'position') : [];
+	const sortedNewCreditNames = _.orderBy(newCreditNames, 'position');
+	if (_.isEqualWith(oldCreditNames, sortedNewCreditNames, comparisonFunc)) {
 		return Promise.resolve(oldCredit || null);
 	}
 
-	return fetchOrCreateCredit(orm, transacting, newCreditNames);
+	return fetchOrCreateCredit(orm, transacting, sortedNewCreditNames);
 }
