@@ -62,10 +62,11 @@
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "bookshelf": "^0.13.3",
+    "bookshelf": "^1.0.1",
+    "bookshelf-virtuals-plugin": "^0.1.1",
     "deep-diff": "^1.0.0",
     "immutable": "^3.8.2",
-    "knex": "^0.15.0",
+    "knex": "^0.19.5",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "nodemon": "^1.18.3",

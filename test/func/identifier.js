@@ -104,7 +104,7 @@ describe('updateIdentifierSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'identifiers'});
 		});
 
-		const firstSetIdentifiers = firstSet.related('identifiers').toJSON();
+		const firstSetIdentifiers = _.orderBy(firstSet.related('identifiers').toJSON(), 'id');
 
 		const thirdIdentifierData = getIdentifierData();
 		thirdIdentifierData.id = firstSetIdentifiers[1].id;
@@ -122,7 +122,7 @@ describe('updateIdentifierSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'identifiers'});
 		});
 
-		const identifiers = result.related('identifiers').toJSON();
+		const identifiers = _.orderBy(result.related('identifiers').toJSON(), 'id');
 
 		expect(result.get('id')).to.not.equal(firstSet.get('id'));
 		expect(identifiers).to.have.lengthOf(2);
@@ -145,7 +145,7 @@ describe('updateIdentifierSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'identifiers'});
 		});
 
-		const firstSetIdentifiers = firstSet.related('identifiers').toJSON();
+		const firstSetIdentifiers = _.orderBy(firstSet.related('identifiers').toJSON(), 'id');
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const set = await updateIdentifierSet(
@@ -158,7 +158,7 @@ describe('updateIdentifierSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'identifiers'});
 		});
 
-		const identifiers = result.related('identifiers').toJSON();
+		const identifiers = _.orderBy(result.related('identifiers').toJSON(), 'id');
 
 		expect(result.get('id')).to.equal(firstSet.get('id'));
 		expect(identifiers).to.have.lengthOf(2);

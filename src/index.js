@@ -89,9 +89,7 @@ import workType from './models/workType';
  */
 export default function init(config) {
 	const bookshelf = Bookshelf(knex(config));
-	bookshelf.plugin('registry');
-	bookshelf.plugin('visibility');
-	bookshelf.plugin('virtuals');
+	bookshelf.plugin('bookshelf-virtuals-plugin');
 
 	// Initialize these here to set up dependencies
 	const AuthorData = authorData(bookshelf);
