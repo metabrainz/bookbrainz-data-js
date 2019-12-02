@@ -167,11 +167,12 @@ export function getEntityModelByType(orm: Object, type: string): Object {
  * Do a recursive search in case the redirected bbid also redirects, etc.
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @param {string} bbid - The target entity's bbid.
+ * @param {any} transacting - Optional ORM transaction object
  * @returns {string} The final bbid to redirect to
  */
-export async function recursivelyGetRedirectBBID(orm: Object, bbid: string) {
+export async function recursivelyGetRedirectBBID(orm: Object, bbid: string, transacting?) {
 	const redirectSQLQuery = `SELECT target_bbid FROM bookbrainz.entity_redirect WHERE source_bbid = '${bbid}'`;
-	const redirectQueryResults = await orm.bookshelf.knex.raw(redirectSQLQuery);
+	const redirectQueryResults = await (transacting || orm.bookshelf.knex).raw(redirectSQLQuery);
 	if (redirectQueryResults.rows && redirectQueryResults.rows.length) {
 		const redirectedBBID = redirectQueryResults.rows[0].target_bbid;
 		return recursivelyGetRedirectBBID(orm, redirectedBBID);
