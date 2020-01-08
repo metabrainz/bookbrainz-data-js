@@ -53,7 +53,7 @@ export default function publisherData(bookshelf) {
 						'bookbrainz.publisher_set__publisher.publisher_bbid':
 							bbid
 					});
-			}).fetchAll(options);
+			}).fetchAll({require: false, ...options});
 		},
 		format: camelToSnake,
 		idAttribute: 'id',

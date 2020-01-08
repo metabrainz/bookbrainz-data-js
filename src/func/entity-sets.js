@@ -82,6 +82,7 @@ export async function updateEntitySets(
 		const oldSetRecord = await derivedSet.model.forge({
 			id: currentEntity[derivedSet.name].id
 		}).fetch({
+			require: false,
 			transacting,
 			withRelated: [derivedSet.propName]
 		});

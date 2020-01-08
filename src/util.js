@@ -136,7 +136,7 @@ export function diffRevisions(base, other, includes) {
 		return data;
 	}
 
-	const baseDataPromise = base.related('data').fetch({withRelated: includes});
+	const baseDataPromise = base.related('data').fetch({require: false, withRelated: includes});
 
 	if (!other) {
 		return baseDataPromise.then(
@@ -149,7 +149,7 @@ export function diffRevisions(base, other, includes) {
 	}
 
 	const otherDataPromise =
-		other.related('data').fetch({withRelated: includes});
+		other.related('data').fetch({require: false, withRelated: includes});
 
 	return Promise.join(
 		baseDataPromise,
