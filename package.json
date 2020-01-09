@@ -94,7 +94,7 @@
     "flow-bin": "^0.105.2",
     "flow-copy-source": "^2.0.1",
     "glob": "^7.1.2",
-    "husky": "^3.0.3",
+    "husky": "^4.0.2",
     "jsinspect": "^0.12.7",
     "lint-staged": "^9.0.0",
     "mocha": "^6.1.0",
