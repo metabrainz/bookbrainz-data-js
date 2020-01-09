@@ -1,6 +1,6 @@
 {
   "name": "bookbrainz-data",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
   "scripts": {
