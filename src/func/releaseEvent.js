@@ -31,7 +31,9 @@ export function updateReleaseEventSet(
 	newSetItems: Array<ReleaseEvent>
 ): Promise<any> {
 	function comparisonFunc(obj, other) {
-		return obj.date === other.date && obj.areaId === other.areaId;
+		return obj.date === other.date &&
+		// Compare areaIds are equal or both null or undefined
+		(obj.areaId === other.areaId || _.isNil(obj.areaId) && _.isNil(other.areaId));
 	}
 
 	const {ReleaseEventSet} = orm;
