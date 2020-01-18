@@ -90,6 +90,7 @@ import workType from './models/workType';
 export default function init(config) {
 	const bookshelf = Bookshelf(knex(config));
 	bookshelf.plugin('bookshelf-virtuals-plugin');
+	bookshelf.plugin('pagination');
 
 	// Initialize these here to set up dependencies
 	const AuthorData = authorData(bookshelf);
