@@ -34,7 +34,7 @@ function getAliasData() {
 	const lastName = faker.name.lastName();
 
 	return {
-		languageId: null,
+		languageId: 1,
 		name: `${firstName} ${lastName}`,
 		sortName: `${lastName}, ${firstName}`
 	};
@@ -240,5 +240,86 @@ describe('updateAliasSet', () => {
 		});
 
 		expect(resultPromise).to.be.rejected;
+	});
+
+	it('should allow only the default alias to be primary for that language', async function () {
+		const firstAliasData = getAliasData();
+		const secondAliasData = getAliasData();
+		const thirdAliasData = getAliasData();
+		firstAliasData.default = true;
+		firstAliasData.primary = true;
+		secondAliasData.primary = true;
+		thirdAliasData.primary = true;
+
+		const firstSet = await bookshelf.transaction(async (trx) => {
+			const set = await updateAliasSet(
+				bookbrainzData,
+				trx,
+				null,
+				null,
+				[firstAliasData, secondAliasData]
+			);
+
+			return set.refresh({transacting: trx, withRelated: 'aliases'});
+		});
+
+		const firstSetAliases = _.orderBy(firstSet.related('aliases').toJSON(), 'id');
+
+		expect(firstSetAliases[0].primary).to.be.true;
+		expect(firstSetAliases[1].primary).to.be.false;
+
+		firstSetAliases[0].default = true;
+
+		const addAlias = await bookshelf.transaction(async (trx) => {
+			const set = await updateAliasSet(
+				bookbrainzData,
+				trx,
+				firstSet,
+				firstSetAliases[0].id,
+				[...firstSetAliases, thirdAliasData]
+			);
+
+			return set.refresh({transacting: trx, withRelated: 'aliases'});
+		});
+
+		const aliases = _.orderBy(addAlias.related('aliases').toJSON(), 'id');
+		expect(aliases.length).to.equal(3);
+		expect(aliases[2].primary).to.be.false;
+	});
+	it('should allow only one primary alias per language', async function () {
+		await new Language({...languageAttribs, id: 2, name: 'Fnordish'}).save(null, {method: 'insert'});
+
+		const firstAliasData = getAliasData();
+		firstAliasData.default = true;
+		firstAliasData.primary = true;
+
+		const secondAliasData = getAliasData();
+		secondAliasData.languageId = 2;
+		secondAliasData.primary = true;
+		const thirdAliasData = getAliasData();
+		thirdAliasData.languageId = 2;
+		thirdAliasData.primary = true;
+
+		const aliasSet = await bookshelf.transaction(async (trx) => {
+			const set = await updateAliasSet(
+				bookbrainzData,
+				trx,
+				null,
+				null,
+				[firstAliasData, secondAliasData, thirdAliasData]
+			);
+
+			return set.refresh({transacting: trx, withRelated: 'aliases'});
+		});
+
+		const aliases = _.orderBy(aliasSet.related('aliases').toJSON(), 'id');
+
+		expect(aliases[0].primary).to.be.true;
+
+		expect(aliases[1].languageId).to.equal(2);
+		expect(aliases[1].primary).to.be.true;
+
+		expect(aliases[2].languageId).to.equal(2);
+		expect(aliases[2].primary).to.be.false;
 	});
 });

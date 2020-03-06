@@ -83,6 +83,34 @@ export async function updateAliasSet(
 		return oldSet;
 	}
 
+	/** Allow only one alias to be primary for a given language */
+	addedItems.forEach((alias, index, itemsArray) => {
+		// Skip non-primary aliases, they're not concerned
+		// If alias is the new defaultAlias, leave it as-is
+		if (!alias.primary || comparisonFunc(alias, newDefaultAlias)) {
+			return;
+		}
+		// If alias is same language as defaultAlias, don't allow it to be primary
+		if (alias.languageId === newDefaultAlias.languageId) {
+			alias.primary = false;
+			return;
+		}
+		const existingAliasSameLanguage = unchangedItems
+			.findIndex(
+				({languageId}) => alias.languageId === languageId
+			) !== -1;
+		if (existingAliasSameLanguage) {
+			alias.primary = false;
+		}
+		// Find all other new 'primary' aliases with same language and set primary to false
+		itemsArray
+			.slice(index + 1)
+			.filter(
+				({languageId, primary}) => primary && languageId === alias.languageId
+			)
+			.forEach(otherAlias => { otherAlias.primary = false; });
+	});
+
 	const newSet = await createNewSetWithItems(
 		orm, transacting, AliasSet, unchangedItems, addedItems, 'aliases'
 	);
