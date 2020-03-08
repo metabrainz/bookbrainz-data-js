@@ -175,7 +175,7 @@ const DAY_STR_LENGTH = 2;
  *                   date.
  */
 export function formatDate(year, month, day) {
-	if ((!year || isNaN(parseInt(year, 10))) && year!==0) {
+	if ((!year || isNaN(parseInt(year, 10))) && year !== 0) {
 		return null;
 	}
 	const isCommonEraDate = Math.sign(year) === 1;
