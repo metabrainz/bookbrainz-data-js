@@ -178,7 +178,7 @@ export function formatDate(year, month, day) {
 	if ((!year || isNaN(parseInt(year, 10))) && year !== 0) {
 		return null;
 	}
-	const isCommonEraDate = Math.sign(year) === 1;
+	const isCommonEraDate = Math.sign(year) === 1 || Math.sign(year) === 0;
 	// eslint-disable-next-line max-len
 	const yearString = `${isCommonEraDate ? '+' : '-'}${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
 
