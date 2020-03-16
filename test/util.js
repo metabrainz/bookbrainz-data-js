@@ -111,6 +111,11 @@ describe('Utils', () => {
 			expect(result).to.be.false;
 		});
 
+		it('should return the date as ISO 8601 for a date object with year equal to zero', () => {
+			const parsedDate = formatDate(0, 1, 1);
+			expect(parsedDate).to.equal('+000000-01-01');
+		});
+
 		it('should return the date as ISO 8601 for a full date object', () => {
 			const parsedDate = formatDate(1925, 4, '28');
 			expect(parsedDate).to.equal('+001925-04-28');
