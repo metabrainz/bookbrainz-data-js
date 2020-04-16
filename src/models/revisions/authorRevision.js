@@ -47,8 +47,10 @@ export default function authorRevision(bookshelf) {
 						return null;
 					}
 
-					return new AuthorRevision({bbid: this.get('bbid')})
+					return new AuthorRevision()
+						.where('bbid', this.get('bbid'))
 						.query('whereIn', 'id', parentIds)
+						.orderBy('id', 'DESC')
 						.fetch();
 				});
 		},
