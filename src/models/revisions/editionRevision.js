@@ -49,8 +49,10 @@ export default function editionRevision(bookshelf) {
 						return null;
 					}
 
-					return new EditionRevision({bbid: this.get('bbid')})
+					return new EditionRevision()
+						.where('bbid', this.get('bbid'))
 						.query('whereIn', 'id', parentIds)
+						.orderBy('id', 'DESC')
 						.fetch();
 				});
 		},

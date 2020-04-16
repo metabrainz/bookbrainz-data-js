@@ -47,8 +47,10 @@ export default function workRevision(bookshelf) {
 						return null;
 					}
 
-					return new WorkRevision({bbid: this.get('bbid')})
+					return new WorkRevision()
+						.where('bbid', this.get('bbid'))
 						.query('whereIn', 'id', parentIds)
+						.orderBy('id', 'DESC')
 						.fetch();
 				});
 		},
