@@ -121,7 +121,7 @@ export function diffRevisions(base, other, includes) {
 			data.identifierSet && _.isArray(data.identifierSet.identifiers);
 		if (identifiersPresent) {
 			data.identifierSet.identifiers = _.sortBy(
-				data.identifierSet.identifiers, ['value', 'type.label']
+				data.identifierSet.identifiers, ['type.id', 'value']
 			);
 		}
 
