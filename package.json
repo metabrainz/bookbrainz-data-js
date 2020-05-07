@@ -70,7 +70,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "nodemon": "^1.18.3",
-    "pg": "^7.14.0"
+    "pg": "^7.18.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
