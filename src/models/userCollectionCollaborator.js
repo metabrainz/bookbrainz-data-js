@@ -21,10 +21,10 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function identifier(bookshelf) {
 	const UserCollectionCollaborator = bookshelf.Model.extend({
-		collaboratorDetails() {
+		collaborator() {
 			return this.belongsTo('Editor', 'editor_id');
 		},
-		collectionDetails() {
+		collection() {
 			return this.belongsTo('UserCollection', 'collection_id');
 		},
 		format: camelToSnake,

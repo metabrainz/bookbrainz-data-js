@@ -26,8 +26,11 @@ export default function identifier(bookshelf) {
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
+		items() {
+			return this.hasMany('UserCollectionItem', 'collection_id');
+		},
 		owner() {
-			return this.belongsTo('Editor', 'editor_id');
+			return this.belongsTo('Editor', 'owner_id');
 		},
 		parse: snakeToCamel,
 		tableName: 'bookbrainz.user_collection'
