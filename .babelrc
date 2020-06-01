@@ -1,22 +1,21 @@
 {
   "plugins": [
     "lodash",
-    "transform-es2015-modules-commonjs",
-    "transform-object-rest-spread",
-    "transform-class-properties",
+    "@babel/transform-modules-commonjs",
+    "@babel/proposal-object-rest-spread",
+    "@babel/proposal-class-properties",
     "array-includes",
     [
-      "transform-runtime",
+      "@babel/transform-runtime",
       {
-        "polyfill": false,
         "regenerator": true
       }
     ]
   ],
   "presets": [
-    "flow",
+    "@babel/flow",
     [
-      "env",
+      "@babel/env",
       {
         "targets": {
           "node": "8.0"
