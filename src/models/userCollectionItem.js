@@ -19,7 +19,7 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function identifier(bookshelf) {
+export default function userCollectionItem(bookshelf) {
 	const UserCollectionItem = bookshelf.Model.extend({
 		entity() {
 			return this.belongsTo('Entity', 'bbid');
