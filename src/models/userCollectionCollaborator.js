@@ -22,7 +22,7 @@ import {camelToSnake, snakeToCamel} from '../util';
 export default function userCollectionCollaborator(bookshelf) {
 	const UserCollectionCollaborator = bookshelf.Model.extend({
 		collaborator() {
-			return this.belongsTo('Editor', 'editor_id');
+			return this.belongsTo('Editor', 'collaborator_id');
 		},
 		collection() {
 			return this.belongsTo('UserCollection', 'collection_id');
