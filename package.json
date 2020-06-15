@@ -68,7 +68,7 @@
     "immutable": "^3.8.2",
     "knex": "^0.21.1",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2",
+    "moment": "^2.25.3",
     "pg": "^7.18.2"
   },
   "devDependencies": {
