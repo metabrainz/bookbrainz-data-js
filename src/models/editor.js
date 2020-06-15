@@ -27,6 +27,12 @@ export default function editor(bookshelf) {
 		area() {
 			return this.belongsTo('Area', 'area_id');
 		},
+		collaboratesOn() {
+			return this.belongsToMany('UserCollectionCollaborator', 'editor_id');
+		},
+		collectionsOwned() {
+			return this.hasMany('UserCollection', 'editor_id');
+		},
 		format: camelToSnake,
 		gender() {
 			return this.belongsTo('Gender', 'gender_id');

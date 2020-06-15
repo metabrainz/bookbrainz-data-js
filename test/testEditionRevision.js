@@ -147,7 +147,7 @@ describe('EditionRevision model', () => {
 			.then((revision) => revision.toJSON());
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
-			'id', 'revision', 'entity', 'data', 'bbid', 'dataId'
+			'id', 'revision', 'entity', 'data', 'bbid', 'dataId', 'isMerge'
 		]);
 	});
 });
