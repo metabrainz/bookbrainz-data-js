@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
-    "bluebird": "^3.5.1",
+    "bluebird": "^3.7.2",
     "bookshelf": "^1.0.1",
     "bookshelf-virtuals-plugin": "^0.1.1",
     "deep-diff": "^1.0.0",
@@ -69,7 +69,7 @@
     "knex": "^0.21.1",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
-    "pg": "^7.14.0"
+    "pg": "^7.18.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
