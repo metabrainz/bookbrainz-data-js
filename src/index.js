@@ -75,6 +75,9 @@ import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
+import userCollection from './models/userCollection';
+import userCollectionCollaborator from './models/userCollectionCollaborator';
+import userCollectionItem from './models/userCollectionItem';
 import work from './models/entities/work';
 import workData from './models/data/workData';
 import workHeader from './models/headers/workHeader';
@@ -153,6 +156,9 @@ export default function init(config) {
 		Revision: revision(bookshelf),
 		TitleType: titleType(bookshelf),
 		TitleUnlock: titleUnlock(bookshelf),
+		UserCollection: userCollection(bookshelf),
+		UserCollectionCollaborator: userCollectionCollaborator(bookshelf),
+		UserCollectionItem: userCollectionItem(bookshelf),
 		Work: work(bookshelf),
 		WorkData,
 		WorkHeader: workHeader(bookshelf),

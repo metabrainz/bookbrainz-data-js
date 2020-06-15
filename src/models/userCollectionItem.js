@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Ben Ockmore
+ * Copyright (C) 2020 Prabal Singh
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {camelToSnake, snakeToCamelID} from '../util';
+import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function authorCreditName(bookshelf) {
-	const AuthorCreditName = bookshelf.Model.extend({
-		author() {
-			return this.belongsTo('Author', 'author_bbid', 'bbid');
+export default function userCollectionItem(bookshelf) {
+	const UserCollectionItem = bookshelf.Model.extend({
+		entity() {
+			return this.belongsTo('Entity', 'bbid');
 		},
 		format: camelToSnake,
-		idAttribute: null,
-		parse: snakeToCamelID,
-		tableName: 'bookbrainz.author_credit_name'
+		parse: snakeToCamel,
+		tableName: 'bookbrainz.user_collection_item'
 	});
 
-	return bookshelf.model('AuthorCreditName', AuthorCreditName);
+	return bookshelf.model('UserCollectionItem', UserCollectionItem);
 }

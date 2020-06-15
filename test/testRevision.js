@@ -81,7 +81,7 @@ describe('Revision model', () => {
 			.then((revision) => revision.toJSON());
 
 		return expect(revisionPromise).to.eventually.have.all.keys([
-			'id', 'author', 'authorId', 'createdAt', 'parents', 'children'
+			'id', 'author', 'authorId', 'createdAt', 'parents', 'children', 'isMerge'
 		]);
 	});
 });
