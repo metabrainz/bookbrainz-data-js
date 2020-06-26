@@ -27,7 +27,7 @@ export default function editionRevision(bookshelf) {
 		diff(other) {
 			return diffRevisions(this, other, [
 				'annotation', 'disambiguation', 'aliasSet.aliases.language',
-				'aliasSet.defaultAlias',
+				'aliasSet.defaultAlias', 'authorCredit.names',
 				'relationshipSet.relationships',
 				'relationshipSet.relationships.type', 'publisherSet.publishers',
 				'editionGroup', 'editionFormat', 'editionStatus',
