@@ -67,8 +67,8 @@
     "deep-diff": "^1.0.0",
     "immutable": "^3.8.2",
     "knex": "^0.21.1",
-    "lodash": "^4.17.11",
     "moment": "^2.26.0",
+    "lodash": "^4.17.20",
     "pg": "^7.18.2"
   },
   "devDependencies": {
