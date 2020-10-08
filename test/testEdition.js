@@ -168,19 +168,26 @@ describe('Edition model', () => {
 		expect(editionJSON.editionGroup.dataId).to.not.be.null;
 	});
 
-	it('should reject an Edition update if editionGroupBbid has been unset', async () => {
-		const edition = await createEdition();
+	it('should automatically create an Edition Group editionGroupBbid has been unset in existing Edition', async () => {
+		let edition = await createEdition();
 
 		let editionJSON = edition.toJSON();
 		const firstEditionGroup = editionJSON.editionGroupBbid;
 		expect(firstEditionGroup).to.be.a('string');
 
-		expect(edition.save({editionGroupBbid: null}))
-			.to.be.rejectedWith('EditionGroupBbid required in Edition update');
+		// Save the Edition with no editionGroupBbid
+		const revision2 = await new Revision({...revisionAttribs, id: 2})
+			.save(null, {method: 'insert'});
+		edition = await new Edition({...editionAttribs, editionGroupBbid: null, revisionId: revision2.id})
+			.save();
 
-		await edition.refresh({withRelated: ['editionGroup']});
+		// Fetch it again
+		edition = await new Edition({bbid: edition.get('bbid')}).fetch({withRelated: ['editionGroup']});
 		editionJSON = edition.toJSON();
-		expect(editionJSON.editionGroupBbid).to.equal(firstEditionGroup);
+
+		// Check that a new Edition Group has been created automatically
+		expect(editionJSON.editionGroupBbid).to.be.a('string');
+		expect(editionJSON.editionGroupBbid).to.not.equal(firstEditionGroup);
 	});
 
 	it('should return the master revision when multiple revisions exist',
