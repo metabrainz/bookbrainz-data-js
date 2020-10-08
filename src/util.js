@@ -114,7 +114,7 @@ export function diffRevisions(base, other, includes) {
 		const aliasesPresent =
 			data.aliasSet && _.isArray(data.aliasSet.aliases);
 		if (aliasesPresent) {
-			data.aliasSet.aliases = _.sortBy(data.aliasSet.aliases, 'name');
+			data.aliasSet.aliases = _.sortBy(data.aliasSet.aliases, 'id');
 		}
 
 		const identifiersPresent =
