@@ -19,6 +19,21 @@
 import _ from 'lodash';
 import {createEditionGroupForNewEdition} from '../../util';
 
+/**
+ * @param  {any} model The ORM model of the Edition being edited/created
+ * @param  {any} bookshelf The BoolshelfJS ORM
+ * @param  {any} options Query options — seuch as transacting object
+ * @description Automatically create and sets a new Edition Group
+ * if there is none selected, in the same transaction
+ */
+async function autoCreateNewEditionGroup(model, bookshelf, options) {
+	const aliasSetId = model.get('aliasSetId');
+	const revisionId = model.get('revisionId');
+	const newEditionGroupBBID = await createEditionGroupForNewEdition(
+		bookshelf, options.transacting, aliasSetId, revisionId
+	);
+	model.set('editionGroupBbid', newEditionGroupBBID);
+}
 
 export default function edition(bookshelf) {
 	const EditionData = bookshelf.model('EditionData');
@@ -36,25 +51,19 @@ export default function edition(bookshelf) {
 				}
 			});
 
-			this.on('updating', (model, attrs, options) => {
+			this.on('updating', async (model, attrs, options) => {
 				// Always update the master revision.
 				options.query.where({master: true});
 				if (_.has(model, 'changed.editionGroupBbid') &&
 					!model.get('editionGroupBbid')
 				) {
-					throw new Error('EditionGroupBbid required in Edition update');
+					await autoCreateNewEditionGroup(model, bookshelf, options);
 				}
 			});
 
 			this.on('creating', async (model, attrs, options) => {
-				// Automatically create a new Edition Group if there is none selected,
-				// in the same transaction
 				if (!model.get('editionGroupBbid')) {
-					const aliasSetId = model.get('aliasSetId');
-					const revisionId = model.get('revisionId');
-					const newEditionGroupBBID =
-						await createEditionGroupForNewEdition(bookshelf, options.transacting, aliasSetId, revisionId);
-					model.set('editionGroupBbid', newEditionGroupBBID);
+					await autoCreateNewEditionGroup(model, bookshelf, options);
 				}
 			});
 		},
