@@ -12,11 +12,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Use Node.js
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
+
+      - run: npm run build-js
+
       - name: Build
         uses: andstor/jsdoc-action@v1
         with:
           recurse: true
-          source_dir: ./src
+          source_dir: ./lib
           output_dir: ./gh-pages
           template: minami
           front_page: README.md
