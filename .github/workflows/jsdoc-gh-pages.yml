@@ -11,15 +11,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+          
+      - name: NPM install
+        uses: bahmutov/npm-install@v1
 
-      - name: Use Node.js
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '12'
+      - name: Build source
+        run: npm run build-js
 
-      - run: npm run build-js
-
-      - name: Build
+      - name: Build JSDoc
         uses: andstor/jsdoc-action@v1
         with:
           recurse: true
