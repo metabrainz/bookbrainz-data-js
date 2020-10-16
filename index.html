@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>BookBrainz Node ORM</h1>
+<p><a href="https://www.npmjs.com/package/bookbrainz-data"><img src="https://img.shields.io/npm/v/bookbrainz-data.svg" alt="npm"></a>
+<a href="https://snyk.io/test/github/bookbrainz/bookbrainz-data-js"><img src="https://snyk.io/test/github/bookbrainz/bookbrainz-data-js/badge.svg" alt="Known Vulnerabilities"></a>
+<a href="https://travis-ci.org/bookbrainz/bookbrainz-data-js"><img src="https://travis-ci.org/bookbrainz/bookbrainz-data-js.svg?branch=master" alt="Build Status"></a>
+<a href="https://david-dm.org/bookbrainz/bookbrainz-data-js"><img src="https://david-dm.org/bookbrainz/bookbrainz-data-js/status.svg" alt="dependencies Status"></a>
+<a href="https://coveralls.io/github/bookbrainz/bookbrainz-data-js?branch=master"><img src="https://coveralls.io/repos/github/bookbrainz/bookbrainz-data-js/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p>bookbrainz-data-js provides a node package to allow manipulation of data in a BookBrainz database using a set
+of <a href="http://bookshelfjs.org/">bookshelf.js</a> models. The module is only for accessing data in an existing database - for schema creation, see the <a href="https://github.com/bookbrainz/bookbrainz-site/tree/master/sql"><code>sql</code> folder in bookbrainz-site</a>.</p>
+<p>Each model has its own source file in the &quot;models&quot; directory. These models can be accessed via index.js, which provides a function returning the models, taking an initialized bookshelf.js instance as a single parameter.</p>
+<h2>Tests</h2>
+<p>A suite of simple tests is provided in the tests directory, using the Mocha and Chai libraries.</p>
+<p>Copy the file <code>test/bookshelf.example.js</code> to <code>test/bookshelf.js</code> and modify it according to your local postgres setup. For instructions on setting up the postgres test database, refer to the <a href="https://github.com/bookbrainz/bookbrainz-site/blob/master/README.md#testing">bookbrainz-site repo</a>.</p>
+<p>The command for running the tests, following dependency installation, is the standard:</p>
+<pre><code>npm test
+</code></pre>
+<p>This will also provide style checking and coverage information.</p>
+<p>Please note, ES6 features are used within this codebase, and it has only been tested in Node 4.x. It may also work in Node 0.12.x, but not any earlier than that.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

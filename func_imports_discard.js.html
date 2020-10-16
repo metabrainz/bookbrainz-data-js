@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>func/imports/discard.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">func/imports/discard.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.discardVotesCast = discardVotesCast;
+exports.castDiscardVote = castDiscardVote;
+exports.DISCARD_LIMIT = void 0;
+
+var _util = require("../../util");
+
+var _deleteImport = require("./delete-import");
+
+/*
+ * Copyright (C) 2018 Shivam Tripathi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/* The maximum allowed limit of count of votes (in favour of discarding) */
+const DISCARD_LIMIT = 1;
+exports.DISCARD_LIMIT = DISCARD_LIMIT;
+
+async function discardVotesCast(transacting, importId) {
+  const votes = await transacting.select('*').from('bookbrainz.discard_votes').where('import_id', importId);
+  return votes.map(_util.snakeToCamel);
+}
+/** This function casts a discard vote. In case of it has already been cast,
+ * it raises an error. If the vote is decisive one (and the record is deleted),
+ * it returns a Promise that resolves to true, else it returns an promise that
+ * resolves to false.
+ * @param  {Transaction} transacting - The knex Transacting object
+ * @param  {number} importId - Id of the import
+ * @param  {number} editorId - Id of the user casting the vote
+ * @returns {Promise&lt;boolean>} - Promise&lt;true> if records has been deleted or
+ * 		Promise&lt;false> if the record is still present
+ */
+
+
+async function castDiscardVote(transacting, importId, editorId) {
+  const votesCast = await discardVotesCast(transacting, importId); // If editor has already cast the vote, reject the vote
+
+  for (const vote of votesCast) {
+    if (vote.editor_id === editorId) {
+      throw new Error('Already cast the vote');
+    }
+  } // If cast vote is decisive one, delete the records
+
+
+  if (votesCast.length === DISCARD_LIMIT) {
+    await (0, _deleteImport.deleteImport)(transacting, importId); // The record been deleted
+
+    return true;
+  } else if (votesCast.length &lt; DISCARD_LIMIT) {
+    // Cast vote if it's below the limit
+    await transacting.insert((0, _util.camelToSnake)({
+      editorId,
+      importId
+    })).into('bookbrainz.discard_votes');
+  } else {
+    throw new Error('Cast votes greater than the limit. Check database.');
+  } // The record has not been deleted
+
+
+  return false;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

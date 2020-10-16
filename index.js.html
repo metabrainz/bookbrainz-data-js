@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = init;
+
+var util = _interopRequireWildcard(require("./util"));
+
+var _bookshelf = _interopRequireDefault(require("bookshelf"));
+
+var _achievementType = _interopRequireDefault(require("./models/achievementType"));
+
+var _achievementUnlock = _interopRequireDefault(require("./models/achievementUnlock"));
+
+var _alias = _interopRequireDefault(require("./models/alias"));
+
+var _aliasSet = _interopRequireDefault(require("./models/aliasSet"));
+
+var _annotation = _interopRequireDefault(require("./models/annotation"));
+
+var _area = _interopRequireDefault(require("./models/area"));
+
+var _author = _interopRequireDefault(require("./models/entities/author"));
+
+var _authorCredit = _interopRequireDefault(require("./models/authorCredit"));
+
+var _authorCreditName = _interopRequireDefault(require("./models/authorCreditName"));
+
+var _authorData = _interopRequireDefault(require("./models/data/authorData"));
+
+var _authorHeader = _interopRequireDefault(require("./models/headers/authorHeader"));
+
+var _authorImport = _interopRequireDefault(require("./models/imports/authorImport"));
+
+var _authorRevision = _interopRequireDefault(require("./models/revisions/authorRevision"));
+
+var _authorType = _interopRequireDefault(require("./models/authorType"));
+
+var _disambiguation = _interopRequireDefault(require("./models/disambiguation"));
+
+var _edition = _interopRequireDefault(require("./models/entities/edition"));
+
+var _editionData = _interopRequireDefault(require("./models/data/editionData"));
+
+var _editionFormat = _interopRequireDefault(require("./models/editionFormat"));
+
+var _editionGroup = _interopRequireDefault(require("./models/entities/editionGroup"));
+
+var _editionGroupData = _interopRequireDefault(require("./models/data/editionGroupData"));
+
+var _editionGroupHeader = _interopRequireDefault(require("./models/headers/editionGroupHeader"));
+
+var _editionGroupImport = _interopRequireDefault(require("./models/imports/editionGroupImport"));
+
+var _editionGroupRevision = _interopRequireDefault(require("./models/revisions/editionGroupRevision"));
+
+var _editionGroupType = _interopRequireDefault(require("./models/editionGroupType"));
+
+var _editionHeader = _interopRequireDefault(require("./models/headers/editionHeader"));
+
+var _editionImport = _interopRequireDefault(require("./models/imports/editionImport"));
+
+var _editionRevision = _interopRequireDefault(require("./models/revisions/editionRevision"));
+
+var _editionStatus = _interopRequireDefault(require("./models/editionStatus"));
+
+var _editor = _interopRequireDefault(require("./models/editor"));
+
+var _editorEntityVisits = _interopRequireDefault(require("./models/editorEntityVisits"));
+
+var _editorType = _interopRequireDefault(require("./models/editorType"));
+
+var _entity = _interopRequireDefault(require("./models/entity"));
+
+var _func = _interopRequireDefault(require("./func"));
+
+var _gender = _interopRequireDefault(require("./models/gender"));
+
+var _identifier = _interopRequireDefault(require("./models/identifier"));
+
+var _identifierSet = _interopRequireDefault(require("./models/identifierSet"));
+
+var _identifierType = _interopRequireDefault(require("./models/identifierType"));
+
+var _knex = _interopRequireDefault(require("knex"));
+
+var _language = _interopRequireDefault(require("./models/language"));
+
+var _languageSet = _interopRequireDefault(require("./models/languageSet"));
+
+var _note = _interopRequireDefault(require("./models/note"));
+
+var _publisher = _interopRequireDefault(require("./models/entities/publisher"));
+
+var _publisherData = _interopRequireDefault(require("./models/data/publisherData"));
+
+var _publisherHeader = _interopRequireDefault(require("./models/headers/publisherHeader"));
+
+var _publisherImport = _interopRequireDefault(require("./models/imports/publisherImport"));
+
+var _publisherRevision = _interopRequireDefault(require("./models/revisions/publisherRevision"));
+
+var _publisherSet = _interopRequireDefault(require("./models/publisherSet"));
+
+var _publisherType = _interopRequireDefault(require("./models/publisherType"));
+
+var _relationship = _interopRequireDefault(require("./models/relationship"));
+
+var _relationshipSet = _interopRequireDefault(require("./models/relationshipSet"));
+
+var _relationshipType = _interopRequireDefault(require("./models/relationshipType"));
+
+var _releaseEvent = _interopRequireDefault(require("./models/releaseEvent"));
+
+var _releaseEventSet = _interopRequireDefault(require("./models/releaseEventSet"));
+
+var _revision = _interopRequireDefault(require("./models/revision"));
+
+var _titleType = _interopRequireDefault(require("./models/titleType"));
+
+var _titleUnlock = _interopRequireDefault(require("./models/titleUnlock"));
+
+var _userCollection = _interopRequireDefault(require("./models/userCollection"));
+
+var _userCollectionCollaborator = _interopRequireDefault(require("./models/userCollectionCollaborator"));
+
+var _userCollectionItem = _interopRequireDefault(require("./models/userCollectionItem"));
+
+var _work = _interopRequireDefault(require("./models/entities/work"));
+
+var _workData = _interopRequireDefault(require("./models/data/workData"));
+
+var _workHeader = _interopRequireDefault(require("./models/headers/workHeader"));
+
+var _workImport = _interopRequireDefault(require("./models/imports/workImport"));
+
+var _workRevision = _interopRequireDefault(require("./models/revisions/workRevision"));
+
+var _workType = _interopRequireDefault(require("./models/workType"));
+
+/*
+ * Copyright (C) 2015  Ben Ockmore
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+// eslint-disable-line import/no-namespace
+
+/**
+ * Initialize the database connection and models.
+ * @param {Object} config - A knex.js configuration object.
+ * @returns {Object} All data models.
+ */
+function init(config) {
+  const bookshelf = (0, _bookshelf.default)((0, _knex.default)(config));
+  bookshelf.plugin('bookshelf-virtuals-plugin'); // Initialize these here to set up dependencies
+
+  const AuthorData = (0, _authorData.default)(bookshelf);
+  const EditionData = (0, _editionData.default)(bookshelf);
+  const EditionGroupData = (0, _editionGroupData.default)(bookshelf);
+  const PublisherData = (0, _publisherData.default)(bookshelf);
+  const WorkData = (0, _workData.default)(bookshelf);
+  return {
+    AchievementType: (0, _achievementType.default)(bookshelf),
+    AchievementUnlock: (0, _achievementUnlock.default)(bookshelf),
+    Alias: (0, _alias.default)(bookshelf),
+    AliasSet: (0, _aliasSet.default)(bookshelf),
+    Annotation: (0, _annotation.default)(bookshelf),
+    Area: (0, _area.default)(bookshelf),
+    Author: (0, _author.default)(bookshelf),
+    AuthorCredit: (0, _authorCredit.default)(bookshelf),
+    AuthorCreditName: (0, _authorCreditName.default)(bookshelf),
+    AuthorData,
+    AuthorHeader: (0, _authorHeader.default)(bookshelf),
+    AuthorImport: (0, _authorImport.default)(bookshelf),
+    AuthorRevision: (0, _authorRevision.default)(bookshelf),
+    AuthorType: (0, _authorType.default)(bookshelf),
+    Disambiguation: (0, _disambiguation.default)(bookshelf),
+    Edition: (0, _edition.default)(bookshelf),
+    EditionData,
+    EditionFormat: (0, _editionFormat.default)(bookshelf),
+    EditionGroup: (0, _editionGroup.default)(bookshelf),
+    EditionGroupData,
+    EditionGroupHeader: (0, _editionGroupHeader.default)(bookshelf),
+    EditionGroupImport: (0, _editionGroupImport.default)(bookshelf),
+    EditionGroupRevision: (0, _editionGroupRevision.default)(bookshelf),
+    EditionGroupType: (0, _editionGroupType.default)(bookshelf),
+    EditionHeader: (0, _editionHeader.default)(bookshelf),
+    EditionImport: (0, _editionImport.default)(bookshelf),
+    EditionRevision: (0, _editionRevision.default)(bookshelf),
+    EditionStatus: (0, _editionStatus.default)(bookshelf),
+    Editor: (0, _editor.default)(bookshelf),
+    EditorEntityVisits: (0, _editorEntityVisits.default)(bookshelf),
+    EditorType: (0, _editorType.default)(bookshelf),
+    Entity: (0, _entity.default)(bookshelf),
+    Gender: (0, _gender.default)(bookshelf),
+    Identifier: (0, _identifier.default)(bookshelf),
+    IdentifierSet: (0, _identifierSet.default)(bookshelf),
+    IdentifierType: (0, _identifierType.default)(bookshelf),
+    Language: (0, _language.default)(bookshelf),
+    LanguageSet: (0, _languageSet.default)(bookshelf),
+    Note: (0, _note.default)(bookshelf),
+    Publisher: (0, _publisher.default)(bookshelf),
+    PublisherData,
+    PublisherHeader: (0, _publisherHeader.default)(bookshelf),
+    PublisherImport: (0, _publisherImport.default)(bookshelf),
+    PublisherRevision: (0, _publisherRevision.default)(bookshelf),
+    PublisherSet: (0, _publisherSet.default)(bookshelf),
+    PublisherType: (0, _publisherType.default)(bookshelf),
+    Relationship: (0, _relationship.default)(bookshelf),
+    RelationshipSet: (0, _relationshipSet.default)(bookshelf),
+    RelationshipType: (0, _relationshipType.default)(bookshelf),
+    ReleaseEvent: (0, _releaseEvent.default)(bookshelf),
+    ReleaseEventSet: (0, _releaseEventSet.default)(bookshelf),
+    Revision: (0, _revision.default)(bookshelf),
+    TitleType: (0, _titleType.default)(bookshelf),
+    TitleUnlock: (0, _titleUnlock.default)(bookshelf),
+    UserCollection: (0, _userCollection.default)(bookshelf),
+    UserCollectionCollaborator: (0, _userCollectionCollaborator.default)(bookshelf),
+    UserCollectionItem: (0, _userCollectionItem.default)(bookshelf),
+    Work: (0, _work.default)(bookshelf),
+    WorkData,
+    WorkHeader: (0, _workHeader.default)(bookshelf),
+    WorkImport: (0, _workImport.default)(bookshelf),
+    WorkRevision: (0, _workRevision.default)(bookshelf),
+    WorkType: (0, _workType.default)(bookshelf),
+    bookshelf,
+    func: (0, _func.default)(),
+    util
+  };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

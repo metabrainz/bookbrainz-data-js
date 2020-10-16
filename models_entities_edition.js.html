@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>models/entities/edition.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">models/entities/edition.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = edition;
+
+var _has2 = _interopRequireDefault(require("lodash/has"));
+
+var _util = require("../../util");
+
+/**
+ * @param  {any} model The ORM model of the Edition being edited/created
+ * @param  {any} bookshelf The BoolshelfJS ORM
+ * @param  {any} options Query options — seuch as transacting object
+ * @description Automatically create and sets a new Edition Group
+ * if there is none selected, in the same transaction
+ */
+async function autoCreateNewEditionGroup(model, bookshelf, options) {
+  const aliasSetId = model.get('aliasSetId');
+  const revisionId = model.get('revisionId');
+  const newEditionGroupBBID = await (0, _util.createEditionGroupForNewEdition)(bookshelf, options.transacting, aliasSetId, revisionId);
+  model.set('editionGroupBbid', newEditionGroupBBID);
+}
+
+function edition(bookshelf) {
+  const EditionData = bookshelf.model('EditionData');
+  const Edition = EditionData.extend({
+    defaultAlias() {
+      return this.belongsTo('Alias', 'default_alias_id');
+    },
+
+    idAttribute: 'bbid',
+
+    initialize() {
+      this.on('fetching', (model, col, options) => {
+        // If no revision is specified, fetch the master revision
+        if (!model.get('revisionId')) {
+          options.query.where({
+            master: true
+          });
+        }
+      });
+      this.on('updating', async (model, attrs, options) => {
+        // Always update the master revision.
+        options.query.where({
+          master: true
+        });
+
+        if ((0, _has2.default)(model, 'changed.editionGroupBbid') &amp;&amp; !model.get('editionGroupBbid')) {
+          await autoCreateNewEditionGroup(model, bookshelf, options);
+        }
+      });
+      this.on('creating', async (model, attrs, options) => {
+        if (!model.get('editionGroupBbid')) {
+          await autoCreateNewEditionGroup(model, bookshelf, options);
+        }
+      });
+    },
+
+    revision() {
+      return this.belongsTo('EditionRevision', 'revision_id');
+    },
+
+    tableName: 'bookbrainz.edition'
+  });
+  return bookshelf.model('Edition', Edition);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

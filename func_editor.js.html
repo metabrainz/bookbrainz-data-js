@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>func/editor.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">func/editor.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.incrementEditorEditCountById = incrementEditorEditCountById;
+exports.deleteEditorByMetaBrainzID = deleteEditorByMetaBrainzID;
+
+var _bluebird = _interopRequireDefault(require("bluebird"));
+
+/*
+ * Copied from bookbrainz-site
+ * Copyright (C) 2016  Sean Burke
+ *               2016  Ben Ockmore
+ *               2018  Shivam Tripathi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/**
+ * Adds 1 to the edit count of the specified editor
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} id - row ID of editor to be updated
+ * @param {object} transacting - Bookshelf transaction object (must be in
+ * progress)
+ * @returns {Promise} - Resolves to the updated editor model
+ */
+function incrementEditorEditCountById(orm, id, transacting) {
+  const {
+    Editor
+  } = orm;
+  return new Editor({
+    id
+  }).fetch({
+    transacting
+  }).then(editor => {
+    editor.incrementEditCount();
+    return editor.save(null, {
+      transacting
+    });
+  });
+}
+/* eslint-disable camelcase */
+
+
+function getEditorIDByMetaBrainzID(trx, metabrainzUserID) {
+  return trx('bookbrainz.editor').select('id').where({
+    metabrainz_user_id: metabrainzUserID
+  }).then(rows => {
+    if (rows.length > 0) {
+      return rows[0].id;
+    }
+
+    return null;
+  });
+}
+
+function clearEditorByID(trx, editorID) {
+  return trx('bookbrainz.editor').where({
+    editor_id: editorID
+  }).update({
+    area_id: null,
+    bio: '',
+    cached_metabrainz_name: '&lt;deleted>',
+    gender_id: null,
+    name: `Deleted Editor #${editorID}`
+  });
+}
+
+function clearEditorLanguagesByEditorID(trx, editorID) {
+  return trx('bookbrainz.editor__language').where({
+    editor_id: editorID
+  }).del();
+}
+/* eslint-enable camelcase */
+
+
+function deleteEditorByMetaBrainzID(knex) {
+  return metabrainzUserID => knex.transaction(trx => {
+    // Fetch user by MetaBrainz ID
+    const editorIDPromise = getEditorIDByMetaBrainzID(trx, metabrainzUserID);
+    return editorIDPromise.then(editorID => {
+      if (editorID === null) {
+        return false;
+      } // Set the editor name to "Deleted Editor #ID"
+      // Set cached MetaBrainz name to "&lt;deleted>"
+      // Also clear bio, gender, area
+
+
+      const clearEditorPromise = clearEditorByID(trx, editorID); // ... and languages
+
+      const clearEditorLanguagesPromise = clearEditorLanguagesByEditorID(trx, editorID);
+      return _bluebird.default.join(clearEditorPromise, clearEditorLanguagesPromise, () => true);
+    });
+  });
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

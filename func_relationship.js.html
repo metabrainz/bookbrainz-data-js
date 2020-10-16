@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>func/relationship.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">func/relationship.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateRelationshipSets = updateRelationshipSets;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _isEmpty2 = _interopRequireDefault(require("lodash/isEmpty"));
+
+var _uniq2 = _interopRequireDefault(require("lodash/uniq"));
+
+var _set = require("./set");
+
+var _bluebird = _interopRequireDefault(require("bluebird"));
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i &lt; arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function getAffectedBBIDs(addedItems, removedItems) {
+  const affectedSourceBBIDs = [...addedItems, ...removedItems].map(relationship => relationship.sourceBbid);
+  const affectedTargetBBIDs = [...addedItems, ...removedItems].map(relationship => relationship.targetBbid);
+  return (0, _uniq2.default)([...affectedSourceBBIDs, ...affectedTargetBBIDs]);
+}
+
+async function getMasterRelationshipSetForEntity(orm, transacting, bbid) {
+  const {
+    Entity,
+    Author,
+    Edition,
+    EditionGroup,
+    Publisher,
+    RelationshipSet,
+    Work
+  } = orm;
+  const entityHeader = await Entity.forge({
+    bbid
+  }).fetch({
+    require: true,
+    transacting
+  });
+  const typeModelMap = {
+    Author,
+    Edition,
+    EditionGroup,
+    Publisher,
+    Work
+  }; // Extract entity type
+
+  const type = entityHeader.get('type'); // Fetch master revision of entity
+
+  const entity = await typeModelMap[type].forge({
+    bbid
+  }).fetch({
+    require: false,
+    transacting
+  });
+
+  if (!entity) {
+    return null;
+  }
+
+  const relationshipSetId = entity.get('relationshipSetId');
+
+  if (!relationshipSetId) {
+    return null;
+  } // Return relationship set
+
+
+  return RelationshipSet.forge({
+    id: relationshipSetId
+  }).fetch({
+    require: true,
+    transacting,
+    withRelated: ['relationships']
+  });
+}
+
+async function updateRelationshipSetForEntity(orm, transacting, bbid, allAddedItems, allRemovedItems, comparisonFunc) {
+  const {
+    RelationshipSet
+  } = orm;
+  const oldSet = await getMasterRelationshipSetForEntity(orm, transacting, bbid);
+  const oldSetItems = oldSet ? oldSet.related('relationships').toJSON() : [];
+  const addedItems = allAddedItems.filter(relationship => relationship.sourceBbid === bbid || relationship.targetBbid === bbid);
+  const unchangedItems = (0, _set.removeItemsFromSet)(oldSetItems, allRemovedItems, comparisonFunc);
+  return (0, _set.createNewSetWithItems)(orm, transacting, RelationshipSet, unchangedItems, addedItems, 'relationships');
+}
+/**
+ * Takes an array of relationships that should be set for the entity, and
+ * compares it to the currently set list of relationships to determine the
+ * difference. Compiles a list of affected entity BBIDs from this difference,
+ * and then updates the relationship sets for all affected entities, and returns
+ * these. If no entities are affected (there are no changes), an empty object
+ * is returned.
+ *
+ * @param {any} orm - an initialized instance of bookbrainz-data-js
+ * @param {Transaction} transacting - the current transaction
+ * @param {any} oldSet - the RelationshipSet object for the old entity data
+ * @param {Array&lt;Relationship>} newSetItems - the edited RelationshipSet for the
+ *        entity
+ *
+ * @returns {Promise&lt;any>} a promise which resolves to a {BBID: RelationshipSet}
+ *          map
+ */
+
+
+function updateRelationshipSets(orm, transacting, oldSet, newSetItems) {
+  function comparisonFunc(obj, other) {
+    return obj.typeId === other.typeId &amp;&amp; obj.sourceBbid === other.sourceBbid &amp;&amp; obj.targetBbid === other.targetBbid;
+  }
+
+  const oldSetItems = oldSet ? oldSet.related('relationships').toJSON() : [];
+  const allAddedItems = (0, _set.getAddedItems)(oldSetItems, newSetItems, comparisonFunc);
+  const allRemovedItems = (0, _set.getRemovedItems)(oldSetItems, newSetItems, comparisonFunc);
+
+  if ((0, _isEmpty2.default)(allAddedItems) &amp;&amp; (0, _isEmpty2.default)(allRemovedItems)) {
+    // No action - set has not changed
+    return _bluebird.default.resolve({});
+  }
+
+  const affectedBBIDs = getAffectedBBIDs(allAddedItems, allRemovedItems); // For each BBID, get the entity and the old relationship set, then apply
+  // the relevant changes to create a new set.
+
+  const newSetPromises = affectedBBIDs.reduce((result, bbid) => _objectSpread(_objectSpread({}, result), {}, {
+    [bbid]: updateRelationshipSetForEntity(orm, transacting, bbid, allAddedItems, allRemovedItems, comparisonFunc)
+  }), {});
+  return _bluebird.default.props(newSetPromises);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

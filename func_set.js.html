@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>func/set.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">func/set.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getComparisonFunc = getComparisonFunc;
+exports.getUnchangedItems = getUnchangedItems;
+exports.getAddedItems = getAddedItems;
+exports.getRemovedItems = getRemovedItems;
+exports.createNewSetWithItems = createNewSetWithItems;
+exports.removeItemsFromSet = void 0;
+
+var _omit2 = _interopRequireDefault(require("lodash/omit"));
+
+var _map2 = _interopRequireDefault(require("lodash/map"));
+
+var _isEmpty2 = _interopRequireDefault(require("lodash/isEmpty"));
+
+var _differenceWith2 = _interopRequireDefault(require("lodash/differenceWith"));
+
+var _intersectionWith2 = _interopRequireDefault(require("lodash/intersectionWith"));
+
+var _uniqWith2 = _interopRequireDefault(require("lodash/uniqWith"));
+
+/**
+ * Returns a function which compares two object provided to it using the
+ * comparison fields mentioned
+ * @param  {Array&lt;string>} compareFields - Comparison fields of two objects
+ * @returns {Function} - Returns a comparison function
+ */
+function getComparisonFunc(compareFields) {
+  /**
+   * @param  {Object} obj - Object for comparison
+   * @param  {Object} other - Object for comparison
+   * @returns {boolean} Boolean value denoting objects are equal on fields
+   */
+  return function Cmp(obj, other) {
+    for (const field of compareFields) {
+      if (obj[field] !== other[field]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+}
+/**
+ * Get the intersection of two arrays of objects using a custom comparison
+ * function. The two arrays represent two versions of a single set - one array
+ * is the set before a particular change and the other is the same set after
+ * that change.
+ *
+ * @param {Array&lt;{}>} oldSet - The old array to compare
+ * @param {Array&lt;{}>} newSet - The new array to compare
+ * @param {Function} comparisonFunc - Function to compare items from the two
+ * arrays
+ *
+ * @returns {Array&lt;{}>} - An array representing the intersection of the two
+ * arrays
+ */
+
+
+function getUnchangedItems(oldSet, newSet, comparisonFunc) {
+  return (0, _uniqWith2.default)((0, _intersectionWith2.default)(oldSet, newSet, comparisonFunc), comparisonFunc);
+}
+/**
+ * Get any items in the new version of the set that aren't present in the old
+ * version using a custom comparison function. The two arrays represent two
+ * versions of a single set - one array is the set before a particular change
+ * and the other is the same set after that change.
+ *
+ * @param {Array&lt;{}>} oldSet - The old array to compare
+ * @param {Array&lt;{}>} newSet - The new array to compare
+ * @param {Function} comparisonFunc - Function to compare items from the two
+ * arrays
+ *
+ * @returns {Array&lt;{}>} - An array representing the difference of the two
+ * arrays
+ */
+
+
+function getAddedItems(oldSet, newSet, comparisonFunc) {
+  return (0, _uniqWith2.default)((0, _differenceWith2.default)(newSet, oldSet, comparisonFunc), comparisonFunc);
+}
+/**
+* Get any items in the old version of the set that aren't present in the new
+* version using a custom comparison function. The two arrays represent two
+* versions of a single set - one array is the set before a particular change
+* and the other is the same set after that change.
+ *
+ * @param {Array&lt;{}>} oldSet - The old array to compare
+ * @param {Array&lt;{}>} newSet - The new array to compare
+ * @param {Function} comparisonFunc - Function to compare items from the two
+ * arrays
+ *
+ * @returns {Array&lt;{}>} - An array representing the difference of the two
+ * arrays
+ */
+
+
+function getRemovedItems(oldSet, newSet, comparisonFunc) {
+  return (0, _uniqWith2.default)((0, _differenceWith2.default)(oldSet, newSet, comparisonFunc), comparisonFunc);
+}
+
+const removeItemsFromSet = getRemovedItems;
+exports.removeItemsFromSet = removeItemsFromSet;
+
+async function createNewSetWithItems(orm, transacting, SetModel, unchangedItems, addedItems, itemsAttribute, idAttribute = 'id') {
+  if (!itemsAttribute) {
+    throw Error('itemsAttribute must be set in createNewSetWithItems');
+  }
+
+  if ((0, _isEmpty2.default)(unchangedItems) &amp;&amp; (0, _isEmpty2.default)(addedItems)) {
+    return null;
+  }
+
+  const newSet = await new SetModel().save(null, {
+    transacting
+  });
+  const newSetItemsCollection = await newSet.related(itemsAttribute).fetch({
+    transacting
+  });
+  const newSetItemsCollectionAttached = await newSetItemsCollection.attach((0, _map2.default)(unchangedItems, idAttribute), {
+    transacting
+  });
+  await Promise.all((0, _map2.default)(addedItems, ident => newSetItemsCollectionAttached.create((0, _omit2.default)(ident, idAttribute), {
+    transacting
+  })));
+  return newSet;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

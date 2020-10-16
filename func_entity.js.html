@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>func/entity.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#autoCreateNewEditionGroup">autoCreateNewEditionGroup</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#castDiscardVote">castDiscardVote</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createEditionGroupForNewEdition">createEditionGroupForNewEdition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#createNote">createNote</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#entityTypes">entityTypes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatDate">formatDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAddedItems">getAddedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComparisonFunc">getComparisonFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntity">getEntity</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModelByType">getEntityModelByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityModels">getEntityModels</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntityParentAlias">getEntityParentAlias</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getEntitySetMetadataByType">getEntitySetMetadataByType</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRecentImportUtilData">getRecentImportUtilData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getRemovedItems">getRemovedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnchangedItems">getUnchangedItems</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#incrementEditorEditCountById">incrementEditorEditCountById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#parseDate">parseDate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#recursivelyGetRedirectBBID">recursivelyGetRedirectBBID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateAnnotation">updateAnnotation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateDisambiguation">updateDisambiguation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#updateRelationshipSets">updateRelationshipSets</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">func/entity.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getAdditionalEntityProps = getAdditionalEntityProps;
+exports.getEntitySetMetadataByType = getEntitySetMetadataByType;
+exports.getEntityModels = getEntityModels;
+exports.getEntityModelByType = getEntityModelByType;
+exports.recursivelyGetRedirectBBID = recursivelyGetRedirectBBID;
+exports.getEntity = getEntity;
+exports.getEntityParentAlias = getEntityParentAlias;
+exports.entityTypes = exports.WORK = exports.PUBLISHER = exports.EDITION_GROUP = exports.EDITION = exports.AUTHOR = void 0;
+
+var _camelCase2 = _interopRequireDefault(require("lodash/camelCase"));
+
+var _mapKeys2 = _interopRequireDefault(require("lodash/mapKeys"));
+
+var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
+
+var _pick2 = _interopRequireDefault(require("lodash/pick"));
+
+var _util = require("../util");
+
+const AUTHOR = 'Author';
+exports.AUTHOR = AUTHOR;
+const EDITION = 'Edition';
+exports.EDITION = EDITION;
+const EDITION_GROUP = 'EditionGroup';
+exports.EDITION_GROUP = EDITION_GROUP;
+const PUBLISHER = 'Publisher';
+exports.PUBLISHER = PUBLISHER;
+const WORK = 'Work';
+exports.WORK = WORK;
+const entityTypes = {
+  AUTHOR,
+  EDITION,
+  EDITION_GROUP,
+  PUBLISHER,
+  WORK
+};
+/**
+ * @param  {Object} entityData - Object holding all data related to an entity
+ * @param  {string} entityType - The type of the entity
+ * @returns {Object} - Returns all the additional entity specific data
+*/
+
+exports.entityTypes = entityTypes;
+
+function getAdditionalEntityProps(entityData, entityType) {
+  if (entityType === entityTypes.AUTHOR) {
+    const {
+      typeId,
+      genderId,
+      beginAreaId,
+      beginDate,
+      endDate,
+      ended,
+      endAreaId
+    } = entityData;
+    const [beginYear, beginMonth, beginDay] = (0, _util.parseDate)(beginDate);
+    const [endYear, endMonth, endDay] = (0, _util.parseDate)(endDate);
+    return {
+      beginAreaId,
+      beginDate,
+      beginDay,
+      beginMonth,
+      beginYear,
+      endAreaId,
+      endDate,
+      endDay,
+      endMonth,
+      endYear,
+      ended,
+      genderId,
+      typeId
+    };
+  }
+
+  if (entityType === entityTypes.EDITION) {
+    return (0, _pick2.default)(entityData, ['editionGroupBbid', 'width', 'height', 'depth', 'weight', 'pages', 'formatId', 'statusId']);
+  }
+
+  if (entityType === entityTypes.PUBLISHER) {
+    const {
+      typeId,
+      areaId,
+      beginDate,
+      endDate,
+      ended
+    } = entityData;
+    const [beginYear, beginMonth, beginDay] = (0, _util.parseDate)(beginDate);
+    const [endYear, endMonth, endDay] = (0, _util.parseDate)(endDate);
+    return {
+      areaId,
+      beginDate,
+      beginDay,
+      beginMonth,
+      beginYear,
+      endDate,
+      endDay,
+      endMonth,
+      endYear,
+      ended,
+      typeId
+    };
+  }
+
+  if (entityType === entityTypes.EDITION_GROUP || entityType === entityTypes.WORK) {
+    return (0, _pick2.default)(entityData, ['typeId']);
+  }
+
+  return null;
+}
+/**
+ * @param  {string} entityType - Entity type string
+ * @returns {Object} - Returns entitySetMetadata (derivedSets)
+*/
+
+
+function getEntitySetMetadataByType(entityType) {
+  if (entityType === EDITION) {
+    return [{
+      entityIdField: 'languageSetId',
+      idField: 'id',
+      name: 'languageSet',
+      propName: 'languages'
+    }, {
+      entityIdField: 'publisherSetId',
+      idField: 'bbid',
+      name: 'publisherSet',
+      propName: 'publishers'
+    }, {
+      entityIdField: 'releaseEventSetId',
+      idField: 'id',
+      mutableFields: ['date', 'areaId'],
+      name: 'releaseEventSet',
+      propName: 'releaseEvents'
+    }];
+  } else if (entityType === WORK) {
+    return [{
+      entityIdField: 'languageSetId',
+      idField: 'id',
+      name: 'languageSet',
+      propName: 'languages'
+    }];
+  }
+
+  return [];
+}
+/**
+ * Returns all entity models defined in bookbrainz-data-js
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @returns {object} - Object mapping model name to the entity model
+*/
+
+
+function getEntityModels(orm) {
+  const {
+    Author,
+    Edition,
+    EditionGroup,
+    Publisher,
+    Work
+  } = orm;
+  return {
+    Author,
+    Edition,
+    EditionGroup,
+    Publisher,
+    Work
+  };
+}
+/**
+ * Retrieves the Bookshelf entity model with the given the model name
+ *
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} type - Name or type of model
+ * @throws {Error} Throws a custom error if the param 'type' does not
+ * map to a model
+ * @returns {object} - Bookshelf model object with the type specified in the
+ * single param
+*/
+
+
+function getEntityModelByType(orm, type) {
+  const entityModels = getEntityModels(orm);
+
+  if (!entityModels[type]) {
+    throw new Error('Unrecognized entity type');
+  }
+
+  return entityModels[type];
+}
+/**
+ * Finds the bbid an entity redirects to, if any.
+ * Do a recursive search in case the redirected bbid also redirects, etc.
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} bbid - The target entity's bbid.
+ * @param {any} transacting - Optional ORM transaction object
+ * @returns {string} The final bbid to redirect to
+ */
+
+
+async function recursivelyGetRedirectBBID(orm, bbid, transacting) {
+  const redirectSQLQuery = `SELECT target_bbid FROM bookbrainz.entity_redirect WHERE source_bbid = '${bbid}'`;
+  const redirectQueryResults = await (transacting || orm.bookshelf.knex).raw(redirectSQLQuery);
+
+  if (redirectQueryResults.rows &amp;&amp; redirectQueryResults.rows.length) {
+    const redirectedBBID = redirectQueryResults.rows[0].target_bbid;
+    return recursivelyGetRedirectBBID(orm, redirectedBBID);
+  }
+
+  return bbid;
+}
+/**
+ * Fetches an entity with related data
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} entityType - The entity model name.
+ * @param {string} bbid - The target entity's bbid.
+ * @param {string[]} relations - Extra model relationships to fetch along with the entity
+ * @returns {Promise} A Promise that resolves to the entity in JSON format
+ */
+
+
+async function getEntity(orm, entityType, bbid, relations = []) {
+  // if bbid appears in entity_redirect table, use that bbid instead
+  // Do a recursive search in case the redirected bbid also redirects, etc.
+  const finalBBID = await recursivelyGetRedirectBBID(orm, bbid);
+  const model = getEntityModelByType(orm, entityType);
+  const entity = await model.forge({
+    bbid: finalBBID
+  }).fetch({
+    require: true,
+    withRelated: relations
+  });
+  return entity.toJSON();
+}
+/**
+ * Fetches an entity's last known default alias from its revision parent.
+ * This is necessary to display the name of a 'deleted' entity
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {string} entityType - The entity model name.
+ * @param {string} bbid - The target entity's bbid.
+ * @returns {Promise} The returned Promise returns the entity's
+ * 					   parent default alias
+ */
+
+
+async function getEntityParentAlias(orm, entityType, bbid) {
+  const rawSql = `
+		SELECT alias.name,
+			alias.sort_name,
+			alias.id,
+			alias.language_id,
+			alias.primary
+		FROM bookbrainz.${(0, _snakeCase2.default)(entityType)}
+		LEFT JOIN bookbrainz.alias ON alias.id = default_alias_id
+		WHERE bbid = '${bbid}' AND master = FALSE
+		ORDER BY revision_id DESC
+		LIMIT 1;
+	`; // Query the database to get the parent revision default alias
+
+  const queryResult = await orm.bookshelf.knex.raw(rawSql);
+
+  if (!Array.isArray(queryResult.rows)) {
+    return null;
+  }
+
+  const rows = queryResult.rows.map(rawQueryResult => {
+    // Convert query keys to camelCase
+    const queriedResult = (0, _mapKeys2.default)(rawQueryResult, (value, key) => (0, _camelCase2.default)(key));
+    return queriedResult;
+  });
+  return rows[0];
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 16 2020 10:31:29 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
