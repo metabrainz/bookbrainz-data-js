@@ -17,6 +17,7 @@
  */
 
 import {camelToSnake, snakeToCamel} from '../util';
+import {recursivelyGetAreaParentsWithNames} from '../func/area';
 
 
 export default function area(bookshelf) {
@@ -26,6 +27,9 @@ export default function area(bookshelf) {
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
+		parents(checkAllLevels = false) {
+			return recursivelyGetAreaParentsWithNames(bookshelf, this.id, checkAllLevels);
+		},
 		parse: snakeToCamel,
 		tableName: 'musicbrainz.area',
 		virtuals: {
