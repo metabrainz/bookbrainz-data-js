@@ -69,7 +69,7 @@
     "knex": "^0.21.9",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
-    "pg": "^8.5.0"
+    "pg": "^8.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
