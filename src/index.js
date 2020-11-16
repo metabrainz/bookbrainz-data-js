@@ -25,6 +25,7 @@ import alias from './models/alias';
 import aliasSet from './models/aliasSet';
 import annotation from './models/annotation';
 import area from './models/area';
+import areaType from './models/areaType';
 import author from './models/entities/author';
 import authorCredit from './models/authorCredit';
 import authorCreditName from './models/authorCreditName';
@@ -108,6 +109,7 @@ export default function init(config) {
 		AliasSet: aliasSet(bookshelf),
 		Annotation: annotation(bookshelf),
 		Area: area(bookshelf),
+		AreaType: areaType(bookshelf),
 		Author: author(bookshelf),
 		AuthorCredit: authorCredit(bookshelf),
 		AuthorCreditName: authorCreditName(bookshelf),

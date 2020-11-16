@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015  Ben Ockmore
+ * Copyright (C) 2020  Nicolas Pelletier
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,15 @@
  */
 
 import {camelToSnake, snakeToCamel} from '../util';
-import {recursivelyGetAreaParentsWithNames} from '../func/area';
 
 
-export default function area(bookshelf) {
-	const Area = bookshelf.Model.extend({
-		areaType() {
-			return this.belongsTo('AreaType', 'type');
-		},
+export default function areaType(bookshelf) {
+	const AreaType = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
-		parents(checkAllLevels = false) {
-			return recursivelyGetAreaParentsWithNames(bookshelf, this.id, checkAllLevels);
-		},
 		parse: snakeToCamel,
-		tableName: 'musicbrainz.area',
-		virtuals: {
-			bbid() {
-				return this.get('gid');
-			}
-		}
+		tableName: 'musicbrainz.area_type'
 	});
 
-	return bookshelf.model('Area', Area);
+	return bookshelf.model('AreaType', AreaType);
 }

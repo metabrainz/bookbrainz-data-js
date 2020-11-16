@@ -19,6 +19,7 @@
 
 import * as alias from './alias';
 import * as annotation from './annotation';
+import * as area from './area';
 import * as authorCredit from './author-credit';
 import * as disambiguation from './disambiguation';
 import * as editor from './editor';
@@ -38,6 +39,7 @@ export default function init() {
 	return {
 		alias,
 		annotation,
+		area,
 		authorCredit,
 		createEntity,
 		disambiguation,

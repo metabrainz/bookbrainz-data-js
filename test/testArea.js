@@ -25,7 +25,7 @@ import uuid from 'node-uuid';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {Area, bookshelf} = bookbrainzData;
+const {Area, AreaType, bookshelf} = bookbrainzData;
 
 function createArea(name) {
 	const areaAttribs = {
@@ -51,5 +51,33 @@ describe('Area model', () => {
 			'beginDateYear', 'beginDateMonth', 'beginDateDay', 'endDateYear',
 			'endDateMonth', 'endDateDay', 'ended', 'comment'
 		]);
+	});
+});
+
+describe('AreaType model', () => {
+	afterEach(() => truncateTables(bookshelf, ['musicbrainz.area', 'musicbrainz.area_type']));
+
+	it('should return a JSON object with correct keys when saved', async () => {
+		const areaType = await new AreaType({id: 1, name: 'Planet'})
+			.save(null, {method: 'insert'})
+			.then((model) => model.refresh())
+			.then((areaTypeModel) => areaTypeModel.toJSON());
+
+		expect(areaType).to.have.all.keys([
+			'id', 'name', 'parent', 'childOrder', 'description'
+		]);
+	});
+
+	it('should be fetched as relationship when fetching Area', async () => {
+		const areaType = await new AreaType({description: 'Fnord', id: 1, name: 'Planet'})
+			.save(null, {method: 'insert'})
+			.then((model) => model.refresh())
+			.then((areaTypeModel) => areaTypeModel.toJSON());
+		const createdArea = await createArea('Mars');
+
+		const fetchedArea = await Area.forge({id: createdArea.id})
+			.fetch({withRelated: 'areaType'});
+
+		expect(fetchedArea.related('areaType')?.toJSON()).to.deep.equal(areaType);
 	});
 });
