@@ -238,15 +238,16 @@ export function parseDate(date) {
 
 /**
  * Create a new Edition Group for an Edition.
- * The Edition Group will be part of the same revision, and will have the same alias set id for that revision
- * Subsequent changes to the alias set for either entity will only impact that entity's new revision.
+ * The Edition Group will be part of the same revision, and will have the same alias set and author credit for that revision
+ * Subsequent changes to the alias set or author credit for either entity will only impact that entity's new revision.
  * @param {object} orm - The Bookshelf ORM
  * @param {object} transacting - The Bookshelf/Knex SQL transaction in progress
  * @param {number|string} aliasSetId - The id of the new edition's alias set
  * @param {number|string} revisionId - The id of the new edition's revision
+ * @param {number|string} authorCreditId - The id of the new edition's author credit
  * @returns {string} BBID of the newly created Edition Group
  */
-export async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, revisionId) {
+export async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, revisionId, authorCreditId) {
 	const Entity = orm.model('Entity');
 	const EditionGroup = orm.model('EditionGroup');
 	const newEditionGroupEntity = await new Entity({type: 'EditionGroup'})
@@ -254,6 +255,7 @@ export async function createEditionGroupForNewEdition(orm, transacting, aliasSet
 	const bbid = newEditionGroupEntity.get('bbid');
 	await new EditionGroup({
 		aliasSetId,
+		authorCreditId,
 		bbid,
 		revisionId
 	})
