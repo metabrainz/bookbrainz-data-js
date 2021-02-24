@@ -27,7 +27,7 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Edition, Editor, EditorType, Entity,
+	AliasSet, Annotation, AuthorCredit, Disambiguation, Edition, EditionGroup, Editor, EditorType, Entity,
 	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
 } = bookbrainzData;
 
@@ -56,6 +56,7 @@ const revisionAttribs = {
 const editionAttribs = {
 	aliasSetId: 1,
 	annotationId: 1,
+	authorCreditId: 1,
 	bbid: aBBID,
 	disambiguationId: 1,
 	identifierSetId: 1,
@@ -99,6 +100,8 @@ describe('Edition model', () => {
 							.save(null, {method: 'insert'}),
 						new RelationshipSet(setData)
 							.save(null, {method: 'insert'}),
+						new AuthorCredit({...setData, authorCount: 0})
+							.save(null, {method: 'insert'}),
 						new Disambiguation({
 							comment: 'Test Disambiguation',
 							id: 1
@@ -117,6 +120,7 @@ describe('Edition model', () => {
 			'bookbrainz.entity',
 			'bookbrainz.revision',
 			'bookbrainz.alias',
+			'bookbrainz.author_credit',
 			'bookbrainz.identifier',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_set',
@@ -142,7 +146,7 @@ describe('Edition model', () => {
 
 		expect(editionJSON).to.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'authorCredit', 'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
@@ -188,6 +192,21 @@ describe('Edition model', () => {
 		// Check that a new Edition Group has been created automatically
 		expect(editionJSON.editionGroupBbid).to.be.a('string');
 		expect(editionJSON.editionGroupBbid).to.not.equal(firstEditionGroup);
+	});
+
+	it('should set the same Author Credit on auto-created Edition Group', async () => {
+		const edition = await createEdition();
+
+		const editionJSON = edition.toJSON();
+		expect(editionJSON.authorCreditId).to.be.a('number');
+		const editionGroupBBID = editionJSON.editionGroupBbid;
+
+		// Fetch the Edition Group
+		const editionGroup = await new EditionGroup({bbid: editionGroupBBID}).fetch({withRelated: ['authorCredit']});
+		const editionGroupJSON = editionGroup.toJSON();
+
+		// Check that the newly created Edition Group has the same Author Credit ID set
+		expect(editionGroupJSON.authorCreditId).to.equal(editionJSON.authorCreditId);
 	});
 
 	it('should return the master revision when multiple revisions exist',
