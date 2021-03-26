@@ -26,6 +26,17 @@ export default function userCollection(bookshelf) {
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
+		initialize() {
+			this.on('fetching fetching:collection', (model, columns, options) => {
+				options.query.select(bookshelf.knex.raw(
+					`(select count(*) 
+					from bookbrainz.user_collection_item 
+					where 
+					bookbrainz.user_collection_item.collection_id = bookbrainz.user_collection.id
+					) as itemCount`
+				));
+			});
+		},
 		items() {
 			return this.hasMany('UserCollectionItem', 'collection_id');
 		},
