@@ -33,8 +33,8 @@ export default function userCollection(bookshelf) {
 					from bookbrainz.user_collection_item 
 					where 
 					bookbrainz.user_collection_item.collection_id = bookbrainz.user_collection.id
-					) as itemCount`
-				));
+					) as item_count`
+				)).groupBy('user_collection.id');
 			});
 		},
 		items() {
