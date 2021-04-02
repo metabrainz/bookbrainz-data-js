@@ -1,5 +1,5 @@
 # Test configuration
-/test/bookshelf.js
+/test/bookshelf.ts
 
 # Lib directory
 lib
@@ -68,3 +68,5 @@ typings/
 
 # IntelliJ project files
 .idea/
+
+dist

@@ -206,12 +206,8 @@ describe('updateRelationshipSet', () => {
 	it('should return an object with two entries if one relationship is added to an empty set', async function () {
 		const relationshipData = getRelationshipData(1, aBBID, bBBID);
 		const result = await bookshelf.transaction(async (trx) => {
-			const sets = await updateRelationshipSets(
-				bookbrainzData,
-				trx,
-				null,
-				[relationshipData]
-			);
+			// @ts-ignore
+			const sets = await updateRelationshipSets(bookbrainzData, trx, null, [relationshipData]);
 			return BBPromise.props(
 				_.transform(
 					sets,
@@ -239,12 +235,8 @@ describe('updateRelationshipSet', () => {
 		const firstRelationshipData = getRelationshipData(1, aBBID, bBBID);
 		const secondRelationshipData = getRelationshipData(1, aBBID, cBBID);
 		const firstResult = await bookshelf.transaction(async (trx) => {
-			const sets = await updateRelationshipSets(
-				bookbrainzData,
-				trx,
-				null,
-				[firstRelationshipData, secondRelationshipData]
-			);
+			// @ts-ignore
+			const sets = await updateRelationshipSets(bookbrainzData, trx, null, [firstRelationshipData, secondRelationshipData]);
 			const updatedEntitiesPromise = Promise.all(
 				_.map(sets, async (set, bbid) => {
 					const revision = await new Revision({
@@ -290,12 +282,8 @@ describe('updateRelationshipSet', () => {
 		firstSetRelationships[1].targetBbid = dBBID;
 		const thirdRelationshipData = firstSetRelationships[1];
 		const result = await bookshelf.transaction(async (trx) => {
-			const sets = await updateRelationshipSets(
-				bookbrainzData,
-				trx,
-				firstSet,
-				firstSetRelationships
-			);
+			// @ts-ignore
+			const sets = await updateRelationshipSets(bookbrainzData, trx, firstSet, firstSetRelationships);
 			return BBPromise.props(
 				_.transform(
 					sets,
@@ -342,12 +330,8 @@ describe('updateRelationshipSet', () => {
 		const firstRelationshipData = getRelationshipData(1, aBBID, bBBID);
 		const secondRelationshipData = getRelationshipData(1, aBBID, cBBID);
 		const firstResult = await bookshelf.transaction(async (trx) => {
-			const sets = await updateRelationshipSets(
-				bookbrainzData,
-				trx,
-				null,
-				[firstRelationshipData, secondRelationshipData]
-			);
+			// @ts-ignore
+			const sets = await updateRelationshipSets(bookbrainzData, trx, null, [firstRelationshipData, secondRelationshipData]);
 			const updatedEntitiesPromise = Promise.all(
 				_.map(sets, async (set, bbid) => {
 					const revision = await new Revision({

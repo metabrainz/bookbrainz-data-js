@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
     "prepublish": "npm run build-js",
-    "test": "npm run lint-errors && npm run build-js-for-test && mocha",
+    "test": "tsc && cd dist && mocha",
     "test-cov": "nyc --reporter=text npm test",
     "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
     "dupreport": "jsinspect src/ || true",
