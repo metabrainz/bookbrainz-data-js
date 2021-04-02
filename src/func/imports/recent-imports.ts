@@ -16,10 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import type {EntityTypeString, Transaction} from '../types';
 import {entityTypes} from '../entity';
 import {getAliasByIds} from '../alias';
-import moment from 'moment';
 import {originSourceMapping} from './misc';
 import {snakeToCamel} from '../../util';
 

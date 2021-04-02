@@ -15,9 +15,9 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+import * as Bookshelf from 'bookshelf';
+import * as knex from 'knex';
 import * as util from './util'; // eslint-disable-line import/no-namespace
-
-import Bookshelf from 'bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
 import alias from './models/alias';
@@ -56,7 +56,6 @@ import gender from './models/gender';
 import identifier from './models/identifier';
 import identifierSet from './models/identifierSet';
 import identifierType from './models/identifierType';
-import knex from 'knex';
 import language from './models/language';
 import languageSet from './models/languageSet';
 import note from './models/note';
