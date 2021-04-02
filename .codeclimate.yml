@@ -1,15 +1,15 @@
 engines:
-  eslint:
-    enabled: true
-  duplication:
-    enabled: true
-    config:
-      languages:
-      - javascript
-  nodesecurity:
-    enabled: true
+    eslint:
+        enabled: true
+    duplication:
+        enabled: true
+        config:
+            languages:
+                - javascript
+    nodesecurity:
+        enabled: true
 ratings:
-  paths:
-    - models/**
-    - test/**
-    - "*.js"
+    paths:
+        - models/**
+        - test/**
+        - '*.js'

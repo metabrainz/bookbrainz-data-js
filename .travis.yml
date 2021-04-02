@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "lts/*"
+  - 'lts/*'
 
 notifications:
   email: false
@@ -12,11 +12,11 @@ notifications:
     on_start: never
   irc:
     channels:
-      - "chat.freenode.net#metabrainz"
+      - 'chat.freenode.net#metabrainz'
     on_success: change
     on_failure: change
     template:
-      - "Project %{repository_name} build #%{build_number}: %{result} in %{elapsed_time}: %{build_url}"
+      - 'Project %{repository_name} build #%{build_number}: %{result} in %{elapsed_time}: %{build_url}'
 
 sudo: false
 
@@ -52,7 +52,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-  postgresql: "9.4"
+  postgresql: '9.4'
 
 branches:
   only:

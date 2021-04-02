@@ -12,6 +12,7 @@ of [bookshelf.js](http://bookshelfjs.org/) models. The module is only for access
 Each model has its own source file in the "models" directory. These models can be accessed via index.js, which provides a function returning the models, taking an initialized bookshelf.js instance as a single parameter.
 
 ### Documentation
+
 The auto-generated documentation is served alongisde this repository on Github Pages: https://bookbrainz.github.io/bookbrainz-data-js/index.html
 
 ## Tests

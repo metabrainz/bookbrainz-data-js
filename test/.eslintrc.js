@@ -1,7 +1,6 @@
 /* eslint-disable import/unambiguous, import/no-commonjs, no-magic-numbers */
 /* eslint-disable no-inline-comments */
 
-
 module.exports = {
 	env: {
 		mocha: true
@@ -11,5 +10,12 @@ module.exports = {
 		'max-lines-per-function': 0,
 		'no-unused-expressions': 0,
 		'prefer-arrow-callback': 0
+	},
+	settings: {
+		'import/resolver': {
+			node: {
+				extensions: ['.js', '.jsx', '.ts', '.tsx']
+			}
+		}
 	}
 };
