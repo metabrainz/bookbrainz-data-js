@@ -18,7 +18,7 @@
 import * as _ from 'lodash';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
-import bookbrainzData from './bookshelf';
+import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';

@@ -15,8 +15,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-import * as Bookshelf from 'bookshelf';
-import * as knex from 'knex';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
@@ -91,7 +89,9 @@ import workType from './models/workType';
  */
 
 export default function init(config) {
-	const bookshelf = Bookshelf(knex(config));
+	// eslint-disable-next-line global-require
+	const bookshelf = require('bookshelf')(require('knex')(config));
+
 	bookshelf.plugin('bookshelf-virtuals-plugin');
 	// Initialize these here to set up dependencies
 	const AuthorData = authorData(bookshelf);

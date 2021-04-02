@@ -37,7 +37,7 @@ export async function updateAliasSet(
 	transacting: Transaction,
 	oldSet: any,
 	oldDefaultAliasId: number | null,
-	newSetItemsWithDefault: Array<AliasWithDefault>
+	newSetItemsWithDefault: Array<any>
 ) {
 	function comparisonFunc(obj: Alias, other: Alias) {
 		return (
@@ -49,7 +49,7 @@ export async function updateAliasSet(
 	}
 
 	const {AliasSet} = orm;
-	const newSetItems: Array<Alias> = newSetItemsWithDefault.map((item) =>
+	const newSetItems: Array<any> = newSetItemsWithDefault.map((item) =>
 		_.omit(item, 'default'));
 	const oldSetItems: Array<Alias> = oldSet ?
 		oldSet.related('aliases').toJSON() :
