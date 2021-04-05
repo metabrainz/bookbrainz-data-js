@@ -2,14 +2,18 @@
   "name": "bookbrainz-data",
   "version": "2.8.0",
   "description": "A JavaScript data access module for BookBrainz",
-  "main": "dist/src/index.js",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "build-js": "rimraf dist && tsc",
-    "build-js-for-test": "rimraf dist && tsc",
+    "build-js": "rimraf lib && tsc",
+    "build-js-for-test": "rimraf lib && tsc",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
     "prepublish": "npm run build-js",
-    "test": "tsc && cd dist && mocha",
+    "test": "tsc && cd lib && mocha",
     "test-cov": "nyc --reporter=text npm test",
     "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
     "dupreport": "jsinspect src/ || true",
