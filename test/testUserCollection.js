@@ -29,7 +29,7 @@ const editorAttribs = {
 const aBBID = faker.random.uuid();
 const aBBID2 = faker.random.uuid();
 
-describe('User Collection', () => {
+describe('UserCollection model', () => {
 	beforeEach(
 		async () => {
 			await new Gender(genderData).save(null, {method: 'insert'});
