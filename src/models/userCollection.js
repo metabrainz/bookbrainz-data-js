@@ -28,13 +28,16 @@ export default function userCollection(bookshelf) {
 		idAttribute: 'id',
 		initialize() {
 			this.on('fetching fetching:collection', (model, columns, options) => {
-				options.query.select(bookshelf.knex.raw(
-					`(select count(*) 
-					from bookbrainz.user_collection_item 
-					where 
-					bookbrainz.user_collection_item.collection_id = bookbrainz.user_collection.id
-					) as item_count`
-				)).groupBy('user_collection.id');
+				if (options.withItemCount === true) {
+					options.query.select(bookshelf.knex.raw(
+						`(select count(*)
+						from bookbrainz.user_collection_item
+						where
+						collection_id = bookbrainz.user_collection.id
+						) as item_count`
+					))
+						.groupBy('user_collection.id');
+				}
 			});
 		},
 		items() {
