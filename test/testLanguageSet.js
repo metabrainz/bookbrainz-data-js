@@ -82,4 +82,40 @@ describe('LanguageSet model', () => {
 			return expect(jsonPromise).to.eventually.be.empty;
 		}
 	);
+
+	it('should have have a language when one is set', () => {
+		const langPromise = new Language(languageAttribs)
+			.save(null, {method: 'insert'});
+
+		const jsonPromise = langPromise.then(
+			(language) => createLanguageSet([language])
+		)
+			.then((model) => model.refresh({withRelated: ['languages']}))
+			.then((model) => model.toJSON());
+
+		return Promise.all([
+			expect(jsonPromise).to.eventually
+				.have.nested.property('languages[0].id', 1)
+		]);
+	});
+
+	it('should have have two languages when two are set', () => {
+		const lang1Promise = new Language(languageAttribs)
+			.save(null, {method: 'insert'});
+
+		const lang2Promise = new Language(_.assign(languageAttribs, {id: 2}))
+			.save(null, {method: 'insert'});
+
+		const jsonPromise = Promise.join(
+			lang1Promise, lang2Promise, (language1, language2) =>
+				createLanguageSet([language1, language2])
+		)
+			.then(
+				(model) => model.refresh({withRelated: ['languages']})
+			)
+			.then((model) => model.toJSON());
+
+		return expect(jsonPromise).to.eventually
+			.have.nested.property('languages.length', 2);
+	});
 });
