@@ -18,7 +18,7 @@ The auto-generated documentation is served alongisde this repository on Github P
 
 A suite of simple tests is provided in the tests directory, using the Mocha and Chai libraries.
 
-Copy the file `test/bookshelf.example.js` to `test/bookshelf.js` and modify it according to your local postgres setup. For instructions on setting up the postgres test database, refer to the [bookbrainz-site repo](https://github.com/bookbrainz/bookbrainz-site/blob/master/README.md#testing).
+Copy the file `test/bookshelf.js.example` to `test/bookshelf.js` and modify it according to your local postgres setup. For instructions on setting up the postgres test database, refer to the [bookbrainz-site repo](https://github.com/bookbrainz/bookbrainz-site/blob/master/README.md#testing).
 
 The command for running the tests, following dependency installation, is the standard:
 
