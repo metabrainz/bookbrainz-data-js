@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
@@ -56,66 +55,53 @@ describe('LanguageSet model', () => {
 		])
 	);
 
-	it('should return a JSON object with correct keys when saved', () => {
-		const jsonPromise = new LanguageSet({id: 1})
-			.save(null, {method: 'insert'})
-			.then(
-				(model) => model.refresh({withRelated: ['languages']})
-			)
-			.then((model) => model.toJSON());
+	it('should return a JSON object with correct keys when saved', async () => {
+		const model = await new LanguageSet({id: 1})
+			.save(null, {method: 'insert'});
+		await model.refresh({withRelated: ['languages']});
+		const json = model.toJSON();
 
-		return expect(jsonPromise).to.eventually.have.all.keys([
+		return expect(json).to.have.all.keys([
 			'id', 'languages'
 		]);
 	});
 
+
 	it(
 		'should have an empty list of languages when none are attached',
-		() => {
-			const jsonPromise = new LanguageSet({id: 1})
-				.save(null, {method: 'insert'})
-				.then(
-					(model) => model.refresh({withRelated: ['languages']})
-				)
-				.then((model) => model.toJSON().languages);
+		async () => {
+			const model = await new LanguageSet({id: 1})
+				.save(null, {method: 'insert'});
+			await model.refresh({withRelated: ['languages']});
+			const json = model.toJSON().languages;
 
-			return expect(jsonPromise).to.eventually.be.empty;
+			return expect(json).to.be.empty;
 		}
 	);
 
-	it('should have have a language when one is set', () => {
-		const langPromise = new Language(languageAttribs)
+	it('should have have a language when one is set', async () => {
+		const language = await new Language(languageAttribs)
 			.save(null, {method: 'insert'});
+		const model = await createLanguageSet([language]);
+		await model.refresh({withRelated: ['languages']});
+		const json = model.toJSON();
 
-		const jsonPromise = langPromise.then(
-			(language) => createLanguageSet([language])
-		)
-			.then((model) => model.refresh({withRelated: ['languages']}))
-			.then((model) => model.toJSON());
-
-		return Promise.all([
-			expect(jsonPromise).to.eventually
-				.have.nested.property('languages[0].id', 1)
-		]);
+		return expect(json).to.have.nested.property('languages[0].id', 1);
 	});
 
-	it('should have have two languages when two are set', () => {
-		const lang1Promise = new Language(languageAttribs)
+	it('should have have two languages when two are set', async () => {
+		const language1 = await new Language(languageAttribs)
 			.save(null, {method: 'insert'});
 
-		const lang2Promise = new Language(_.assign(languageAttribs, {id: 2}))
+		const language2 = await new Language(_.assign(languageAttribs, {id: 2}))
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = Promise.join(
-			lang1Promise, lang2Promise, (language1, language2) =>
-				createLanguageSet([language1, language2])
-		)
-			.then(
-				(model) => model.refresh({withRelated: ['languages']})
-			)
-			.then((model) => model.toJSON());
+		const model = await createLanguageSet([language1, language2]);
+		await model.refresh({withRelated: ['languages']});
+		const json = model.toJSON();
 
-		return expect(jsonPromise).to.eventually
+
+		return expect(json).to
 			.have.nested.property('languages.length', 2);
 	});
 });
