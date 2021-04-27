@@ -29,12 +29,10 @@ const {
 	Language, LanguageSet, bookshelf
 } = bookbrainzData;
 
-function createLanguageSet(languages) {
-	return new LanguageSet({id: 1})
-		.save(null, {method: 'insert'})
-		.then(
-			(model) => model.languages().attach(languages).then(() => model)
-		);
+async function createLanguageSet(languages) {
+	const model = await new LanguageSet({id: 1}).save(null, {method: 'insert'});
+	await model.languages().attach(languages);
+	return model;
 }
 
 describe('LanguageSet model', () => {
