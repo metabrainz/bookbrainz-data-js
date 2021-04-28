@@ -246,7 +246,7 @@ describe('EditionGroup model', () => {
 		const {collections} = json;
 
 		// collections exist
-		return expect(collections).to.have.lengthOf.above(0);
+		return expect(collections).to.have.lengthOf(1);
 	});
 
 	it('should return a JSON object with empty collections array', async () => {
