@@ -28,7 +28,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, AuthorCredit, Disambiguation, Edition, EditionGroup, Editor, EditorType, Entity,
-	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
+	Gender, IdentifierSet, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +48,7 @@ const editorAttribs = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
 
 const revisionAttribs = {
 	authorId: 1,
@@ -151,7 +152,7 @@ describe('Edition model', () => {
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
 			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
-			'type', 'weight', 'width'
+			'type', 'weight', 'width', 'collections'
 		]);
 	});
 
@@ -267,4 +268,41 @@ describe('Edition model', () => {
 					.to.eventually.have.property('master', true)
 			]);
 		});
+
+	it('should return a JSON object with related collections if there exist any', async () => {
+		const edition = await createEdition();
+		const userCollectionAttribs = {
+			entityType: 'Author',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await edition.refresh({
+			withRelated: ['collections']
+		});
+		const json = edition.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf.above(0);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const edition = await createEdition();
+		await edition.refresh({
+			withRelated: ['collections']
+		});
+		const json = edition.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });
