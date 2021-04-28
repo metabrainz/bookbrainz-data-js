@@ -20,6 +20,9 @@ export default function publisher(bookshelf) {
 	const PublisherData = bookshelf.model('PublisherData');
 
 	const Publisher = PublisherData.extend({
+		collections() {
+			return this.belongsToMany('UserCollection').through('UserCollectionItem', 'bbid', 'collection_id', 'bbid');
+		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
