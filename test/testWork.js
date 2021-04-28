@@ -28,7 +28,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Editor, EditorType, Entity, Gender,
-	IdentifierSet, RelationshipSet, Revision, Work, bookshelf
+	IdentifierSet, RelationshipSet, Revision, Work, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +48,15 @@ const editorData = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
+
+const workAttribs = {
+	aliasSetId: 1,
+	bbid: aBBID,
+	identifierSetId: 1,
+	relationshipSetId: 1,
+	revisionId: 1
+};
 
 describe('Work model', () => {
 	beforeEach(
@@ -104,7 +113,7 @@ describe('Work model', () => {
 			authorId: 1,
 			id: 1
 		};
-		const workAttribs = {
+		const entityAttribs = {
 			aliasSetId: 1,
 			annotationId: 1,
 			bbid: aBBID,
@@ -129,7 +138,7 @@ describe('Work model', () => {
 			);
 
 		const entityPromise = annotationPromise
-			.then(() => new Work(workAttribs).save(null, {method: 'insert'}))
+			.then(() => new Work(entityAttribs).save(null, {method: 'insert'}))
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
@@ -156,13 +165,6 @@ describe('Work model', () => {
 			const revisionAttribs = {
 				authorId: 1,
 				id: 1
-			};
-			const workAttribs = {
-				aliasSetId: 1,
-				bbid: aBBID,
-				identifierSetId: 1,
-				relationshipSetId: 1,
-				revisionId: 1
 			};
 
 			const revisionOnePromise = new Revision(revisionAttribs)
@@ -201,4 +203,52 @@ describe('Work model', () => {
 					.to.eventually.have.property('master', true)
 			]);
 		});
+
+	it('should return a JSON object with related collections', async () => {
+		const userCollectionAttribs = {
+			entityType: 'Work',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Work(workAttribs).save(null, {method: 'insert'});
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf.above(0);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Work(workAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });
