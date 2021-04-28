@@ -28,7 +28,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Editor, EditorType, Entity, Gender,
-	IdentifierSet, EditionGroup, RelationshipSet, Revision, bookshelf
+	IdentifierSet, EditionGroup, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +48,7 @@ const editorAttribs = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
 
 describe('EditionGroup model', () => {
 	beforeEach(
@@ -94,6 +95,8 @@ describe('EditionGroup model', () => {
 			'bookbrainz.disambiguation',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
+			'bookbrainz.user_collection',
+			'bookbrainz.user_collection_item',
 			'musicbrainz.gender'
 		]);
 	});
@@ -136,7 +139,7 @@ describe('EditionGroup model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'authorCredit'
+					'annotation', 'disambiguation', 'authorCredit', 'collections'
 				]
 			}))
 			.then((entity) => entity.toJSON());
@@ -146,7 +149,7 @@ describe('EditionGroup model', () => {
 			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId'
+			'typeId', 'collections'
 		]);
 	});
 
@@ -209,4 +212,65 @@ describe('EditionGroup model', () => {
 					.to.eventually.have.property('master', true)
 			]);
 		});
+	it('should return a JSON object with related collections if there exist any', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const editionGroupAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+		const userCollectionAttribs = {
+			entityType: 'EditionGroup',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new EditionGroup(editionGroupAttribs).save(null, {method: 'insert'});
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf(1);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const editionGroupAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new EditionGroup(editionGroupAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });

@@ -20,6 +20,9 @@ export default function work(bookshelf) {
 	const WorkData = bookshelf.model('WorkData');
 
 	const Work = WorkData.extend({
+		collections() {
+			return this.belongsToMany('UserCollection').through('UserCollectionItem', 'bbid', 'collection_id', 'bbid');
+		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
