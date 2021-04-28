@@ -95,6 +95,8 @@ describe('EditionGroup model', () => {
 			'bookbrainz.disambiguation',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
+			'bookbrainz.user_collection',
+			'bookbrainz.user_collection_item',
 			'musicbrainz.gender'
 		]);
 	});
