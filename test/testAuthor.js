@@ -137,7 +137,7 @@ describe('Author model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'collections'
 				]
 			}))
 			.then((author) => author.toJSON());
@@ -149,7 +149,7 @@ describe('Author model', () => {
 			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
 			'endYear', 'ended', 'genderId', 'identifierSet', 'identifierSetId',
 			'master', 'relationshipSet', 'relationshipSetId', 'revisionId',
-			'type', 'typeId'
+			'type', 'typeId', 'collections'
 		]);
 	});
 

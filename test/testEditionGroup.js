@@ -139,7 +139,7 @@ describe('EditionGroup model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation', 'authorCredit'
+					'annotation', 'disambiguation', 'authorCredit', 'collections'
 				]
 			}))
 			.then((entity) => entity.toJSON());
@@ -149,7 +149,7 @@ describe('EditionGroup model', () => {
 			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId'
+			'typeId', 'collections'
 		]);
 	});
 

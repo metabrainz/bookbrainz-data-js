@@ -144,7 +144,7 @@ describe('Work model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'collections'
 				]
 			}))
 			.then((entity) => entity.toJSON());
@@ -154,7 +154,7 @@ describe('Work model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId'
+			'typeId', 'collections'
 		]);
 	});
 

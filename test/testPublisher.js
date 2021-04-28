@@ -138,7 +138,7 @@ describe('Publisher model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'collections'
 				]
 			}))
 			.then((entity) => entity.toJSON());
@@ -149,7 +149,7 @@ describe('Publisher model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'endDate', 'endDay', 'endMonth', 'endYear', 'ended',
 			'identifierSetId', 'identifierSet', 'master', 'relationshipSet',
-			'relationshipSetId', 'revisionId', 'type', 'typeId'
+			'relationshipSetId', 'revisionId', 'type', 'typeId', 'collections'
 		]);
 	});
 

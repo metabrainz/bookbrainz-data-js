@@ -142,7 +142,7 @@ describe('Edition model', () => {
 		await edition.refresh({
 			withRelated: [
 				'relationshipSet', 'aliasSet', 'identifierSet',
-				'annotation', 'disambiguation', 'authorCredit'
+				'annotation', 'disambiguation', 'authorCredit', 'collections'
 			]
 		});
 		const editionJSON = edition.toJSON();
