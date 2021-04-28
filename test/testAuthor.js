@@ -28,7 +28,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Author, Disambiguation, Editor, EditorType, Entity,
-	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
+	Gender, IdentifierSet, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +48,7 @@ const editorAttribs = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
 
 describe('Author model', () => {
 	beforeEach(
@@ -211,4 +212,67 @@ describe('Author model', () => {
 					.to.eventually.have.property('ended', true)
 			]);
 		});
+
+	it('should return a JSON object with related collections if there exist any', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const authorAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+		const userCollectionAttribs = {
+			entityType: 'Author',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf.above(0);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const authorAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });
