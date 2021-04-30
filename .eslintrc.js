@@ -14,11 +14,6 @@ const options = {
 	],
 	parser: 'babel-eslint',
 	parserOptions: {
-		ecmaFeatures: {
-			generators: true,
-			modules: false
-		},
-		ecmaVersion: 2018,
 		sourceType: 'module'
 	},
 	plugins: [
