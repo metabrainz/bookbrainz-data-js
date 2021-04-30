@@ -82,7 +82,7 @@ export class EntityTypeError extends Error {
 		super(message);
 		this.name = 'EntityTypeError';
 		this.message = message;
-		this.stack = (new Error()).stack;
+		this.stack = new Error().stack;
 	}
 }
 
@@ -238,8 +238,10 @@ export function parseDate(date) {
 
 /**
  * Create a new Edition Group for an Edition.
- * The Edition Group will be part of the same revision, and will have the same alias set and author credit for that revision
- * Subsequent changes to the alias set or author credit for either entity will only impact that entity's new revision.
+ * The Edition Group will be part of the same revision, and will have the same
+ * alias set and author credit for that revision
+ * Subsequent changes to the alias set or author credit for either entity will
+ * only impact that entity's new revision.
  * @param {object} orm - The Bookshelf ORM
  * @param {object} transacting - The Bookshelf/Knex SQL transaction in progress
  * @param {number|string} aliasSetId - The id of the new edition's alias set
