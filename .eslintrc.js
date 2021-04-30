@@ -44,7 +44,6 @@ const possibleErrorsRules = {
 			returnAssign: false
 		}
 	],
-	'no-prototype-builtins': ERROR,
 	'no-template-curly-in-string': ERROR,
 	'valid-jsdoc': [
 		ERROR,
@@ -131,7 +130,6 @@ const bestPracticesRules = {
 	'no-useless-return': ERROR,
 	'no-void': ERROR,
 	'no-warning-comments': WARNING,
-	'no-with': ERROR,
 	'prefer-promise-reject-errors': ERROR,
 	radix: ERROR,
 	'require-await': ERROR,
@@ -155,7 +153,6 @@ const variablesRules = {
 	'no-catch-shadow': ERROR,
 	'no-label-var': ERROR,
 	'no-shadow': ERROR,
-	'no-shadow-restricted-names': ERROR,
 	'no-undef-init': ERROR,
 	'no-undefined': WARNING,
 	'no-unused-vars': WARNING,
@@ -360,12 +357,7 @@ const ecmaScript6Rules = {
 			before: false
 		}
 	],
-	'no-confusing-arrow': [
-		ERROR,
-		{
-			allowParens: true
-		}
-	],
+	'no-confusing-arrow': ERROR,
 	'no-duplicate-imports': ERROR,
 	'no-useless-computed-key': ERROR,
 	'no-useless-constructor': ERROR,
