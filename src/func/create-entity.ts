@@ -19,8 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {
 	FormAliasWithDefaultT as AliasWithDefault, FormIdentifierT as Identifier,
 	Transaction
@@ -29,7 +28,6 @@ import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from './entity';
 import Promise from 'bluebird';
-import _ from 'lodash';
 import {createNote} from './note';
 import {incrementEditorEditCountById} from './editor';
 import {updateAliasSet} from './alias';
@@ -39,30 +37,34 @@ import {updateEntitySets} from './entity-sets';
 import {updateIdentifierSet} from './identifier';
 
 
-type createEntityPropsType = {
-	orm: Object,
-	transacting: Transaction,
-	editorId: string,
-	entityData: Object,
-	entityType: string
-};
-
-type entityDataType = {
+interface EntityDataType {
 	aliases: Array<AliasWithDefault>,
 	annotation: string,
 	disambiguation: string,
 	identifiers: Array<Identifier>,
 	note: string,
 	type: string
-};
+}
+
+interface ExtraEntityDataType extends EntityDataType {
+	[propName: string]: any;
+}
+
+interface CreateEntityPropsType {
+	orm: any,
+	transacting: Transaction,
+	editorId: string,
+	entityData: ExtraEntityDataType,
+	entityType: string
+}
 
 export async function createEntity({
 	editorId, entityData, orm, transacting
-}: createEntityPropsType) {
+}: CreateEntityPropsType) {
 	const {Revision} = orm;
 
 	const {aliases, annotation, disambiguation, identifiers, note,
-		type: entityType, ...entitySetData}: entityDataType = entityData;
+		type: entityType, ...entitySetData} = entityData;
 
 	// Increase user edit count
 	const editorUpdatePromise =

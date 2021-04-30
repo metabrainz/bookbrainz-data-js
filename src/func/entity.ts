@@ -18,19 +18,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// @flow
-
-import _ from 'lodash';
+import * as _ from 'lodash';
+import {EntityTypeString} from './types';
 import {parseDate} from '../util';
 
 
-export const AUTHOR: string = 'Author';
-export const EDITION: string = 'Edition';
-export const EDITION_GROUP: string = 'EditionGroup';
-export const PUBLISHER: string = 'Publisher';
-export const WORK: string = 'Work';
+export const AUTHOR: EntityTypeString = 'Author';
+export const EDITION: EntityTypeString = 'Edition';
+export const EDITION_GROUP: EntityTypeString = 'EditionGroup';
+export const PUBLISHER: EntityTypeString = 'Publisher';
+export const WORK: EntityTypeString = 'Work';
 
-export const entityTypes: Object = {
+export const entityTypes = {
 	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, WORK
 };
 
@@ -40,7 +39,7 @@ export const entityTypes: Object = {
  * @returns {Object} - Returns all the additional entity specific data
 */
 export function getAdditionalEntityProps(
-	entityData: Object, entityType: string
+	entityData: Record<string, unknown>, entityType: string
 ) {
 	if (entityType === entityTypes.AUTHOR) {
 		const {typeId, genderId, beginAreaId, beginDate, endDate,
@@ -84,7 +83,7 @@ export function getAdditionalEntityProps(
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
 */
-export function getEntitySetMetadataByType(entityType: string): Array<Object> {
+export function getEntitySetMetadataByType(entityType: string): Array<Record<string, unknown>> {
 	if (entityType === EDITION) {
 		return [
 			{
@@ -131,7 +130,7 @@ export function getEntitySetMetadataByType(entityType: string): Array<Object> {
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @returns {object} - Object mapping model name to the entity model
 */
-export function getEntityModels(orm: Object): Object {
+export function getEntityModels(orm: Record<string, unknown>): any {
 	const {Author, Edition, EditionGroup, Publisher, Work} = orm;
 	return {
 		Author,
@@ -152,7 +151,7 @@ export function getEntityModels(orm: Object): Object {
  * @returns {object} - Bookshelf model object with the type specified in the
  * single param
 */
-export function getEntityModelByType(orm: Object, type: string): Object {
+export function getEntityModelByType(orm: Record<string, unknown>, type: string): any {
 	const entityModels = getEntityModels(orm);
 
 	if (!entityModels[type]) {
@@ -170,7 +169,7 @@ export function getEntityModelByType(orm: Object, type: string): Object {
  * @param {any} transacting - Optional ORM transaction object
  * @returns {string} The final bbid to redirect to
  */
-export async function recursivelyGetRedirectBBID(orm: Object, bbid: string, transacting?) {
+export async function recursivelyGetRedirectBBID(orm: any, bbid: string, transacting?) {
 	const redirectSQLQuery = `SELECT target_bbid FROM bookbrainz.entity_redirect WHERE source_bbid = '${bbid}'`;
 	const redirectQueryResults = await (transacting || orm.bookshelf.knex).raw(redirectSQLQuery);
 	if (redirectQueryResults.rows && redirectQueryResults.rows.length) {
@@ -189,8 +188,8 @@ export async function recursivelyGetRedirectBBID(orm: Object, bbid: string, tran
  * @returns {Promise} A Promise that resolves to the entity in JSON format
  */
 export async function getEntity(
-	orm: Object, entityType: string, bbid: string, relations: Array<String> = []
-): Object {
+	orm: Record<string, unknown>, entityType: string, bbid: string, relations: Array<string> = []
+): Promise<Record<string, unknown>> {
 	// if bbid appears in entity_redirect table, use that bbid instead
 	// Do a recursive search in case the redirected bbid also redirects, etc.
 	const finalBBID = await recursivelyGetRedirectBBID(orm, bbid);

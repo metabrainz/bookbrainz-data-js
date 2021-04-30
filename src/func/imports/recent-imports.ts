@@ -16,11 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {EntityTypeString, Transaction} from '../types';
-
-import _ from 'lodash';
 import {entityTypes} from '../entity';
 import {getAliasByIds} from '../alias';
 import moment from 'moment';
@@ -35,12 +32,12 @@ import {snakeToCamel} from '../../util';
  * 		importIds of various importTypes
  */
 async function getRecentImportUtilData(
-	transacting: Object,
+	transacting: Transaction,
 	limit: number,
 	offset: number
 ) {
 	// Extract recent imports, types and import timeStamp
-	const recentImportUtilsData: Object =
+	const recentImportUtilsData =
 			await transacting.select(
 				'link.imported_at',
 				'link.origin_source_id',
@@ -65,7 +62,7 @@ async function getRecentImportUtilData(
 	/* Contruct importHolder object (holds importIds classified by their types)
 		object of form {type: []} */
 	const importHolder = _.values(entityTypes).reduce(
-		(holder: Object, type: string) => _.assign(holder, {[type]: []}), {}
+		(holder: Record<string, unknown>, type: string) => _.assign(holder, {[type]: []}), {}
 	);
 
 	/* Returns the holder object which has two fields:
@@ -77,7 +74,7 @@ async function getRecentImportUtilData(
 		=> originIdMap: Object{originId: origin_id}
 			This holds a mapping of all imports and their origin_ids
 		*/
-	return recentImportUtilsData.reduce((holder: Object, data: Object) => {
+	return recentImportUtilsData.reduce((holder: Record<string, unknown>, data: any) => {
 		holder.importHolder[data.type].push(data.id);
 		holder.originIdMap[data.id] = data.origin_source_id;
 		holder.timeStampMap[data.id] = data.imported_at;
@@ -92,7 +89,7 @@ function getRecentImportsByType(transacting, type, importIds) {
 }
 
 export async function getRecentImports(
-	orm: Object, transacting: Transaction, limit: number = 10,
+	orm: Record<string, unknown>, transacting: Transaction, limit: number = 10,
 	offset: number = 0
 ) {
 	/* Fetch most recent ImportIds classified by importTypes
@@ -158,5 +155,5 @@ export async function getRecentImports(
 export async function getTotalImports(transacting: Transaction) {
 	const [{count}] =
 		await transacting('bookbrainz.link_import').count('import_id');
-	return parseInt(count, 10);
+	return parseInt(count as string, 10);
 }

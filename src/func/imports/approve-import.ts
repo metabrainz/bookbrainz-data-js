@@ -16,28 +16,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from '../entity';
 import type {Transaction} from '../types';
-import _ from 'lodash';
 import {createNote} from '../note';
 import {deleteImport} from './delete-import';
 import {incrementEditorEditCountById} from '../editor';
 
 
-type approveEntityPropsType = {
-	orm: Object,
+interface approveEntityPropsType {
+	orm: any,
 	transacting: Transaction,
-	importEntity: Object,
+	importEntity: any,
 	editorId: string
-};
+}
 
 export async function approveImport(
 	{orm, transacting, importEntity, editorId}: approveEntityPropsType
-): Object {
+): Promise<Record<string, unknown>> {
 	const {source, importId, type: entityType, disambiguationId, aliasSet,
 		identifierSetId} = importEntity;
 	const {id: aliasSetId} = aliasSet;
@@ -64,7 +62,7 @@ export async function approveImport(
 	const additionalProps = getAdditionalEntityProps(importEntity, entityType);
 
 	// Collect the entity sets from the importEntity
-	const entitySetMetadata: Array<Object> =
+	const entitySetMetadata: Array<any> =
 		getEntitySetMetadataByType(entityType);
 	const entitySets = entitySetMetadata.reduce(
 		(set, {entityIdField}) =>

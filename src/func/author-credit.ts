@@ -16,11 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {AuthorCreditNameT, Transaction} from './types';
-
-import _ from 'lodash';
 
 
 function findAuthorCredit(
@@ -31,15 +28,16 @@ function findAuthorCredit(
 	const joins = _.map(
 		authorCredit,
 		(authorCreditName: AuthorCreditNameT, index: number) =>
-			[
-				`JOIN bookbrainz.author_credit_name ccn${index} ` +
-				`ON ccn${index}.author_credit_id = cc.id`
-			]
+			`JOIN bookbrainz.author_credit_name ccn${index} ` +
+			`ON ccn${index}.author_credit_id = cc.id`
 	);
 
 	const wheres = _.reduce(
 		authorCredit,
-		(result: {}, authorCreditName: AuthorCreditNameT, index: number) => {
+		(
+			result: Record<string, unknown>,
+			authorCreditName: AuthorCreditNameT, index: number
+		) => {
 			result[`ccn${index}.position`] = index;
 			result[`ccn${index}.author_bbid`] = authorCreditName.authorBBID;
 			result[`ccn${index}.name`] = authorCreditName.name;

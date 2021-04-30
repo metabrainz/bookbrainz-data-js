@@ -17,8 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {
 	FormAliasT as Alias,
 	FormAliasWithDefaultT as AliasWithDefault,
@@ -31,13 +30,12 @@ import {
 	getRemovedItems,
 	getUnchangedItems
 } from './set';
-
-import _ from 'lodash';
 import {snakeToCamel} from '../util';
 
 
 export async function updateAliasSet(
-	orm: any, transacting: Transaction, oldSet: any, oldDefaultAliasId: ?number,
+	orm: any, transacting: Transaction, oldSet: any,
+	oldDefaultAliasId: number | null | undefined,
 	newSetItemsWithDefault: Array<AliasWithDefault>
 ) {
 	function comparisonFunc(obj: Alias, other: Alias) {
@@ -132,7 +130,7 @@ export async function updateAliasSet(
 
 export async function getAliasByIds(
 	transacting: Transaction, ids: Array<number>
-): Promise<Object> {
+): Promise<Record<string, unknown>> {
 	const aliases = await transacting.select('*')
 		.from('bookbrainz.alias')
 		.whereIn('id', ids);
@@ -142,7 +140,7 @@ export async function getAliasByIds(
 
 export function getAliasIds(
 	transacting: Transaction, name: string, caseSensitive: boolean = false
-): Promise<Array<Object>> {
+): Promise<Array<Record<string, unknown>>> {
 	const trimmedName = _.trim(name);
 	if (caseSensitive) {
 		return transacting.select('id')
@@ -163,7 +161,7 @@ export async function getBBIDsWithMatchingAlias(
 	const aliasIds = _.map(
 		await getAliasIds(transacting, name, caseSensitive),
 		'id'
-	);
+	) as Array<string|number>;
 
 	const aliasSetIds = _.map(
 		await transacting.distinct('set_id')
