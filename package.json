@@ -4,7 +4,7 @@
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
   "scripts": {
-    "build-js": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts",
+    "build-js": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts && tsc",
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
@@ -15,6 +15,9 @@
     "dupreport": "jsinspect src/ || true",
     "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'"
   },
+  "files": [
+    "lib/**/*"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -22,6 +25,9 @@
   },
   "lint-staged": {
     "*.js": [
+      "eslint"
+    ],
+    "*.ts": [
       "eslint"
     ]
   },
@@ -79,7 +85,8 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.10.1",
     "@types/lodash": "^4.14.168",
-    "babel-eslint": "^10.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-plugin-lodash": "^3.2.11",
     "chai": "^4.1.2",

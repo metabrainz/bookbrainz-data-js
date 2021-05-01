@@ -89,8 +89,8 @@ function getRecentImportsByType(transacting, type, importIds) {
 }
 
 export async function getRecentImports(
-	orm: Record<string, unknown>, transacting: Transaction, limit: number = 10,
-	offset: number = 0
+	orm: Record<string, unknown>, transacting: Transaction, limit = 10,
+	offset = 0
 ) {
 	/* Fetch most recent ImportIds classified by importTypes
 		=> importHolder - holds recentImports classified by entity type

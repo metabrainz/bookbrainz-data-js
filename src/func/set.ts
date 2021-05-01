@@ -115,7 +115,7 @@ export const removeItemsFromSet = getRemovedItems;
 export async function createNewSetWithItems<Item extends SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
-	itemsAttribute: string, idAttribute: string = 'id'
+	itemsAttribute: string, idAttribute = 'id'
 ): Promise<any> {
 	if (!itemsAttribute) {
 		throw Error('itemsAttribute must be set in createNewSetWithItems');

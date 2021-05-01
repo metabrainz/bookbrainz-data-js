@@ -10,16 +10,22 @@ const options = {
 	extends: [
 		'eslint:recommended',
 		'plugin:node/recommended',
-		'plugin:import/recommended'
+		'plugin:import/recommended',
+		'plugin:@typescript-eslint/recommended'
 	],
-	parser: 'babel-eslint',
-	parserOptions: {
-		sourceType: 'module'
-	},
+	parser: '@typescript-eslint/parser',
 	plugins: [
 		'import',
-		'babel'
-	]
+		'@typescript-eslint'
+	],
+	root: true,
+	settings: {
+		'import/resolver': {
+			node: {
+				extensions: ['.js', '.ts']
+			}
+		}
+	}
 };
 
 
@@ -34,16 +40,6 @@ const IGNORE = 0;
 const possibleErrorsRules = {
 	'no-await-in-loop': ERROR,
 	'no-console': ERROR,
-	'no-extra-parens': [
-		ERROR,
-		'all',
-		{
-			enforceForArrowConditionals: false,
-			ignoreJSX: 'multi-line',
-			nestedBinaryExpressions: false,
-			returnAssign: false
-		}
-	],
 	'no-template-curly-in-string': ERROR,
 	'valid-jsdoc': [
 		ERROR,
@@ -152,11 +148,8 @@ const variablesRules = {
 	'init-declarations': TRANSITION_IGNORE,
 	'no-catch-shadow': ERROR,
 	'no-label-var': ERROR,
-	'no-shadow': ERROR,
 	'no-undef-init': ERROR,
-	'no-undefined': WARNING,
-	'no-unused-vars': WARNING,
-	'no-use-before-define': ERROR
+	'no-undefined': ERROR
 };
 
 const nodeAndCommonJSRules = {
@@ -289,6 +282,12 @@ const stylisticIssuesRules = {
 		TRANSITION_IGNORE,
 		15
 	],
+	'new-cap': [
+		ERROR,
+		{
+			capIsNew: false
+		}
+	],
 	'new-parens': ERROR,
 	'no-array-constructor': ERROR,
 	'no-bitwise': ERROR,
@@ -306,6 +305,7 @@ const stylisticIssuesRules = {
 	'no-unneeded-ternary': ERROR,
 	'no-whitespace-before-property': ERROR,
 	'object-curly-newline': ERROR,
+	'object-curly-spacing': ERROR,
 	'one-var': [
 		ERROR,
 		'never'
@@ -388,16 +388,25 @@ const ecmaScript6Rules = {
 	'yield-star-spacing': ERROR
 };
 
-const babelRules = {
-	'babel/new-cap': [
+const typescriptRules = {
+	'@typescript-eslint/ban-types': TRANSITION_WARNING,
+	'@typescript-eslint/explicit-module-boundary-types': TRANSITION_IGNORE,
+	'@typescript-eslint/no-explicit-any': TRANSITION_IGNORE,
+	'@typescript-eslint/no-extra-parens': [
 		ERROR,
+		'all',
 		{
-			capIsNew: false
+			enforceForArrowConditionals: false,
+			ignoreJSX: 'multi-line',
+			nestedBinaryExpressions: false,
+			returnAssign: false
 		}
 	],
-	'babel/no-invalid-this': ERROR,
-	'babel/object-curly-spacing': ERROR,
-	'babel/semi': ERROR
+	'@typescript-eslint/no-invalid-this': ERROR,
+	'@typescript-eslint/no-shadow': ERROR,
+	'@typescript-eslint/no-unused-vars': WARNING,
+	'@typescript-eslint/no-use-before-define': ERROR,
+	'@typescript-eslint/semi': ERROR
 };
 
 const es6ImportRules = {
@@ -444,7 +453,7 @@ options.rules = Object.assign(
 	nodeAndCommonJSRules,
 	stylisticIssuesRules,
 	ecmaScript6Rules,
-	babelRules,
+	typescriptRules,
 	es6ImportRules
 );
 

@@ -139,7 +139,7 @@ export async function getAliasByIds(
 }
 
 export function getAliasIds(
-	transacting: Transaction, name: string, caseSensitive: boolean = false
+	transacting: Transaction, name: string, caseSensitive = false
 ): Promise<Array<Record<string, unknown>>> {
 	const trimmedName = _.trim(name);
 	if (caseSensitive) {
@@ -156,7 +156,7 @@ export async function getBBIDsWithMatchingAlias(
 	transacting: Transaction,
 	entityType: EntityTypeString,
 	name: string,
-	caseSensitive: boolean = false
+	caseSensitive = false
 ) {
 	const aliasIds = _.map(
 		await getAliasIds(transacting, name, caseSensitive),
@@ -186,7 +186,7 @@ export async function doesAliasExist(
 	transacting: Transaction,
 	entityType: EntityTypeString,
 	name: string,
-	caseSensitive: boolean = false
+	caseSensitive = false
 ) {
 	const bbids = await getBBIDsWithMatchingAlias(
 		transacting, entityType, name, caseSensitive
