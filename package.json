@@ -8,14 +8,12 @@
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
-    "prepublish": "npm run build-js && npm run copy-flow",
+    "prepublish": "npm run build-js",
     "test": "npm run lint-errors && npm run build-js-for-test && mocha",
     "test-cov": "nyc --reporter=text npm test",
     "test-ci": "nyc --reporter=lcovonly --reporter=text-summary npm test",
-    "flow": "flow",
     "dupreport": "jsinspect src/ || true",
-    "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'",
-    "copy-flow": "flow-copy-source src lib"
+    "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'"
   },
   "husky": {
     "hooks": {
@@ -78,7 +76,6 @@
     "@babel/plugin-transform-modules-commonjs": "^7.10.1",
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.1",
-    "@babel/preset-flow": "^7.10.1",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.10.1",
     "@types/lodash": "^4.14.168",
@@ -89,12 +86,9 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.25.0",
     "eslint-plugin-babel": "^5.0.0",
-    "eslint-plugin-flowtype": "4.5.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "faker": "^4.1.0",
-    "flow-bin": "^0.105.2",
-    "flow-copy-source": "^2.0.9",
     "glob": "^7.1.2",
     "husky": "^3.0.3",
     "jsinspect": "^0.12.7",

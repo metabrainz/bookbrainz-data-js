@@ -13,7 +13,6 @@
     ]
   ],
   "presets": [
-    "@babel/flow",
     "@babel/preset-typescript",
     [
       "@babel/env",

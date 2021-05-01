@@ -9,7 +9,6 @@ const options = {
 	},
 	extends: [
 		'eslint:recommended',
-		'plugin:flowtype/recommended',
 		'plugin:node/recommended',
 		'plugin:import/recommended'
 	],
@@ -19,7 +18,6 @@ const options = {
 	},
 	plugins: [
 		'import',
-		'flowtype',
 		'babel'
 	]
 };
@@ -402,11 +400,6 @@ const babelRules = {
 	'babel/semi': ERROR
 };
 
-const flowTypeRules = {
-	'flowtype/semi': ERROR
-};
-
-
 const es6ImportRules = {
 	'import/first': ERROR,
 	'import/newline-after-import': [
@@ -452,7 +445,6 @@ options.rules = Object.assign(
 	stylisticIssuesRules,
 	ecmaScript6Rules,
 	babelRules,
-	flowTypeRules,
 	es6ImportRules
 );
 
