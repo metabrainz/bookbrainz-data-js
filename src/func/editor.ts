@@ -19,7 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import type {Transaction} from './types';
 
 /**
@@ -98,11 +97,8 @@ export function deleteEditorByMetaBrainzID(knex) {
 			const clearEditorLanguagesPromise =
 				clearEditorLanguagesByEditorID(trx, editorID);
 
-			return Promise.join(
-				clearEditorPromise,
-				clearEditorLanguagesPromise,
-				() => true
-			);
+			return Promise.all([clearEditorPromise, clearEditorLanguagesPromise])
+				.then(() => true);
 		});
 	});
 }

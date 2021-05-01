@@ -28,8 +28,8 @@ import {
 	getRemovedItems,
 	removeItemsFromSet
 } from './set';
+import {promiseProps} from '../util';
 
-import Promise from 'bluebird';
 
 type RelationshipComparisonFunc =
 	(obj: Relationship, other: Relationship) => boolean;
@@ -168,5 +168,5 @@ export function updateRelationshipSets(
 		)
 	}), {});
 
-	return Promise.props(newSetPromises);
+	return promiseProps(newSetPromises);
 }

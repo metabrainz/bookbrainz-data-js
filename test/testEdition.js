@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -249,8 +248,10 @@ describe('Edition model', () => {
 						.save(null, {method: 'insert'});
 				});
 
-			const editionUpdatePromise = Promise.join(editionPromise,
-				revisionTwoPromise, (edition) => {
+			const editionUpdatePromise = Promise.all(
+				[editionPromise, revisionTwoPromise]
+			)
+				.then(([edition]) => {
 					const editionUpdateAttribs = {
 						bbid: edition.bbid,
 						revisionId: 2

@@ -27,7 +27,6 @@ import type {
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from './entity';
-import Promise from 'bluebird';
 import {createNote} from './note';
 import {incrementEditorEditCountById} from './editor';
 import {updateAliasSet} from './alias';

@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
 
@@ -94,11 +93,11 @@ export function validateEntityType(model) {
 	}
 }
 
-export function truncateTables(Bookshelf, tables) {
-	return Promise.each(
-		tables,
-		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
-	);
+export async function truncateTables(Bookshelf, tables) {
+	for (const table of tables) {
+		// eslint-disable-next-line no-await-in-loop
+		await Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`);
+	}
 }
 
 export function diffRevisions(base, other, includes) {
@@ -151,15 +150,12 @@ export function diffRevisions(base, other, includes) {
 	const otherDataPromise =
 		other.related('data').fetch({require: false, withRelated: includes});
 
-	return Promise.join(
-		baseDataPromise,
-		otherDataPromise,
-		(baseData, otherData) => diff(
+	return Promise.all([baseDataPromise, otherDataPromise])
+		.then(([baseData, otherData]) => diff(
 			otherData ? sortEntityData(otherData.toJSON()) : {},
 			baseData ? sortEntityData(baseData.toJSON()) : {},
 			diffFilter
-		)
-	);
+		));
 }
 
 const YEAR_STR_LENGTH = 6;
@@ -263,4 +259,19 @@ export async function createEditionGroupForNewEdition(orm, transacting, aliasSet
 	})
 		.save(null, {method: 'insert', transacting});
 	return bbid;
+}
+
+/**
+ * Replacement for Bluebird's Promise.props
+ * @param {Object} promiseObj - an object containing string keys and promises
+ *                              to be resolved as the values
+ * @returns {Object} an object containing the same keys, but resolved promises
+ */
+export async function promiseProps(promiseObj) {
+	const resolvedKeyValuePairs = await Promise.all(
+		Object.entries(promiseObj).map(
+			([key, val]) => Promise.resolve(val).then((x) => [key, x])
+		)
+	);
+	return Object.fromEntries(resolvedKeyValuePairs);
 }
