@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import faker from 'faker';
@@ -64,8 +63,8 @@ describe('UserCollection model', () => {
 			collectionId: aBBID2
 		};
 
-		const userCollectionPromise = await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
-		const userCollectionItem = await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
 
 		const userCollection = await new UserCollection({id: aBBID2}).fetch({
 			withRelated: ['owner']
@@ -90,8 +89,8 @@ describe('UserCollection model', () => {
 			collectionId: aBBID2
 		};
 
-		const userCollectionPromise = await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
-		const userCollectionItem = await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
 
 		const userCollection = await new UserCollection({id: aBBID2}).fetch({
 			withItemCount: true,
@@ -101,7 +100,8 @@ describe('UserCollection model', () => {
 		const collection = userCollection.toJSON();
 
 		return expect(collection).to.have.all.keys([
-			'createdAt', 'description', 'entityType', 'id', 'itemCount', 'lastModified', 'name', 'owner', 'ownerId', 'public'
+			'createdAt', 'description', 'entityType', 'id', 'itemCount',
+			'lastModified', 'name', 'owner', 'ownerId', 'public'
 		]);
 	});
 });
