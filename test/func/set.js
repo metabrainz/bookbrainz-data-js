@@ -16,6 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {
+	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems,
+	removeItemsFromSet
+} from '../../lib/func/set';
 import _ from 'lodash';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
@@ -26,10 +30,6 @@ import {truncateTables} from '../../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {
-	getAddedItems, getRemovedItems, getUnchangedItems, removeItemsFromSet,
-	createNewSetWithItems
-} = bookbrainzData.func.set;
 const {AliasSet, Language, bookshelf} = bookbrainzData;
 
 const arrayA = [

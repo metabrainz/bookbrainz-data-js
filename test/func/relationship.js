@@ -22,11 +22,11 @@ import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
+import {updateRelationshipSets} from '../../lib/func/relationship';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {updateRelationshipSets} = bookbrainzData.func.relationship;
 const {
 	RelationshipType, Entity, Gender, EditorType, Revision, Annotation, Work,
 	Editor, AliasSet, bookshelf

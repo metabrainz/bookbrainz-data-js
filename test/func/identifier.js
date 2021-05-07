@@ -22,11 +22,11 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../../lib/util';
+import {updateIdentifierSet} from '../../lib/func/identifier';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {updateIdentifierSet} = bookbrainzData.func.identifier;
 const {IdentifierType, bookshelf} = bookbrainzData;
 
 function getIdentifierData() {

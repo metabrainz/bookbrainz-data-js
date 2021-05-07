@@ -22,11 +22,11 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../../lib/util';
+import {updateAliasSet} from '../../lib/func/alias';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {updateAliasSet} = bookbrainzData.func.alias;
 const {Language, bookshelf} = bookbrainzData;
 
 function getAliasData() {

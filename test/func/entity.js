@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {getEntity, recursivelyGetRedirectBBID} from '../../lib/func/entity';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -26,7 +27,6 @@ import {truncateTables} from '../../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {recursivelyGetRedirectBBID, getEntity} = bookbrainzData.func.entity;
 const {Entity, AliasSet, RelationshipSet, IdentifierSet,
 	Author, Disambiguation, Gender, Editor, EditorType,
 	Revision, Annotation, bookshelf} = bookbrainzData;
