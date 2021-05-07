@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2018  Ben Ockmore
- *               2018 Shivam Tripathi
+ * Copyright (C) 2021  Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,40 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as alias from './alias';
-import * as annotation from './annotation';
-import * as area from './area';
-import * as authorCredit from './author-credit';
-import * as disambiguation from './disambiguation';
-import * as editor from './editor';
-import * as entity from './entity';
-import * as identifier from './identifier';
-import * as language from './language';
-import * as publisher from './publisher';
-import * as relationship from './relationship';
-import * as releaseEvent from './releaseEvent';
-import * as set from './set';
-
-import {createEntity} from './create-entity';
-import imports from './imports';
-
-
-export default function init() {
-	return {
-		alias,
-		annotation,
-		area,
-		authorCredit,
-		createEntity,
-		disambiguation,
-		editor,
-		entity,
-		identifier,
-		imports,
-		language,
-		publisher,
-		relationship,
-		releaseEvent,
-		set
-	};
-}
+export * as alias from './alias';
+export * as annotation from './annotation';
+export * as area from './area';
+export * as authorCredit from './author-credit';
+export * as disambiguation from './disambiguation';
+export * as editor from './editor';
+export * as entity from './entity';
+export * as identifier from './identifier';
+export * as imports from './imports';
+export * as language from './language';
+export * as publisher from './publisher';
+export * as relationship from './relationship';
+export * as releaseEvent from './releaseEvent';
+export * as set from './set';
+export {createEntity} from './create-entity';

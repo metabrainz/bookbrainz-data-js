@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 Shivam Tripathi
+ *               2021 Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {DISCARD_LIMIT, castDiscardVote, discardVotesCast} from './discard';
-import {
+export {DISCARD_LIMIT, castDiscardVote, discardVotesCast} from './discard';
+export {
 	getImportDetails, getOriginSourceFromId, getOriginSourceId,
 	originSourceMapping
 } from './misc';
-import {getRecentImports, getTotalImports} from './recent-imports';
-import {approveImport} from './approve-import';
-import {createImport} from './create-import';
-import {deleteImport} from './delete-import';
-
-
-export default {
-	DISCARD_LIMIT,
-	approveImport,
-	castDiscardVote,
-	createImport,
-	deleteImport,
-	discardVotesCast,
-	getImportDetails,
-	getOriginSourceFromId,
-	getOriginSourceId,
-	getRecentImports,
-	getTotalImports,
-	originSourceMapping
-};
+export {getRecentImports, getTotalImports} from './recent-imports';
+export {approveImport} from './approve-import';
+export {createImport} from './create-import';
+export {deleteImport} from './delete-import';
