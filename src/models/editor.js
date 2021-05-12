@@ -41,6 +41,7 @@ export default function editor(bookshelf) {
 		incrementEditCount() {
 			this.set('totalRevisions', this.get('totalRevisions') + 1);
 			this.set('revisionsApplied', this.get('revisionsApplied') + 1);
+			this.set('reputation', this.get('reputation') + 1);
 		},
 		parse: snakeToCamel,
 		revisions() {
