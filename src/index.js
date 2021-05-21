@@ -69,11 +69,18 @@ import publisherRevision from './models/revisions/publisherRevision';
 import publisherSet from './models/publisherSet';
 import publisherType from './models/publisherType';
 import relationship from './models/relationship';
+import relationshipDate from './models/relationshipDate';
+import relationshipOrder from './models/relationshipOrder';
 import relationshipSet from './models/relationshipSet';
 import relationshipType from './models/relationshipType';
 import releaseEvent from './models/releaseEvent';
 import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
+import series from './models/entities/series';
+import seriesData from './models/data/seriesData';
+import seriesHeader from './models/headers/seriesHeader';
+import seriesOrderingType from './models/seriesOrderingType';
+import seriesRevision from './models/revisions/seriesRevision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
 import userCollection from './models/userCollection';
@@ -100,6 +107,7 @@ export default function init(config) {
 	const EditionData = editionData(bookshelf);
 	const EditionGroupData = editionGroupData(bookshelf);
 	const PublisherData = publisherData(bookshelf);
+	const SeriesData = seriesData(bookshelf);
 	const WorkData = workData(bookshelf);
 
 	return {
@@ -151,11 +159,18 @@ export default function init(config) {
 		PublisherSet: publisherSet(bookshelf),
 		PublisherType: publisherType(bookshelf),
 		Relationship: relationship(bookshelf),
+		RelationshipDate: relationshipDate(bookshelf),
+		RelationshipOrder: relationshipOrder(bookshelf),
 		RelationshipSet: relationshipSet(bookshelf),
 		RelationshipType: relationshipType(bookshelf),
 		ReleaseEvent: releaseEvent(bookshelf),
 		ReleaseEventSet: releaseEventSet(bookshelf),
 		Revision: revision(bookshelf),
+		Series: series(bookshelf),
+		SeriesData,
+		SeriesHeader: seriesHeader(bookshelf),
+		SeriesOrderingType: seriesOrderingType(bookshelf),
+		SeriesRevision: seriesRevision(bookshelf),
 		TitleType: titleType(bookshelf),
 		TitleUnlock: titleUnlock(bookshelf),
 		UserCollection: userCollection(bookshelf),

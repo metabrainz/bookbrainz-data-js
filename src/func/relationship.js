@@ -53,12 +53,12 @@ async function getMasterRelationshipSetForEntity(
 	orm, transacting: Transaction, bbid: string
 ) {
 	const {
-		Entity, Author, Edition, EditionGroup, Publisher, RelationshipSet, Work
+		Entity, Author, Edition, EditionGroup, Publisher, RelationshipSet, Series, Work
 	} = orm;
 	const entityHeader = await Entity.forge({bbid})
 		.fetch({require: true, transacting});
 
-	const typeModelMap = {Author, Edition, EditionGroup, Publisher, Work};
+	const typeModelMap = {Author, Edition, EditionGroup, Publisher, Series, Work};
 
 	// Extract entity type
 	const type: EntityTypeString = entityHeader.get('type');
