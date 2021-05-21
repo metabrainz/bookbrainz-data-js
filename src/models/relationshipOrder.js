@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016  Ben Ockmore
- *				 2021  Akash Gupta
+ * Copyright (C) 2021  Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,34 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function relationship(bookshelf) {
-	const Relationship = bookshelf.Model.extend({
-		date() {
-			return this.belongsTo('RelationshipDate', 'id');
-		},
+export default function relationshipOrder(bookshelf) {
+	const RelationshipOrder = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
-		order() {
-			return this.belongsTo('RelationshipOrder', 'id');
-		},
 		parse: snakeToCamel,
-		sets() {
-			return this.belongsToMany(
-				'RelationshipSet', 'bookbrainz.relationship_set__relationship',
-				'relationship_id', 'set_id'
-			);
-		},
-		source() {
-			return this.belongsTo('Entity', 'source_bbid');
-		},
-		tableName: 'bookbrainz.relationship',
-		target() {
-			return this.belongsTo('Entity', 'target_bbid');
-		},
-		type() {
-			return this.belongsTo('RelationshipType', 'type_id');
-		}
+		tableName: 'bookbrainz.relationship_order'
 	});
 
-	return bookshelf.model('Relationship', Relationship);
+	return bookshelf.model('RelationshipOrder', RelationshipOrder);
 }
