@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function relationshipOrder(bookshelf) {
-	const RelationshipOrder = bookshelf.Model.extend({
+export default function relationshipAttributeOrdinal(bookshelf) {
+	const RelationshipAttributeOrdinal = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_order'
+		tableName: 'bookbrainz.relationship_attribute_ordinal'
 	});
 
-	return bookshelf.model('RelationshipOrder', RelationshipOrder);
+	return bookshelf.model('RelationshipAttributeOrdinal', RelationshipAttributeOrdinal);
 }

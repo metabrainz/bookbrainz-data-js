@@ -27,7 +27,7 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	Entity, Relationship, RelationshipType, RelationshipOrder, RelationshipDate, bookshelf
+	Entity, Relationship, RelationshipType, RelationshipAttributeOrdinal, RelationshipDate, bookshelf
 } = bookbrainzData;
 
 const relAttribs = {
@@ -49,6 +49,7 @@ const relTypeAttribs = {
 
 const relOrder = {
 	id: 1,
+	number: 1,
 	position: 1,
 	relId: 1
 };
@@ -90,7 +91,7 @@ describe('Relationship model', () => {
 		() => truncateTables(bookshelf, [
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
-			'bookbrainz.relationship_order',
+			'bookbrainz.relationship_attribute_ordinal',
 			'bookbrainz.relationship_date',
 			'bookbrainz.entity'
 		])
@@ -99,16 +100,16 @@ describe('Relationship model', () => {
 	it('should return a JSON object with correct keys when saved', async () => {
 		const model = await new Relationship(relAttribs)
 			.save(null, {method: 'insert'});
-		await new RelationshipOrder(relOrder)
+		await new RelationshipAttributeOrdinal(relOrder)
 			.save(null, {method: 'insert'});
 		await new RelationshipDate(relDate)
 			.save(null, {method: 'insert'});
-		await model.refresh({withRelated: ['type', 'source', 'target', 'order', 'date']});
+		await model.refresh({withRelated: ['type', 'source', 'target', 'ordinal', 'date']});
 		const relationship = model.toJSON();
 
 		return expect(relationship).to.have.all.keys([
 			'id', 'typeId', 'type', 'sourceBbid', 'source', 'targetBbid',
-			'target', 'order', 'date'
+			'target', 'ordinal', 'date'
 		]);
 	});
 });

@@ -27,8 +27,8 @@ export default function relationship(bookshelf) {
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
-		order() {
-			return this.belongsTo('RelationshipOrder', 'id');
+		ordinal() {
+			return this.belongsTo('RelationshipAttributeOrdinal', 'id');
 		},
 		parse: snakeToCamel,
 		sets() {
