@@ -57,6 +57,7 @@ describe('updateLanguageSet', () => {
 
 	afterEach(function () {
 		return truncateTables(bookshelf, [
+			'bookbrainz.language_set',
 			'musicbrainz.language'
 		]);
 	});
