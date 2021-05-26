@@ -16,8 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
 import {camelToSnake, snakeToCamel} from '../../util';
 import type {Transaction} from '../types';
 import {deleteImport} from './delete-import';
@@ -28,7 +26,7 @@ export const DISCARD_LIMIT = 1;
 
 export async function discardVotesCast(
 	transacting: Transaction, importId: number
-): Promise<Object> {
+): Promise<Array<any>> {
 	const votes = await transacting.select('*')
 		.from('bookbrainz.discard_votes')
 		.where('import_id', importId);

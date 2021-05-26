@@ -13,12 +13,12 @@
     ]
   ],
   "presets": [
-    "@babel/flow",
+    "@babel/preset-typescript",
     [
       "@babel/env",
       {
         "targets": {
-          "node": "8.0"
+          "node": "12.0"
         }
       }
     ]

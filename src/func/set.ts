@@ -16,10 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {SetItemT, Transaction} from './types';
-import _ from 'lodash';
 
 /**
  * Returns a function which compares two object provided to it using the
@@ -27,13 +25,13 @@ import _ from 'lodash';
  * @param  {Array<string>} compareFields - Comparison fields of two objects
  * @returns {Function} - Returns a comparison function
  */
-export function getComparisonFunc(compareFields: Array<string>): Function {
+export function getComparisonFunc(compareFields: Array<string>) {
 	/**
-	 * @param  {Object} obj - Object for comparison
-	 * @param  {Object} other - Object for comparison
+	 * @param  {any} obj - Object for comparison
+	 * @param  {any} other - Object for comparison
 	 * @returns {boolean} Boolean value denoting objects are equal on fields
 	 */
-	return function Cmp(obj: Object, other: Object): boolean {
+	return function Cmp(obj: any, other: any): boolean {
 		for (const field of compareFields) {
 			if (obj[field] !== other[field]) {
 				return false;
@@ -49,15 +47,15 @@ export function getComparisonFunc(compareFields: Array<string>): Function {
  * is the set before a particular change and the other is the same set after
  * that change.
  *
- * @param {Array<{}>} oldSet - The old array to compare
- * @param {Array<{}>} newSet - The new array to compare
+ * @param {Array<Item>} oldSet - The old array to compare
+ * @param {Array<Item>} newSet - The new array to compare
  * @param {Function} comparisonFunc - Function to compare items from the two
  * arrays
  *
- * @returns {Array<{}>} - An array representing the intersection of the two
+ * @returns {Array<Item>} - An array representing the intersection of the two
  * arrays
  */
-export function getUnchangedItems<Item: SetItemT>(
+export function getUnchangedItems<Item extends SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
@@ -72,15 +70,15 @@ export function getUnchangedItems<Item: SetItemT>(
  * versions of a single set - one array is the set before a particular change
  * and the other is the same set after that change.
  *
- * @param {Array<{}>} oldSet - The old array to compare
- * @param {Array<{}>} newSet - The new array to compare
+ * @param {Array<Item>} oldSet - The old array to compare
+ * @param {Array<Item>} newSet - The new array to compare
  * @param {Function} comparisonFunc - Function to compare items from the two
  * arrays
  *
- * @returns {Array<{}>} - An array representing the difference of the two
+ * @returns {Array<Item>} - An array representing the difference of the two
  * arrays
  */
-export function getAddedItems<Item: SetItemT>(
+export function getAddedItems<Item extends SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
@@ -95,15 +93,15 @@ export function getAddedItems<Item: SetItemT>(
 * versions of a single set - one array is the set before a particular change
 * and the other is the same set after that change.
  *
- * @param {Array<{}>} oldSet - The old array to compare
- * @param {Array<{}>} newSet - The new array to compare
+ * @param {Array<Item>} oldSet - The old array to compare
+ * @param {Array<Item>} newSet - The new array to compare
  * @param {Function} comparisonFunc - Function to compare items from the two
  * arrays
  *
- * @returns {Array<{}>} - An array representing the difference of the two
+ * @returns {Array<Item>} - An array representing the difference of the two
  * arrays
  */
-export function getRemovedItems<Item: SetItemT>(
+export function getRemovedItems<Item extends SetItemT>(
 	oldSet: Array<Item>, newSet: Array<Item>,
 	comparisonFunc: (obj: Item, other: Item) => boolean
 ): Array<Item> {
@@ -114,10 +112,10 @@ export function getRemovedItems<Item: SetItemT>(
 
 export const removeItemsFromSet = getRemovedItems;
 
-export async function createNewSetWithItems<Item: SetItemT>(
+export async function createNewSetWithItems<Item extends SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
-	itemsAttribute: string, idAttribute: string = 'id'
+	itemsAttribute: string, idAttribute = 'id'
 ): Promise<any> {
 	if (!itemsAttribute) {
 		throw Error('itemsAttribute must be set in createNewSetWithItems');

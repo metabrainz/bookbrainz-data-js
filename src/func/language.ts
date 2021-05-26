@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2018 Shivam Tripathi
- *               2018 Ben Ockmore
+ * Copyright (C) 2018  Ben Ockmore
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +16,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
-import type {FormReleaseEventT as ReleaseEvent, Transaction} from './types';
+import * as _ from 'lodash';
+import type {FormLanguageT as Language, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
-import _ from 'lodash';
 
 
-export function updateReleaseEventSet(
+export function updateLanguageSet(
 	orm: any, transacting: Transaction, oldSet: any,
-	newSetItems: Array<ReleaseEvent>
+	newSetItems: Array<Language>
 ): Promise<any> {
-	function comparisonFunc(obj, other) {
-		return obj.date === other.date &&
-		// Compare areaIds are equal or both null or undefined
-		(obj.areaId === other.areaId || _.isNil(obj.areaId) && _.isNil(other.areaId));
+	function comparisonFunc(obj: Language, other: Language) {
+		return obj.id === other.id;
 	}
 
-	const {ReleaseEventSet} = orm;
+	const {LanguageSet} = orm;
 
-	const oldSetItems: Array<ReleaseEvent> =
-		oldSet ? oldSet.related('releaseEvents').toJSON() : [];
+	const oldSetItems: Array<Language> =
+		oldSet ? oldSet.related('languages').toJSON() : [];
 
 	const addedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
@@ -55,8 +50,9 @@ export function updateReleaseEventSet(
 		return Promise.resolve(oldSet || null);
 	}
 
+	// addedItems combined with unchangedItems since lanuguages are read-only
 	return createNewSetWithItems(
-		orm, transacting, ReleaseEventSet, unchangedItems, addedItems,
-		'releaseEvents'
+		orm, transacting, LanguageSet, [...unchangedItems, ...addedItems], [],
+		'languages'
 	);
 }

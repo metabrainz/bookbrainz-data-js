@@ -19,9 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
-import Promise from 'bluebird';
 import type {Transaction} from './types';
 
 /**
@@ -29,15 +26,15 @@ import type {Transaction} from './types';
  *
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @param {string} id - row ID of editor to be updated
- * @param {object} transacting - Bookshelf transaction object (must be in
+ * @param {Transaction} transacting - Bookshelf transaction object (must be in
  * progress)
  * @returns {Promise} - Resolves to the updated editor model
  */
 export function incrementEditorEditCountById(
-	orm: Object,
+	orm: any,
 	id: string,
 	transacting: Transaction
-): Promise<Object> {
+): Promise<any> {
 	const {Editor} = orm;
 	return new Editor({id})
 		.fetch({transacting})
@@ -100,11 +97,8 @@ export function deleteEditorByMetaBrainzID(knex) {
 			const clearEditorLanguagesPromise =
 				clearEditorLanguagesByEditorID(trx, editorID);
 
-			return Promise.join(
-				clearEditorPromise,
-				clearEditorLanguagesPromise,
-				() => true
-			);
+			return Promise.all([clearEditorPromise, clearEditorLanguagesPromise])
+				.then(() => true);
 		});
 	});
 }
