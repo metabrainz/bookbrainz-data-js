@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016  Ben Ockmore
+ * Copyright (C) 2021 Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Edition, EditionRevision, Editor,
+	AliasSet, Annotation, Disambiguation, Author, AuthorRevision, Editor,
 	Entity, EditorType, Gender, IdentifierSet, RelationshipSet, Revision,
 	bookshelf
 } = bookbrainzData;
@@ -36,18 +36,18 @@ const data = {
 		id: 1,
 		lastRevisionId: 1
 	},
-	disambiguation: {
-		comment: 'Test Disambiguation',
-		id: 1
-	},
-	edition: {
+	author: {
 		aliasSetId: 1,
 		annotationId: 1,
-		bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
+		bbid: 'b4892b34-ae8a-11eb-8529-0242ac130003',
 		disambiguationId: 1,
 		identifierSetId: 1,
 		relationshipSetId: 1,
 		revisionId: 1
+	},
+	disambiguation: {
+		comment: 'Test Disambiguation',
+		id: 1
 	},
 	editor: {
 		genderId: 1,
@@ -70,51 +70,35 @@ const data = {
 	set: {id: 1}
 };
 
-describe('EditionRevision model', () => {
+describe('AuthorRevision model', () => {
 	beforeEach(
-		() =>
-			new Gender(data.gender)
-				.save(null, {method: 'insert'})
-				.then(
-					() =>
-						new EditorType(data.editorType)
-							.save(null, {method: 'insert'})
-				)
-				.then(
-					() =>
-						new Editor(data.editor).save(null, {method: 'insert'})
-				)
-				.then(
-					() => Promise.all([
-						new AliasSet(data.set).save(null, {method: 'insert'}),
-						new IdentifierSet(data.set)
-							.save(null, {method: 'insert'}),
-						new RelationshipSet(data.set)
-							.save(null, {method: 'insert'}),
-						new Disambiguation(data.disambiguation)
-							.save(null, {method: 'insert'}),
-						new Entity({
-							bbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
-							type: 'Edition'
-						})
-							.save(null, {method: 'insert'})
-					])
-				)
-				.then(
-					() =>
-						new Revision(data.revision)
-							.save(null, {method: 'insert'})
-				)
-				.then(
-					() =>
-						new Annotation(data.annotation)
-							.save(null, {method: 'insert'})
-				)
-				.then(
-					() =>
-						new Edition(data.edition)
-							.save(null, {method: 'insert'})
-				)
+		async () => {
+			await new Gender(data.gender)
+				.save(null, {method: 'insert'});
+			await new EditorType(data.editorType)
+				.save(null, {method: 'insert'});
+			await new Editor(data.editor)
+				.save(null, {method: 'insert'});
+			await new AliasSet(data.set)
+				.save(null, {method: 'insert'});
+			await new IdentifierSet(data.set)
+				.save(null, {method: 'insert'});
+			await new RelationshipSet(data.set)
+				.save(null, {method: 'insert'});
+			await new Disambiguation(data.disambiguation)
+				.save(null, {method: 'insert'});
+			await new Entity({
+				bbid: 'b4892b34-ae8a-11eb-8529-0242ac130003',
+				type: 'Author'
+			})
+				.save(null, {method: 'insert'});
+			await new Revision(data.revision)
+				.save(null, {method: 'insert'});
+			await new Annotation(data.annotation)
+				.save(null, {method: 'insert'});
+			await new Author(data.author)
+				.save(null, {method: 'insert'});
+		}
 	);
 
 	afterEach(function truncate() {
@@ -124,14 +108,15 @@ describe('EditionRevision model', () => {
 			'bookbrainz.annotation',
 			'bookbrainz.disambiguation',
 			'bookbrainz.alias',
+			'bookbrainz.entity',
 			'bookbrainz.identifier',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_set',
 			'bookbrainz.identifier_set',
 			'bookbrainz.alias_set',
-			'bookbrainz.edition_revision',
-			'bookbrainz.edition_header',
-			'bookbrainz.edition_data',
+			'bookbrainz.author_revision',
+			'bookbrainz.author_header',
+			'bookbrainz.author_data',
 			'bookbrainz.revision',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
@@ -139,13 +124,12 @@ describe('EditionRevision model', () => {
 		]);
 	});
 
-	it('should return a JSON object with correct keys when saved', () => {
+	it('should return a JSON object with correct keys when saved', async () => {
 		const relatedToLoad = ['revision', 'entity', 'data'];
-		const revisionPromise = new EditionRevision({id: 1})
-			.fetch({withRelated: relatedToLoad})
-			.then((revision) => revision.toJSON());
+		const revision = await new AuthorRevision({id: 1}).fetch({withRelated: relatedToLoad});
+		const revisionJSON = revision.toJSON();
 
-		return expect(revisionPromise).to.eventually.have.all.keys([
+		return expect(revisionJSON).to.have.all.keys([
 			'id', 'revision', 'entity', 'data', 'bbid', 'dataId', 'isMerge'
 		]);
 	});

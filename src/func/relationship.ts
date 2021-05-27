@@ -16,8 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {
 	EntityTypeString,
 	FormRelationshipT as Relationship,
@@ -29,9 +28,7 @@ import {
 	getRemovedItems,
 	removeItemsFromSet
 } from './set';
-
-import Promise from 'bluebird';
-import _ from 'lodash';
+import {promiseProps} from '../util';
 
 
 type RelationshipComparisonFunc =
@@ -171,5 +168,5 @@ export function updateRelationshipSets(
 		)
 	}), {});
 
-	return Promise.props(newSetPromises);
+	return promiseProps(newSetPromises);
 }

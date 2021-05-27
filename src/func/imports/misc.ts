@@ -16,10 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import type {Transaction} from '../types';
-import _ from 'lodash';
 import {snakeToCamel} from '../../util';
 
 
@@ -40,8 +38,8 @@ export async function originSourceMapping(
 
 export async function getOriginSourceId(
 	transacting: Transaction, source: string
-): Promise<?number> {
-	let originSourceId: ?number = null;
+): Promise<number | null | undefined> {
+	let originSourceId: number | null | undefined = null;
 
 	try {
 		const [idObj] = await transacting.select('id')
@@ -77,7 +75,7 @@ export async function getOriginSourceId(
 
 export async function getOriginSourceFromId(
 	transacting: Transaction, originSourceId: number
-): Promise<?string> {
+): Promise<string | null | undefined> {
 	// Should error loudly if anything goes wrong
 	const [nameObj] = await transacting.select('name')
 		.from('bookbrainz.origin_source')
@@ -94,7 +92,7 @@ export async function getOriginSourceFromId(
 
 export async function getImportDetails(
 	transacting: Transaction, importId: number
-): Promise<Object> {
+): Promise<Record<string, unknown>> {
 	// Should error loudly if anything goes wrong
 	const [details] = await transacting.select('*')
 		.from('bookbrainz.link_import')

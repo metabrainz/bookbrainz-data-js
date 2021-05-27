@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
@@ -138,10 +137,11 @@ describe('RelationshipSet model', () => {
 		const rel2Promise = new Relationship(_.assign(relAttribs, {id: 2}))
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = Promise.join(
-			rel1Promise, rel2Promise, (relationship1, relationship2) =>
-				createRelationshipSet([relationship1, relationship2])
-		)
+		const jsonPromise = Promise.all([rel1Promise, rel2Promise])
+			.then(
+				([relationship1, relationship2]) =>
+					createRelationshipSet([relationship1, relationship2])
+			)
 			.then((model) => model.refresh({withRelated: ['relationships']}))
 			.then((model) => model.toJSON());
 

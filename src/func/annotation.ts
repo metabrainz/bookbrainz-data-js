@@ -19,8 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
 import type {Transaction} from './types';
 
 
@@ -33,8 +31,8 @@ import type {Transaction} from './types';
  * @returns {Promise<Object>} - Returns Annotation object
  */
 export function updateAnnotation(
-	orm: Object, transacting: Transaction, oldAnnotation: ?Object,
-	newContent: string, revision: Object
+	orm: any, transacting: Transaction, oldAnnotation: any,
+	newContent: string, revision: any
 ) {
 	const {Annotation} = orm;
 	const oldContent = oldAnnotation && oldAnnotation.get('content');

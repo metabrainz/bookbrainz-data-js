@@ -16,13 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
+import {promiseProps, truncateTables} from '../../lib/util';
 import _ from 'lodash';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
-import {truncateTables} from '../../lib/util';
 
 
 chai.use(chaiAsPromised);
@@ -37,6 +36,7 @@ const aBBID = faker.random.uuid();
 const bBBID = faker.random.uuid();
 const cBBID = faker.random.uuid();
 const dBBID = faker.random.uuid();
+
 
 function getRelationshipData(typeId, sourceBbid, targetBbid) {
 	return {
@@ -190,7 +190,7 @@ describe('updateRelationshipSet', () => {
 				bookbrainzData, trx, null, [relationshipData]
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -230,7 +230,7 @@ describe('updateRelationshipSet', () => {
 				})
 			);
 
-			const refreshedSetsPromise = Promise.props(
+			const refreshedSetsPromise = promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -238,8 +238,8 @@ describe('updateRelationshipSet', () => {
 				}, {})
 			);
 
-			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets);
+			return Promise.all([refreshedSetsPromise, updatedEntitiesPromise])
+				.then(([refreshedSets]) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
@@ -255,7 +255,7 @@ describe('updateRelationshipSet', () => {
 				bookbrainzData, trx, firstSet, firstSetRelationships
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set && set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -301,7 +301,7 @@ describe('updateRelationshipSet', () => {
 				})
 			);
 
-			const refreshedSetsPromise = Promise.props(
+			const refreshedSetsPromise = promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -309,8 +309,8 @@ describe('updateRelationshipSet', () => {
 				}, {})
 			);
 
-			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets);
+			return Promise.all([refreshedSetsPromise, updatedEntitiesPromise])
+				.then(([refreshedSets]) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
@@ -323,7 +323,7 @@ describe('updateRelationshipSet', () => {
 				bookbrainzData, trx, firstSet, firstSetRelationships
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set && set.refresh({
 						transacting: trx, withRelated: 'relationships'

@@ -20,23 +20,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
 import type {Transaction} from './types';
 
 /**
  * @param  {Object} orm - Bookbrainz orm wrapper containing all models
- * @param  {String} content - Note content
- * @param  {number} editorId - Editor's Id
+ * @param  {string} content - Note content
+ * @param  {string} editorId - Editor's Id
  * @param  {Object} revision - Revision object created using orm.Revision model
  * @param  {Transaction} transacting - The transaction model
- * @returns {?Object} Returns the created Note object or returns null
+ * @returns {Object | null} Returns the created Note object or returns null
  */
 export function createNote(
-	orm: Object,
+	orm: any,
 	content: string,
 	editorId: string,
-	revision: Object,
+	revision: any,
 	transacting: Transaction
 ) {
 	const {Note} = orm;

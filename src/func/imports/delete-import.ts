@@ -16,16 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
 import {camelToSnake, snakeToCamel} from '../../util';
-
 import type {Transaction} from '../types';
-import _ from 'lodash';
 
 
 export async function deleteImport(
-	transacting: Transaction, importId: number, entityId: ?string
+	transacting: Transaction, importId: number, entityId?: string | null | undefined
 ) {
 	// Get the type of the import
 	const [typeObj] = await transacting.select('type')

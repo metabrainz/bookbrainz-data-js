@@ -19,8 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
 import type {Transaction} from './types';
 
 
@@ -32,7 +30,7 @@ import type {Transaction} from './types';
  * @returns {Promise<Object>} - Returns Promise holding Disambiguation object
  */
 export function updateDisambiguation(
-	orm: Object, transacting: Transaction, oldDisambiguation: ?Object,
+	orm: any, transacting: Transaction, oldDisambiguation: any,
 	newComment: string
 ) {
 	const {Disambiguation} = orm;

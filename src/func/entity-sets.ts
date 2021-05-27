@@ -18,20 +18,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
+import * as _ from 'lodash';
+import type {SetItemT, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getComparisonFunc, getRemovedItems,
 	getUnchangedItems
 } from './set';
-import type {Transaction} from './types';
-import _ from 'lodash';
 
 
-function updateEntitySet(
-	transacting: Transaction, oldSet: ?Object, newItems: Array<Object>,
-	derivedSet: Object, orm: Object
-): Promise<?Object> {
+function updateEntitySet<Item extends SetItemT>(
+	transacting: Transaction, oldSet: any, newItems: Array<Item>,
+	derivedSet: any, orm: Record<string, unknown>
+): Promise<any> {
 	const oldItems =
 		oldSet ? oldSet.related(derivedSet.propName).toJSON() : [];
 
@@ -63,9 +61,9 @@ function updateEntitySet(
 
 
 export async function updateEntitySets(
-	derivedSets: ?Array<Object>, currentEntity: ?Object, entityData: Object,
-	transacting: Transaction, orm: Object
-): Promise<?Object> {
+	derivedSets: Array<any> | null | undefined, currentEntity: any,
+	entityData: any, transacting: Transaction, orm: Record<string, unknown>
+): Promise<Record<string, unknown> | null | undefined> {
 	// If no entity sets, return null
 	if (!derivedSets) {
 		return null;

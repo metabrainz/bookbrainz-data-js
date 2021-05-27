@@ -17,64 +17,62 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// @flow
-
-import {type $Transaction} from 'knex';
+import type {Transaction as _Transaction} from 'knex';
 
 
-export type Transaction = $Transaction<any>;
+export type Transaction = _Transaction<any>;
 
 export type EntityTypeString =
 	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup' | 'Series';
 
-export type FormAliasT = {
+export interface FormAliasT {
 	id: number,
 	name: string,
 	sortName: string,
 	languageId: number,
 	primary: boolean
-};
+}
 
-export type FormAliasWithDefaultT = {
+export interface FormAliasWithDefaultT {
 	id: number,
 	name: string,
 	sortName: string,
 	languageId: number,
 	primary: boolean,
 	default: boolean
-};
+}
 
-export type FormIdentifierT = {
+export interface FormIdentifierT {
 	value: string,
 	typeId: number
-};
+}
 
-export type FormRelationshipT = {
+export interface FormRelationshipT {
 	id: number,
 	typeId: number,
 	sourceBbid: string,
 	targetBbid: string
-};
+}
 
-export type FormLanguageT = {
+export interface FormLanguageT {
 	id: number
-};
+}
 
-export type FormPublisherT = {
+export interface FormPublisherT {
 	bbid: string
-};
+}
 
-export type FormReleaseEventT = {
+export interface FormReleaseEventT {
 	date: string,
 	areaId?: any
-};
+}
 
 export type SetItemT =
 	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
 	FormPublisherT | FormReleaseEventT;
 
-export type AuthorCreditNameT = {
+export interface AuthorCreditNameT {
 	authorBBID: string,
 	name: string,
 	joinPhrase: string
-};
+}
