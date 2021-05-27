@@ -46,7 +46,7 @@ const editorData = {
 };
 const orderTypeData = {
 	id: 1,
-	label: 'Test Order'
+	label: 'Manual'
 };
 
 const setData = {id: 1};
@@ -238,5 +238,51 @@ describe('Series model', () => {
 
 		// collections does not exist
 		return expect(collections).to.be.empty;
+	});
+
+	it('should allow to update the series ordering type', async () => {
+		const entityAttribs = {
+			aliasSetId: 1,
+			annotationId: 1,
+			bbid: aBBID,
+			disambiguationId: 1,
+			entityType: 'Author',
+			identifierSetId: 1,
+			orderingId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const orderTypeData1 = {
+			id: 2,
+			label: 'Automatic'
+		};
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		await new Annotation({
+			content: 'Test Annotation',
+			id: 1,
+			lastRevisionId: 1
+		})
+			.save(null, {method: 'insert'});
+		await new SeriesOrderingType(orderTypeData1)
+			.save(null, {method: 'insert'});
+
+		const model = await new Series(entityAttribs).save(null, {method: 'insert'});
+		await model.refresh({withRelated: ['seriesOrderingType']});
+		const entity = model.toJSON();
+		expect(entity.seriesOrderingType).to.deep.equal(orderTypeData);
+		revisionAttribs.id = 2;
+		await new Revision(revisionAttribs)
+			.save(null, {method: 'insert'});
+
+		// Modify the seriesOrderingType attribute.
+		const model2 = await new Series({bbid: aBBID, orderingId: 2, revisionId: 2}).save();
+		const model3 = await new Series({bbid: model2.get('bbid')}).fetch({withRelated: ['seriesOrderingType']});
+
+		const updatedEntity = model3.toJSON();
+		expect(updatedEntity.seriesOrderingType).to.deep.equal(orderTypeData1);
 	});
 });
