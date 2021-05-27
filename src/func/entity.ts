@@ -27,10 +27,11 @@ export const AUTHOR: EntityTypeString = 'Author';
 export const EDITION: EntityTypeString = 'Edition';
 export const EDITION_GROUP: EntityTypeString = 'EditionGroup';
 export const PUBLISHER: EntityTypeString = 'Publisher';
+export const SERIES: EntityTypeString = 'Series';
 export const WORK: EntityTypeString = 'Work';
 
 export const entityTypes = {
-	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, WORK
+	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, SERIES, WORK
 };
 
 /**
@@ -74,6 +75,10 @@ export function getAdditionalEntityProps(
 	if (entityType === entityTypes.EDITION_GROUP ||
 		entityType === entityTypes.WORK) {
 		return _.pick(entityData, ['typeId']);
+	}
+
+	if (entityType === entityTypes.SERIES) {
+		return _.pick(entityData, ['entityType', 'orderingId']);
 	}
 
 	return null;
@@ -131,12 +136,13 @@ export function getEntitySetMetadataByType(entityType: string): Array<Record<str
  * @returns {object} - Object mapping model name to the entity model
 */
 export function getEntityModels(orm: Record<string, unknown>): any {
-	const {Author, Edition, EditionGroup, Publisher, Work} = orm;
+	const {Author, Edition, EditionGroup, Publisher, Series, Work} = orm;
 	return {
 		Author,
 		Edition,
 		EditionGroup,
 		Publisher,
+		Series,
 		Work
 	};
 }
