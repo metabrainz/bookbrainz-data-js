@@ -20,12 +20,12 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 
 export default function relationshipDate(bookshelf) {
-	const RelationshipDate = bookshelf.Model.extend({
+	const RelationshipAttributeDate = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_date'
+		tableName: 'bookbrainz.relationship_attribute_date'
 	});
 
-	return bookshelf.model('RelationshipDate', RelationshipDate);
+	return bookshelf.model('RelationshipAttributeDate', RelationshipAttributeDate);
 }

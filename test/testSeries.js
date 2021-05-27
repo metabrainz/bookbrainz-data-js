@@ -150,7 +150,7 @@ describe('Series model', () => {
 		return expect(entity).to.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
-			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
+			'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
 			'entityType', 'orderingId', 'collections'
 		]);

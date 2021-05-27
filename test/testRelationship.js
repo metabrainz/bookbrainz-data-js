@@ -27,7 +27,7 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	Entity, Relationship, RelationshipType, RelationshipAttributeOrdinal, RelationshipDate, bookshelf
+	Entity, Relationship, RelationshipType, RelationshipAttributeOrdinal, RelationshipAttributeDate, bookshelf
 } = bookbrainzData;
 
 const relAttribs = {
@@ -92,7 +92,7 @@ describe('Relationship model', () => {
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
 			'bookbrainz.relationship_attribute_ordinal',
-			'bookbrainz.relationship_date',
+			'bookbrainz.relationship_attribute_date',
 			'bookbrainz.entity'
 		])
 	);
@@ -102,7 +102,7 @@ describe('Relationship model', () => {
 			.save(null, {method: 'insert'});
 		await new RelationshipAttributeOrdinal(relOrder)
 			.save(null, {method: 'insert'});
-		await new RelationshipDate(relDate)
+		await new RelationshipAttributeDate(relDate)
 			.save(null, {method: 'insert'});
 		await model.refresh({withRelated: ['type', 'source', 'target', 'ordinal', 'date']});
 		const relationship = model.toJSON();

@@ -36,9 +36,6 @@ export default function seriesData(bookshelf) {
 		identifierSet() {
 			return this.belongsTo('IdentifierSet', 'identifier_set_id');
 		},
-		languageSet() {
-			return this.belongsTo('LanguageSet', 'language_set_id');
-		},
 		parse: snakeToCamel,
 		relationshipSet() {
 			return this.belongsTo('RelationshipSet', 'relationship_set_id');
