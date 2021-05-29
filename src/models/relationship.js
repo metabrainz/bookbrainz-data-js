@@ -22,14 +22,11 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function relationship(bookshelf) {
 	const Relationship = bookshelf.Model.extend({
-		date() {
-			return this.belongsTo('RelationshipAttributeDate', 'id');
+		attributeValue() {
+			return this.belongsTo('RelationshipAttributeTextValue', 'id', 'relationship_id');
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
-		ordinal() {
-			return this.belongsTo('RelationshipAttributeOrdinal', 'id');
-		},
 		parse: snakeToCamel,
 		sets() {
 			return this.belongsToMany(

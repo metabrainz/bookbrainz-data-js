@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021  Akash Gupta
+ * Copyright (C) 2021 Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function relationshipAttributeOrdinal(bookshelf) {
-	const RelationshipAttributeOrdinal = bookshelf.Model.extend({
+export default function relationshipTypeAttributeType(bookshelf) {
+	const RelationshipTypeAttributeType = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_attribute_ordinal'
+		tableName: 'bookbrainz.relationship_type_attribute_type'
 	});
 
-	return bookshelf.model('RelationshipAttributeOrdinal', RelationshipAttributeOrdinal);
+	return bookshelf.model('RelationshipTypeAttributeType', RelationshipTypeAttributeType);
 }

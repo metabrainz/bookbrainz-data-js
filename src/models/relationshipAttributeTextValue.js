@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021  Akash Gupta
+ * Copyright (C) 2021 Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,16 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function relationshipDate(bookshelf) {
-	const RelationshipAttributeDate = bookshelf.Model.extend({
+export default function relationshipAttributeTextValue(bookshelf) {
+	const RelationshipAttributeTextValue = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_attribute_date'
+		tableName: 'bookbrainz.relationship_attribute_text_value',
+		type() {
+			return this.belongsTo('RelationshipAttributeType', 'attribute_type', 'id');
+		}
 	});
 
-	return bookshelf.model('RelationshipAttributeDate', RelationshipAttributeDate);
+	return bookshelf.model('RelationshipAttributeTextValue', RelationshipAttributeTextValue);
 }

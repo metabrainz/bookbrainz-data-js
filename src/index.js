@@ -69,10 +69,11 @@ import publisherRevision from './models/revisions/publisherRevision';
 import publisherSet from './models/publisherSet';
 import publisherType from './models/publisherType';
 import relationship from './models/relationship';
-import relationshipAttributeDate from './models/relationshipAttributeDate';
-import relationshipAttributeOrdinal from './models/relationshipAttributeOrdinal';
+import relationshipAttributeTextValue from './models/relationshipAttributeTextValue';
+import relationshipAttributeType from './models/relationshipAttributeType';
 import relationshipSet from './models/relationshipSet';
 import relationshipType from './models/relationshipType';
+import relationshipTypeAttributeType from './models/relationshipTypeAttributeType';
 import releaseEvent from './models/releaseEvent';
 import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
@@ -159,10 +160,11 @@ export default function init(config) {
 		PublisherSet: publisherSet(bookshelf),
 		PublisherType: publisherType(bookshelf),
 		Relationship: relationship(bookshelf),
-		RelationshipAttributeDate: relationshipAttributeDate(bookshelf),
-		RelationshipAttributeOrdinal: relationshipAttributeOrdinal(bookshelf),
+		RelationshipAttributeTextValue: relationshipAttributeTextValue(bookshelf),
+		RelationshipAttributeType: relationshipAttributeType(bookshelf),
 		RelationshipSet: relationshipSet(bookshelf),
 		RelationshipType: relationshipType(bookshelf),
+		RelationshipTypeAttributeType: relationshipTypeAttributeType(bookshelf),
 		ReleaseEvent: releaseEvent(bookshelf),
 		ReleaseEventSet: releaseEventSet(bookshelf),
 		Revision: revision(bookshelf),
