@@ -22,8 +22,8 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function relationship(bookshelf) {
 	const Relationship = bookshelf.Model.extend({
-		attributeValue() {
-			return this.belongsTo('RelationshipAttributeTextValue', 'id', 'relationship_id');
+		attributeSet() {
+			return this.belongsTo('RelationshipAttributeSet', 'attribute_set_id');
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
