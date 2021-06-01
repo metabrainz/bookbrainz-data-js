@@ -24,7 +24,7 @@ export default function relationshipTypeAttributeType(bookshelf) {
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_type_attribute_type'
+		tableName: 'bookbrainz.relationship_type__attribute_type'
 	});
 
 	return bookshelf.model('RelationshipTypeAttributeType', RelationshipTypeAttributeType);

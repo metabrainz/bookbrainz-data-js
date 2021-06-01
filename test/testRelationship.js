@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2015  Ben Ockmore
- *				 2021  Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +26,11 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	Entity, Relationship, RelationshipType, RelationshipAttributeOrdinal, RelationshipAttributeDate, bookshelf
+	Entity, Relationship, RelationshipAttributeSet, RelationshipType, bookshelf
 } = bookbrainzData;
 
 const relAttribs = {
+	attributeSetId: 1,
 	id: 1,
 	sourceBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 	targetBbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
@@ -47,24 +47,6 @@ const relTypeAttribs = {
 	targetEntityType: 'Author'
 };
 
-const relOrder = {
-	id: 1,
-	number: 1,
-	position: 1,
-	relId: 1
-};
-
-const relDate = {
-	beginDay: 15,
-	beginMonth: 2,
-	beginYear: 1996,
-	endDay: 15,
-	endMonth: 2,
-	endYear: 2001,
-	ended: true,
-	id: 1,
-	relId: 1
-};
 
 const entityAttribs = {
 	bbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
@@ -74,6 +56,8 @@ const entityAttribs = {
 describe('Relationship model', () => {
 	beforeEach(
 		async () => {
+			await new RelationshipAttributeSet({id: 1})
+				.save(null, {method: 'insert'});
 			await new RelationshipType(relTypeAttribs)
 				.save(null, {method: 'insert'});
 			await new Entity(entityAttribs)
@@ -91,8 +75,7 @@ describe('Relationship model', () => {
 		() => truncateTables(bookshelf, [
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
-			'bookbrainz.relationship_attribute_ordinal',
-			'bookbrainz.relationship_attribute_date',
+			'bookbrainz.relationship_attribute_set',
 			'bookbrainz.entity'
 		])
 	);
@@ -100,16 +83,12 @@ describe('Relationship model', () => {
 	it('should return a JSON object with correct keys when saved', async () => {
 		const model = await new Relationship(relAttribs)
 			.save(null, {method: 'insert'});
-		await new RelationshipAttributeOrdinal(relOrder)
-			.save(null, {method: 'insert'});
-		await new RelationshipAttributeDate(relDate)
-			.save(null, {method: 'insert'});
-		await model.refresh({withRelated: ['type', 'source', 'target', 'ordinal', 'date']});
+		await model.refresh({withRelated: ['type', 'source', 'target', 'attributeSet']});
 		const relationship = model.toJSON();
 
 		return expect(relationship).to.have.all.keys([
-			'id', 'typeId', 'type', 'sourceBbid', 'source', 'targetBbid',
-			'target', 'ordinal', 'date'
+			'id', 'typeId', 'attributeSet', 'attributeSetId', 'type', 'sourceBbid', 'source', 'targetBbid',
+			'target'
 		]);
 	});
 });
