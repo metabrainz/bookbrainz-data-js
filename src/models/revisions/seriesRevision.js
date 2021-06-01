@@ -33,7 +33,6 @@ export default function seriesRevision(bookshelf) {
 				'relationshipSet.relationships',
 				'relationshipSet.relationships.type',
 				'seriesOrderingType',
-				'languageSet.languages',
 				'identifierSet.identifiers.type'
 			]);
 		},

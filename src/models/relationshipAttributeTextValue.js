@@ -24,10 +24,7 @@ export default function relationshipAttributeTextValue(bookshelf) {
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_attribute_text_value',
-		type() {
-			return this.belongsTo('RelationshipAttributeType', 'attribute_type', 'id');
-		}
+		tableName: 'bookbrainz.relationship_attribute_text_value'
 	});
 
 	return bookshelf.model('RelationshipAttributeTextValue', RelationshipAttributeTextValue);
