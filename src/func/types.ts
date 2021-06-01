@@ -33,6 +33,11 @@ export interface FormAliasT {
 	primary: boolean
 }
 
+export interface FormRelationshipAttributesT {
+	id: number,
+	attributeType: number
+}
+
 export interface FormAliasWithDefaultT {
 	id: number,
 	name: string,
@@ -48,6 +53,7 @@ export interface FormIdentifierT {
 }
 
 export interface FormRelationshipT {
+	attributeSetId: number,
 	id: number,
 	typeId: number,
 	sourceBbid: string,
