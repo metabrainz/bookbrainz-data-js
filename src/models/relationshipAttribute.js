@@ -35,7 +35,7 @@ export default function relationshipAttribute(bookshelf) {
 			return this.belongsTo('RelationshipAttributeType', 'attribute_type');
 		},
 		value() {
-			return this.belongsTo('RelationshipAttributeTextValue', 'id');
+			return this.belongsTo('RelationshipAttributeTextValue', 'id', 'attribute_id');
 		}
 	});
 

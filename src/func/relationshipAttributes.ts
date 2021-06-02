@@ -49,7 +49,6 @@ export function updateRelationshipAttributeSet(
 		return Promise.resolve(oldSet || null);
 	}
 
-	// addedItems combined with unchangedItems since lanuguages are read-only
 	return createNewSetWithItems(
 		orm, transacting, RelationshipAttributeSet, [...unchangedItems, ...addedItems], [],
 		'attribute'

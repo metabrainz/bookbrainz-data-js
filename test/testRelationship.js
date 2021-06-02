@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2015  Ben Ockmore
- *
+ *				 2021  Akash Gupta
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -26,15 +26,26 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	Entity, Relationship, RelationshipAttributeSet, RelationshipType, bookshelf
+	Entity, Relationship, RelationshipAttributeSet, RelationshipAttribute,
+	RelationshipAttributeTextValue, RelationshipAttributeType, RelationshipType, bookshelf
 } = bookbrainzData;
 
 const relAttribs = {
-	attributeSetId: 1,
 	id: 1,
 	sourceBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 	targetBbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
 	typeId: 1
+};
+
+const relAttribsData = {
+	attributeType: 1,
+	id: 1
+};
+
+const relAttribTypeAttribs = {
+	id: 1,
+	name: 'position',
+	root: 1
 };
 
 const relTypeAttribs = {
@@ -56,7 +67,7 @@ const entityAttribs = {
 describe('Relationship model', () => {
 	beforeEach(
 		async () => {
-			await new RelationshipAttributeSet({id: 1})
+			await new RelationshipAttributeType(relAttribTypeAttribs)
 				.save(null, {method: 'insert'});
 			await new RelationshipType(relTypeAttribs)
 				.save(null, {method: 'insert'});
@@ -76,6 +87,8 @@ describe('Relationship model', () => {
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_type',
 			'bookbrainz.relationship_attribute_set',
+			'bookbrainz.relationship_attribute',
+			'bookbrainz.relationship_attribute_type',
 			'bookbrainz.entity'
 		])
 	);
@@ -87,8 +100,27 @@ describe('Relationship model', () => {
 		const relationship = model.toJSON();
 
 		return expect(relationship).to.have.all.keys([
-			'id', 'typeId', 'attributeSet', 'attributeSetId', 'type', 'sourceBbid', 'source', 'targetBbid',
+			'id', 'typeId', 'attributeSetId', 'type', 'sourceBbid', 'source', 'targetBbid',
 			'target'
 		]);
+	});
+
+
+	it("should return a relationship with it's attributes when one is set", async () => {
+		const attribute = await new RelationshipAttribute(relAttribsData)
+			.save(null, {method: 'insert'});
+		await new RelationshipAttributeTextValue({attributeId: attribute.get('id'), textValue: '1'})
+			.save(null, {method: 'insert'});
+		const model = await new RelationshipAttributeSet({id: 1})
+			.save(null, {method: 'insert'});
+		await model.attribute().attach(attribute);
+
+		const model1 = await new Relationship({...relAttribs, attributeSetId: 1})
+			.save(null, {method: 'insert'});
+		await model1.refresh({withRelated: ['type', 'source', 'target',
+			'attributeSet.attribute.value', 'attributeSet.attribute.type']});
+		const {attributeSet} = model1.toJSON();
+
+		return expect(attributeSet.attribute[0]).to.include.all.keys('value', 'type');
 	});
 });
