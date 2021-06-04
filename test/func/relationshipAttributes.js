@@ -119,4 +119,43 @@ describe('updateRelationshipAttributeSet', () => {
 		expect(resultJSON.attribute[1].attributeType).to.equal(secondRelationshipData.attributeType);
 		expect(resultJSON.attribute[1].value).to.be.an('object').to.include(secondRelationshipData.value);
 	});
+
+	it('should return a new set if changes are made to the attributes in the set', async function () {
+		const firstRelationshipData = getRelationshipAttributeData(1, '1');
+		const secondRelationshipData = getRelationshipAttributeData(2, '2');
+		const firstSet = await bookshelf.transaction(async (trx) => {
+			const set = await updateRelationshipAttributeSet(
+				bookbrainzData,
+				trx,
+				null,
+				[firstRelationshipData, secondRelationshipData]
+			);
+
+			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+		});
+		const firstSetRelationships = firstSet.related('attribute').toJSON();
+
+		const thirdRelationshipData = getRelationshipAttributeData(1, '3');
+		thirdRelationshipData.id = firstSetRelationships[0].id;
+		firstSetRelationships[0] = thirdRelationshipData;
+
+		const result = await bookshelf.transaction(async (trx) => {
+			const set = await updateRelationshipAttributeSet(
+				bookbrainzData,
+				trx,
+				firstSet,
+				firstSetRelationships
+			);
+
+			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+		});
+		const resultJSON = result.toJSON();
+
+		expect(resultJSON.id).to.not.equal(firstSet.toJSON().id);
+		expect(resultJSON.attribute).to.have.lengthOf(2);
+		expect(resultJSON.attribute[0].attributeType).to.equal(secondRelationshipData.attributeType);
+		expect(resultJSON.attribute[0].value).to.be.an('object').to.include(secondRelationshipData.value);
+		expect(resultJSON.attribute[1].attributeType).to.equal(thirdRelationshipData.attributeType);
+		expect(resultJSON.attribute[1].value).to.be.an('object').to.include(thirdRelationshipData.value);
+	});
 });

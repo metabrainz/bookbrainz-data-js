@@ -36,6 +36,9 @@ export interface FormAliasT {
 export interface FormRelationshipAttributesT {
 	id: number,
 	attributeType: number
+	value: {
+		textValue: string | null
+	}
 }
 
 export interface FormAliasWithDefaultT {

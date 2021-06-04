@@ -137,7 +137,8 @@ export function updateRelationshipSets(
 	function comparisonFunc(obj: Relationship, other: Relationship) {
 		return obj.typeId === other.typeId &&
 			obj.sourceBbid === other.sourceBbid &&
-			obj.targetBbid === other.targetBbid;
+			obj.targetBbid === other.targetBbid &&
+			obj.attributeSetId === other.attributeSetId;
 	}
 
 	const oldSetItems =

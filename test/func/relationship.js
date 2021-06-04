@@ -28,7 +28,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {updateRelationshipSets} = bookbrainzData.func.relationship;
 const {
-	RelationshipType, RelationshipAttributeSet, Entity, Gender, EditorType, Revision, Annotation, Work,
+	RelationshipType, Entity, Gender, EditorType, Revision, Annotation, Work,
 	Editor, AliasSet, bookshelf
 } = bookbrainzData;
 
@@ -40,7 +40,6 @@ const dBBID = faker.random.uuid();
 
 function getRelationshipData(typeId, sourceBbid, targetBbid) {
 	return {
-		attributeSetId: 1,
 		sourceBbid,
 		targetBbid,
 		typeId
@@ -129,7 +128,6 @@ describe('updateRelationshipSet', () => {
 			new Gender(genderData).save(null, {method: 'insert'}),
 			new EditorType(editorTypeData).save(null, {method: 'insert'})
 		]);
-		await new RelationshipAttributeSet({id: 1}).save(null, {method: 'insert'});
 		await new Editor(editorAttribs).save(null, {method: 'insert'});
 
 		return Promise.all([
@@ -146,7 +144,6 @@ describe('updateRelationshipSet', () => {
 			'bookbrainz.alias_set',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
-			'bookbrainz.relationship_attribute_set',
 			'musicbrainz.gender'
 		]);
 	});
@@ -247,11 +244,10 @@ describe('updateRelationshipSet', () => {
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = _.orderBy(firstSet.related('relationships').toJSON(), 'id')
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid', 'attributeSetId']));
 
 		firstSetRelationships[1].targetBbid = dBBID;
 		const thirdRelationshipData = firstSetRelationships[1];
-		thirdRelationshipData.attributeSetId = 1;
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
@@ -319,7 +315,7 @@ describe('updateRelationshipSet', () => {
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = firstSet.related('relationships').toJSON()
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid', 'attributeSetId']));
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
