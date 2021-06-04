@@ -19,7 +19,7 @@
 import * as _ from 'lodash';
 import type {FormRelationshipAttributesT as RelationshipAttributes, Transaction} from './types';
 import {
-	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
+	createNewRelationshipAttributeSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
 
 
@@ -28,7 +28,7 @@ export function updateRelationshipAttributeSet(
 	newSetItems: Array<RelationshipAttributes>
 ): Promise<any> {
 	function comparisonFunc(obj: RelationshipAttributes, other: RelationshipAttributes) {
-		return obj.id === other.id;
+		return obj.value.textValue === other.value.textValue;
 	}
 
 	const {RelationshipAttributeSet} = orm;
@@ -49,8 +49,8 @@ export function updateRelationshipAttributeSet(
 		return Promise.resolve(oldSet || null);
 	}
 
-	return createNewSetWithItems(
-		orm, transacting, RelationshipAttributeSet, [...unchangedItems, ...addedItems], [],
+	return createNewRelationshipAttributeSetWithItems(
+		orm, transacting, RelationshipAttributeSet, unchangedItems, addedItems,
 		'attribute'
 	);
 }

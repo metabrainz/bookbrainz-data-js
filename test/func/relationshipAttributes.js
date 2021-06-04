@@ -25,28 +25,32 @@ import {truncateTables} from '../../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {updateRelationshipAttributeSet} = bookbrainzData.func.relationshipAttributes;
-const {RelationshipAttribute, RelationshipAttributeType, bookshelf} = bookbrainzData;
+const {RelationshipAttributeType, bookshelf} = bookbrainzData;
+
+function getRelationshipAttributeData(attributeType, value) {
+	return {
+		attributeType,
+		value: {
+			 textValue: value
+		}
+	};
+}
 
 describe('updateRelationshipAttributeSet', () => {
-	const firstRelationshipAttribs = {
-		attributeType: 1,
-		id: 1
-	};
-	const relAttribTypeAttribs = {
+	const relAttribTypeAttribs1 = {
 		id: 1,
 		name: 'position',
 		root: 1
 	};
-
-	const secondRelationshipAttribs = {
-		attributeType: 1,
-		id: 2
+	const relAttribTypeAttribs2 = {
+		id: 2,
+		name: 'number',
+		root: 1
 	};
 
 	beforeEach(async () => {
-		await new RelationshipAttributeType(relAttribTypeAttribs).save(null, {method: 'insert'});
-	        await new RelationshipAttribute(firstRelationshipAttribs).save(null, {method: 'insert'});
-		await new RelationshipAttribute(secondRelationshipAttribs).save(null, {method: 'insert'});
+		await new RelationshipAttributeType(relAttribTypeAttribs1).save(null, {method: 'insert'});
+		await new RelationshipAttributeType(relAttribTypeAttribs2).save(null, {method: 'insert'});
 	});
 
 	afterEach(function () {
@@ -68,30 +72,33 @@ describe('updateRelationshipAttributeSet', () => {
 
 	/* eslint-disable-next-line max-len */
 	it('should return a set with one attribute if one attribute is added to an empty set', async function () {
+		const firstRelationshipData = getRelationshipAttributeData(1, '1');
 		const result = await bookshelf.transaction(async (trx) => {
 			const set = await updateRelationshipAttributeSet(
-				bookbrainzData, trx, null, [{id: 1}]
+				bookbrainzData, trx, null, [firstRelationshipData]
 			);
-
-			return set.refresh({transacting: trx, withRelated: 'attribute'});
+			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
 		});
 
 		const attributes = result.related('attribute').toJSON();
 
 		expect(attributes).to.have.lengthOf(1);
-		expect(attributes[0]).to.include({id: 1});
+		expect(attributes[0]).to.include({attributeType: 1});
+		expect(attributes[0].value).to.include({textValue: '1'});
 	});
 
 	it('should return the old set if no changes are made', async function () {
+		const firstRelationshipData = getRelationshipAttributeData(1, '1');
+		const secondRelationshipData = getRelationshipAttributeData(2, '2');
 		const firstSet = await bookshelf.transaction(async (trx) => {
 			const set = await updateRelationshipAttributeSet(
 				bookbrainzData,
 				trx,
 				null,
-				[{id: 1}, {id: 2}]
+				[firstRelationshipData, secondRelationshipData]
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute'});
+			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
 		});
 
 		const result = await bookshelf.transaction(async (trx) => {
@@ -99,18 +106,17 @@ describe('updateRelationshipAttributeSet', () => {
 				bookbrainzData,
 				trx,
 				firstSet,
-				[{id: 1}, {id: 2}]
+				[firstRelationshipData, secondRelationshipData]
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute'});
+			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
 		});
-
-		let attributes = result.related('attribute').toJSON();
-		attributes = attributes.sort((a, b) => a.id - b.id);
-
-		expect(result.get('id')).to.equal(firstSet.get('id'));
-		expect(attributes).to.have.lengthOf(2);
-		expect(attributes[0]).to.include({id: 1});
-		expect(attributes[1]).to.include({id: 2});
+		const resultJSON = result.toJSON();
+		expect(resultJSON.id).to.equal(firstSet.toJSON().id);
+		expect(resultJSON.attribute).to.have.lengthOf(2);
+		expect(resultJSON.attribute[0].attributeType).to.equal(firstRelationshipData.attributeType);
+		expect(resultJSON.attribute[0].value).to.be.an('object').to.include(firstRelationshipData.value);
+		expect(resultJSON.attribute[1].attributeType).to.equal(secondRelationshipData.attributeType);
+		expect(resultJSON.attribute[1].value).to.be.an('object').to.include(secondRelationshipData.value);
 	});
 });
