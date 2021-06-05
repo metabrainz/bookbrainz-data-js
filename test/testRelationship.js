@@ -96,7 +96,7 @@ describe('Relationship model', () => {
 	it('should return a JSON object with correct keys when saved', async () => {
 		const model = await new Relationship(relAttribs)
 			.save(null, {method: 'insert'});
-		await model.refresh({withRelated: ['type', 'source', 'target', 'attributeSet']});
+		await model.refresh({withRelated: ['type', 'source', 'target']});
 		const relationship = model.toJSON();
 
 		return expect(relationship).to.have.all.keys([
