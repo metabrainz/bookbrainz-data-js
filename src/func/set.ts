@@ -172,7 +172,7 @@ export async function createNewRelationshipAttributeSetWithItems<Item extends Se
 	await Promise.all(
 		_.map(addedItems, async (ident: Ident) => {
 			const model = await newSetItemsCollectionAttached.create(
-				_.omit(ident, idAttribute, 'value', 'type'), {transacting}
+				_.pick(ident, 'attributeType'), {transacting}
 			);
 			const {value} = ident;
 			await new RelationshipAttributeTextValue({attributeId: model.get('id'), textValue: value.textValue})
