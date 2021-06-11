@@ -35,7 +35,7 @@ export function updateRelationshipAttributeSet(
 	const {RelationshipAttributeSet} = orm;
 
 	const oldSetItems: Array<RelationshipAttributes> =
-		oldSet ? oldSet.related('attribute').toJSON() : [];
+		oldSet ? oldSet.related('relationshipAttributes').toJSON() : [];
 
 	const addedItems =
 		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
@@ -52,6 +52,6 @@ export function updateRelationshipAttributeSet(
 
 	return createNewRelationshipAttributeSetWithItems(
 		orm, transacting, RelationshipAttributeSet, unchangedItems, addedItems,
-		'attribute'
+		'relationshipAttributes'
 	);
 }

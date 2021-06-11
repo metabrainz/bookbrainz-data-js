@@ -21,15 +21,15 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function relationshipAttributeSet(bookshelf) {
 	const RelationshipAttributeSet = bookshelf.Model.extend({
-		attribute() {
+		format: camelToSnake,
+		idAttribute: 'id',
+		parse: snakeToCamel,
+		relationshipAttributes() {
 			return this.belongsToMany(
 				'RelationshipAttribute', 'bookbrainz.relationship_attribute_set__relationship_attribute',
 				'set_id', 'attribute_id'
 			);
 		},
-		format: camelToSnake,
-		idAttribute: 'id',
-		parse: snakeToCamel,
 		tableName: 'bookbrainz.relationship_attribute_set'
 	});
 

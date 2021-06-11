@@ -41,7 +41,7 @@ const relAttribTypeAttribs = {
 async function createRelationshipAttributeSet(attributes) {
 	const model = await new RelationshipAttributeSet({id: 1})
 		.save(null, {method: 'insert'});
-	await model.attribute().attach(attributes);
+	await model.relationshipAttributes().attach(attributes);
 	return model;
 }
 
@@ -65,10 +65,10 @@ describe('RelationshipAttributeSet model', () => {
 	it('should return a JSON object with correct keys when saved', async () => {
 		const model = await new RelationshipAttributeSet({id: 1})
 			.save(null, {method: 'insert'});
-		await model.refresh({withRelated: ['attribute']});
+		await model.refresh({withRelated: ['relationshipAttributes']});
 		const json = model.toJSON();
 		return expect(json).to.have.all.keys([
-			'id', 'attribute'
+			'id', 'relationshipAttributes'
 		]);
 	});
 
@@ -77,8 +77,8 @@ describe('RelationshipAttributeSet model', () => {
 		async () => {
 			const model = await new RelationshipAttributeSet({id: 1})
 				.save(null, {method: 'insert'});
-			await model.refresh({withRelated: ['attribute']});
-			const attributes = model.toJSON().attribute;
+			await model.refresh({withRelated: ['relationshipAttributes']});
+			const attributes = model.toJSON().relationshipAttributes;
 
 			return expect(attributes).to.be.empty;
 		}
@@ -88,10 +88,10 @@ describe('RelationshipAttributeSet model', () => {
 		const attribute = await new RelationshipAttribute(relAttribs)
 			.save(null, {method: 'insert'});
 		const model = await createRelationshipAttributeSet([attribute]);
-		await model.refresh({withRelated: ['attribute']});
+		await model.refresh({withRelated: ['relationshipAttributes']});
 		const json = model.toJSON();
 
-		return expect(json).to.have.nested.property('attribute[0].id', 1);
+		return expect(json).to.have.nested.property('relationshipAttributes[0].id', 1);
 	});
 
 	it('should have have two relationship attributes when two are set', async () => {
@@ -103,9 +103,9 @@ describe('RelationshipAttributeSet model', () => {
 
 
 		const model = await createRelationshipAttributeSet([attribute1, attribute2]);
-		await model.refresh({withRelated: ['attribute']});
+		await model.refresh({withRelated: ['relationshipAttributes']});
 		const json = model.toJSON();
 
-		return expect(json).to.have.nested.property('attribute.length', 2);
+		return expect(json).to.have.nested.property('relationshipAttributes.length', 2);
 	});
 });

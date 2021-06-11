@@ -73,10 +73,10 @@ describe('updateRelationshipAttributeSet', () => {
 			const set = await updateRelationshipAttributeSet(
 				bookbrainzData, trx, null, [firstRelationshipAttributeData]
 			);
-			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+			return set.refresh({transacting: trx, withRelated: 'relationshipAttributes.value'});
 		});
 
-		const attributes = result.related('attribute').toJSON();
+		const attributes = result.related('relationshipAttributes').toJSON();
 
 		expect(attributes).to.have.lengthOf(1);
 		expect(attributes[0]).to.include({attributeType: 1});
@@ -94,7 +94,7 @@ describe('updateRelationshipAttributeSet', () => {
 				[firstRelationshipAttributeData, secondRelationshipAttributeData]
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+			return set.refresh({transacting: trx, withRelated: 'relationshipAttributes.value'});
 		});
 
 		const result = await bookshelf.transaction(async (trx) => {
@@ -105,15 +105,15 @@ describe('updateRelationshipAttributeSet', () => {
 				[firstRelationshipAttributeData, secondRelationshipAttributeData]
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+			return set.refresh({transacting: trx, withRelated: 'relationshipAttributes.value'});
 		});
 		const resultJSON = result.toJSON();
 		expect(resultJSON).to.deep.equal(firstSet.toJSON());
-		expect(resultJSON.attribute).to.have.lengthOf(2);
-		expect(resultJSON.attribute[0].attributeType).to.equal(firstRelationshipAttributeData.attributeType);
-		expect(resultJSON.attribute[0].value).to.be.an('object').to.include(firstRelationshipAttributeData.value);
-		expect(resultJSON.attribute[1].attributeType).to.equal(secondRelationshipAttributeData.attributeType);
-		expect(resultJSON.attribute[1].value).to.be.an('object').to.include(secondRelationshipAttributeData.value);
+		expect(resultJSON.relationshipAttributes).to.have.lengthOf(2);
+		expect(resultJSON.relationshipAttributes[0].attributeType).to.equal(firstRelationshipAttributeData.attributeType);
+		expect(resultJSON.relationshipAttributes[0].value).to.be.an('object').to.include(firstRelationshipAttributeData.value);
+		expect(resultJSON.relationshipAttributes[1].attributeType).to.equal(secondRelationshipAttributeData.attributeType);
+		expect(resultJSON.relationshipAttributes[1].value).to.be.an('object').to.include(secondRelationshipAttributeData.value);
 	});
 
 	it('should return a new set if changes are made to the attributes in the set', async function () {
@@ -127,13 +127,13 @@ describe('updateRelationshipAttributeSet', () => {
 				[firstRelationshipAttributeData, secondRelationshipAttributeData]
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+			return set.refresh({transacting: trx, withRelated: 'relationshipAttributes.value'});
 		});
-		const firstSetRelationships = firstSet.related('attribute').toJSON();
+		const firstSetRelationships = firstSet.related('relationshipAttributes').toJSON();
 
-		const thirdRelationshipData = getRelationshipAttributeData(1, '3');
-		thirdRelationshipData.id = firstSetRelationships[0].id;
-		firstSetRelationships[0] = thirdRelationshipData;
+		const thirdRelationshipAttributeData = getRelationshipAttributeData(1, '3');
+		thirdRelationshipAttributeData.id = firstSetRelationships[0].id;
+		firstSetRelationships[0] = thirdRelationshipAttributeData;
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const set = await updateRelationshipAttributeSet(
@@ -143,15 +143,15 @@ describe('updateRelationshipAttributeSet', () => {
 				firstSetRelationships
 			);
 
-			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
+			return set.refresh({transacting: trx, withRelated: 'relationshipAttributes.value'});
 		});
 		const resultJSON = result.toJSON();
 
 		expect(resultJSON.id).to.not.equal(firstSet.toJSON().id);
-		expect(resultJSON.attribute).to.have.lengthOf(2);
-		expect(resultJSON.attribute[0].attributeType).to.equal(secondRelationshipAttributeData.attributeType);
-		expect(resultJSON.attribute[0].value).to.be.an('object').to.include(secondRelationshipAttributeData.value);
-		expect(resultJSON.attribute[1].attributeType).to.equal(thirdRelationshipData.attributeType);
-		expect(resultJSON.attribute[1].value).to.be.an('object').to.include(thirdRelationshipData.value);
+		expect(resultJSON.relationshipAttributes).to.have.lengthOf(2);
+		expect(resultJSON.relationshipAttributes[0].attributeType).to.equal(secondRelationshipAttributeData.attributeType);
+		expect(resultJSON.relationshipAttributes[0].value).to.be.an('object').to.include(secondRelationshipAttributeData.value);
+		expect(resultJSON.relationshipAttributes[1].attributeType).to.equal(thirdRelationshipAttributeData.attributeType);
+		expect(resultJSON.relationshipAttributes[1].value).to.be.an('object').to.include(thirdRelationshipAttributeData.value);
 	});
 });

@@ -111,14 +111,14 @@ describe('Relationship model', () => {
 			.save(null, {method: 'insert'});
 		const model = await new RelationshipAttributeSet({id: 1})
 			.save(null, {method: 'insert'});
-		await model.attribute().attach(attribute);
+		await model.relationshipAttributes().attach(attribute);
 
 		const model1 = await new Relationship({...relAttribs, attributeSetId: 1})
 			.save(null, {method: 'insert'});
 		await model1.refresh({withRelated: ['type', 'source', 'target',
-			'attributeSet.attribute.value', 'attributeSet.attribute.type']});
+			'attributeSet.relationshipAttributes.value', 'attributeSet.relationshipAttributes.type']});
 		const {attributeSet} = model1.toJSON();
 
-		return expect(attributeSet.attribute[0]).to.include.all.keys('value', 'type');
+		return expect(attributeSet.relationshipAttributes[0]).to.include.all.keys('value', 'type');
 	});
 });
