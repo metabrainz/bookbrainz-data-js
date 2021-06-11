@@ -78,7 +78,7 @@ export function getAdditionalEntityProps(
 	}
 
 	if (entityType === entityTypes.SERIES) {
-		return _.pick(entityData, ['entityType', 'orderingId']);
+		return _.pick(entityData, ['entityType', 'orderingTypeId']);
 	}
 
 	return null;

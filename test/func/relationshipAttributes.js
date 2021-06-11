@@ -18,11 +18,9 @@
 
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../../lib/util';
 
 
-chai.use(chaiAsPromised);
 const {expect} = chai;
 const {updateRelationshipAttributeSet} = bookbrainzData.func.relationshipAttributes;
 const {RelationshipAttributeType, bookshelf} = bookbrainzData;
@@ -110,7 +108,7 @@ describe('updateRelationshipAttributeSet', () => {
 			return set.refresh({transacting: trx, withRelated: 'attribute.value'});
 		});
 		const resultJSON = result.toJSON();
-		expect(resultJSON.id).to.equal(firstSet.toJSON().id);
+		expect(resultJSON).to.deep.equal(firstSet.toJSON());
 		expect(resultJSON.attribute).to.have.lengthOf(2);
 		expect(resultJSON.attribute[0].attributeType).to.equal(firstRelationshipAttributeData.attributeType);
 		expect(resultJSON.attribute[0].value).to.be.an('object').to.include(firstRelationshipAttributeData.value);

@@ -41,7 +41,7 @@ export default function seriesData(bookshelf) {
 			return this.belongsTo('RelationshipSet', 'relationship_set_id');
 		},
 		seriesOrderingType() {
-			return this.belongsTo('SeriesOrderingType', 'ordering_id');
+			return this.belongsTo('SeriesOrderingType', 'ordering_type_id');
 		},
 		tableName: 'bookbrainz.series_data'
 	});

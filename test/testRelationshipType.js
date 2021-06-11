@@ -18,11 +18,9 @@
 
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
 
-chai.use(chaiAsPromised);
 const {expect} = chai;
 const {RelationshipType, RelationshipAttributeType, RelationshipTypeAttributeType, bookshelf} = bookbrainzData;
 
@@ -77,12 +75,12 @@ describe('RelationshipType model', () => {
 			.save(null, {method: 'insert'});
 		await new RelationshipTypeAttributeType(relTypeAttributeTypeAttribs)
 			.save(null, {method: 'insert'});
-		await model.refresh({withRelated: ['attribute']});
+		await model.refresh({withRelated: ['attributeTypes']});
 
 		return expect(model.toJSON()).to.have.all.keys([
 			'id', 'label', 'description', 'linkPhrase', 'reverseLinkPhrase',
 			'sourceEntityType', 'targetEntityType', 'parentId', 'childOrder',
-			'deprecated', 'attribute'
+			'deprecated', 'attributeTypes'
 		]);
 	});
 });

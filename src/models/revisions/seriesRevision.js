@@ -30,8 +30,8 @@ export default function seriesRevision(bookshelf) {
 				'disambiguation',
 				'aliasSet.aliases.language',
 				'aliasSet.defaultAlias',
-				'relationshipSet.relationships',
 				'relationshipSet.relationships.type',
+				'relationshipSet.relationships.attributeSet.attribute.value',
 				'seriesOrderingType',
 				'identifierSet.identifiers.type'
 			]);

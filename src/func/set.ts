@@ -17,7 +17,7 @@
  */
 
 import * as _ from 'lodash';
-import type {SetItemT, Transaction} from './types';
+import type {FormRelationshipAttributesT as RelationshipAttributeT, SetItemT, Transaction} from './types';
 
 /**
  * Returns a function which compares two object provided to it using the
@@ -141,12 +141,6 @@ export async function createNewSetWithItems<Item extends SetItemT>(
 
 	return newSet;
 }
-interface Ident {
-	attributeType: number,
-	value: {
-		textValue: string | null
-	}
-}
 export async function createNewRelationshipAttributeSetWithItems<Item extends SetItemT>(
 	orm: any, transacting: Transaction, SetModel: any,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
@@ -170,7 +164,7 @@ export async function createNewRelationshipAttributeSetWithItems<Item extends Se
 	);
 
 	await Promise.all(
-		_.map(addedItems, async (ident: Ident) => {
+		_.map(addedItems, async (ident: RelationshipAttributeT) => {
 			const model = await newSetItemsCollectionAttached.create(
 				_.pick(ident, 'attributeType'), {transacting}
 			);

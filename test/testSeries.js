@@ -18,12 +18,10 @@
 
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
 import {truncateTables} from '../lib/util';
 
 
-chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Editor, EditorType, Entity, Gender,
@@ -59,7 +57,7 @@ const seriesAttribs = {
 	bbid: aBBID,
 	entityType: 'Author',
 	identifierSetId: 1,
-	orderingId: 1,
+	orderingTypeId: 1,
 	relationshipSetId: 1,
 	revisionId: 1
 };
@@ -123,7 +121,7 @@ describe('Series model', () => {
 			disambiguationId: 1,
 			entityType: 'Author',
 			identifierSetId: 1,
-			orderingId: 1,
+			orderingTypeId: 1,
 			relationshipSetId: 1,
 			revisionId: 1
 		};
@@ -152,7 +150,7 @@ describe('Series model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'entityType', 'orderingId', 'collections'
+			'entityType', 'orderingTypeId', 'collections'
 		]);
 	});
 
@@ -248,7 +246,7 @@ describe('Series model', () => {
 			disambiguationId: 1,
 			entityType: 'Author',
 			identifierSetId: 1,
-			orderingId: 1,
+			orderingTypeId: 1,
 			relationshipSetId: 1,
 			revisionId: 1
 		};
@@ -279,7 +277,7 @@ describe('Series model', () => {
 			.save(null, {method: 'insert'});
 
 		// Modify the seriesOrderingType attribute.
-		const model2 = await new Series({bbid: aBBID, orderingId: 2, revisionId: 2}).save();
+		const model2 = await new Series({bbid: aBBID, orderingTypeId: 2, revisionId: 2}).save();
 		const model3 = await new Series({bbid: model2.get('bbid')}).fetch({withRelated: ['seriesOrderingType']});
 
 		const updatedEntity = model3.toJSON();

@@ -29,7 +29,7 @@ export function updateRelationshipAttributeSet(
 ): Promise<any> {
 	function comparisonFunc(obj: RelationshipAttributes, other: RelationshipAttributes) {
 		return obj.attributeType === other.attributeType &&
-			   obj.value.textValue === other.value.textValue;
+			   obj.value?.textValue === other.value?.textValue;
 	}
 
 	const {RelationshipAttributeSet} = orm;

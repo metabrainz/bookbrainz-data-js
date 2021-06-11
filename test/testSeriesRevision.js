@@ -18,11 +18,9 @@
 
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
 
-chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, Series, SeriesRevision, SeriesOrderingType, Editor,
@@ -69,7 +67,7 @@ const data = {
 		disambiguationId: 1,
 		entityType: 'Author',
 		identifierSetId: 1,
-		orderingId: 1,
+		orderingTypeId: 1,
 		relationshipSetId: 1,
 		revisionId: 1
 	},

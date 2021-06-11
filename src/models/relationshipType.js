@@ -21,7 +21,7 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function relationshipType(bookshelf) {
 	const RelationshipType = bookshelf.Model.extend({
-		attribute() {
+		attributeTypes() {
 			return this.belongsToMany('RelationshipAttributeType')
 					   .through('RelationshipTypeAttributeType', 'relationship_type', 'attribute_type');
 		},
