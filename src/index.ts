@@ -69,11 +69,21 @@ import publisherRevision from './models/revisions/publisherRevision';
 import publisherSet from './models/publisherSet';
 import publisherType from './models/publisherType';
 import relationship from './models/relationship';
+import relationshipAttribute from './models/relationshipAttribute';
+import relationshipAttributeSet from './models/relationshipAttributeSet';
+import relationshipAttributeTextValue from './models/relationshipAttributeTextValue';
+import relationshipAttributeType from './models/relationshipAttributeType';
 import relationshipSet from './models/relationshipSet';
 import relationshipType from './models/relationshipType';
+import relationshipTypeAttributeType from './models/relationshipTypeAttributeType';
 import releaseEvent from './models/releaseEvent';
 import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
+import series from './models/entities/series';
+import seriesData from './models/data/seriesData';
+import seriesHeader from './models/headers/seriesHeader';
+import seriesOrderingType from './models/seriesOrderingType';
+import seriesRevision from './models/revisions/seriesRevision';
 import titleType from './models/titleType';
 import titleUnlock from './models/titleUnlock';
 import userCollection from './models/userCollection';
@@ -100,6 +110,7 @@ export default function init(config) {
 	const EditionData = editionData(bookshelf);
 	const EditionGroupData = editionGroupData(bookshelf);
 	const PublisherData = publisherData(bookshelf);
+	const SeriesData = seriesData(bookshelf);
 	const WorkData = workData(bookshelf);
 
 	return {
@@ -151,11 +162,21 @@ export default function init(config) {
 		PublisherSet: publisherSet(bookshelf),
 		PublisherType: publisherType(bookshelf),
 		Relationship: relationship(bookshelf),
+		RelationshipAttribute: relationshipAttribute(bookshelf),
+		RelationshipAttributeSet: relationshipAttributeSet(bookshelf),
+		RelationshipAttributeTextValue: relationshipAttributeTextValue(bookshelf),
+		RelationshipAttributeType: relationshipAttributeType(bookshelf),
 		RelationshipSet: relationshipSet(bookshelf),
 		RelationshipType: relationshipType(bookshelf),
+		RelationshipTypeAttributeType: relationshipTypeAttributeType(bookshelf),
 		ReleaseEvent: releaseEvent(bookshelf),
 		ReleaseEventSet: releaseEventSet(bookshelf),
 		Revision: revision(bookshelf),
+		Series: series(bookshelf),
+		SeriesData,
+		SeriesHeader: seriesHeader(bookshelf),
+		SeriesOrderingType: seriesOrderingType(bookshelf),
+		SeriesRevision: seriesRevision(bookshelf),
 		TitleType: titleType(bookshelf),
 		TitleUnlock: titleUnlock(bookshelf),
 		UserCollection: userCollection(bookshelf),

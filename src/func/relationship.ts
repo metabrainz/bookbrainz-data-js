@@ -50,12 +50,12 @@ async function getMasterRelationshipSetForEntity(
 	orm, transacting: Transaction, bbid: string
 ) {
 	const {
-		Entity, Author, Edition, EditionGroup, Publisher, RelationshipSet, Work
+		Entity, Author, Edition, EditionGroup, Publisher, RelationshipSet, Series, Work
 	} = orm;
 	const entityHeader = await Entity.forge({bbid})
 		.fetch({require: true, transacting});
 
-	const typeModelMap = {Author, Edition, EditionGroup, Publisher, Work};
+	const typeModelMap = {Author, Edition, EditionGroup, Publisher, Series, Work};
 
 	// Extract entity type
 	const type: EntityTypeString = entityHeader.get('type');
@@ -137,7 +137,8 @@ export function updateRelationshipSets(
 	function comparisonFunc(obj: Relationship, other: Relationship) {
 		return obj.typeId === other.typeId &&
 			obj.sourceBbid === other.sourceBbid &&
-			obj.targetBbid === other.targetBbid;
+			obj.targetBbid === other.targetBbid &&
+			obj.attributeSetId === other.attributeSetId;
 	}
 
 	const oldSetItems =

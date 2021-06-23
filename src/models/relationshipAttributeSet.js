@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2015  Sean Burke
- *			     2021  Akash Gupta
+ * Copyright (C) 2021  Akash Gupta
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,16 +19,19 @@
 import {camelToSnake, snakeToCamel} from '../util';
 
 
-export default function relationshipType(bookshelf) {
-	const RelationshipType = bookshelf.Model.extend({
-		attributeTypes() {
-			return this.belongsToMany('RelationshipAttributeType')
-					   .through('RelationshipTypeAttributeType', 'relationship_type', 'attribute_type');
-		},
+export default function relationshipAttributeSet(bookshelf) {
+	const RelationshipAttributeSet = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
-		tableName: 'bookbrainz.relationship_type'
+		relationshipAttributes() {
+			return this.belongsToMany(
+				'RelationshipAttribute', 'bookbrainz.relationship_attribute_set__relationship_attribute',
+				'set_id', 'attribute_id'
+			);
+		},
+		tableName: 'bookbrainz.relationship_attribute_set'
 	});
-	return bookshelf.model('RelationshipType', RelationshipType);
+
+	return bookshelf.model('RelationshipAttributeSet', RelationshipAttributeSet);
 }

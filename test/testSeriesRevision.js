@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Akash Gupta
+ * Copyright (C) 2021  Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import {truncateTables} from '../lib/util';
 
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Author, AuthorRevision, Editor,
+	AliasSet, Annotation, Disambiguation, Series, SeriesRevision, SeriesOrderingType, Editor,
 	Entity, EditorType, Gender, IdentifierSet, RelationshipSet, Revision,
 	bookshelf
 } = bookbrainzData;
@@ -33,15 +33,6 @@ const data = {
 		content: 'Test Annotation',
 		id: 1,
 		lastRevisionId: 1
-	},
-	author: {
-		aliasSetId: 1,
-		annotationId: 1,
-		bbid: 'b4892b34-ae8a-11eb-8529-0242ac130003',
-		disambiguationId: 1,
-		identifierSetId: 1,
-		relationshipSetId: 1,
-		revisionId: 1
 	},
 	disambiguation: {
 		comment: 'Test Disambiguation',
@@ -61,14 +52,29 @@ const data = {
 		id: 1,
 		name: 'test'
 	},
+	orderTypeData: {
+		id: 1,
+		label: 'Test Order'
+	},
 	revision: {
 		authorId: 1,
 		id: 1
 	},
+	series: {
+		aliasSetId: 1,
+		annotationId: 1,
+		bbid: '8877c2b2-aeda-11eb-8529-0242ac130003',
+		disambiguationId: 1,
+		entityType: 'Author',
+		identifierSetId: 1,
+		orderingTypeId: 1,
+		relationshipSetId: 1,
+		revisionId: 1
+	},
 	set: {id: 1}
 };
 
-describe('AuthorRevision model', () => {
+describe('SeriesRevision model', () => {
 	beforeEach(
 		async () => {
 			await new Gender(data.gender)
@@ -86,15 +92,17 @@ describe('AuthorRevision model', () => {
 			await new Disambiguation(data.disambiguation)
 				.save(null, {method: 'insert'});
 			await new Entity({
-				bbid: 'b4892b34-ae8a-11eb-8529-0242ac130003',
-				type: 'Author'
+				bbid: '8877c2b2-aeda-11eb-8529-0242ac130003',
+				type: 'Series'
 			})
 				.save(null, {method: 'insert'});
 			await new Revision(data.revision)
 				.save(null, {method: 'insert'});
 			await new Annotation(data.annotation)
 				.save(null, {method: 'insert'});
-			await new Author(data.author)
+			await new SeriesOrderingType(data.orderTypeData)
+				.save(null, {method: 'insert'});
+			await new Series(data.series)
 				.save(null, {method: 'insert'});
 		}
 	);
@@ -112,9 +120,10 @@ describe('AuthorRevision model', () => {
 			'bookbrainz.relationship_set',
 			'bookbrainz.identifier_set',
 			'bookbrainz.alias_set',
-			'bookbrainz.author_revision',
-			'bookbrainz.author_header',
-			'bookbrainz.author_data',
+			'bookbrainz.series_revision',
+			'bookbrainz.series_header',
+			'bookbrainz.series_data',
+			'bookbrainz.series_ordering_type',
 			'bookbrainz.revision',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
@@ -124,7 +133,7 @@ describe('AuthorRevision model', () => {
 
 	it('should return a JSON object with correct keys when saved', async () => {
 		const relatedToLoad = ['revision', 'entity', 'data'];
-		const revision = await new AuthorRevision({id: 1}).fetch({withRelated: relatedToLoad});
+		const revision = await new SeriesRevision({id: 1}).fetch({withRelated: relatedToLoad});
 		const revisionJSON = revision.toJSON();
 
 		return expect(revisionJSON).to.have.all.keys([

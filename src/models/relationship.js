@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016  Ben Ockmore
+ *				 2021  Akash Gupta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +22,9 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function relationship(bookshelf) {
 	const Relationship = bookshelf.Model.extend({
+		attributeSet() {
+			return this.belongsTo('RelationshipAttributeSet', 'attribute_set_id');
+		},
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,

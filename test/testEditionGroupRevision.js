@@ -18,11 +18,9 @@
 
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../lib/util';
 
 
-chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Disambiguation, EditionGroup, EditionGroupRevision, Editor,
