@@ -17,7 +17,7 @@
  */
 
 import * as _ from 'lodash';
-import type {SetItemT, Transaction} from './types';
+import type {FormRelationshipAttributesT as RelationshipAttributeT, SetItemT, Transaction} from './types';
 
 /**
  * Returns a function which compares two object provided to it using the
@@ -137,6 +137,42 @@ export async function createNewSetWithItems<Item extends SetItemT>(
 		_.map(addedItems, (ident) => newSetItemsCollectionAttached.create(
 			_.omit(ident, idAttribute), {transacting}
 		))
+	);
+
+	return newSet;
+}
+export async function createNewRelationshipAttributeSetWithItems<Item extends SetItemT>(
+	orm: any, transacting: Transaction, SetModel: any,
+	unchangedItems: Array<Item>, addedItems: Array<Item>,
+	itemsAttribute: string, idAttribute = 'id'
+): Promise<any> {
+	const {RelationshipAttributeTextValue} = orm;
+	if (!itemsAttribute) {
+		throw Error('itemsAttribute must be set in createNewRelationshipAttributeSetWithItems');
+	}
+
+	if (_.isEmpty(unchangedItems) && _.isEmpty(addedItems)) {
+		return null;
+	}
+
+	const newSet = await new SetModel().save(null, {transacting});
+	const newSetItemsCollection =
+		await newSet.related(itemsAttribute).fetch({transacting});
+
+	const newSetItemsCollectionAttached = await newSetItemsCollection.attach(
+		_.map(unchangedItems, idAttribute), {transacting}
+	);
+
+	await Promise.all(
+		_.map(addedItems, async (ident: RelationshipAttributeT) => {
+			const model = await newSetItemsCollectionAttached.create(
+				_.pick(ident, 'attributeType'), {transacting}
+			);
+			const {value} = ident;
+			await new RelationshipAttributeTextValue({attributeId: model.get('id'), textValue: value.textValue})
+				.save(null, {method: 'insert', transacting});
+			return model;
+		})
 	);
 
 	return newSet;

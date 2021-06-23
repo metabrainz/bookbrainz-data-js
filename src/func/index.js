@@ -28,6 +28,7 @@ import * as identifier from './identifier';
 import * as language from './language';
 import * as publisher from './publisher';
 import * as relationship from './relationship';
+import * as relationshipAttributes from './relationshipAttributes';
 import * as releaseEvent from './releaseEvent';
 import * as set from './set';
 
@@ -50,6 +51,7 @@ export default function init() {
 		language,
 		publisher,
 		relationship,
+		relationshipAttributes,
 		releaseEvent,
 		set
 	};

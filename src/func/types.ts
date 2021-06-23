@@ -23,7 +23,7 @@ import type {Transaction as _Transaction} from 'knex';
 export type Transaction = _Transaction<any>;
 
 export type EntityTypeString =
-	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup';
+	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup' | 'Series';
 
 export interface FormAliasT {
 	id: number,
@@ -31,6 +31,14 @@ export interface FormAliasT {
 	sortName: string,
 	languageId: number,
 	primary: boolean
+}
+
+export interface FormRelationshipAttributesT {
+	id: number,
+	attributeType: number
+	value: {
+		textValue: string | null
+	}
 }
 
 export interface FormAliasWithDefaultT {
@@ -48,6 +56,7 @@ export interface FormIdentifierT {
 }
 
 export interface FormRelationshipT {
+	attributeSetId: number,
 	id: number,
 	typeId: number,
 	sourceBbid: string,
