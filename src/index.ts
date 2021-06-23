@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import * as func from './func';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 
 import Bookshelf from 'bookshelf';
@@ -52,7 +53,6 @@ import editor from './models/editor';
 import editorEntityVisits from './models/editorEntityVisits';
 import editorType from './models/editorType';
 import entity from './models/entity';
-import func from './func';
 import gender from './models/gender';
 import identifier from './models/identifier';
 import identifierSet from './models/identifierSet';
@@ -189,7 +189,9 @@ export default function init(config) {
 		WorkRevision: workRevision(bookshelf),
 		WorkType: workType(bookshelf),
 		bookshelf,
-		func: func(),
+		func,
 		util
 	};
 }
+
+export {func};

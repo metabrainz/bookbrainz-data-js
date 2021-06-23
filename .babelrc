@@ -1,16 +1,6 @@
 {
   "plugins": [
-    "lodash",
-    "@babel/transform-modules-commonjs",
-    "@babel/proposal-object-rest-spread",
-    "@babel/proposal-class-properties",
-    "array-includes",
-    [
-      "@babel/transform-runtime",
-      {
-        "regenerator": true
-      }
-    ]
+    "lodash"
   ],
   "presets": [
     "@babel/preset-typescript",
