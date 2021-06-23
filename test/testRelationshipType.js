@@ -77,6 +77,8 @@ describe('RelationshipType model', () => {
 			.save(null, {method: 'insert'});
 		await model.refresh({withRelated: ['attributeTypes']});
 
+		expect(model.toJSON().attributeTypes).to.have.lengthOf(1);
+		expect(model.toJSON().attributeTypes[0]).to.include(relAttributeTypeAttribs);
 		return expect(model.toJSON()).to.have.all.keys([
 			'id', 'label', 'description', 'linkPhrase', 'reverseLinkPhrase',
 			'sourceEntityType', 'targetEntityType', 'parentId', 'childOrder',

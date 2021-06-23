@@ -119,6 +119,8 @@ describe('Relationship model', () => {
 			'attributeSet.relationshipAttributes.value', 'attributeSet.relationshipAttributes.type']});
 		const {attributeSet} = model1.toJSON();
 
+		expect(attributeSet.relationshipAttributes[0].value.textValue).to.equal('1');
+		expect(attributeSet.relationshipAttributes[0].type.id).to.equal(1);
 		return expect(attributeSet.relationshipAttributes[0]).to.include.all.keys('value', 'type');
 	});
 });

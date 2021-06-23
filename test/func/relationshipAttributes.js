@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+/* eslint-disable max-len */
+
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import {truncateTables} from '../../lib/util';
