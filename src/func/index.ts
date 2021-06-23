@@ -28,6 +28,7 @@ export * as imports from './imports';
 export * as language from './language';
 export * as publisher from './publisher';
 export * as relationship from './relationship';
+export * as relationshipAttributes from './relationshipAttributes';
 export * as releaseEvent from './releaseEvent';
 export * as set from './set';
 export {createEntity} from './create-entity';
