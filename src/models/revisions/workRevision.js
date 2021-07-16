@@ -30,7 +30,9 @@ export default function workRevision(bookshelf) {
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships.type',
 				'workType', 'languageSet.languages',
-				'identifierSet.identifiers.type'
+				'identifierSet.identifiers.type',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.value',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.type'
 			]);
 		},
 		entity() {

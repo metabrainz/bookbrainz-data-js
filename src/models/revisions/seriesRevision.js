@@ -32,6 +32,7 @@ export default function seriesRevision(bookshelf) {
 				'aliasSet.defaultAlias',
 				'relationshipSet.relationships.type',
 				'relationshipSet.relationships.attributeSet.relationshipAttributes.value',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.type',
 				'seriesOrderingType',
 				'identifierSet.identifiers.type'
 			]);

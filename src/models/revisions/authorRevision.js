@@ -30,7 +30,9 @@ export default function authorRevision(bookshelf) {
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships', 'beginArea', 'endArea',
 				'relationshipSet.relationships.type', 'gender', 'authorType',
-				'identifierSet.identifiers.type'
+				'identifierSet.identifiers.type',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.value',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.type'
 			]);
 		},
 		entity() {

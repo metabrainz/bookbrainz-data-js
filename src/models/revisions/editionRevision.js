@@ -32,7 +32,9 @@ export default function editionRevision(bookshelf) {
 				'relationshipSet.relationships.type', 'publisherSet.publishers',
 				'editionGroup', 'editionFormat', 'editionStatus',
 				'releaseEventSet.releaseEvents', 'languageSet.languages',
-				'identifierSet.identifiers.type'
+				'identifierSet.identifiers.type',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.value',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.type'
 			]);
 		},
 		entity() {
