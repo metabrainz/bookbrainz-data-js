@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
@@ -61,7 +60,7 @@ describe('AliasSet model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.alias_set',
@@ -123,10 +122,10 @@ describe('AliasSet model', () => {
 		const alias2Promise = new Alias(_.assign(aliasAttribs, {id: 2}))
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = Promise.join(
-			alias1Promise, alias2Promise, (alias1, alias2) =>
-				createAliasSet(alias1, [alias1, alias2])
-		)
+		const jsonPromise = Promise.all([alias1Promise, alias2Promise])
+			.then(
+				([alias1, alias2]) => createAliasSet(alias1, [alias1, alias2])
+			)
 			.then(
 				(model) =>
 					model.refresh({withRelated: ['aliases', 'defaultAlias']})

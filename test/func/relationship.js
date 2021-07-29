@@ -16,18 +16,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
+import {promiseProps, truncateTables} from '../../lib/util';
 import _ from 'lodash';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import faker from 'faker';
-import {truncateTables} from '../../lib/util';
+import {updateRelationshipSets} from '../../lib/func/relationship';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {updateRelationshipSets} = bookbrainzData.func.relationship;
 const {
 	RelationshipType, Entity, Gender, EditorType, Revision, Annotation, Work,
 	Editor, AliasSet, bookshelf
@@ -37,6 +36,7 @@ const aBBID = faker.random.uuid();
 const bBBID = faker.random.uuid();
 const cBBID = faker.random.uuid();
 const dBBID = faker.random.uuid();
+
 
 function getRelationshipData(typeId, sourceBbid, targetBbid) {
 	return {
@@ -128,7 +128,6 @@ describe('updateRelationshipSet', () => {
 			new Gender(genderData).save(null, {method: 'insert'}),
 			new EditorType(editorTypeData).save(null, {method: 'insert'})
 		]);
-
 		await new Editor(editorAttribs).save(null, {method: 'insert'});
 
 		return Promise.all([
@@ -190,7 +189,7 @@ describe('updateRelationshipSet', () => {
 				bookbrainzData, trx, null, [relationshipData]
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -230,7 +229,7 @@ describe('updateRelationshipSet', () => {
 				})
 			);
 
-			const refreshedSetsPromise = Promise.props(
+			const refreshedSetsPromise = promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -238,14 +237,14 @@ describe('updateRelationshipSet', () => {
 				}, {})
 			);
 
-			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets);
+			return Promise.all([refreshedSetsPromise, updatedEntitiesPromise])
+				.then(([refreshedSets]) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = _.orderBy(firstSet.related('relationships').toJSON(), 'id')
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid', 'attributeSetId']));
 
 		firstSetRelationships[1].targetBbid = dBBID;
 		const thirdRelationshipData = firstSetRelationships[1];
@@ -255,7 +254,7 @@ describe('updateRelationshipSet', () => {
 				bookbrainzData, trx, firstSet, firstSetRelationships
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set && set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -301,7 +300,7 @@ describe('updateRelationshipSet', () => {
 				})
 			);
 
-			const refreshedSetsPromise = Promise.props(
+			const refreshedSetsPromise = promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set.refresh({
 						transacting: trx, withRelated: 'relationships'
@@ -309,21 +308,21 @@ describe('updateRelationshipSet', () => {
 				}, {})
 			);
 
-			return Promise.join(refreshedSetsPromise, updatedEntitiesPromise,
-				(refreshedSets) => refreshedSets);
+			return Promise.all([refreshedSetsPromise, updatedEntitiesPromise])
+				.then(([refreshedSets]) => refreshedSets);
 		});
 
 		const firstSet = firstResult[aBBID];
 		const firstSetRelationships = firstSet.related('relationships').toJSON()
 			.map((relationship) =>
-				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid']));
+				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid', 'attributeSetId']));
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
 				bookbrainzData, trx, firstSet, firstSetRelationships
 			);
 
-			return Promise.props(
+			return promiseProps(
 				_.transform(sets, (acc, set, bbid) => {
 					acc[bbid] = set && set.refresh({
 						transacting: trx, withRelated: 'relationships'

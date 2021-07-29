@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
@@ -27,10 +26,11 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	Entity, Relationship, RelationshipSet, RelationshipType, bookshelf
+	Entity, Relationship, RelationshipAttributeSet, RelationshipSet, RelationshipType, bookshelf
 } = bookbrainzData;
 
 const relAttribs = {
+	attributeSetId: 1,
 	id: 1,
 	sourceBbid: '68f52341-eea4-4ebc-9a15-6226fb68962c',
 	targetBbid: 'de305d54-75b4-431b-adb2-eb6b9e546014',
@@ -71,6 +71,10 @@ describe('RelationshipSet model', () => {
 						.save(null, {method: 'insert'})
 				)
 				.then(
+					() => new RelationshipAttributeSet({id: 1})
+						.save(null, {method: 'insert'})
+				)
+				.then(
 					() =>
 						new Entity(
 							_.assign(_.clone(entityAttribs), {
@@ -85,6 +89,7 @@ describe('RelationshipSet model', () => {
 		() => truncateTables(bookshelf, [
 			'bookbrainz.relationship_set',
 			'bookbrainz.relationship',
+			'bookbrainz.relationship_attribute_set',
 			'bookbrainz.relationship_type',
 			'bookbrainz.entity'
 		])
@@ -138,10 +143,11 @@ describe('RelationshipSet model', () => {
 		const rel2Promise = new Relationship(_.assign(relAttribs, {id: 2}))
 			.save(null, {method: 'insert'});
 
-		const jsonPromise = Promise.join(
-			rel1Promise, rel2Promise, (relationship1, relationship2) =>
-				createRelationshipSet([relationship1, relationship2])
-		)
+		const jsonPromise = Promise.all([rel1Promise, rel2Promise])
+			.then(
+				([relationship1, relationship2]) =>
+					createRelationshipSet([relationship1, relationship2])
+			)
 			.then((model) => model.refresh({withRelated: ['relationships']}))
 			.then((model) => model.toJSON());
 

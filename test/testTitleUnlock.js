@@ -66,7 +66,7 @@ describe('TitleUnlock model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(); // eslint-disable-line babel/no-invalid-this
+		this.timeout(); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.editor_type', 'musicbrainz.gender',

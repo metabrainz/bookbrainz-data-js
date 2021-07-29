@@ -30,7 +30,9 @@ export default function publisherRevision(bookshelf) {
 				'aliasSet.defaultAlias', 'identifierSet.identifiers',
 				'relationshipSet.relationships', 'area',
 				'relationshipSet.relationships.type',
-				'identifierSet.identifiers.type', 'publisherType'
+				'identifierSet.identifiers.type', 'publisherType',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.value',
+				'relationshipSet.relationships.attributeSet.relationshipAttributes.type'
 			]);
 		},
 		entity() {

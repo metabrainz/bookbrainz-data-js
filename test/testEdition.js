@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -27,8 +26,8 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Disambiguation, Edition, Editor, EditorType, Entity,
-	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
+	AliasSet, Annotation, AuthorCredit, Disambiguation, Edition, EditionGroup, Editor, EditorType, Entity,
+	Gender, IdentifierSet, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +47,7 @@ const editorAttribs = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
 
 const revisionAttribs = {
 	authorId: 1,
@@ -56,6 +56,7 @@ const revisionAttribs = {
 const editionAttribs = {
 	aliasSetId: 1,
 	annotationId: 1,
+	authorCreditId: 1,
 	bbid: aBBID,
 	disambiguationId: 1,
 	identifierSetId: 1,
@@ -99,6 +100,8 @@ describe('Edition model', () => {
 							.save(null, {method: 'insert'}),
 						new RelationshipSet(setData)
 							.save(null, {method: 'insert'}),
+						new AuthorCredit({...setData, authorCount: 0})
+							.save(null, {method: 'insert'}),
 						new Disambiguation({
 							comment: 'Test Disambiguation',
 							id: 1
@@ -111,12 +114,13 @@ describe('Edition model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
 			'bookbrainz.revision',
 			'bookbrainz.alias',
+			'bookbrainz.author_credit',
 			'bookbrainz.identifier',
 			'bookbrainz.relationship',
 			'bookbrainz.relationship_set',
@@ -126,6 +130,8 @@ describe('Edition model', () => {
 			'bookbrainz.disambiguation',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
+			'bookbrainz.user_collection',
+			'bookbrainz.user_collection_item',
 			'musicbrainz.gender'
 		]);
 	});
@@ -135,19 +141,19 @@ describe('Edition model', () => {
 		await edition.refresh({
 			withRelated: [
 				'relationshipSet', 'aliasSet', 'identifierSet',
-				'annotation', 'disambiguation', 'authorCredit'
+				'annotation', 'disambiguation', 'authorCredit', 'collections'
 			]
 		});
 		const editionJSON = edition.toJSON();
 
 		expect(editionJSON).to.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'authorCredit', 'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
 			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
-			'type', 'weight', 'width'
+			'type', 'weight', 'width', 'collections'
 		]);
 	});
 
@@ -190,6 +196,21 @@ describe('Edition model', () => {
 		expect(editionJSON.editionGroupBbid).to.not.equal(firstEditionGroup);
 	});
 
+	it('should set the same Author Credit on auto-created Edition Group', async () => {
+		const edition = await createEdition();
+
+		const editionJSON = edition.toJSON();
+		expect(editionJSON.authorCreditId).to.be.a('number');
+		const editionGroupBBID = editionJSON.editionGroupBbid;
+
+		// Fetch the Edition Group
+		const editionGroup = await new EditionGroup({bbid: editionGroupBBID}).fetch({withRelated: ['authorCredit']});
+		const editionGroupJSON = editionGroup.toJSON();
+
+		// Check that the newly created Edition Group has the same Author Credit ID set
+		expect(editionGroupJSON.authorCreditId).to.equal(editionJSON.authorCreditId);
+	});
+
 	it('should return the master revision when multiple revisions exist',
 		() => {
 			/*
@@ -227,8 +248,10 @@ describe('Edition model', () => {
 						.save(null, {method: 'insert'});
 				});
 
-			const editionUpdatePromise = Promise.join(editionPromise,
-				revisionTwoPromise, (edition) => {
+			const editionUpdatePromise = Promise.all(
+				[editionPromise, revisionTwoPromise]
+			)
+				.then(([edition]) => {
 					const editionUpdateAttribs = {
 						bbid: edition.bbid,
 						revisionId: 2
@@ -248,4 +271,41 @@ describe('Edition model', () => {
 					.to.eventually.have.property('master', true)
 			]);
 		});
+
+	it('should return a JSON object with related collections if there exist any', async () => {
+		const edition = await createEdition();
+		const userCollectionAttribs = {
+			entityType: 'Author',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await edition.refresh({
+			withRelated: ['collections']
+		});
+		const json = edition.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf(1);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const edition = await createEdition();
+		await edition.refresh({
+			withRelated: ['collections']
+		});
+		const json = edition.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });

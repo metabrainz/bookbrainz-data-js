@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import bookbrainzData from './bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -28,7 +27,7 @@ chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
 	AliasSet, Annotation, Author, Disambiguation, Editor, EditorType, Entity,
-	Gender, IdentifierSet, RelationshipSet, Revision, bookshelf
+	Gender, IdentifierSet, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -48,6 +47,7 @@ const editorAttribs = {
 const setData = {id: 1};
 
 const aBBID = faker.random.uuid();
+const aBBID2 = faker.random.uuid();
 
 describe('Author model', () => {
 	beforeEach(
@@ -81,7 +81,7 @@ describe('Author model', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
@@ -93,6 +93,8 @@ describe('Author model', () => {
 			'bookbrainz.disambiguation',
 			'bookbrainz.editor',
 			'bookbrainz.editor_type',
+			'bookbrainz.user_collection',
+			'bookbrainz.user_collection_item',
 			'musicbrainz.gender'
 		]);
 	});
@@ -134,7 +136,7 @@ describe('Author model', () => {
 			.then((model) => model.refresh({
 				withRelated: [
 					'relationshipSet', 'aliasSet', 'identifierSet',
-					'annotation', 'disambiguation'
+					'annotation', 'disambiguation', 'collections'
 				]
 			}))
 			.then((author) => author.toJSON());
@@ -146,7 +148,7 @@ describe('Author model', () => {
 			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
 			'endYear', 'ended', 'genderId', 'identifierSet', 'identifierSetId',
 			'master', 'relationshipSet', 'relationshipSetId', 'revisionId',
-			'type', 'typeId'
+			'type', 'typeId', 'collections'
 		]);
 	});
 
@@ -187,8 +189,10 @@ describe('Author model', () => {
 						.save(null, {method: 'insert'});
 				});
 
-			const authorUpdatePromise = Promise.join(authorPromise,
-				revisionTwoPromise, (author) => {
+			const authorUpdatePromise = Promise.all(
+				[authorPromise, revisionTwoPromise]
+			)
+				.then(([author]) => {
 					const authorUpdateAttribs = {
 						bbid: author.bbid,
 						ended: true,
@@ -211,4 +215,67 @@ describe('Author model', () => {
 					.to.eventually.have.property('ended', true)
 			]);
 		});
+
+	it('should return a JSON object with related collections if there exist any', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const authorAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+		const userCollectionAttribs = {
+			entityType: 'Author',
+			id: aBBID2,
+			name: 'Test Collection',
+			ownerId: 1
+		};
+		const userCollectionItemAttribs = {
+			bbid: aBBID,
+			collectionId: aBBID2
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+
+		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
+		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections exist
+		return expect(collections).to.have.lengthOf(1);
+	});
+
+	it('should return a JSON object with empty collections array', async () => {
+		const revisionAttribs = {
+			authorId: 1,
+			id: 1
+		};
+		const authorAttribs = {
+			aliasSetId: 1,
+			bbid: aBBID,
+			identifierSetId: 1,
+			relationshipSetId: 1,
+			revisionId: 1
+		};
+
+		await new Revision(revisionAttribs).save(null, {method: 'insert'});
+		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+		await model.refresh({
+			withRelated: ['collections']
+		});
+		const json = model.toJSON();
+		const {collections} = json;
+
+		// collections does not exist
+		return expect(collections).to.be.empty;
+	});
 });

@@ -20,11 +20,11 @@ import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {truncateTables} from '../../lib/util';
+import {updateLanguageSet} from '../../lib/func/language';
 
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {updateLanguageSet} = bookbrainzData.func.language;
 const {Language, bookshelf} = bookbrainzData;
 
 describe('updateLanguageSet', () => {
@@ -57,6 +57,7 @@ describe('updateLanguageSet', () => {
 
 	afterEach(function () {
 		return truncateTables(bookshelf, [
+			'bookbrainz.language_set',
 			'musicbrainz.language'
 		]);
 	});

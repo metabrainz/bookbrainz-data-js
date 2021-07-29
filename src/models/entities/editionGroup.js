@@ -20,6 +20,9 @@ export default function editionGroup(bookshelf) {
 	const EditionGroupData = bookshelf.model('EditionGroupData');
 
 	const EditionGroup = EditionGroupData.extend({
+		collections() {
+			return this.belongsToMany('UserCollection').through('UserCollectionItem', 'bbid', 'collection_id', 'bbid');
+		},
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},

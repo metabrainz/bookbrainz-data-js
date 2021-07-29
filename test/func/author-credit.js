@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {fetchOrCreateCredit, updateAuthorCredit} from '../../lib/func/author-credit';
 import _ from 'lodash';
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
@@ -26,7 +27,6 @@ import {truncateTables} from '../../lib/util';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
-const {fetchOrCreateCredit, updateAuthorCredit} = bookbrainzData.func.authorCredit;
 const {Entity, AuthorHeader, bookshelf} = bookbrainzData;
 
 const aBBID = faker.random.uuid();
@@ -52,7 +52,7 @@ describe('fetchOrCreateCredit', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',
@@ -100,7 +100,7 @@ describe('updateCreateCredit', () => {
 	);
 
 	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line babel/no-invalid-this
+		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 
 		return truncateTables(bookshelf, [
 			'bookbrainz.entity',

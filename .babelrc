@@ -1,24 +1,14 @@
 {
   "plugins": [
-    "lodash",
-    "@babel/transform-modules-commonjs",
-    "@babel/proposal-object-rest-spread",
-    "@babel/proposal-class-properties",
-    "array-includes",
-    [
-      "@babel/transform-runtime",
-      {
-        "regenerator": true
-      }
-    ]
+    "lodash"
   ],
   "presets": [
-    "@babel/flow",
+    "@babel/preset-typescript",
     [
       "@babel/env",
       {
         "targets": {
-          "node": "8.0"
+          "node": "12.0"
         }
       }
     ]

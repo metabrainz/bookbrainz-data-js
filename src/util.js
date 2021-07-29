@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Promise from 'bluebird';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
 
@@ -82,7 +81,7 @@ export class EntityTypeError extends Error {
 		super(message);
 		this.name = 'EntityTypeError';
 		this.message = message;
-		this.stack = (new Error()).stack;
+		this.stack = new Error().stack;
 	}
 }
 
@@ -94,11 +93,11 @@ export function validateEntityType(model) {
 	}
 }
 
-export function truncateTables(Bookshelf, tables) {
-	return Promise.each(
-		tables,
-		(table) => Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`)
-	);
+export async function truncateTables(Bookshelf, tables) {
+	for (const table of tables) {
+		// eslint-disable-next-line no-await-in-loop
+		await Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`);
+	}
 }
 
 export function diffRevisions(base, other, includes) {
@@ -151,15 +150,12 @@ export function diffRevisions(base, other, includes) {
 	const otherDataPromise =
 		other.related('data').fetch({require: false, withRelated: includes});
 
-	return Promise.join(
-		baseDataPromise,
-		otherDataPromise,
-		(baseData, otherData) => diff(
+	return Promise.all([baseDataPromise, otherDataPromise])
+		.then(([baseData, otherData]) => diff(
 			otherData ? sortEntityData(otherData.toJSON()) : {},
 			baseData ? sortEntityData(baseData.toJSON()) : {},
 			diffFilter
-		)
-	);
+		));
 }
 
 const YEAR_STR_LENGTH = 6;
@@ -238,15 +234,18 @@ export function parseDate(date) {
 
 /**
  * Create a new Edition Group for an Edition.
- * The Edition Group will be part of the same revision, and will have the same alias set id for that revision
- * Subsequent changes to the alias set for either entity will only impact that entity's new revision.
+ * The Edition Group will be part of the same revision, and will have the same
+ * alias set and author credit for that revision
+ * Subsequent changes to the alias set or author credit for either entity will
+ * only impact that entity's new revision.
  * @param {object} orm - The Bookshelf ORM
  * @param {object} transacting - The Bookshelf/Knex SQL transaction in progress
  * @param {number|string} aliasSetId - The id of the new edition's alias set
  * @param {number|string} revisionId - The id of the new edition's revision
+ * @param {number|string} authorCreditId - The id of the new edition's author credit
  * @returns {string} BBID of the newly created Edition Group
  */
-export async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, revisionId) {
+export async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, revisionId, authorCreditId) {
 	const Entity = orm.model('Entity');
 	const EditionGroup = orm.model('EditionGroup');
 	const newEditionGroupEntity = await new Entity({type: 'EditionGroup'})
@@ -254,9 +253,25 @@ export async function createEditionGroupForNewEdition(orm, transacting, aliasSet
 	const bbid = newEditionGroupEntity.get('bbid');
 	await new EditionGroup({
 		aliasSetId,
+		authorCreditId,
 		bbid,
 		revisionId
 	})
 		.save(null, {method: 'insert', transacting});
 	return bbid;
+}
+
+/**
+ * Replacement for Bluebird's Promise.props
+ * @param {Object} promiseObj - an object containing string keys and promises
+ *                              to be resolved as the values
+ * @returns {Object} an object containing the same keys, but resolved promises
+ */
+export async function promiseProps(promiseObj) {
+	const resolvedKeyValuePairs = await Promise.all(
+		Object.entries(promiseObj).map(
+			([key, val]) => Promise.resolve(val).then((x) => [key, x])
+		)
+	);
+	return Object.fromEntries(resolvedKeyValuePairs);
 }
