@@ -20,36 +20,49 @@
 
 /**
  * @param  {object} orm - the BookBrainz ORM, initialized during app setup
- * @param  {object} relationship - the relationship object, with typeId=10 (Edition contains Work)
- * @returns {Object} - Returns the relationship object after loading the author of the Work
+ * @param  {array} workBBIDs - the array containing the BBIDs of the works contained in the edition
+ * @returns {Object} - Returns an array of objects containing the authorAlias, authorBBID of each work in an edition
 */
-export async function loadAuthorNames(orm: any, relationship: any) {
-	const {RelationshipSet} = orm;
-	// const {entity} = res.locals;
-
-	async function getEntityWithAlias(relEntity) {
-		const redirectBbid = await orm.func.entity.recursivelyGetRedirectBBID(orm, relEntity.bbid, null);
-
-		return orm.Author.forge({bbid: redirectBbid})
-			.fetch({require: false, withRelated: ['defaultAlias']});
+export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
+	function queryBuilder(BBIDs) {
+		let query = '(';
+		if (BBIDs.length) {
+			query += `'${BBIDs[0]}'`;
+			for (let i = 1; i < BBIDs.length; i++) {
+				query += `, '${BBIDs[i]}'`;
+			}
+		}
+		query += ')';
+		return query;
 	}
 
-	// Loading the relationshipSet of the Work
-	const relationshipSet = await RelationshipSet.forge({id: relationship.target.relationshipSetId})
-		.fetch({
-			require: false,
-			withRelated: [
-				'relationships.source'
-			]
-		});
-	const relationships = relationshipSet ? relationshipSet.related('relationships').toJSON() : [];
+	const listOfBBIDs = queryBuilder(workBBIDs);
 
-	// Now trying to load the Author using the relationship with typeId=8, i.e, "Author Wrote Work"
-	relationship.target.author = relationships.filter(rel => rel.typeId === 8)[0];
-	if (relationship.target.author) {
-		const source = await getEntityWithAlias(relationship.target.author.source);
-		relationship.target.author = source.toJSON();
-	}
+	const sqlQuery = `select
+		author.bbid as authorBBID,
+		alias."name" as authorAlias,
+		work.bbid as workBBID
+		from
+			bookbrainz.work as work
+		-- Get Authors related to Work (relationship type 8, Author wrote Work)
+		left join bookbrainz.relationship_set as workRelSet on
+			workRelSet.id = work.relationship_set_id
+		left join bookbrainz.relationship_set__relationship as workRelSetRel on
+			workRelSetRel.set_id = workRelSet.id
+		inner join bookbrainz.relationship as workRel on
+			workRel.type_id = 8
+			and workRel.id = workRelSetRel.relationship_id
+		left join bookbrainz.author as author on
+			author.bbid = workRel.source_bbid
+			and author.master is true
+		-- Get defaultAlias of the Authors
+		left join bookbrainz.alias on
+			alias.id = author.default_alias_id 
+		where
+			work.master is true
+			and work.data_id is not null
+			and work.bbid in ${listOfBBIDs}`;
 
-	return relationship;
+	const queryResults = await orm.bookshelf.knex.raw(sqlQuery);
+	return queryResults.rows;
 }
