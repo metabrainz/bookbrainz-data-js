@@ -28,20 +28,6 @@ export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
 		return [];
 	}
 
-	function queryBuilder(BBIDs) {
-		let query = '(';
-		if (BBIDs.length) {
-			query += `'${BBIDs[0]}'`;
-			for (let i = 1; i < BBIDs.length; i++) {
-				query += `, '${BBIDs[i]}'`;
-			}
-		}
-		query += ')';
-		return query;
-	}
-
-	const listOfBBIDs = queryBuilder(workBBIDs);
-
 	const sqlQuery = `select
 		author.bbid as authorBBID,
 		alias."name" as authorAlias,
@@ -65,7 +51,7 @@ export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
 		where
 			work.master is true
 			and work.data_id is not null
-			and work.bbid in ${listOfBBIDs}`;
+			and work.bbid in ${`(${workBBIDs.map(bbid => `'${bbid}'`).join(', ')})`}`;
 
 	const queryResults = await orm.bookshelf.knex.raw(sqlQuery);
 	return queryResults.rows;
