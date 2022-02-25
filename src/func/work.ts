@@ -24,6 +24,10 @@
  * @returns {Object} - Returns an array of objects containing the authorAlias, authorBBID of each work in an edition
 */
 export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
+	if (!workBBIDs.length) {
+		return [];
+	}
+
 	function queryBuilder(BBIDs) {
 		let query = '(';
 		if (BBIDs.length) {
