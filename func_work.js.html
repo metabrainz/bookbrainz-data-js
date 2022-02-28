@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>func/imports/recent-imports.js - Documentation</title>
+    <title>func/work.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">func/imports/recent-imports.js</h1>
+    <h1 class="page-title">func/work.js</h1>
     
 
     
@@ -44,130 +44,63 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getRecentImports = getRecentImports;
-exports.getTotalImports = getTotalImports;
+exports.loadAuthorNames = loadAuthorNames;
 
-var _get2 = _interopRequireDefault(require("lodash/get"));
+/*
+ * Copyright (C) 2022  Shivam Awasthi
+ * Some parts adapted from bookbrainz-site
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
-var _map2 = _interopRequireDefault(require("lodash/map"));
+/**
+ * @param  {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param  {array} workBBIDs - the array containing the BBIDs of the works contained in the edition
+ * @returns {Object} - Returns an array of objects containing the authorAlias, authorBBID of each work in an edition
+*/
+async function loadAuthorNames(orm, workBBIDs) {
+  if (!workBBIDs.length) {
+    return [];
+  }
 
-var _flatten2 = _interopRequireDefault(require("lodash/flatten"));
-
-var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
-
-var _assign2 = _interopRequireDefault(require("lodash/assign"));
-
-var _values2 = _interopRequireDefault(require("lodash/values"));
-
-var _entity = require("../entity");
-
-var _alias = require("../alias");
-
-var _moment = _interopRequireDefault(require("moment"));
-
-var _misc = require("./misc");
-
-var _util = require("../../util");
-
-function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
-
-/** getRecentImportIdsByType -
- * @param  {Transaction} transacting - Transaction object
- * @param  {number} limit - To limit the number of importIds fetched
- * @param  {number} offset - We offset the result by this value
- * @returns {Promise&lt;Object&lt;Array>>} - Returns an object containing arrays of
- * 		importIds of various importTypes
- */
-async function getRecentImportUtilData(transacting, limit, offset) {
-  // Extract recent imports, types and import timeStamp
-  const recentImportUtilsData = await transacting.select('link.imported_at', 'link.origin_source_id', 'bookbrainz.import.id', 'bookbrainz.import.type').from('bookbrainz.import').join(transacting.select('import_id', 'imported_at', 'origin_source_id').from('bookbrainz.link_import').orderBy('imported_at').whereNot('import_id', null).limit(limit).offset(offset).as('link'), 'link.import_id', 'bookbrainz.import.id');
-  /* Contruct importHolder object (holds importIds classified by their types)
-  	object of form {type: []} */
-
-  const importHolder = (0, _values2.default)(_entity.entityTypes).reduce((holder, type) => (0, _assign2.default)(holder, {
-    [type]: []
-  }), {});
-  /* Returns the holder object which has two fields:
-  	=> importHolder: Object{type: Array[importIds]}
-  		Where type is entityType. This essentially classifies all the
-  		imports into the their respective types
-  	=> timestampMap: Object{importId: imported_at}
-  		This holds a mapping of all imports and their imported_at timestamps
-  	=> originIdMap: Object{originId: origin_id}
-  		This holds a mapping of all imports and their origin_ids
-  	*/
-
-  return recentImportUtilsData.reduce((holder, data) => {
-    holder.importHolder[data.type].push(data.id);
-    holder.originIdMap[data.id] = data.origin_source_id;
-    holder.timeStampMap[data.id] = data.imported_at;
-    return holder;
-  }, {
-    importHolder,
-    originIdMap: {},
-    timeStampMap: {}
-  });
-}
-
-function getRecentImportsByType(transacting, type, importIds) {
-  return transacting.select('*').from(`bookbrainz.${(0, _snakeCase2.default)(type)}_import`).whereIn('import_id', importIds);
-}
-
-async function getRecentImports(orm, transacting, limit = 10, offset = 0) {
-  /* Fetch most recent ImportIds classified by importTypes
-  	=> importHolder - holds recentImports classified by entity type
-  	=> timeStampMap - holds value importedAt value in object with importId
-  		as key
-  	=> originIdMap - holds value originId value in object with importId as
-  		key
-  */
-  const {
-    importHolder: recentImportIdsByType,
-    timeStampMap,
-    originIdMap
-  } = await getRecentImportUtilData(transacting, limit, offset);
-  /* Qs. What are all import types? Ans => Extract the values from entityTypes
-  	[Author, Edition, EditionGroup, Publisher, Work] */
-
-  const importTypes = (0, _values2.default)(_entity.entityTypes);
-  /* Fetch imports for each importType using their importIds
-  	We first pass type and id to fetch function, await all those promises
-  	and then flatten the array containing those results. Classification by
-  	type is important as only by knowing types we can access dataId and
-  	hence subsequent data.
-  */
-
-  const recentImports = (0, _flatten2.default)(await Promise.all(importTypes.map(type => getRecentImportsByType(transacting, type, recentImportIdsByType[type])))); // Fetch all default alias ids
-
-  const defaultAliasIds = (0, _map2.default)(recentImports, 'default_alias_id'); // Fetch default aliases using the default alias ids
-
-  const defaultAliasesMap = await (0, _alias.getAliasByIds)(transacting, defaultAliasIds);
-  /* Add timestamp, source and defaultAlias to the recentImports
-  	Previously while getting utils data we fetched a mapping of importId to
-  	timestamp and oringId.
-  	We also fetched map of aliasId to alias object.
-  	Now using those we populate our final object */
-  // First, get the origin mapping => {originId: name}
-
-  const sourceMapping = await (0, _misc.originSourceMapping)(transacting, true);
-  return recentImports.map(recentImport => {
-    // Add timestamp
-    recentImport.importedAt = (0, _moment.default)(timeStampMap[recentImport.import_id]).format('YYYY-MM-DD'); // Add origin source
-
-    const originId = originIdMap[recentImport.import_id];
-    recentImport.source = sourceMapping[originId]; // Add default alias
-
-    const defaultAliasId = (0, _get2.default)(recentImport, 'default_alias_id');
-    recentImport.defaultAlias = defaultAliasesMap[defaultAliasId];
-    return (0, _util.snakeToCamel)(recentImport);
-  });
-}
-
-async function getTotalImports(transacting) {
-  const [{
-    count
-  }] = await transacting('bookbrainz.link_import').count('import_id');
-  return parseInt(count, 10);
+  const sqlQuery = `select
+		author.bbid as authorBBID,
+		alias."name" as authorAlias,
+		work.bbid as workBBID
+		from
+			bookbrainz.work as work
+		-- Get Authors related to Work (relationship type 8, Author wrote Work)
+		left join bookbrainz.relationship_set as workRelSet on
+			workRelSet.id = work.relationship_set_id
+		left join bookbrainz.relationship_set__relationship as workRelSetRel on
+			workRelSetRel.set_id = workRelSet.id
+		inner join bookbrainz.relationship as workRel on
+			workRel.type_id = 8
+			and workRel.id = workRelSetRel.relationship_id
+		left join bookbrainz.author as author on
+			author.bbid = workRel.source_bbid
+			and author.master is true
+		-- Get defaultAlias of the Authors
+		left join bookbrainz.alias on
+			alias.id = author.default_alias_id 
+		where
+			work.master is true
+			and work.data_id is not null
+			and work.bbid in ${`(${workBBIDs.map(bbid => `'${bbid}'`).join(', ')})`}`;
+  const queryResults = await orm.bookshelf.knex.raw(sqlQuery);
+  return queryResults.rows;
 }</code></pre>
         </article>
     </section>
