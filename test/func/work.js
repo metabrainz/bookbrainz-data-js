@@ -1,4 +1,20 @@
-
+/*
+ * Copyright (C) 2022  Shivam Awasthi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -61,8 +77,8 @@ const relationshipTypeData = {
 	label: 'test label',
 	linkPhrase: 'test phrase',
 	reverseLinkPhrase: 'test reverse link phrase',
-	sourceEntityType: 'Work',
-	targetEntityType: 'Author'
+	sourceEntityType: 'Author',
+	targetEntityType: 'Work'
 };
 
 const revisionAttribs = {
@@ -98,10 +114,11 @@ async function createWork() {
 	await new EditorType(editorTypeData).save(null, {method: 'insert'});
 	await new Editor(editorData).save(null, {method: 'insert'});
 	await new AliasSet(setData).save(null, {method: 'insert'});
-	await new RelationshipSet(setData).save(null, {method: 'insert'});
+	const relSetOfWork = await new RelationshipSet(setData).save(null, {method: 'insert'});
 	await new Entity({bbid: workBBID, type: 'Work'}).save(null, {method: 'insert'});
 	await new Revision(revisionAttribs).save(null, {method: 'insert'});
 	await new Work(workAttribs).save(null, {method: 'insert'});
+	return relSetOfWork;
 }
 
 async function createRelationshipAttributeSet() {
@@ -117,34 +134,34 @@ async function createRelationshipAttributeSet() {
 	return relationshipAttributeSet.get('id');
 }
 
-async function createRelationshipSet(attributeSetId) {
+async function createAuthorAndRelationshipSet(attributeSetId, relSetOfWork) {
 	await new Entity({bbid: authorBBID, type: 'Author'}).save(null, {method: 'insert'});
 	await new Revision(revisionAttribs2).save(null, {method: 'insert'});
 	await new Author(authorAttribs).save(null, {method: 'insert'});
 	const relationshipType = await new RelationshipType(relationshipTypeData).save(null, {method: 'insert'});
 	const relationshipData = {
 		attributeSetId,
-		sourceBbid: workBBID,
-		targetBbid: authorBBID,
+		sourceBbid: authorBBID,
+		targetBbid: workBBID,
 		typeId: relationshipType.id
 	};
-	await new Relationship(relationshipData).save(null, {method: 'insert'});
-	await new RelationshipSet().save(null, {method: 'insert'});
+	const relationship = await new Relationship(relationshipData).save(null, {method: 'insert'});
+	await relSetOfWork.relationships().attach(relationship);
 }
 
 describe('loadAuthorNames', () => {
-	beforeEach(
+	before(
 		async () => {
-			createWork();
+			const relSetOfWork = await createWork();
 			await new Language(languageAttribs).save(null, {method: 'insert'});
 			await new Alias(aliasAttribs).save(null, {method: 'insert'});
 			await new AliasSet(authorAliasSet).save(null, {method: 'insert'});
-			const attributeSetId = createRelationshipAttributeSet();
-			await createRelationshipSet(attributeSetId);
+			const attributeSetId = await createRelationshipAttributeSet();
+			await createAuthorAndRelationshipSet(attributeSetId, relSetOfWork);
 		}
 	);
 
-	afterEach(function truncate() {
+	after(function truncate() {
 		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
 		return truncateTables(bookshelf, [
 			'bookbrainz.alias',
@@ -170,11 +187,13 @@ describe('loadAuthorNames', () => {
 	});
 
 	it('should return an empty array if the list of workBBIDs is empty', async () => {
-		const authorsData = await loadAuthorNames(bookshelf, []);
+		const authorsData = await loadAuthorNames(bookbrainzData, []);
 		expect(authorsData).to.be.an('array').that.is.empty;
 	});
 
-	it('should return an array of objects containing the authorAlias', async () => {
-		//
+	it('should return an array of objects with appropriate keys when the list of workBBIDs is not empty', async () => {
+		const authorsData = await loadAuthorNames(bookbrainzData, [workBBID]);
+		expect(authorsData).to.be.an('array');
+		expect(authorsData[0]).to.have.all.keys('authoralias', 'authorbbid', 'workbbid');
 	});
 });
