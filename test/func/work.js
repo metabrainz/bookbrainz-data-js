@@ -195,5 +195,6 @@ describe('loadAuthorNames', () => {
 		const authorsData = await loadAuthorNames(bookbrainzData, [workBBID]);
 		expect(authorsData).to.be.an('array');
 		expect(authorsData[0]).to.have.all.keys('authoralias', 'authorbbid', 'workbbid');
+		expect(authorsData[0].authoralias).to.equal(aliasAttribs.name);
 	});
 });
