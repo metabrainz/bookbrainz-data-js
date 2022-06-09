@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>func/set.js - Documentation</title>
+    <title>func/author-credit.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">func/set.js</h1>
+    <h1 class="page-title">func/author-credit.js</h1>
     
 
     
@@ -44,176 +44,167 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getComparisonFunc = getComparisonFunc;
-exports.getUnchangedItems = getUnchangedItems;
-exports.getAddedItems = getAddedItems;
-exports.getRemovedItems = getRemovedItems;
-exports.createNewSetWithItems = createNewSetWithItems;
-exports.createNewRelationshipAttributeSetWithItems = createNewRelationshipAttributeSetWithItems;
-exports.removeItemsFromSet = void 0;
+exports.fetchOrCreateCredit = fetchOrCreateCredit;
+exports.updateAuthorCredit = updateAuthorCredit;
+exports.getEditionsCreditedToAuthor = getEditionsCreditedToAuthor;
+exports.getEditionGroupsCreditedToAuthor = getEditionGroupsCreditedToAuthor;
 
-var _pick2 = _interopRequireDefault(require("lodash/pick"));
+var _isEqualWith2 = _interopRequireDefault(require("lodash/isEqualWith"));
 
-var _omit2 = _interopRequireDefault(require("lodash/omit"));
+var _orderBy2 = _interopRequireDefault(require("lodash/orderBy"));
+
+var _isArray2 = _interopRequireDefault(require("lodash/isArray"));
+
+var _reduce2 = _interopRequireDefault(require("lodash/reduce"));
 
 var _map2 = _interopRequireDefault(require("lodash/map"));
 
-var _isEmpty2 = _interopRequireDefault(require("lodash/isEmpty"));
-
-var _differenceWith2 = _interopRequireDefault(require("lodash/differenceWith"));
-
-var _intersectionWith2 = _interopRequireDefault(require("lodash/intersectionWith"));
-
-var _uniqWith2 = _interopRequireDefault(require("lodash/uniqWith"));
-
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Returns a function which compares two object provided to it using the
- * comparison fields mentioned
- * @param  {Array&lt;string>} compareFields - Comparison fields of two objects
- * @returns {Function} - Returns a comparison function
- */
-function getComparisonFunc(compareFields) {
-  /**
-   * @param  {any} obj - Object for comparison
-   * @param  {any} other - Object for comparison
-   * @returns {boolean} Boolean value denoting objects are equal on fields
-   */
-  return function Cmp(obj, other) {
-    for (const field of compareFields) {
-      if (obj[field] !== other[field]) {
-        return false;
-      }
-    }
-
-    return true;
+function findAuthorCredit(orm, transacting, authorCredit) {
+  const tables = {
+    cc: 'bookbrainz.author_credit'
   };
-}
-/**
- * Get the intersection of two arrays of objects using a custom comparison
- * function. The two arrays represent two versions of a single set - one array
- * is the set before a particular change and the other is the same set after
- * that change.
- *
- * @param {Array&lt;Item>} oldSet - The old array to compare
- * @param {Array&lt;Item>} newSet - The new array to compare
- * @param {Function} comparisonFunc - Function to compare items from the two
- * arrays
- *
- * @returns {Array&lt;Item>} - An array representing the intersection of the two
- * arrays
- */
-
-
-function getUnchangedItems(oldSet, newSet, comparisonFunc) {
-  return (0, _uniqWith2.default)((0, _intersectionWith2.default)(oldSet, newSet, comparisonFunc), comparisonFunc);
-}
-/**
- * Get any items in the new version of the set that aren't present in the old
- * version using a custom comparison function. The two arrays represent two
- * versions of a single set - one array is the set before a particular change
- * and the other is the same set after that change.
- *
- * @param {Array&lt;Item>} oldSet - The old array to compare
- * @param {Array&lt;Item>} newSet - The new array to compare
- * @param {Function} comparisonFunc - Function to compare items from the two
- * arrays
- *
- * @returns {Array&lt;Item>} - An array representing the difference of the two
- * arrays
- */
-
-
-function getAddedItems(oldSet, newSet, comparisonFunc) {
-  return (0, _uniqWith2.default)((0, _differenceWith2.default)(newSet, oldSet, comparisonFunc), comparisonFunc);
-}
-/**
-* Get any items in the old version of the set that aren't present in the new
-* version using a custom comparison function. The two arrays represent two
-* versions of a single set - one array is the set before a particular change
-* and the other is the same set after that change.
- *
- * @param {Array&lt;Item>} oldSet - The old array to compare
- * @param {Array&lt;Item>} newSet - The new array to compare
- * @param {Function} comparisonFunc - Function to compare items from the two
- * arrays
- *
- * @returns {Array&lt;Item>} - An array representing the difference of the two
- * arrays
- */
-
-
-function getRemovedItems(oldSet, newSet, comparisonFunc) {
-  return (0, _uniqWith2.default)((0, _differenceWith2.default)(oldSet, newSet, comparisonFunc), comparisonFunc);
+  const joins = (0, _map2.default)(authorCredit, (authorCreditName, index) => `JOIN bookbrainz.author_credit_name ccn${index} ` + `ON ccn${index}.author_credit_id = cc.id`);
+  const wheres = (0, _reduce2.default)(authorCredit, (result, authorCreditName, index) => {
+    result[`ccn${index}.position`] = index;
+    result[`ccn${index}.author_bbid`] = authorCreditName.authorBBID;
+    result[`ccn${index}.name`] = authorCreditName.name;
+    result[`ccn${index}.join_phrase`] = authorCreditName.joinPhrase;
+    return result;
+  }, {});
+  const joinedQuery = (0, _reduce2.default)(joins, (result, join) => result.joinRaw(join), transacting(tables).select('cc.id'));
+  return joinedQuery.where(wheres).first();
 }
 
-const removeItemsFromSet = getRemovedItems;
-exports.removeItemsFromSet = removeItemsFromSet;
+async function fetchOrCreateCredit(orm, transacting, authorCredit) {
+  const result = await findAuthorCredit(orm, transacting, authorCredit);
 
-async function createNewSetWithItems(orm, transacting, SetModel, unchangedItems, addedItems, itemsAttribute, idAttribute = 'id') {
-  if (!itemsAttribute) {
-    throw Error('itemsAttribute must be set in createNewSetWithItems');
-  }
-
-  if ((0, _isEmpty2.default)(unchangedItems) &amp;&amp; (0, _isEmpty2.default)(addedItems)) {
-    return null;
-  }
-
-  const newSet = await new SetModel().save(null, {
-    transacting
-  });
-  const newSetItemsCollection = await newSet.related(itemsAttribute).fetch({
-    transacting
-  });
-  const newSetItemsCollectionAttached = await newSetItemsCollection.attach((0, _map2.default)(unchangedItems, idAttribute), {
-    transacting
-  });
-  await Promise.all((0, _map2.default)(addedItems, ident => newSetItemsCollectionAttached.create((0, _omit2.default)(ident, idAttribute), {
-    transacting
-  })));
-  return newSet;
-}
-
-async function createNewRelationshipAttributeSetWithItems(orm, transacting, SetModel, unchangedItems, addedItems, itemsAttribute, idAttribute = 'id') {
-  const {
-    RelationshipAttributeTextValue
-  } = orm;
-
-  if (!itemsAttribute) {
-    throw Error('itemsAttribute must be set in createNewRelationshipAttributeSetWithItems');
-  }
-
-  if ((0, _isEmpty2.default)(unchangedItems) &amp;&amp; (0, _isEmpty2.default)(addedItems)) {
-    return null;
-  }
-
-  const newSet = await new SetModel().save(null, {
-    transacting
-  });
-  const newSetItemsCollection = await newSet.related(itemsAttribute).fetch({
-    transacting
-  });
-  const newSetItemsCollectionAttached = await newSetItemsCollection.attach((0, _map2.default)(unchangedItems, idAttribute), {
-    transacting
-  });
-  await Promise.all((0, _map2.default)(addedItems, async ident => {
-    const model = await newSetItemsCollectionAttached.create((0, _pick2.default)(ident, 'attributeType'), {
-      transacting
+  if (result) {
+    return orm.AuthorCredit.forge({
+      id: result.id
+    }).fetch({
+      transacting,
+      withRelated: 'names'
     });
-    const {
-      value
-    } = ident;
-    await new RelationshipAttributeTextValue({
-      attributeId: model.get('id'),
-      textValue: value.textValue
-    }).save(null, {
-      method: 'insert',
-      transacting
-    });
-    return model;
-  }));
-  return newSet;
+  }
+
+  const newCredit = await new orm.AuthorCredit({
+    authorCount: authorCredit.length
+  }).save(null, {
+    transacting
+  });
+  /* eslint-disable camelcase */
+
+  await transacting('bookbrainz.author_credit_name').insert((0, _map2.default)(authorCredit, (authorCreditName, index) => ({
+    author_bbid: authorCreditName.authorBBID,
+    author_credit_id: newCredit.get('id'),
+    join_phrase: authorCreditName.joinPhrase,
+    name: authorCreditName.name,
+    position: index
+  }))).returning(['author_bbid', 'join_phrase', 'name', 'position']);
+  /* eslint-enable camelcase */
+
+  return newCredit.refresh({
+    transacting,
+    withRelated: 'names'
+  });
+}
+
+function updateAuthorCredit(orm, transacting, oldCredit, newCreditNames) {
+  /* eslint-disable consistent-return */
+  function comparisonFunc(obj, other) {
+    // Check for arrays here, so that the comparison func is only used
+    // for individual author credits
+    if (!(0, _isArray2.default)(obj) &amp;&amp; !(0, _isArray2.default)(other)) {
+      return obj.authorBBID === other.authorBBID &amp;&amp; obj.name === other.name &amp;&amp; obj.joinPhrase === other.joinPhrase;
+    } // return undefined - to indicate that the default comparison should
+    // be used for arrays, which will end up recursing to the item level
+
+  }
+  /* eslint-enable consistent-return */
+
+
+  const oldCreditNames = oldCredit ? (0, _orderBy2.default)(oldCredit.related('names').toJSON(), 'position') : [];
+  const sortedNewCreditNames = (0, _orderBy2.default)(newCreditNames, 'position');
+
+  if ((0, _isEqualWith2.default)(oldCreditNames, sortedNewCreditNames, comparisonFunc)) {
+    return Promise.resolve(oldCredit || null);
+  }
+
+  return fetchOrCreateCredit(orm, transacting, sortedNewCreditNames);
+}
+/**
+ * Fetches all the Edition entities credited to an Author (with Author Credits)
+ * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {string} authorBBID - The target Author's BBID.
+ * @returns {Promise} The returned Promise returns the Edition BBID and default alias
+ */
+
+
+async function getEditionsCreditedToAuthor(bookshelf, authorBBID) {
+  var _queryResult;
+
+  const rawSql = ` SELECT e.bbid , alias."name" from bookbrainz.author
+	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
+	LEFT JOIN bookbrainz.author_credit ac on ac.id = acn.author_credit_id
+	LEFT JOIN bookbrainz.edition e on e.author_credit_id = ac.id
+	LEFT JOIN bookbrainz.alias on alias.id  = e.default_alias_id
+	WHERE  author.bbid = '${authorBBID}'
+		AND author.master = true
+		AND e.master = true
+		AND e.data_id is not null
+	`;
+  let queryResult;
+
+  try {
+    queryResult = await bookshelf.knex.raw(rawSql);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+
+  if (!Array.isArray((_queryResult = queryResult) === null || _queryResult === void 0 ? void 0 : _queryResult.rows)) {
+    return [];
+  }
+
+  return queryResult.rows;
+}
+/**
+ * Fetches all the Edition Group entities credited to an Author (with Author Credits)
+ * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {string} authorBBID - The target Author's BBID.
+ * @returns {Promise} The returned Promise returns the Edition Group BBID and default alias
+ */
+
+
+async function getEditionGroupsCreditedToAuthor(bookshelf, authorBBID) {
+  var _queryResult2;
+
+  const rawSql = ` SELECT eg.bbid , alias."name" from bookbrainz.author
+	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
+	LEFT JOIN bookbrainz.author_credit ac on ac.id = acn.author_credit_id
+	LEFT JOIN bookbrainz.edition_group eg on eg.author_credit_id = ac.id
+	LEFT JOIN bookbrainz.alias on alias.id  = eg.default_alias_id
+	WHERE  author.bbid = '${authorBBID}'
+		AND author.master = true
+		AND eg.master = true
+		AND eg.data_id is not null
+	`;
+  let queryResult;
+
+  try {
+    queryResult = await bookshelf.knex.raw(rawSql);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+
+  if (!Array.isArray((_queryResult2 = queryResult) === null || _queryResult2 === void 0 ? void 0 : _queryResult2.rows)) {
+    return [];
+  }
+
+  return queryResult.rows;
 }</code></pre>
         </article>
     </section>
