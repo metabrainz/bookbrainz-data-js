@@ -118,3 +118,72 @@ export function updateAuthorCredit(
 
 	return fetchOrCreateCredit(orm, transacting, sortedNewCreditNames);
 }
+
+
+/**
+ * Fetches all the Edition entities credited to an Author (with Author Credits)
+ * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {string} authorBBID - The target Author's BBID.
+ * @returns {Promise} The returned Promise returns the Edition BBID and default alias
+ */
+
+export async function getEditionsCreditedToAuthor(
+	bookshelf: any, authorBBID: string
+) {
+	const rawSql = ` SELECT e.bbid , alias."name" from bookbrainz.author
+	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
+	LEFT JOIN bookbrainz.author_credit ac on ac.id = acn.author_credit_id
+	LEFT JOIN bookbrainz.edition e on e.author_credit_id = ac.id
+	LEFT JOIN bookbrainz.alias on alias.id  = e.default_alias_id
+	WHERE  author.bbid = '${authorBBID}'
+		AND author.master = true
+		AND e.master = true
+		AND e.data_id is not null
+	`;
+	let queryResult;
+	try {
+		queryResult = await bookshelf.knex.raw(rawSql);
+	}
+	catch (error) {
+		// eslint-disable-next-line no-console
+		console.error(error);
+	}
+	if (!Array.isArray(queryResult?.rows)) {
+		return [];
+	}
+	return queryResult.rows;
+}
+
+/**
+ * Fetches all the Edition Group entities credited to an Author (with Author Credits)
+ * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {string} authorBBID - The target Author's BBID.
+ * @returns {Promise} The returned Promise returns the Edition Group BBID and default alias
+ */
+
+export async function getEditionGroupsCreditedToAuthor(
+	bookshelf: any, authorBBID: string
+) {
+	const rawSql = ` SELECT eg.bbid , alias."name" from bookbrainz.author
+	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
+	LEFT JOIN bookbrainz.author_credit ac on ac.id = acn.author_credit_id
+	LEFT JOIN bookbrainz.edition_group eg on eg.author_credit_id = ac.id
+	LEFT JOIN bookbrainz.alias on alias.id  = eg.default_alias_id
+	WHERE  author.bbid = '${authorBBID}'
+		AND author.master = true
+		AND eg.master = true
+		AND eg.data_id is not null
+	`;
+	let queryResult;
+	try {
+		queryResult = await bookshelf.knex.raw(rawSql);
+	}
+	catch (error) {
+		// eslint-disable-next-line no-console
+		console.error(error);
+	}
+	if (!Array.isArray(queryResult?.rows)) {
+		return [];
+	}
+	return queryResult.rows;
+}
