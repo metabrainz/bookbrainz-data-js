@@ -17,6 +17,7 @@
  */
 
 import {camelToSnake, formatDate, parseDate, snakeToCamel} from '../../util';
+import {getEditionGroupsCreditedToAuthor, getEditionsCreditedToAuthor} from '../../func/author-credit';
 
 
 export default function authorData(bookshelf) {
@@ -27,11 +28,25 @@ export default function authorData(bookshelf) {
 		annotation() {
 			return this.belongsTo('Annotation', 'annotation_id');
 		},
+		authorCredits() {
+			return this.hasMany('AuthorCredit', 'author_bbid')
+				.through('AuthorCreditName', 'id', 'author_bbid', 'author_credit_id');
+		},
 		authorType() {
 			return this.belongsTo('AuthorType', 'type_id');
 		},
 		beginArea() {
 			return this.belongsTo('Area', 'begin_area_id');
+		},
+		creditedEditionGroups() {
+			// Do not use this as Model.fetch({withRelated:creditedEditions)
+			// As we cannot return a promise in withRelated
+			return getEditionGroupsCreditedToAuthor(bookshelf, this.get('bbid'));
+		},
+		creditedEditions() {
+			// Do not use this as Model.fetch({withRelated:creditedEditions)
+			// As we cannot return a promise in withRelated
+			return getEditionsCreditedToAuthor(bookshelf, this.get('bbid'));
 		},
 		disambiguation() {
 			return this.belongsTo('Disambiguation', 'disambiguation_id');

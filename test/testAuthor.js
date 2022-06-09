@@ -26,8 +26,10 @@ import {truncateTables} from '../lib/util';
 chai.use(chaiAsPromised);
 const {expect} = chai;
 const {
-	AliasSet, Annotation, Author, Disambiguation, Editor, EditorType, Entity,
-	Gender, IdentifierSet, RelationshipSet, Revision, UserCollection, UserCollectionItem, bookshelf
+	Alias, AliasSet, Annotation, Author, AuthorCredit, AuthorCreditName,
+	Disambiguation, Edition, EditionGroup, Editor, EditorType, Entity,
+	Gender, IdentifierSet, RelationshipSet, Revision,
+	UserCollection, UserCollectionItem, bookshelf
 } = bookbrainzData;
 
 const genderData = {
@@ -49,72 +51,97 @@ const setData = {id: 1};
 const aBBID = faker.random.uuid();
 const aBBID2 = faker.random.uuid();
 
+
+let defaultAliasId;
+
+const revisionAttribs = {
+	authorId: 1,
+	id: 1
+};
+const authorAttribs = {
+	aliasSetId: 1,
+	annotationId: 1,
+	bbid: aBBID,
+	defaultAliasId,
+	disambiguationId: 1,
+	identifierSetId: 1,
+	relationshipSetId: 1,
+	revisionId: 1
+};
+
+async function createAuthor() {
+	await new Revision({...revisionAttribs, id: revisionAttribs.id++})
+		.save(null, {method: 'insert'});
+	await new Annotation({
+		content: 'Test Annotation',
+		id: 1,
+		lastRevisionId: 1
+	})
+		.save(null, {method: 'insert'});
+
+	/** Create the Author entity */
+	await new Entity({bbid: aBBID, type: 'Author'})
+		.save(null, {method: 'insert'});
+	const author = await new Author(authorAttribs)
+		.save(null, {method: 'insert'});
+
+	return author;
+}
+function truncateAll() {
+	return truncateTables(bookshelf, [
+		'bookbrainz.entity',
+		'bookbrainz.author_header',
+		'bookbrainz.author_data',
+		'bookbrainz.author_credit',
+		'bookbrainz.author_credit_name',
+		'bookbrainz.revision',
+		'bookbrainz.relationship_set',
+		'bookbrainz.identifier_set',
+		'bookbrainz.alias',
+		'bookbrainz.alias_set',
+		'bookbrainz.annotation',
+		'bookbrainz.disambiguation',
+		'bookbrainz.editor',
+		'bookbrainz.editor_type',
+		'bookbrainz.user_collection',
+		'bookbrainz.user_collection_item',
+		'musicbrainz.gender'
+	]);
+}
 describe('Author model', () => {
-	beforeEach(
-		() =>
-			new Gender(genderData).save(null, {method: 'insert'})
-				.then(
-					() => new EditorType(editorTypeData)
-						.save(null, {method: 'insert'})
-				)
-				.then(
-					() =>
-						new Editor(editorAttribs)
-							.save(null, {method: 'insert'})
-				)
-				.then(
-					() => Promise.all([
-						new AliasSet(setData).save(null, {method: 'insert'}),
-						new IdentifierSet(setData)
-							.save(null, {method: 'insert'}),
-						new RelationshipSet(setData)
-							.save(null, {method: 'insert'}),
-						new Disambiguation({
-							comment: 'Test Disambiguation',
-							id: 1
-						})
-							.save(null, {method: 'insert'}),
-						new Entity({bbid: aBBID, type: 'Author'})
-							.save(null, {method: 'insert'})
-					])
-				)
+	before(
+		async () => {
+			await truncateAll();
+			await new Gender(genderData).save(null, {method: 'insert'});
+			await new EditorType(editorTypeData)
+				.save(null, {method: 'insert'});
+			await new Editor(editorAttribs)
+				.save(null, {method: 'insert'});
+
+
+			const alias = await new Alias({name: 'FNORD', sortName: 'FNORD'}).save(null, {method: 'insert'});
+			defaultAliasId = alias.get('id');
+			const aliasSet = await new AliasSet({...setData, defaultAliasId}).save(null, {method: 'insert'});
+			await aliasSet.aliases().attach(alias);
+
+			await new IdentifierSet(setData)
+				.save(null, {method: 'insert'});
+			await new RelationshipSet(setData)
+				.save(null, {method: 'insert'});
+			await new Disambiguation({
+				comment: 'Test Disambiguation',
+				id: 1
+			})
+				.save(null, {method: 'insert'});
+
+			await createAuthor();
+		}
 	);
 
-	afterEach(function truncate() {
-		this.timeout(0); // eslint-disable-line @typescript-eslint/no-invalid-this
-
-		return truncateTables(bookshelf, [
-			'bookbrainz.entity',
-			'bookbrainz.revision',
-			'bookbrainz.relationship_set',
-			'bookbrainz.identifier_set',
-			'bookbrainz.alias_set',
-			'bookbrainz.annotation',
-			'bookbrainz.disambiguation',
-			'bookbrainz.editor',
-			'bookbrainz.editor_type',
-			'bookbrainz.user_collection',
-			'bookbrainz.user_collection_item',
-			'musicbrainz.gender'
-		]);
-	});
+	after(truncateAll);
 
 	it('should return a JSON object with correct keys when saved', () => {
-		const revisionAttribs = {
-			authorId: 1,
-			id: 1
-		};
-		const authorAttribs = {
-			aliasSetId: 1,
-			annotationId: 1,
-			bbid: aBBID,
-			disambiguationId: 1,
-			identifierSetId: 1,
-			relationshipSetId: 1,
-			revisionId: 1
-		};
-
-		const revisionPromise = new Revision(revisionAttribs)
+		const revisionPromise = new Revision({...revisionAttribs, id: revisionAttribs.id++})
 			.save(null, {method: 'insert'});
 
 		const annotationPromise = revisionPromise
@@ -122,16 +149,20 @@ describe('Author model', () => {
 				() =>
 					new Annotation({
 						content: 'Test Annotation',
-						id: 1,
+						id: 123,
 						lastRevisionId: 1
 					})
 						.save(null, {method: 'insert'})
 			);
-
+		const bbid = faker.random.uuid();
 		const authorPromise = annotationPromise
 			.then(
 				() =>
-					new Author(authorAttribs).save(null, {method: 'insert'})
+					new Entity({bbid, type: 'Author'}).save(null, {method: 'insert'})
+			)
+			.then(
+				() =>
+					new Author({...authorAttribs, bbid}).save(null, {method: 'insert'})
 			)
 			.then((model) => model.refresh({
 				withRelated: [
@@ -158,36 +189,25 @@ describe('Author model', () => {
 			 * Revision ID order is reversed so that result is not dependent on
 			 * row order
 			 */
-			const revisionAttribs = {
-				authorId: 1,
-				id: 1
-			};
-			const authorAttribs = {
-				aliasSetId: 1,
-				bbid: aBBID,
-				identifierSetId: 1,
-				relationshipSetId: 1,
-				revisionId: 1
-			};
 
-			const revisionOnePromise = new Revision(revisionAttribs)
+			const revisionOnePromise = new Revision({...revisionAttribs, id: revisionAttribs.id++})
 				.save(null, {method: 'insert'});
-
+			const bbid = faker.random.uuid();
 			const authorPromise = revisionOnePromise
 				.then(
+					() => new Entity({bbid, type: 'Author'}).save(null, {method: 'insert'})
+				)
+				.then(
 					() =>
-						new Author(authorAttribs)
+						new Author({...authorAttribs, annotationId: null, bbid})
 							.save(null, {method: 'insert'})
 				)
 				.then((model) => model.refresh())
 				.then((author) => author.toJSON());
 
 			const revisionTwoPromise = authorPromise
-				.then(() => {
-					revisionAttribs.id = 2;
-					return new Revision(revisionAttribs)
-						.save(null, {method: 'insert'});
-				});
+				.then(() => new Revision({...revisionAttribs, id: 234})
+					.save(null, {method: 'insert'}));
 
 			const authorUpdatePromise = Promise.all(
 				[authorPromise, revisionTwoPromise]
@@ -196,7 +216,7 @@ describe('Author model', () => {
 					const authorUpdateAttribs = {
 						bbid: author.bbid,
 						ended: true,
-						revisionId: 2
+						revisionId: 234
 					};
 
 					return new Author(authorUpdateAttribs).save();
@@ -208,7 +228,7 @@ describe('Author model', () => {
 
 			return Promise.all([
 				expect(authorUpdatePromise)
-					.to.eventually.have.property('revisionId', 2),
+					.to.eventually.have.property('revisionId', 234),
 				expect(authorUpdatePromise)
 					.to.eventually.have.property('master', true),
 				expect(authorUpdatePromise)
@@ -217,17 +237,7 @@ describe('Author model', () => {
 		});
 
 	it('should return a JSON object with related collections if there exist any', async () => {
-		const revisionAttribs = {
-			authorId: 1,
-			id: 1
-		};
-		const authorAttribs = {
-			aliasSetId: 1,
-			bbid: aBBID,
-			identifierSetId: 1,
-			relationshipSetId: 1,
-			revisionId: 1
-		};
+		const bbid = faker.random.uuid();
 		const userCollectionAttribs = {
 			entityType: 'Author',
 			id: aBBID2,
@@ -235,12 +245,13 @@ describe('Author model', () => {
 			ownerId: 1
 		};
 		const userCollectionItemAttribs = {
-			bbid: aBBID,
+			bbid,
 			collectionId: aBBID2
 		};
 
-		await new Revision(revisionAttribs).save(null, {method: 'insert'});
-		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+		await new Revision({...revisionAttribs, id: revisionAttribs.id++}).save(null, {method: 'insert'});
+		await new Entity({bbid, type: 'Author'}).save(null, {method: 'insert'});
+		const model = await new Author({...authorAttribs, bbid}).save(null, {method: 'insert'});
 
 		await new UserCollection(userCollectionAttribs).save(null, {method: 'insert'});
 		await new UserCollectionItem(userCollectionItemAttribs).save(null, {method: 'insert'});
@@ -255,20 +266,10 @@ describe('Author model', () => {
 	});
 
 	it('should return a JSON object with empty collections array', async () => {
-		const revisionAttribs = {
-			authorId: 1,
-			id: 1
-		};
-		const authorAttribs = {
-			aliasSetId: 1,
-			bbid: aBBID,
-			identifierSetId: 1,
-			relationshipSetId: 1,
-			revisionId: 1
-		};
-
-		await new Revision(revisionAttribs).save(null, {method: 'insert'});
-		const model = await new Author(authorAttribs).save(null, {method: 'insert'});
+		const bbid = faker.random.uuid();
+		await new Revision({...revisionAttribs, id: revisionAttribs.id++}).save(null, {method: 'insert'});
+		await new Entity({bbid, type: 'Author'}).save(null, {method: 'insert'});
+		const model = await new Author({...authorAttribs, bbid}).save(null, {method: 'insert'});
 		await model.refresh({
 			withRelated: ['collections']
 		});
@@ -277,5 +278,74 @@ describe('Author model', () => {
 
 		// collections does not exist
 		return expect(collections).to.be.empty;
+	});
+
+	describe('with Author Credits', () => {
+		const entityBBID = faker.random.uuid();
+		const entityAtribs = {...authorAttribs, authorCreditId: 1, bbid: entityBBID, defaultAliasId};
+		beforeEach(async () => {
+			/** Create the Author Credit */
+			await new AuthorCredit({...setData, authorCount: 0})
+				.save(null, {method: 'insert'});
+			await new AuthorCreditName(
+				{authorBbid: aBBID, authorCreditId: 1, joinPhrase: '', name: 'John Fnord', position: 0}
+			)
+				.save(null, {method: 'insert'});
+		});
+		afterEach(async () => {
+			await truncateTables(bookshelf, [
+				'bookbrainz.author_credit',
+				'bookbrainz.author_credit_name',
+				'bookbrainz.edition_data',
+				'bookbrainz.edition_header',
+				'bookbrainz.edition_revision',
+				'bookbrainz.edition_group_data',
+				'bookbrainz.edition_group_header',
+				'bookbrainz.edition_group_revision'
+			]);
+		});
+		it('should return the associated Author Credits for an Author',
+			async function () {
+				const author = await new Author({bbid: aBBID}).fetch({withRelated: 'authorCredits.names'});
+				const AC = await author.related('authorCredits');
+				expect(AC).to.have.length.of(1);
+				const firstAC = AC.first().toJSON();
+				expect(firstAC.names).to.have.length.of(1);
+				expect(firstAC.names[0].authorBBID).to.equal(aBBID);
+				expect(firstAC.names[0].name).to.equal('John Fnord');
+			});
+		it('should return the associated Editions using creditedEditions method',
+			async function () {
+				/** Create the Edition entity that uses the AuthorCredit */
+				await new Revision({...revisionAttribs, id: revisionAttribs.id++})
+					.save(null, {method: 'insert'});
+				await new Entity({bbid: entityBBID, type: 'Edition'})
+					.save(null, {method: 'insert'});
+				await new Edition(entityAtribs)
+					.save(null, {method: 'insert'});
+
+				const author = await new Author({bbid: aBBID}).fetch();
+				const creditedEditions = await author.creditedEditions();
+				expect(creditedEditions).to.have.length.of(1);
+				expect(creditedEditions[0].bbid).to.equal(entityBBID);
+				expect(creditedEditions[0].name).to.equal('FNORD');
+			});
+		it('should return the associated Edition Groups using creditedEditionGroups method',
+			async function () {
+				/** Create the Edition Group entity that uses the AuthorCredit */
+				const anotherBBID = faker.random.uuid();
+				await new Revision({...revisionAttribs, id: revisionAttribs.id++})
+					.save(null, {method: 'insert'});
+				await new Entity({bbid: anotherBBID, type: 'EditionGroup'})
+					.save(null, {method: 'insert'});
+				await new EditionGroup({...entityAtribs, bbid: anotherBBID})
+					.save(null, {method: 'insert'});
+
+				const author = await new Author({bbid: aBBID}).fetch();
+				const creditedEditionGroups = await author.creditedEditionGroups();
+				expect(creditedEditionGroups).to.have.length.of(1);
+				expect(creditedEditionGroups[0].bbid).to.equal(anotherBBID);
+				expect(creditedEditionGroups[0].name).to.equal('FNORD');
+			});
 	});
 });
