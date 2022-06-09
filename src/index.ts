@@ -35,6 +35,7 @@ import authorHeader from './models/headers/authorHeader';
 import authorImport from './models/imports/authorImport';
 import authorRevision from './models/revisions/authorRevision';
 import authorType from './models/authorType';
+import collectionSubscription from './models/collectionSubscription';
 import disambiguation from './models/disambiguation';
 import edition from './models/entities/edition';
 import editionData from './models/data/editionData';
@@ -53,6 +54,7 @@ import editor from './models/editor';
 import editorEntityVisits from './models/editorEntityVisits';
 import editorType from './models/editorType';
 import entity from './models/entity';
+import entitySubscription from './models/entitySubscription';
 import gender from './models/gender';
 import identifier from './models/identifier';
 import identifierSet from './models/identifierSet';
@@ -61,6 +63,7 @@ import knex from 'knex';
 import language from './models/language';
 import languageSet from './models/languageSet';
 import note from './models/note';
+import notification from './models/notification';
 import publisher from './models/entities/publisher';
 import publisherData from './models/data/publisherData';
 import publisherHeader from './models/headers/publisherHeader';
@@ -129,6 +132,7 @@ export default function init(config) {
 		AuthorImport: authorImport(bookshelf),
 		AuthorRevision: authorRevision(bookshelf),
 		AuthorType: authorType(bookshelf),
+		CollectionSubscription: collectionSubscription(bookshelf),
 		Disambiguation: disambiguation(bookshelf),
 		Edition: edition(bookshelf),
 		EditionData,
@@ -147,6 +151,7 @@ export default function init(config) {
 		EditorEntityVisits: editorEntityVisits(bookshelf),
 		EditorType: editorType(bookshelf),
 		Entity: entity(bookshelf),
+		EntitySubscription: entitySubscription(bookshelf),
 		Gender: gender(bookshelf),
 		Identifier: identifier(bookshelf),
 		IdentifierSet: identifierSet(bookshelf),
@@ -154,6 +159,7 @@ export default function init(config) {
 		Language: language(bookshelf),
 		LanguageSet: languageSet(bookshelf),
 		Note: note(bookshelf),
+		Notification: notification(bookshelf),
 		Publisher: publisher(bookshelf),
 		PublisherData,
 		PublisherHeader: publisherHeader(bookshelf),
