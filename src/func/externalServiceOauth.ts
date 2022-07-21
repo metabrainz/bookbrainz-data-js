@@ -40,7 +40,7 @@ export async function getOauthToken(
 		WHERE editor_id = ${editorId} 
 		  AND service = '${service}'`;
 	const result = await orm.bookshelf.knex.raw(rawSql);
-	return result.rows;
+	return result.rows[0];
 }
 
 /**
