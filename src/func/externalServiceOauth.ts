@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import type {ExternalServiceTokenT} from './types';
+
 /**
  * Fetches the Oauth token with related data
  * @param {number} editorId - Editor's id.
@@ -27,7 +29,7 @@ export async function getOauthToken(
 	editorId: number,
 	service: string,
 	orm: Record<string, any>
-): Promise<any> {
+): Promise<ExternalServiceTokenT> {
 	const rawSql =
 		`SELECT 
 			  editor_id,
@@ -84,7 +86,7 @@ export async function saveOauthToken(
 	tokenExpiresTs: number,
 	scopes: Array<string>,
 	orm: Record<string, any>
-): Promise<any> {
+): Promise<ExternalServiceTokenT> {
 	const rawSql =
 		`INSERT INTO external_service_oauth
 			(editor_id, service, access_token, refresh_token, token_expires, scopes)
@@ -134,7 +136,7 @@ export async function updateOauthToken(
 	refreshToken: string,
 	tokenExpiresTs: number,
 	orm: Record<string, any>
-): Promise<void> {
+): Promise<ExternalServiceTokenT> {
 	const rawSql =
 		`UPDATE external_service_oauth
 			SET access_token = '${accessToken}',
