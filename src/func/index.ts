@@ -23,6 +23,7 @@ export * as authorCredit from './author-credit';
 export * as disambiguation from './disambiguation';
 export * as editor from './editor';
 export * as entity from './entity';
+export * as externalServiceOauth from './externalServiceOauth';
 export * as identifier from './identifier';
 export * as imports from './imports';
 export * as language from './language';

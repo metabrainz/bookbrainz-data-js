@@ -53,6 +53,7 @@ import editor from './models/editor';
 import editorEntityVisits from './models/editorEntityVisits';
 import editorType from './models/editorType';
 import entity from './models/entity';
+import externalServiceOauth from './models/externalServiceOauth';
 import gender from './models/gender';
 import identifier from './models/identifier';
 import identifierSet from './models/identifierSet';
@@ -147,6 +148,7 @@ export default function init(config) {
 		EditorEntityVisits: editorEntityVisits(bookshelf),
 		EditorType: editorType(bookshelf),
 		Entity: entity(bookshelf),
+		ExternalServiceOauth: externalServiceOauth(bookshelf),
 		Gender: gender(bookshelf),
 		Identifier: identifier(bookshelf),
 		IdentifierSet: identifierSet(bookshelf),

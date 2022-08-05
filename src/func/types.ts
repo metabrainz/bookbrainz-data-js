@@ -85,3 +85,12 @@ export interface AuthorCreditNameT {
 	name: string,
 	joinPhrase: string
 }
+
+export interface ExternalServiceTokenT {
+    access_token: string, // eslint-disable-line camelcase
+    editor_id: number, // eslint-disable-line camelcase
+    refresh_token: string, // eslint-disable-line camelcase
+    token_expires: string, // eslint-disable-line camelcase
+    scopes: Array<string>,
+    service: string
+}
