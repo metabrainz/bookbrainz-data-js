@@ -38,7 +38,7 @@ export async function getOauthToken(
 			  refresh_token,
 			  token_expires::text,
               scopes
-		 FROM external_service_oauth 
+		 FROM bookbrainz.external_service_oauth 
 		WHERE editor_id = ${editorId} 
 		  AND service = '${service}'`;
 	const result = await orm.bookshelf.knex.raw(rawSql);
@@ -88,7 +88,7 @@ export async function saveOauthToken(
 	orm: Record<string, any>
 ): Promise<ExternalServiceTokenT> {
 	const rawSql =
-		`INSERT INTO external_service_oauth
+		`INSERT INTO bookbrainz.external_service_oauth
 			(editor_id, service, access_token, refresh_token, token_expires, scopes)
 		VALUES
 			(${editorId},
@@ -138,7 +138,7 @@ export async function updateOauthToken(
 	orm: Record<string, any>
 ): Promise<ExternalServiceTokenT> {
 	const rawSql =
-		`UPDATE external_service_oauth
+		`UPDATE bookbrainz.external_service_oauth
 			SET access_token = '${accessToken}',
 				refresh_token = '${refreshToken}',
 				token_expires = to_timestamp(${tokenExpiresTs})
