@@ -186,7 +186,7 @@ describe('updateRelationshipSet', () => {
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
-				bookbrainzData, trx, null, [relationshipData]
+				bookbrainzData, trx, null, [{...relationshipData, isAdded: true}]
 			);
 
 			return promiseProps(
@@ -213,7 +213,7 @@ describe('updateRelationshipSet', () => {
 		const firstResult = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
 				bookbrainzData, trx, null,
-				[firstRelationshipData, secondRelationshipData]
+				[{...firstRelationshipData, isAdded: true}, {...secondRelationshipData, isAdded: true}]
 			);
 
 			const updatedEntitiesPromise = Promise.all(
@@ -246,8 +246,11 @@ describe('updateRelationshipSet', () => {
 			.map((relationship) =>
 				_.pick(relationship, ['typeId', 'sourceBbid', 'targetBbid', 'attributeSetId']));
 
+		const firstRel = firstSetRelationships[1];
+		firstSetRelationships.push({...firstRel, isRemoved: true});
 		firstSetRelationships[1].targetBbid = dBBID;
-		const thirdRelationshipData = firstSetRelationships[1];
+		firstSetRelationships[1].isAdded = true;
+		const thirdRelationshipData = _.omit(firstSetRelationships[1], 'isAdded');
 
 		const result = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
@@ -284,7 +287,7 @@ describe('updateRelationshipSet', () => {
 		const firstResult = await bookshelf.transaction(async (trx) => {
 			const sets = await updateRelationshipSets(
 				bookbrainzData, trx, null,
-				[firstRelationshipData, secondRelationshipData]
+				[{...firstRelationshipData, isAdded: true}, {isAdded: true, ...secondRelationshipData}]
 			);
 
 			const updatedEntitiesPromise = Promise.all(
