@@ -24,8 +24,6 @@ import type {
 } from './types';
 import {
 	createNewSetWithItems,
-	getAddedItems,
-	getRemovedItems,
 	removeItemsFromSet
 } from './set';
 import {promiseProps} from '../util';
@@ -141,13 +139,10 @@ export function updateRelationshipSets(
 			obj.attributeSetId === other.attributeSetId;
 	}
 
-	const oldSetItems =
-		oldSet ? oldSet.related('relationships').toJSON() : [];
-
-	const allAddedItems =
-		getAddedItems(oldSetItems, newSetItems, comparisonFunc);
-	const allRemovedItems =
-		getRemovedItems(oldSetItems, newSetItems, comparisonFunc);
+	const allAddedItems:any[] = newSetItems.filter((rel:any) => rel.isAdded)
+		.map((rel) => _.omit(rel, ['isRemoved', 'isAdded']));
+	const allRemovedItems:any[] = newSetItems.filter((rel:any) => rel.isRemoved)
+		.map((rel) => _.omit(rel, ['isRemoved', 'isAdded']));
 
 
 	if (_.isEmpty(allAddedItems) && _.isEmpty(allRemovedItems)) {
