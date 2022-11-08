@@ -21,6 +21,9 @@ import {camelToSnake, snakeToCamelID} from '../util';
 
 export default function authorCredit(bookshelf) {
 	const AuthorCredit = bookshelf.Model.extend({
+		editions() {
+			return this.hasMany('Edition', 'author_credit_id');
+		},
 		format: camelToSnake,
 		idAttribute: 'id',
 		names() {
