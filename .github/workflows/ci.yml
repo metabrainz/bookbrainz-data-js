@@ -62,6 +62,9 @@ jobs:
           
       - name: Install dependencies
         run: npm install --no-audit
+        
+      - name: Create config file
+        run: cp test/bookshelf.js.example test/bookshelf.js
       
       - name: Run tests
         run: npm run test-ci                    # run tests (configured to use mocha's json reporter)
