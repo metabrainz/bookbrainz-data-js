@@ -32,6 +32,9 @@ jobs:
           --health-retries 5
     
     steps:
+    
+      - name: Checkout bookbrainz-data-js repo
+        uses: actions/checkout@v3
 
       # We need schema files and scripts that are in another repo
       - name: Checkout bookbrainz-site repo
