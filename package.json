@@ -8,12 +8,12 @@
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
-    "prepublish": "npm run build-js",
-    "test": "npm run lint-errors && npm run build-js-for-test && mocha",
-    "test-cov": "nyc --reporter=text npm test",
-    "test-ci": "nyc --reporter=json npm test",
+    "prepublishOnly": "yarn run build-js",
+    "test": "yarn run lint-errors && yarn run build-js-for-test && mocha",
+    "test-cov": "nyc --reporter=text yarn test",
+    "test-ci": "nyc --reporter=json yarn test",
     "dupreport": "jsinspect src/ || true",
-    "nodemon": "nodemon --watch './src/' --exec 'npm run prepublish'"
+    "nodemon": "nodemon --watch './src/' --exec 'yarn run build-js'"
   },
   "files": [
     "lib/**/*"

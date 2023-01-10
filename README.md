@@ -22,6 +22,8 @@ Copy the file `test/bookshelf.js.example` to `test/bookshelf.js` and modify it a
 
 The command for running the tests, following dependency installation, is the standard:
 
+    yarn test
+    - or -
     npm test
 
 This will also provide style checking and coverage information.
