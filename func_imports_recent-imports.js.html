@@ -46,31 +46,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRecentImports = getRecentImports;
 exports.getTotalImports = getTotalImports;
-
 var _get2 = _interopRequireDefault(require("lodash/get"));
-
 var _map2 = _interopRequireDefault(require("lodash/map"));
-
 var _flatten2 = _interopRequireDefault(require("lodash/flatten"));
-
 var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
-
 var _assign2 = _interopRequireDefault(require("lodash/assign"));
-
 var _values2 = _interopRequireDefault(require("lodash/values"));
-
 var _entity = require("../entity");
-
 var _alias = require("../alias");
-
 var _moment = _interopRequireDefault(require("moment"));
-
 var _misc = require("./misc");
-
 var _util = require("../../util");
-
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
-
 /** getRecentImportIdsByType -
  * @param  {Transaction} transacting - Transaction object
  * @param  {number} limit - To limit the number of importIds fetched
@@ -81,12 +68,13 @@ function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? ob
 async function getRecentImportUtilData(transacting, limit, offset) {
   // Extract recent imports, types and import timeStamp
   const recentImportUtilsData = await transacting.select('link.imported_at', 'link.origin_source_id', 'bookbrainz.import.id', 'bookbrainz.import.type').from('bookbrainz.import').join(transacting.select('import_id', 'imported_at', 'origin_source_id').from('bookbrainz.link_import').orderBy('imported_at').whereNot('import_id', null).limit(limit).offset(offset).as('link'), 'link.import_id', 'bookbrainz.import.id');
+
   /* Contruct importHolder object (holds importIds classified by their types)
   	object of form {type: []} */
-
   const importHolder = (0, _values2.default)(_entity.entityTypes).reduce((holder, type) => (0, _assign2.default)(holder, {
     [type]: []
   }), {});
+
   /* Returns the holder object which has two fields:
   	=> importHolder: Object{type: Array[importIds]}
   		Where type is entityType. This essentially classifies all the
@@ -96,7 +84,6 @@ async function getRecentImportUtilData(transacting, limit, offset) {
   	=> originIdMap: Object{originId: origin_id}
   		This holds a mapping of all imports and their origin_ids
   	*/
-
   return recentImportUtilsData.reduce((holder, data) => {
     holder.importHolder[data.type].push(data.id);
     holder.originIdMap[data.id] = data.origin_source_id;
@@ -108,11 +95,9 @@ async function getRecentImportUtilData(transacting, limit, offset) {
     timeStampMap: {}
   });
 }
-
 function getRecentImportsByType(transacting, type, importIds) {
   return transacting.select('*').from(`bookbrainz.${(0, _snakeCase2.default)(type)}_import`).whereIn('import_id', importIds);
 }
-
 async function getRecentImports(orm, transacting, limit = 10, offset = 0) {
   /* Fetch most recent ImportIds classified by importTypes
   	=> importHolder - holds recentImports classified by entity type
@@ -126,43 +111,45 @@ async function getRecentImports(orm, transacting, limit = 10, offset = 0) {
     timeStampMap,
     originIdMap
   } = await getRecentImportUtilData(transacting, limit, offset);
+
   /* Qs. What are all import types? Ans => Extract the values from entityTypes
   	[Author, Edition, EditionGroup, Publisher, Work] */
-
   const importTypes = (0, _values2.default)(_entity.entityTypes);
+
   /* Fetch imports for each importType using their importIds
   	We first pass type and id to fetch function, await all those promises
   	and then flatten the array containing those results. Classification by
   	type is important as only by knowing types we can access dataId and
   	hence subsequent data.
   */
+  const recentImports = (0, _flatten2.default)(await Promise.all(importTypes.map(type => getRecentImportsByType(transacting, type, recentImportIdsByType[type]))));
 
-  const recentImports = (0, _flatten2.default)(await Promise.all(importTypes.map(type => getRecentImportsByType(transacting, type, recentImportIdsByType[type])))); // Fetch all default alias ids
-
-  const defaultAliasIds = (0, _map2.default)(recentImports, 'default_alias_id'); // Fetch default aliases using the default alias ids
-
+  // Fetch all default alias ids
+  const defaultAliasIds = (0, _map2.default)(recentImports, 'default_alias_id');
+  // Fetch default aliases using the default alias ids
   const defaultAliasesMap = await (0, _alias.getAliasByIds)(transacting, defaultAliasIds);
+
   /* Add timestamp, source and defaultAlias to the recentImports
   	Previously while getting utils data we fetched a mapping of importId to
   	timestamp and oringId.
   	We also fetched map of aliasId to alias object.
   	Now using those we populate our final object */
   // First, get the origin mapping => {originId: name}
-
   const sourceMapping = await (0, _misc.originSourceMapping)(transacting, true);
   return recentImports.map(recentImport => {
     // Add timestamp
-    recentImport.importedAt = (0, _moment.default)(timeStampMap[recentImport.import_id]).format('YYYY-MM-DD'); // Add origin source
+    recentImport.importedAt = (0, _moment.default)(timeStampMap[recentImport.import_id]).format('YYYY-MM-DD');
 
+    // Add origin source
     const originId = originIdMap[recentImport.import_id];
-    recentImport.source = sourceMapping[originId]; // Add default alias
+    recentImport.source = sourceMapping[originId];
 
+    // Add default alias
     const defaultAliasId = (0, _get2.default)(recentImport, 'default_alias_id');
     recentImport.defaultAlias = defaultAliasesMap[defaultAliasId];
     return (0, _util.snakeToCamel)(recentImport);
   });
 }
-
 async function getTotalImports(transacting) {
   const [{
     count
@@ -180,7 +167,7 @@ async function getTotalImports(transacting) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 12:02:18 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 16:04:43 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

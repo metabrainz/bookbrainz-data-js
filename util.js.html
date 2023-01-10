@@ -44,85 +44,65 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.snakeToCamel = snakeToCamel;
-exports.snakeToCamelID = snakeToCamelID;
+exports.EntityTypeError = void 0;
 exports.camelToSnake = camelToSnake;
-exports.validateEntityType = validateEntityType;
-exports.truncateTables = truncateTables;
+exports.createEditionGroupForNewEdition = createEditionGroupForNewEdition;
 exports.diffRevisions = diffRevisions;
 exports.formatDate = formatDate;
 exports.parseDate = parseDate;
-exports.createEditionGroupForNewEdition = createEditionGroupForNewEdition;
 exports.promiseProps = promiseProps;
-exports.EntityTypeError = void 0;
-
+exports.snakeToCamel = snakeToCamel;
+exports.snakeToCamelID = snakeToCamelID;
+exports.truncateTables = truncateTables;
+exports.validateEntityType = validateEntityType;
 var _padStart2 = _interopRequireDefault(require("lodash/padStart"));
-
 var _sortBy2 = _interopRequireDefault(require("lodash/sortBy"));
-
 var _isArray2 = _interopRequireDefault(require("lodash/isArray"));
-
 var _isString2 = _interopRequireDefault(require("lodash/isString"));
-
 var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
-
 var _camelCase2 = _interopRequireDefault(require("lodash/camelCase"));
-
 var _reduce2 = _interopRequireDefault(require("lodash/reduce"));
-
 var _deepDiff = require("deep-diff");
-
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
-
 function snakeToCamel(attrs) {
   return (0, _reduce2.default)(attrs, (result, val, key) => {
     let newKey;
-
     if (key.indexOf('_') === 0) {
       newKey = `_${(0, _camelCase2.default)(key.substr(1))}`;
     } else {
       newKey = (0, _camelCase2.default)(key);
     }
-
     result[newKey] = val;
     return result;
   }, {});
 }
-
 function snakeToCamelID(attrs) {
   return (0, _reduce2.default)(attrs, (result, val, key) => {
     let newKey;
-
     if (key.indexOf('_') === 0) {
       newKey = `_${(0, _camelCase2.default)(key.substr(1))}`;
     } else {
       newKey = (0, _camelCase2.default)(key);
     }
-
     if (newKey !== 'bbid' &amp;&amp; newKey !== 'id') {
       newKey = newKey.replace('Bbid', 'BBID').replace('Id', 'ID');
     }
-
     result[newKey] = val;
     return result;
   }, {});
 }
-
 function camelToSnake(attrs) {
   return (0, _reduce2.default)(attrs, (result, val, key) => {
     let newKey;
-
     if (key.indexOf('_') === 0) {
       newKey = `_${(0, _snakeCase2.default)(key.substr(1))}`;
     } else {
       newKey = (0, _snakeCase2.default)(key);
     }
-
     result[newKey] = val;
     return result;
   }, {});
 }
-
 class EntityTypeError extends Error {
   constructor(message) {
     super(message);
@@ -130,74 +110,58 @@ class EntityTypeError extends Error {
     this.message = message;
     this.stack = new Error().stack;
   }
-
 }
-
 exports.EntityTypeError = EntityTypeError;
-
 function validateEntityType(model) {
   if (model.get('_type') !== model.typeId) {
     throw new Error(`Entity ${model.get('bbid')} is not a ${model.typeId}`);
   }
 }
-
 async function truncateTables(Bookshelf, tables) {
   for (const table of tables) {
     // eslint-disable-next-line no-await-in-loop
     await Bookshelf.knex.raw(`TRUNCATE ${table} CASCADE`);
   }
 }
-
 function diffRevisions(base, other, includes) {
   function diffFilter(path, key) {
     if ((0, _isString2.default)(key)) {
       return key.startsWith('_pivot');
     }
-
     return false;
   }
-
   function sortEntityData(data) {
     const aliasesPresent = data.aliasSet &amp;&amp; (0, _isArray2.default)(data.aliasSet.aliases);
-
     if (aliasesPresent) {
       data.aliasSet.aliases = (0, _sortBy2.default)(data.aliasSet.aliases, 'id');
     }
-
     const identifiersPresent = data.identifierSet &amp;&amp; (0, _isArray2.default)(data.identifierSet.identifiers);
-
     if (identifiersPresent) {
       data.identifierSet.identifiers = (0, _sortBy2.default)(data.identifierSet.identifiers, ['value', 'type.label']);
     }
-
     const relationshipsPresent = data.relationshipSet &amp;&amp; (0, _isArray2.default)(data.relationshipSet.relationships);
-
     if (relationshipsPresent) {
       data.relationshipSet.relationships = (0, _sortBy2.default)(data.relationshipSet.relationships, 'id');
     }
-
     return data;
   }
-
   const baseDataPromise = base.related('data').fetch({
     require: false,
     withRelated: includes
   });
-
   if (!other) {
     return baseDataPromise.then(baseData => (0, _deepDiff.diff)({}, baseData ? sortEntityData(baseData.toJSON()) : {}, diffFilter));
   }
-
   const otherDataPromise = other.related('data').fetch({
     require: false,
     withRelated: includes
   });
   return Promise.all([baseDataPromise, otherDataPromise]).then(([baseData, otherData]) => (0, _deepDiff.diff)(otherData ? sortEntityData(otherData.toJSON()) : {}, baseData ? sortEntityData(baseData.toJSON()) : {}, diffFilter));
 }
-
 const YEAR_STR_LENGTH = 6;
 const MONTH_STR_LENGTH = 2;
 const DAY_STR_LENGTH = 2;
+
 /**
  * Produce an ISO 8601-2004 formatted string for a date.
  * @param {number} year - A calendar year.
@@ -206,70 +170,59 @@ const DAY_STR_LENGTH = 2;
  * @returns {string} The provided date formatted as an ISO 8601-2004 year or calendar
  *                   date.
  */
-
 function formatDate(year, month, day) {
   if ((!year || isNaN(parseInt(year, 10))) &amp;&amp; year !== 0) {
     return null;
   }
-
-  const isCommonEraDate = Math.sign(year) === 1 || Math.sign(year) === 0; // eslint-disable-next-line max-len
-
+  const isCommonEraDate = Math.sign(year) === 1 || Math.sign(year) === 0;
+  // eslint-disable-next-line max-len
   const yearString = `${isCommonEraDate ? '+' : '-'}${(0, _padStart2.default)(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
-
   if (!month || isNaN(parseInt(month, 10))) {
     return `${yearString}`;
   }
-
   const monthString = (0, _padStart2.default)(month.toString(), MONTH_STR_LENGTH, '0');
-
   if (!day || isNaN(parseInt(day, 10))) {
     return `${yearString}-${monthString}`;
   }
-
   const dayString = (0, _padStart2.default)(day.toString(), DAY_STR_LENGTH, '0');
   return `${yearString}-${monthString}-${dayString}`;
 }
+
 /**
  * Split ISO 8601 calendar dates or years into a numerical array.
  * @param {string} date - A date of the format 'YYYY', 'YYYY-MM', or
  *                        'YYYY-MM-DD'.
  * @returns {number[]} Year, month, and day of month respectively.
  */
-
-
 function parseDate(date) {
   if (!date) {
     return [null, null, null];
   }
-
-  const parts = date.toString().split('-'); // A leading minus sign denotes a BC date
+  const parts = date.toString().split('-');
+  // A leading minus sign denotes a BC date
   // This creates an empty part that needs to be removed,
   // and requires us to add the negative sign back for the year
   // We ensure parts[0] is a number and not for example an empty string
-
   if (parts[0] === '') {
     parts.shift();
     parts[0] = -parseInt(parts[0], 10);
-  } // Incorrect format
-
-
+  }
+  // Incorrect format
   if (parts.length &lt; 1 || parts.length > 3) {
     return [null, null, null];
   }
-
   let padding = [];
-
   if (parts.length === 1) {
     padding = [null, null];
   } else if (parts.length === 2) {
     padding = [null];
   }
-
   return parts.map(part => {
     const parsed = parseInt(part, 10);
     return isNaN(parsed) ? null : parsed;
   }).concat(padding);
 }
+
 /**
  * Create a new Edition Group for an Edition.
  * The Edition Group will be part of the same revision, and will have the same
@@ -283,8 +236,6 @@ function parseDate(date) {
  * @param {number|string} authorCreditId - The id of the new edition's author credit
  * @returns {string} BBID of the newly created Edition Group
  */
-
-
 async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, revisionId, authorCreditId) {
   const Entity = orm.model('Entity');
   const EditionGroup = orm.model('EditionGroup');
@@ -306,14 +257,13 @@ async function createEditionGroupForNewEdition(orm, transacting, aliasSetId, rev
   });
   return bbid;
 }
+
 /**
  * Replacement for Bluebird's Promise.props
  * @param {Object} promiseObj - an object containing string keys and promises
  *                              to be resolved as the values
  * @returns {Object} an object containing the same keys, but resolved promises
  */
-
-
 async function promiseProps(promiseObj) {
   const resolvedKeyValuePairs = await Promise.all(Object.entries(promiseObj).map(([key, val]) => Promise.resolve(val).then(x => [key, x])));
   return Object.fromEntries(resolvedKeyValuePairs);
@@ -329,7 +279,7 @@ async function promiseProps(promiseObj) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 12:02:18 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 16:04:43 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

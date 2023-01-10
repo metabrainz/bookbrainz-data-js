@@ -46,173 +46,89 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = init;
 exports.func = void 0;
-
 var func = _interopRequireWildcard(require("./func"));
-
 exports.func = func;
-
 var util = _interopRequireWildcard(require("./util"));
-
 var _bookshelf = _interopRequireDefault(require("bookshelf"));
-
 var _achievementType = _interopRequireDefault(require("./models/achievementType"));
-
 var _achievementUnlock = _interopRequireDefault(require("./models/achievementUnlock"));
-
 var _alias = _interopRequireDefault(require("./models/alias"));
-
 var _aliasSet = _interopRequireDefault(require("./models/aliasSet"));
-
 var _annotation = _interopRequireDefault(require("./models/annotation"));
-
 var _area = _interopRequireDefault(require("./models/area"));
-
 var _areaType = _interopRequireDefault(require("./models/areaType"));
-
 var _author = _interopRequireDefault(require("./models/entities/author"));
-
 var _authorCredit = _interopRequireDefault(require("./models/authorCredit"));
-
 var _authorCreditName = _interopRequireDefault(require("./models/authorCreditName"));
-
 var _authorData = _interopRequireDefault(require("./models/data/authorData"));
-
 var _authorHeader = _interopRequireDefault(require("./models/headers/authorHeader"));
-
 var _authorImport = _interopRequireDefault(require("./models/imports/authorImport"));
-
 var _authorRevision = _interopRequireDefault(require("./models/revisions/authorRevision"));
-
 var _authorType = _interopRequireDefault(require("./models/authorType"));
-
 var _disambiguation = _interopRequireDefault(require("./models/disambiguation"));
-
 var _edition = _interopRequireDefault(require("./models/entities/edition"));
-
 var _editionData = _interopRequireDefault(require("./models/data/editionData"));
-
 var _editionFormat = _interopRequireDefault(require("./models/editionFormat"));
-
 var _editionGroup = _interopRequireDefault(require("./models/entities/editionGroup"));
-
 var _editionGroupData = _interopRequireDefault(require("./models/data/editionGroupData"));
-
 var _editionGroupHeader = _interopRequireDefault(require("./models/headers/editionGroupHeader"));
-
 var _editionGroupImport = _interopRequireDefault(require("./models/imports/editionGroupImport"));
-
 var _editionGroupRevision = _interopRequireDefault(require("./models/revisions/editionGroupRevision"));
-
 var _editionGroupType = _interopRequireDefault(require("./models/editionGroupType"));
-
 var _editionHeader = _interopRequireDefault(require("./models/headers/editionHeader"));
-
 var _editionImport = _interopRequireDefault(require("./models/imports/editionImport"));
-
 var _editionRevision = _interopRequireDefault(require("./models/revisions/editionRevision"));
-
 var _editionStatus = _interopRequireDefault(require("./models/editionStatus"));
-
 var _editor = _interopRequireDefault(require("./models/editor"));
-
 var _editorEntityVisits = _interopRequireDefault(require("./models/editorEntityVisits"));
-
 var _editorType = _interopRequireDefault(require("./models/editorType"));
-
 var _entity = _interopRequireDefault(require("./models/entity"));
-
 var _externalServiceOauth = _interopRequireDefault(require("./models/externalServiceOauth"));
-
 var _gender = _interopRequireDefault(require("./models/gender"));
-
 var _identifier = _interopRequireDefault(require("./models/identifier"));
-
 var _identifierSet = _interopRequireDefault(require("./models/identifierSet"));
-
 var _identifierType = _interopRequireDefault(require("./models/identifierType"));
-
 var _knex = _interopRequireDefault(require("knex"));
-
 var _language = _interopRequireDefault(require("./models/language"));
-
 var _languageSet = _interopRequireDefault(require("./models/languageSet"));
-
 var _note = _interopRequireDefault(require("./models/note"));
-
 var _publisher = _interopRequireDefault(require("./models/entities/publisher"));
-
 var _publisherData = _interopRequireDefault(require("./models/data/publisherData"));
-
 var _publisherHeader = _interopRequireDefault(require("./models/headers/publisherHeader"));
-
 var _publisherImport = _interopRequireDefault(require("./models/imports/publisherImport"));
-
 var _publisherRevision = _interopRequireDefault(require("./models/revisions/publisherRevision"));
-
 var _publisherSet = _interopRequireDefault(require("./models/publisherSet"));
-
 var _publisherType = _interopRequireDefault(require("./models/publisherType"));
-
 var _relationship = _interopRequireDefault(require("./models/relationship"));
-
 var _relationshipAttribute = _interopRequireDefault(require("./models/relationshipAttribute"));
-
 var _relationshipAttributeSet = _interopRequireDefault(require("./models/relationshipAttributeSet"));
-
 var _relationshipAttributeTextValue = _interopRequireDefault(require("./models/relationshipAttributeTextValue"));
-
 var _relationshipAttributeType = _interopRequireDefault(require("./models/relationshipAttributeType"));
-
 var _relationshipSet = _interopRequireDefault(require("./models/relationshipSet"));
-
 var _relationshipType = _interopRequireDefault(require("./models/relationshipType"));
-
 var _relationshipTypeAttributeType = _interopRequireDefault(require("./models/relationshipTypeAttributeType"));
-
 var _releaseEvent = _interopRequireDefault(require("./models/releaseEvent"));
-
 var _releaseEventSet = _interopRequireDefault(require("./models/releaseEventSet"));
-
 var _revision = _interopRequireDefault(require("./models/revision"));
-
 var _series = _interopRequireDefault(require("./models/entities/series"));
-
 var _seriesData = _interopRequireDefault(require("./models/data/seriesData"));
-
 var _seriesHeader = _interopRequireDefault(require("./models/headers/seriesHeader"));
-
 var _seriesOrderingType = _interopRequireDefault(require("./models/seriesOrderingType"));
-
 var _seriesRevision = _interopRequireDefault(require("./models/revisions/seriesRevision"));
-
 var _titleType = _interopRequireDefault(require("./models/titleType"));
-
 var _titleUnlock = _interopRequireDefault(require("./models/titleUnlock"));
-
 var _userCollection = _interopRequireDefault(require("./models/userCollection"));
-
 var _userCollectionCollaborator = _interopRequireDefault(require("./models/userCollectionCollaborator"));
-
 var _userCollectionItem = _interopRequireDefault(require("./models/userCollectionItem"));
-
 var _work = _interopRequireDefault(require("./models/entities/work"));
-
 var _workData = _interopRequireDefault(require("./models/data/workData"));
-
 var _workHeader = _interopRequireDefault(require("./models/headers/workHeader"));
-
 var _workImport = _interopRequireDefault(require("./models/imports/workImport"));
-
 var _workRevision = _interopRequireDefault(require("./models/revisions/workRevision"));
-
 var _workType = _interopRequireDefault(require("./models/workType"));
-
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
-
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp; obj &amp;&amp; obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" &amp;&amp; typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache &amp;&amp; cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty &amp;&amp; Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc &amp;&amp; (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 /*
  * Copyright (C) 2015  Ben Ockmore
  *
@@ -230,6 +146,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp;
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 // eslint-disable-line import/no-namespace
 
 /**
@@ -239,8 +156,9 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp;
  */
 function init(config) {
   const bookshelf = (0, _bookshelf.default)((0, _knex.default)(config));
-  bookshelf.plugin('bookshelf-virtuals-plugin'); // Initialize these here to set up dependencies
+  bookshelf.plugin('bookshelf-virtuals-plugin');
 
+  // Initialize these here to set up dependencies
   const AuthorData = (0, _authorData.default)(bookshelf);
   const EditionData = (0, _editionData.default)(bookshelf);
   const EditionGroupData = (0, _editionGroupData.default)(bookshelf);
@@ -339,7 +257,7 @@ function init(config) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 12:02:18 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 16:04:43 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -44,27 +44,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAdditionalEntityProps = getAdditionalEntityProps;
-exports.getEntitySetMetadataByType = getEntitySetMetadataByType;
-exports.getEntityModels = getEntityModels;
-exports.getEntityModelByType = getEntityModelByType;
-exports.recursivelyGetRedirectBBID = recursivelyGetRedirectBBID;
-exports.getEntity = getEntity;
-exports.getEntityParentAlias = getEntityParentAlias;
 exports.entityTypes = exports.WORK = exports.SERIES = exports.PUBLISHER = exports.EDITION_GROUP = exports.EDITION = exports.AUTHOR = void 0;
-
+exports.getAdditionalEntityProps = getAdditionalEntityProps;
+exports.getEntity = getEntity;
+exports.getEntityModelByType = getEntityModelByType;
+exports.getEntityModels = getEntityModels;
+exports.getEntityParentAlias = getEntityParentAlias;
+exports.getEntitySetMetadataByType = getEntitySetMetadataByType;
+exports.recursivelyGetRedirectBBID = recursivelyGetRedirectBBID;
 var _camelCase2 = _interopRequireDefault(require("lodash/camelCase"));
-
 var _mapKeys2 = _interopRequireDefault(require("lodash/mapKeys"));
-
 var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
-
 var _pick2 = _interopRequireDefault(require("lodash/pick"));
-
 var _util = require("../util");
-
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
-
 const AUTHOR = 'Author';
 exports.AUTHOR = AUTHOR;
 const EDITION = 'Edition';
@@ -85,14 +78,13 @@ const entityTypes = {
   SERIES,
   WORK
 };
+
 /**
  * @param  {Object} entityData - Object holding all data related to an entity
  * @param  {string} entityType - The type of the entity
  * @returns {Object} - Returns all the additional entity specific data
 */
-
 exports.entityTypes = entityTypes;
-
 function getAdditionalEntityProps(entityData, entityType) {
   if (entityType === entityTypes.AUTHOR) {
     const {
@@ -122,11 +114,9 @@ function getAdditionalEntityProps(entityData, entityType) {
       typeId
     };
   }
-
   if (entityType === entityTypes.EDITION) {
     return (0, _pick2.default)(entityData, ['editionGroupBbid', 'width', 'height', 'depth', 'weight', 'pages', 'formatId', 'statusId']);
   }
-
   if (entityType === entityTypes.PUBLISHER) {
     const {
       typeId,
@@ -151,23 +141,19 @@ function getAdditionalEntityProps(entityData, entityType) {
       typeId
     };
   }
-
   if (entityType === entityTypes.EDITION_GROUP || entityType === entityTypes.WORK) {
     return (0, _pick2.default)(entityData, ['typeId']);
   }
-
   if (entityType === entityTypes.SERIES) {
     return (0, _pick2.default)(entityData, ['entityType', 'orderingTypeId']);
   }
-
   return null;
 }
+
 /**
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
 */
-
-
 function getEntitySetMetadataByType(entityType) {
   if (entityType === EDITION) {
     return [{
@@ -195,17 +181,15 @@ function getEntitySetMetadataByType(entityType) {
       propName: 'languages'
     }];
   }
-
   return [];
 }
+
 /**
  * Returns all entity models defined in bookbrainz-data-js
  *
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @returns {object} - Object mapping model name to the entity model
 */
-
-
 function getEntityModels(orm) {
   const {
     Author,
@@ -224,6 +208,7 @@ function getEntityModels(orm) {
     Work
   };
 }
+
 /**
  * Retrieves the Bookshelf entity model with the given the model name
  *
@@ -234,17 +219,14 @@ function getEntityModels(orm) {
  * @returns {object} - Bookshelf model object with the type specified in the
  * single param
 */
-
-
 function getEntityModelByType(orm, type) {
   const entityModels = getEntityModels(orm);
-
   if (!entityModels[type]) {
     throw new Error('Unrecognized entity type');
   }
-
   return entityModels[type];
 }
+
 /**
  * Finds the bbid an entity redirects to, if any.
  * Do a recursive search in case the redirected bbid also redirects, etc.
@@ -253,19 +235,16 @@ function getEntityModelByType(orm, type) {
  * @param {any} transacting - Optional ORM transaction object
  * @returns {string} The final bbid to redirect to
  */
-
-
 async function recursivelyGetRedirectBBID(orm, bbid, transacting) {
   const redirectSQLQuery = `SELECT target_bbid FROM bookbrainz.entity_redirect WHERE source_bbid = '${bbid}'`;
   const redirectQueryResults = await (transacting || orm.bookshelf.knex).raw(redirectSQLQuery);
-
   if (redirectQueryResults.rows &amp;&amp; redirectQueryResults.rows.length) {
     const redirectedBBID = redirectQueryResults.rows[0].target_bbid;
     return recursivelyGetRedirectBBID(orm, redirectedBBID);
   }
-
   return bbid;
 }
+
 /**
  * Fetches an entity with related data
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
@@ -274,8 +253,6 @@ async function recursivelyGetRedirectBBID(orm, bbid, transacting) {
  * @param {string[]} relations - Extra model relationships to fetch along with the entity
  * @returns {Promise} A Promise that resolves to the entity in JSON format
  */
-
-
 async function getEntity(orm, entityType, bbid, relations = []) {
   // if bbid appears in entity_redirect table, use that bbid instead
   // Do a recursive search in case the redirected bbid also redirects, etc.
@@ -289,6 +266,7 @@ async function getEntity(orm, entityType, bbid, relations = []) {
   });
   return entity.toJSON();
 }
+
 /**
  * Fetches an entity's last known default alias from its revision parent.
  * This is necessary to display the name of a 'deleted' entity
@@ -298,8 +276,6 @@ async function getEntity(orm, entityType, bbid, relations = []) {
  * @returns {Promise} The returned Promise returns the entity's
  * 					   parent default alias
  */
-
-
 async function getEntityParentAlias(orm, entityType, bbid) {
   const rawSql = `
 		SELECT alias.name,
@@ -312,14 +288,13 @@ async function getEntityParentAlias(orm, entityType, bbid) {
 		WHERE bbid = '${bbid}' AND master = FALSE
 		ORDER BY revision_id DESC
 		LIMIT 1;
-	`; // Query the database to get the parent revision default alias
+	`;
 
+  // Query the database to get the parent revision default alias
   const queryResult = await orm.bookshelf.knex.raw(rawSql);
-
   if (!Array.isArray(queryResult.rows)) {
     return null;
   }
-
   const rows = queryResult.rows.map(rawQueryResult => {
     // Convert query keys to camelCase
     const queriedResult = (0, _mapKeys2.default)(rawQueryResult, (value, key) => (0, _camelCase2.default)(key));
@@ -338,7 +313,7 @@ async function getEntityParentAlias(orm, entityType, bbid) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 12:02:18 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Jan 10 2023 16:04:43 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
