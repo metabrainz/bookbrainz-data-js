@@ -4,16 +4,16 @@
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
   "scripts": {
-    "build-js": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts && tsc",
+    "build": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts && tsc",
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
-    "prepublishOnly": "yarn build-js",
+    "prepublishOnly": "yarn build",
     "test": "yarn build-js-for-test && yarn lint-errors && mocha",
     "test-with-report": "mocha --reporter json --reporter-option output=coverage/test-results.json",
     "test-ci": "yarn build-js-for-test && yarn lint-errors && yarn test-with-report",
     "dupreport": "jsinspect src/ || true",
-    "nodemon": "nodemon --watch './src/' --exec 'yarn build-js'"
+    "nodemon": "nodemon --watch './src/' --exec 'yarn build'"
   },
   "files": [
     "lib/**/*"
