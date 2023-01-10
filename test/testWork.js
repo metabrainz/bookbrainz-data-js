@@ -153,7 +153,7 @@ describe('Work model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId', 'collections'
+			'typeId', 'collections', 'sortName', 'name', 'workType'
 		]);
 	});
 

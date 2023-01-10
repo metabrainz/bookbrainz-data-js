@@ -1,0 +1,77 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  # Triggers the workflow on pull request events in the context of the fork
+  # trying to sidestep limitations here: https://github.com/wearerequired/lint-action/issues/13
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:12.3
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bookbrainz_test
+        # Since we run npm tests on the host machine (not in a docker container)
+        # we need to bind the Postgres port from Docker container to host machine
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    
+      - name: Checkout bookbrainz-data-js repo
+        uses: actions/checkout@v3
+
+      # We need schema files and scripts that are in another repo
+      - name: Checkout bookbrainz-site repo
+        uses: actions/checkout@v3
+        with:
+          repository: metabrainz/bookbrainz-site
+          path: bookbrainz-site
+
+      # Set up the test dabatase
+      - name: Set up test database in PostgreSQL
+        run: scripts/create-test-db.sh
+        working-directory: bookbrainz-site
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bookbrainz_test
+      
+      - name: Set up node
+        uses: actions/setup-node@v1
+        with:
+          # We could also test on multiple Node versions if needed: https://github.com/actions/setup-node#matrix-testing
+          node-version: '16'
+          # Enables caching NPM dependencies (uses https://github.com/actions/cache under the hood)
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm install --no-audit
+        
+      - name: Create config file
+        run: cp test/bookshelf.js.example test/bookshelf.js
+      
+      - name: Run tests
+        run: npm run test-ci                    # run tests (configured to use mocha's json reporter)
+      
+      - name: Export test results
+        uses: actions/upload-artifact@v3        # upload test results
+        if: success() || failure()              # run this step even if previous step failed
+        with:
+          name: test-results
+          path: coverage/coverage-final.json

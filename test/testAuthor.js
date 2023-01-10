@@ -179,7 +179,7 @@ describe('Author model', () => {
 			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
 			'endYear', 'ended', 'genderId', 'identifierSet', 'identifierSetId',
 			'master', 'relationshipSet', 'relationshipSetId', 'revisionId',
-			'type', 'typeId', 'collections'
+			'type', 'typeId', 'collections', 'sortName', 'name', 'authorType'
 		]);
 	});
 

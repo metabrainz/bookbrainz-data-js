@@ -167,13 +167,13 @@ describe('getEntity', () => {
 	it('should return an entity', async function () {
 		const entityJSON = await getEntity(bookbrainzData, 'Author', aBBID);
 		expect(entityJSON).to.have.all.keys([
-			'aliasSetId', 'annotationId', 'areaId',
+			'aliasSetId', 'annotationId', 'areaId', 'authorType',
 			'bbid', 'beginAreaId', 'beginDate', 'beginDay', 'beginMonth',
-			'beginYear', 'dataId', 'defaultAliasId',
+			'beginYear', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
 			'endYear', 'ended', 'genderId', 'identifierSetId',
-			'master', 'relationshipSetId', 'revisionId',
-			'type', 'typeId'
+			'master', 'name', 'relationshipSetId', 'revisionId',
+			'sortName', 'type', 'typeId'
 		]);
 		expect(entityJSON.bbid).to.equal(aBBID);
 		expect(entityJSON.aliasSetId).to.equal(1);
@@ -194,7 +194,7 @@ describe('getEntity', () => {
 			'disambiguationId', 'endAreaId', 'endDate', 'endDay', 'endMonth',
 			'endYear', 'ended', 'genderId', 'identifierSet', 'identifierSetId',
 			'master', 'relationshipSet', 'relationshipSetId', 'revision', 'revisionId',
-			'type', 'typeId'
+			'type', 'typeId', 'sortName', 'name', 'authorType'
 		]);
 		expect(entityJSON.bbid).to.equal(aBBID);
 		expect(entityJSON.aliasSetId).to.equal(1);

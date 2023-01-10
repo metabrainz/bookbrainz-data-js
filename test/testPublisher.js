@@ -148,7 +148,8 @@ describe('Publisher model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'endDate', 'endDay', 'endMonth', 'endYear', 'ended',
 			'identifierSetId', 'identifierSet', 'master', 'relationshipSet',
-			'relationshipSetId', 'revisionId', 'type', 'typeId', 'collections'
+			'relationshipSetId', 'revisionId', 'type', 'typeId', 'collections',
+			'sortName', 'name', 'publisherType'
 		]);
 	});
 
