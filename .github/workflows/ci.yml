@@ -67,11 +67,11 @@ jobs:
         run: cp test/bookshelf.js.example test/bookshelf.js
       
       - name: Run tests
-        run: yarn run test-ci                    # run tests (configured to use mocha's json reporter)
+        run: yarn test-ci                    # run tests (configured to use mocha's json reporter)
       
       - name: Export test results
         uses: actions/upload-artifact@v3        # upload test results
         if: success() || failure()              # run this step even if previous step failed
         with:
           name: test-results
-          path: test-results.json
+          path: coverage/test-results.json
