@@ -153,7 +153,7 @@ describe('Edition model', () => {
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',
 			'relationshipSetId', 'releaseEventSetId', 'revisionId', 'statusId',
-			'type', 'weight', 'width', 'collections'
+			'type', 'weight', 'width', 'collections', 'sortName', 'name'
 		]);
 	});
 

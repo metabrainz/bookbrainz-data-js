@@ -150,7 +150,7 @@ describe('Series model', () => {
 			'dataId', 'defaultAliasId', 'disambiguation', 'disambiguationId',
 			'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'entityType', 'orderingTypeId', 'collections'
+			'entityType', 'orderingTypeId', 'collections', 'sortName', 'name'
 		]);
 	});
 

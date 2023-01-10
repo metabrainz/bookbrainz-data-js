@@ -148,7 +148,7 @@ describe('EditionGroup model', () => {
 			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
-			'typeId', 'collections'
+			'typeId', 'collections', 'sortName', 'name', 'editionGroupType'
 		]);
 	});
 
