@@ -2,8 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/bookbrainz-data.svg)](https://www.npmjs.com/package/bookbrainz-data)
 [![Known Vulnerabilities](https://snyk.io/test/github/bookbrainz/bookbrainz-data-js/badge.svg)](https://snyk.io/test/github/bookbrainz/bookbrainz-data-js)
-[![Build Status](https://travis-ci.org/bookbrainz/bookbrainz-data-js.svg?branch=master)](https://travis-ci.org/bookbrainz/bookbrainz-data-js)
 [![dependencies Status](https://david-dm.org/bookbrainz/bookbrainz-data-js/status.svg)](https://david-dm.org/bookbrainz/bookbrainz-data-js)
+![Build Status](https://github.com/metabrainz/bookbrainz-data-js/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/bookbrainz/bookbrainz-data-js/badge.svg?branch=master)](https://coveralls.io/github/bookbrainz/bookbrainz-data-js?branch=master)
 
 bookbrainz-data-js provides a node package to allow manipulation of data in a BookBrainz database using a set
