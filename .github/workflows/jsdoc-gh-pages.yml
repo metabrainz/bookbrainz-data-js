@@ -15,6 +15,9 @@ jobs:
       - name: NPM install
         uses: bahmutov/npm-install@v1
 
+      - name: Build project
+        run: yarn build
+      
       - name: Build JSDoc
         uses: andstor/jsdoc-action@v1
         with:
