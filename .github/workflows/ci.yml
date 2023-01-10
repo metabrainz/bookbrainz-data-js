@@ -20,7 +20,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: bookbrainz_test
-        # Since we run npm tests on the host machine (not in a docker container)
+        # Since we run tests on the host machine (not in a docker container)
         # we need to bind the Postgres port from Docker container to host machine
         ports:
           - 5432:5432
@@ -57,21 +57,21 @@ jobs:
         with:
           # We could also test on multiple Node versions if needed: https://github.com/actions/setup-node#matrix-testing
           node-version: '16'
-          # Enables caching NPM dependencies (uses https://github.com/actions/cache under the hood)
-          cache: 'npm'
+          # Enables caching Yarn dependencies (uses https://github.com/actions/cache under the hood)
+          cache: 'yarn'
           
       - name: Install dependencies
-        run: npm install --no-audit
+        run: yarn install --frozen-lockfile
         
       - name: Create config file
         run: cp test/bookshelf.js.example test/bookshelf.js
       
       - name: Run tests
-        run: npm run test-ci                    # run tests (configured to use mocha's json reporter)
+        run: yarn test-ci                    # run tests (configured to use mocha's json reporter)
       
       - name: Export test results
         uses: actions/upload-artifact@v3        # upload test results
         if: success() || failure()              # run this step even if previous step failed
         with:
           name: test-results
-          path: coverage/coverage-final.json
+          path: coverage/test-results.json
