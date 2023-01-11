@@ -1,0 +1,27 @@
+# This workflow updates the release draft as PRs are merged
+name: Release drafter
+
+on:
+  push:
+    branches: [ master ]
+
+
+jobs:
+  update_release_draft:
+
+    permissions:
+      # write permission is required to create a github release
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Drafts the next Release notes
+      - name: Release Drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
