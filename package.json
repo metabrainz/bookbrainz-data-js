@@ -1,8 +1,12 @@
 {
   "name": "bookbrainz-data",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A JavaScript data access module for BookBrainz",
   "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts && tsc",
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
