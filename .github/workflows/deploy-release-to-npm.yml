@@ -20,10 +20,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build the library
-        run: yarn prepublishOnly
-          
-      - name: Publish the library
+      - name: Build and publish the package
         run: yarn publish --new-version ${{ github.event.release.tag_name }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
