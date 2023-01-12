@@ -1,0 +1,40 @@
+name: Deploy release to NPM
+
+on:
+  release:
+    types: [published]
+  
+jobs:
+  publish-to-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18'
+          # Enables caching Yarn dependencies (uses https://github.com/actions/cache under the hood)
+          cache: 'yarn'
+          
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the library
+        run: yarn prepublishOnly
+          
+      - name: Publish the library
+        run: yarn publish --new-version ${{ github.event.release.tag_name }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: Commit files
+        run: |
+          git add package.json
+          git commit -m "chore: Release ${{ github.event.release.tag_name }}"
+          git push origin master
