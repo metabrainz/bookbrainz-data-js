@@ -12,21 +12,18 @@
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
+    "lint-staged": "lint-staged",
     "prepublishOnly": "yarn build",
     "test": "yarn build-js-for-test && yarn lint-errors && mocha",
     "test-with-report": "mocha --reporter json --reporter-option output=coverage/test-results.json",
     "test-ci": "yarn build-js-for-test && yarn lint-errors && yarn test-with-report",
     "dupreport": "jsinspect src/ || true",
-    "nodemon": "nodemon --watch './src/' --exec 'yarn build'"
+    "nodemon": "nodemon --watch './src/' --exec 'yarn build'",
+    "prepare": "husky install"
   },
   "files": [
     "lib/**/*"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.js": [
       "eslint"
@@ -96,7 +93,7 @@
     "eslint-plugin-node": "^11.1.0",
     "faker": "^4.1.0",
     "glob": "^7.1.2",
-    "husky": "^3.0.3",
+    "husky": "^8.0.0",
     "jsinspect": "^0.12.7",
     "lint-staged": "^9.0.0",
     "mocha": "^10.2.0",
