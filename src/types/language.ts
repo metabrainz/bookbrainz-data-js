@@ -16,24 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {AliasSetT, AliasT} from './aliases';
-import {IdentifierSetT} from './identifiers';
-import {LazyLoaded} from './utils';
-
-
-export type EntityTypeString =
-	| 'Author'
-	| 'Edition'
-	| 'EditionGroup'
-	| 'Publisher'
-	| 'Series'
-	| 'Work';
-
-// TODO: incomplete
-export type EntityT = {
-	type: EntityTypeString,
-} & LazyLoaded<{
-	aliasSet: AliasSetT,
-	defaultAlias: AliasT,
-	identifierSet: IdentifierSetT,
-}>;
+export type LanguageT = {
+	id: number,
+	isoCode2t?: string,
+	isoCode2b?: string,
+	isoCode1?: string,
+	name: string,
+	frequency: number,
+	isoCode3?: string,
+};
