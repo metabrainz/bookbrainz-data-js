@@ -17,10 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import type {Transaction as _Transaction} from 'knex';
+import type {Knex} from 'knex';
 
 
-export type Transaction = _Transaction<any>;
+export type Transaction = Knex.Transaction;
 
 export type EntityTypeString =
 	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup' | 'Series';
