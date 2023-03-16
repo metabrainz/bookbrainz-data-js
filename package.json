@@ -67,7 +67,7 @@
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
     "bookshelf": "bookbrainz/bookshelf#0da7c79ffe9f5ef13feec87e064b627745f0ed26",
-    "bookshelf-virtuals-plugin": "^0.1.1",
+    "bookshelf-virtuals-plugin": "^1.0.0",
     "deep-diff": "^1.0.2",
     "immutable": "^3.8.2",
     "knex": "^2.4.2",
