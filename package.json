@@ -66,11 +66,11 @@
   },
   "homepage": "https://github.com/bookbrainz/bookbrainz-data-js",
   "dependencies": {
-    "bookshelf": "^1.2.0",
+    "bookshelf": "bookbrainz/bookshelf#update-knex",
     "bookshelf-virtuals-plugin": "^0.1.1",
     "deep-diff": "^1.0.2",
     "immutable": "^3.8.2",
-    "knex": "^0.21.12",
+    "knex": "~1.0.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "pg": "^8.6.0"
