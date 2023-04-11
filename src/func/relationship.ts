@@ -18,7 +18,6 @@
 
 import * as _ from 'lodash';
 import type {
-	EntityTypeString,
 	FormRelationshipT as Relationship,
 	Transaction
 } from './types';
@@ -26,6 +25,7 @@ import {
 	createNewSetWithItems,
 	removeItemsFromSet
 } from './set';
+import type {EntityTypeString} from '../types/entity';
 import {promiseProps} from '../util';
 
 
