@@ -24,7 +24,7 @@ export type AliasT = {
 	id: number,
 	name: string,
 	sortName: string,
-	languageId?: number,
+	languageId: number | null,
 	primary: boolean,
 } & LazyLoaded<{
 	language: LanguageT,
@@ -32,7 +32,7 @@ export type AliasT = {
 
 export type AliasSetT = {
 	id: number,
-	defaultAliasId?: number,
+	defaultAliasId: number | null,
 } & LazyLoaded<{
 	aliases: Array<AliasT>,
 }>;

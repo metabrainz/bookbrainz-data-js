@@ -24,11 +24,11 @@ export type IdentifierTypeT = {
 	id: number,
 	label: string,
 	description: string,
-	detectionRegex?: string,
+	detectionRegex: string | null,
 	validationRegex: string,
 	displayTemplate: string,
 	entityType: EntityTypeString,
-	parentId?: number,
+	parentId: number | null,
 	childOrder: number,
 	deprecated: boolean,
 };

@@ -18,10 +18,10 @@
 
 export type LanguageT = {
 	id: number,
-	isoCode2t?: string,
-	isoCode2b?: string,
-	isoCode1?: string,
+	isoCode2t: string | null,
+	isoCode2b: string | null,
+	isoCode1: string | null,
 	name: string,
 	frequency: number,
-	isoCode3?: string,
+	isoCode3: string | null,
 };
