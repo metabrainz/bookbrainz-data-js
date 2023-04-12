@@ -22,8 +22,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # Make sure you have bumped the version before publishing the release
+      # This script will not bump the version and will use the version from package.json
+      # It will just fail if trying to publish an already published version
       - name: Build and publish the package
-        run: yarn publish --new-version ${{ github.event.release.tag_name }}
+        run: yarn publish --non-interactive
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
