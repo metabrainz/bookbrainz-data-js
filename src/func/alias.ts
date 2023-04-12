@@ -21,7 +21,6 @@ import * as _ from 'lodash';
 import type {
 	FormAliasT as Alias,
 	FormAliasWithDefaultT as AliasWithDefault,
-	EntityTypeString,
 	Transaction
 } from './types';
 import {
@@ -30,6 +29,7 @@ import {
 	getRemovedItems,
 	getUnchangedItems
 } from './set';
+import type {EntityTypeString} from '../types/entity';
 import {snakeToCamel} from '../util';
 
 

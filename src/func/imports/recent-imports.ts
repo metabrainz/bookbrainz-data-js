@@ -17,7 +17,8 @@
  */
 
 import * as _ from 'lodash';
-import type {EntityTypeString, Transaction} from '../types';
+import type {EntityTypeString} from '../../types/entity';
+import type {Transaction} from '../types';
 import {entityTypes} from '../entity';
 import {getAliasByIds} from '../alias';
 import moment from 'moment';

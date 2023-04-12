@@ -22,9 +22,6 @@ import type {Knex} from 'knex';
 
 export type Transaction = Knex.Transaction<any>;
 
-export type EntityTypeString =
-	'Author' | 'Edition' | 'Work' | 'Publisher' | 'EditionGroup' | 'Series';
-
 export interface FormAliasT {
 	id: number,
 	name: string,

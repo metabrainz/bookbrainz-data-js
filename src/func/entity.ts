@@ -19,7 +19,7 @@
 */
 
 import * as _ from 'lodash';
-import {EntityTypeString} from './types';
+import type {EntityTypeString} from '../types/entity';
 import {parseDate} from '../util';
 
 
