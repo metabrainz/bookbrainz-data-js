@@ -19,7 +19,7 @@
 import * as func from './func';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 
-import Bookshelf from 'bookshelf';
+import Bookshelf from '@metabrainz/bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
 import alias from './models/alias';
