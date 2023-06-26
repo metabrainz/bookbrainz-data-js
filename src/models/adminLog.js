@@ -22,14 +22,14 @@ import {camelToSnake, snakeToCamel} from '../util';
 
 export default function adminLog(bookshelf) {
 	const AdminLog = bookshelf.Model.extend({
-		adminId() {
+		admin() {
 			return this.belongsTo('Editor', 'admin_id');
 		},
 		format: camelToSnake,
 		idAttribute: 'id',
 		parse: snakeToCamel,
 		tableName: 'bookbrainz.admin_log',
-		tagetUserId() {
+		targetUser() {
 			return this.belongsTo('Editor', 'target_user_id');
 		}
 	});
