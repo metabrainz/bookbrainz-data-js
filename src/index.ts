@@ -22,6 +22,7 @@ import * as util from './util'; // eslint-disable-line import/no-namespace
 import Bookshelf from '@metabrainz/bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
+import adminLog from './models/adminLog';
 import alias from './models/alias';
 import aliasSet from './models/aliasSet';
 import annotation from './models/annotation';
@@ -117,6 +118,7 @@ export default function init(config) {
 	return {
 		AchievementType: achievementType(bookshelf),
 		AchievementUnlock: achievementUnlock(bookshelf),
+		AdminLog: adminLog(bookshelf),
 		Alias: alias(bookshelf),
 		AliasSet: aliasSet(bookshelf),
 		Annotation: annotation(bookshelf),
