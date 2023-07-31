@@ -18,3 +18,6 @@
 
 /** Utility type to mark properties which are lazy-loaded by the ORM and might not always be present. */
 export type LazyLoaded<T> = Partial<T>;
+
+/** Data models without ID which can be inserted into the ORM. */
+export type Insertable<T> = Omit<T, 'id'>;
