@@ -24,23 +24,21 @@
 import {AliasT} from './aliases';
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
-import {Insertable} from './utils';
 
 
-export type ParsedAlias = Insertable<AliasT & {
+export type ParsedAlias = AliasT & {
 	default?: boolean;
-}>;
+};
 
-export type ParsedIdentifier = Insertable<IdentifierT>;
 
 type ParsedBaseEntity = {
 	entityType: EntityTypeString;
 	alias: ParsedAlias[];
 	annotation?: string;
 	disambiguation?: string;
-	identifiers: ParsedIdentifier[];
+	identifiers: IdentifierT[];
 	metadata: {
-		identifiers?: ParsedIdentifier[];
+		identifiers?: IdentifierT[];
 		links: Array<{
 			title: string;
 			url: string;
