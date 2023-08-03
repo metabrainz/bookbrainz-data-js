@@ -17,18 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import type {FormAliasT} from '../types/aliases';
+import type {IdentifierT} from '../types/identifiers';
 import type {Knex} from 'knex';
 
 
 export type Transaction = Knex.Transaction<any>;
-
-export interface FormAliasT {
-	id: number,
-	name: string,
-	sortName: string,
-	languageId: number,
-	primary: boolean
-}
 
 export interface FormRelationshipAttributesT {
 	id: number,
@@ -36,20 +30,6 @@ export interface FormRelationshipAttributesT {
 	value: {
 		textValue: string | null
 	}
-}
-
-export interface FormAliasWithDefaultT {
-	id: number,
-	name: string,
-	sortName: string,
-	languageId: number,
-	primary: boolean,
-	default: boolean
-}
-
-export interface FormIdentifierT {
-	value: string,
-	typeId: number
 }
 
 export interface FormRelationshipT {
@@ -73,8 +53,12 @@ export interface FormReleaseEventT {
 	areaId?: any
 }
 
+// TODO: Actually all of these types would need an (optional) 'id' or 'bbid' attribute for their intended use
+//  (can be missing for new items), but not all of them are defined as such above!
+// TODO: Although FormRelationshipAttributesT is missing from this type, createNewRelationshipAttributeSetWithItems
+//  (which requires SetItemT inputs) causes no type errors?
 export type SetItemT =
-	FormAliasT | FormIdentifierT | FormLanguageT | FormRelationshipT |
+	FormAliasT | IdentifierT | FormLanguageT | FormRelationshipT |
 	FormPublisherT | FormReleaseEventT;
 
 export interface AuthorCreditNameT {

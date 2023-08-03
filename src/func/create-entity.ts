@@ -20,13 +20,12 @@
  */
 
 import * as _ from 'lodash';
-import type {
-	FormAliasWithDefaultT as AliasWithDefault, FormIdentifierT as Identifier,
-	Transaction
-} from './types';
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from './entity';
+import type {AliasWithDefaultT} from '../types/aliases';
+import type {IdentifierT} from '../types/identifiers';
+import type {Transaction} from './types';
 import {createNote} from './note';
 import {incrementEditorEditCountById} from './editor';
 import {updateAliasSet} from './alias';
@@ -37,10 +36,10 @@ import {updateIdentifierSet} from './identifier';
 
 
 interface EntityDataType {
-	aliases: Array<AliasWithDefault>,
+	aliases: Array<AliasWithDefaultT>,
 	annotation: string,
 	disambiguation: string,
-	identifiers: Array<Identifier>,
+	identifiers: Array<IdentifierT>,
 	note: string,
 	type: string
 }

@@ -33,6 +33,15 @@ export type LazyLoadedAliasT = AliasWithIdT & LazyLoaded<{
 	language: LanguageWithIdT,
 }>;
 
+// TODO: find a better name
+export type FormAliasT = AliasT & {
+	id: number;
+};
+
+export type AliasWithDefaultT = FormAliasT & {
+	default: boolean,
+};
+
 export type AliasSetT = {
 	defaultAliasId: number | null,
 };

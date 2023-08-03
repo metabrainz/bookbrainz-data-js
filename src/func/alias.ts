@@ -18,11 +18,7 @@
  */
 
 import * as _ from 'lodash';
-import type {
-	FormAliasT as Alias,
-	FormAliasWithDefaultT as AliasWithDefault,
-	Transaction
-} from './types';
+import type {AliasWithDefaultT, FormAliasT} from '../types/aliases';
 import {
 	createNewSetWithItems,
 	getAddedItems,
@@ -30,15 +26,16 @@ import {
 	getUnchangedItems
 } from './set';
 import type {EntityTypeString} from '../types/entity';
+import type {Transaction} from './types';
 import {snakeToCamel} from '../util';
 
 
 export async function updateAliasSet(
 	orm: any, transacting: Transaction, oldSet: any,
 	oldDefaultAliasId: number | null | undefined,
-	newSetItemsWithDefault: Array<AliasWithDefault>
+	newSetItemsWithDefault: Array<AliasWithDefaultT>
 ) {
-	function comparisonFunc(obj: Alias, other: Alias) {
+	function comparisonFunc(obj: FormAliasT, other: FormAliasT) {
 		return (
 			obj.name === other.name &&
 			obj.sortName === other.sortName &&
@@ -49,10 +46,10 @@ export async function updateAliasSet(
 
 	const {AliasSet} = orm;
 
-	const newSetItems: Array<Alias> =
+	const newSetItems: Array<FormAliasT> =
 		newSetItemsWithDefault.map((item) => _.omit(item, 'default'));
 
-	const oldSetItems: Array<Alias> =
+	const oldSetItems: Array<FormAliasT> =
 		oldSet ? oldSet.related('aliases').toJSON() : [];
 
 	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
@@ -161,7 +158,7 @@ export async function getBBIDsWithMatchingAlias(
 	const aliasIds = _.map(
 		await getAliasIds(transacting, name, caseSensitive),
 		'id'
-	) as Array<string|number>;
+	) as Array<string | number>;
 
 	const aliasSetIds = _.map(
 		await transacting.distinct('set_id')
