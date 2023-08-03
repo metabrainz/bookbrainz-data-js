@@ -35,11 +35,11 @@ export type LazyLoadedAliasT = AliasWithIdT & LazyLoaded<{
 
 // TODO: find a better name
 export type FormAliasT = AliasT & {
-	id: number;
+	id?: number;
 };
 
 export type AliasWithDefaultT = FormAliasT & {
-	default: boolean,
+	default?: boolean,
 };
 
 export type AliasSetT = {
