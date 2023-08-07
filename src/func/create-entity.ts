@@ -24,6 +24,7 @@ import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from './entity';
 import type {AliasWithDefaultT} from '../types/aliases';
+import type {EntityTypeString} from '../types/entity';
 import type {IdentifierT} from '../types/identifiers';
 import type {Transaction} from './types';
 import {createNote} from './note';
@@ -41,7 +42,7 @@ interface EntityDataType {
 	disambiguation: string,
 	identifiers: Array<IdentifierT>,
 	note: string,
-	type: string
+	type: EntityTypeString
 }
 
 interface ExtraEntityDataType extends EntityDataType {
@@ -53,7 +54,7 @@ interface CreateEntityPropsType {
 	transacting: Transaction,
 	editorId: string,
 	entityData: ExtraEntityDataType,
-	entityType: string
+	entityType: EntityTypeString
 }
 
 export async function createEntity({

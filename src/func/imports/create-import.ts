@@ -17,10 +17,11 @@
  */
 
 
-import {entityTypes, getAdditionalEntityProps} from '../entity';
+import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
 
 import _ from 'lodash';
 import {camelToSnake} from '../../util';
+import {getAdditionalEntityProps} from '../entity';
 import {getOriginSourceId} from './misc';
 import {updateAliasSet} from '../alias';
 import {updateDisambiguation} from '../disambiguation';
@@ -41,7 +42,7 @@ function createImportDataRecord(transacting, dataSets, importData) {
 	const {entityType} = importData;
 
 	// Safe check if entityType is one among the expected
-	if (!_.includes(entityTypes, entityType)) {
+	if (!ENTITY_TYPES.includes(entityType)) {
 		throw new Error('Invalid entity type');
 	}
 
@@ -66,10 +67,10 @@ function createImportDataRecord(transacting, dataSets, importData) {
 		.returning('id');
 }
 
-function createImportHeader(transacting, record, entityType) {
+function createImportHeader(transacting, record, entityType: EntityTypeString) {
 	// Safe check if entityType is one among the expected
 
-	if (!_.includes(entityTypes, entityType)) {
+	if (!ENTITY_TYPES.includes(entityType)) {
 		throw new Error('Invalid entity type');
 	}
 
@@ -121,8 +122,7 @@ export function createImport(orm, importData) {
 				transacting,
 				camelToSnake({
 					aliasSetId: aliasSet && aliasSet.get('id'),
-					disambiguationId:
-					disambiguationObj && disambiguationObj.get('id'),
+					disambiguationId: disambiguationObj && disambiguationObj.get('id'),
 					identifierSetId: identifierSet && identifierSet.get('id'),
 					...entityDataSets
 				}),
