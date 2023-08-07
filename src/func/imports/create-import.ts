@@ -88,7 +88,7 @@ async function updateEntityDataSets(orm, transacting, importData) {
 
 	if (languages) {
 		entityDataSet.languageSetId =
-			await updateLanguageSet(transacting, null, languages);
+			await updateLanguageSet(orm, transacting, null, languages);
 	}
 
 	if (releaseEvents) {
