@@ -21,19 +21,15 @@
  * TODO: Investigate whether these are also useful elsewhere, e.g. for form validation.
  */
 
-import {AliasT} from './aliases';
+import {AliasWithDefaultT} from './aliases';
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
 
 
-export type ParsedAlias = AliasT & {
-	default?: boolean;
-};
-
-
 type ParsedBaseEntity = {
 	entityType: EntityTypeString;
-	alias: ParsedAlias[];
+	// TODO: rename array property to `aliases`, also for consistency with e.g. `EntityDataType`
+	alias: AliasWithDefaultT[];
 	annotation?: string;
 	disambiguation?: string;
 	identifiers: IdentifierT[];
