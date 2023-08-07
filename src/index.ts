@@ -19,6 +19,8 @@
 import * as func from './func';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 
+import {type Knex, knex} from 'knex';
+
 import Bookshelf from '@metabrainz/bookshelf';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
@@ -59,7 +61,6 @@ import gender from './models/gender';
 import identifier from './models/identifier';
 import identifierSet from './models/identifierSet';
 import identifierType from './models/identifierType';
-import knex from 'knex';
 import language from './models/language';
 import languageSet from './models/languageSet';
 import note from './models/note';
@@ -100,10 +101,10 @@ import workType from './models/workType';
 
 /**
  * Initialize the database connection and models.
- * @param {Object} config - A knex.js configuration object.
+ * @param {Knex.Config} config - A knex.js configuration object.
  * @returns {Object} All data models.
  */
-export default function init(config) {
+export default function init(config: Knex.Config) {
 	const bookshelf = Bookshelf(knex(config));
 	bookshelf.plugin('bookshelf-virtuals-plugin');
 
@@ -197,5 +198,7 @@ export default function init(config) {
 		util
 	};
 }
+
+export type ORM = ReturnType<typeof init>;
 
 export {func};
