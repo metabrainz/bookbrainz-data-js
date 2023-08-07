@@ -21,13 +21,16 @@ import {LazyLoaded} from './utils';
 import {LazyLoadedIdentifierSetT} from './identifiers';
 
 
-export type EntityTypeString =
-	| 'Author'
-	| 'Edition'
-	| 'EditionGroup'
-	| 'Publisher'
-	| 'Series'
-	| 'Work';
+export const ENTITY_TYPES = [
+	'Author',
+	'Edition',
+	'EditionGroup',
+	'Publisher',
+	'Series',
+	'Work'
+] as const;
+
+export type EntityTypeString = typeof ENTITY_TYPES[number];
 
 // TODO: incomplete
 export type EntityT = {
