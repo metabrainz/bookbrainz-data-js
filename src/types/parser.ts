@@ -21,6 +21,7 @@
  * TODO: Investigate whether these are also useful elsewhere, e.g. for form validation.
  */
 
+import {FormLanguageT, FormReleaseEventT} from '../func/types';
 import {AliasWithDefaultT} from './aliases';
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
@@ -58,8 +59,14 @@ export type ParsedAuthor = ParsedBaseEntity & {
 	type?: 'Person';
 };
 
+export type ParsedEdition = ParsedBaseEntity & {
+	languages?: FormLanguageT[];
+	releaseEvents?: FormReleaseEventT[];
+};
+
 export type ParsedWork = ParsedBaseEntity;
 
 export type ParsedEntity =
 	| ParsedAuthor
+	| ParsedEdition
 	| ParsedWork;

@@ -18,7 +18,10 @@
 
 
 import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
+import type {ParsedEdition, ParsedEntity} from '../../types/parser';
 
+import type {ORM} from '../..';
+import type {Transaction} from '../types';
 import _ from 'lodash';
 import {camelToSnake} from '../../util';
 import {getAdditionalEntityProps} from '../entity';
@@ -30,15 +33,15 @@ import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
 
-function createImportRecord(transacting, data) {
+function createImportRecord(transacting: Transaction, data) {
 	return transacting.insert(data).into('bookbrainz.import').returning('id');
 }
 
-function createLinkTableRecord(transacting, record) {
+function createLinkTableRecord(transacting: Transaction, record) {
 	return transacting.insert(record).into('bookbrainz.link_import');
 }
 
-function createImportDataRecord(transacting, dataSets, importData) {
+function createImportDataRecord(transacting: Transaction, dataSets, importData: ParsedEntity) {
 	const {entityType} = importData;
 
 	// Safe check if entityType is one among the expected
@@ -67,7 +70,7 @@ function createImportDataRecord(transacting, dataSets, importData) {
 		.returning('id');
 }
 
-function createImportHeader(transacting, record, entityType: EntityTypeString) {
+function createImportHeader(transacting: Transaction, record, entityType: EntityTypeString) {
 	// Safe check if entityType is one among the expected
 
 	if (!ENTITY_TYPES.includes(entityType)) {
@@ -79,12 +82,19 @@ function createImportHeader(transacting, record, entityType: EntityTypeString) {
 	return transacting.insert(record).into(table).returning('import_id');
 }
 
-async function updateEntityDataSets(orm, transacting, importData) {
+type EntityDataSetIds = Partial<{
+	languageSetId: number;
+	releaseEventSetId: number;
+}>;
+
+async function updateEntityDataSets(
+	orm: ORM, transacting: Transaction, importData: ParsedEntity
+): Promise<EntityDataSetIds> {
 	// Extract all entity data sets related fields
-	const {languages, releaseEvents} = importData;
+	const {languages, releaseEvents} = importData as ParsedEdition;
 
 	// Create an empty entityDataSet
-	const entityDataSet = {};
+	const entityDataSet: EntityDataSetIds = {};
 
 	if (languages) {
 		entityDataSet.languageSetId =
@@ -102,7 +112,7 @@ async function updateEntityDataSets(orm, transacting, importData) {
 	return entityDataSet;
 }
 
-export function createImport(orm, importData) {
+export function createImport(orm: ORM, importData: ParsedEntity) {
 	return orm.bookshelf.transaction(async (transacting) => {
 		const {alias, identifiers, disambiguation, entityType, source} =
 			importData;
