@@ -20,6 +20,7 @@ import * as _ from 'lodash';
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from '../entity';
+import type {ORM} from '../..';
 import type {Transaction} from '../types';
 import {createNote} from '../note';
 import {deleteImport} from './delete-import';
@@ -27,7 +28,7 @@ import {incrementEditorEditCountById} from '../editor';
 
 
 interface approveEntityPropsType {
-	orm: any,
+	orm: ORM,
 	transacting: Transaction,
 	importEntity: any,
 	editorId: string
@@ -62,8 +63,7 @@ export async function approveImport(
 	const additionalProps = getAdditionalEntityProps(importEntity, entityType);
 
 	// Collect the entity sets from the importEntity
-	const entitySetMetadata: Array<any> =
-		getEntitySetMetadataByType(entityType);
+	const entitySetMetadata = getEntitySetMetadataByType(entityType);
 	const entitySets = entitySetMetadata.reduce(
 		(set, {entityIdField}) =>
 			_.assign(set, {[entityIdField]: importEntity[entityIdField]})

@@ -79,11 +79,19 @@ export function getAdditionalEntityProps(
 	}
 }
 
+export type EntitySetMetadataT = {
+	entityIdField: string;
+	idField: string;
+	mutableFields?: string[];
+	name: string;
+	propName: string;
+};
+
 /**
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
 */
-export function getEntitySetMetadataByType(entityType: EntityTypeString): Array<Record<string, unknown>> {
+export function getEntitySetMetadataByType(entityType: EntityTypeString): EntitySetMetadataT[] {
 	if (entityType === 'Edition') {
 		return [
 			{

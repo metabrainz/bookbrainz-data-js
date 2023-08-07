@@ -24,11 +24,13 @@ import {
 	createNewSetWithItems, getAddedItems, getComparisonFunc, getRemovedItems,
 	getUnchangedItems
 } from './set';
+import {type EntitySetMetadataT} from './entity';
+import type {ORM} from '..';
 
 
 function updateEntitySet<Item extends SetItemT>(
 	transacting: Transaction, oldSet: any, newItems: Array<Item>,
-	derivedSet: any, orm: Record<string, unknown>
+	derivedSet: EntitySetMetadataT, orm: ORM
 ): Promise<any> {
 	const oldItems =
 		oldSet ? oldSet.related(derivedSet.propName).toJSON() : [];
@@ -61,8 +63,8 @@ function updateEntitySet<Item extends SetItemT>(
 
 
 export async function updateEntitySets(
-	derivedSets: Array<any> | null | undefined, currentEntity: any,
-	entityData: any, transacting: Transaction, orm: Record<string, unknown>
+	derivedSets: EntitySetMetadataT[] | null | undefined, currentEntity: any,
+	entityData: any, transacting: Transaction, orm: ORM
 ): Promise<Record<string, unknown> | null | undefined> {
 	// If no entity sets, return null
 	if (!derivedSets) {
@@ -77,6 +79,7 @@ export async function updateEntitySets(
 			return Promise.resolve(null);
 		}
 
+		// TODO: Find out why we expect a non-existing `model` property here!?
 		const oldSetRecord = await derivedSet.model.forge({
 			id: currentEntity[derivedSet.name].id
 		}).fetch({
