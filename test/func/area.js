@@ -1,6 +1,6 @@
 import bookbrainzData from '../bookshelf';
 import chai from 'chai';
-import {recursivelyGetAreaParentsWithNames} from '../../src/func/area';
+import {recursivelyGetAreaParentsWithNames} from '../../lib/func/area';
 import {truncateTables} from '../../lib/util';
 import uuid from 'node-uuid';
 

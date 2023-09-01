@@ -1,14 +1,17 @@
+import type Bookshelf from '@metabrainz/bookshelf';
+import type {ORM} from '..';
+import type {QueryResult} from 'pg';
 
 /**
  * Recursively fetches an area's parents (with "has part" link)
  * Adapted from https://github.com/metabrainz/musicbrainz-server/blob/f79b6d0d2d4bd67254cc34426f17cf8eb21ec5bb/lib/MusicBrainz/Server/Data/Utils.pm#L255-L273
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
- * @param {string} areaId - The entity model name.
+ * @param {object} orm - the BookBrainz ORM, initialized during app setup, or a Bookshelf instance
+ * @param {string} areaId - The BBID (= MBID) of the area
  * @param {boolean} checkAllLevels - By default limits to the area types Country, Subdivision and City
  * @returns {Promise} The returned Promise returns the entity's
  * 					   parent default alias
  */
-export async function recursivelyGetAreaParentsWithNames(orm, areaId, checkAllLevels = false) {
+export async function recursivelyGetAreaParentsWithNames(orm: ORM | Bookshelf, areaId: string, checkAllLevels = false) {
 	const levelsCondition = checkAllLevels ? '' :
 		'WHERE area.type IN (1, 2, 3)';
 	const rawSql = `
@@ -30,9 +33,17 @@ export async function recursivelyGetAreaParentsWithNames(orm, areaId, checkAllLe
 	`;
 
 	// Query the database to get the area parents recursively
-	const queryResult = await (orm.bookshelf || orm).knex.raw(rawSql);
+	const knex = 'bookshelf' in orm ? orm.bookshelf.knex : orm.knex;
+	const queryResult = await knex.raw<QueryResult<AreaDescendantRow>>(rawSql);
 	if (!Array.isArray(queryResult.rows)) {
 		return [];
 	}
 	return queryResult.rows;
 }
+
+type AreaDescendantRow = {
+	descendant: string;
+	parent: string;
+	depth: number;
+	name: string;
+};
