@@ -1,4 +1,4 @@
-import {formatDate, parseDate} from '../src/util';
+import {formatDate, parseDate} from '../lib/util';
 
 import chai from 'chai';
 
