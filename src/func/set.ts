@@ -18,6 +18,7 @@
 
 import * as _ from 'lodash';
 import type {FormRelationshipAttributesT as RelationshipAttributeT, SetItemT, Transaction} from './types';
+import type Bookshelf from '@metabrainz/bookshelf';
 import type {ORM} from '..';
 
 /**
@@ -113,8 +114,9 @@ export function getRemovedItems<Item extends SetItemT>(
 
 export const removeItemsFromSet = getRemovedItems;
 
+// TODO: unchangedItems: ItemWithIdT, addedItems: ItemT
 export async function createNewSetWithItems<Item extends SetItemT>(
-	orm: ORM, transacting: Transaction, SetModel: any,
+	orm: ORM, transacting: Transaction, SetModel: Bookshelf.ModelSubclass,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
 	itemsAttribute: string, idAttribute = 'id'
 ): Promise<any> {
@@ -143,7 +145,7 @@ export async function createNewSetWithItems<Item extends SetItemT>(
 	return newSet;
 }
 export async function createNewRelationshipAttributeSetWithItems<Item extends SetItemT>(
-	orm: ORM, transacting: Transaction, SetModel: any,
+	orm: ORM, transacting: Transaction, SetModel: Bookshelf.ModelSubclass,
 	unchangedItems: Array<Item>, addedItems: Array<Item>,
 	itemsAttribute: string, idAttribute = 'id'
 ): Promise<any> {
