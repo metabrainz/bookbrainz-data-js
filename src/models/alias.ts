@@ -17,9 +17,10 @@
  */
 
 import {camelToSnake, snakeToCamel} from '../util';
+import type Bookshelf from '@metabrainz/bookshelf';
 
 
-export default function alias(bookshelf) {
+export default function alias(bookshelf: Bookshelf) {
 	const Alias = bookshelf.Model.extend({
 		format: camelToSnake,
 		idAttribute: 'id',
