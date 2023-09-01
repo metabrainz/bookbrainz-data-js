@@ -26,6 +26,7 @@ import {
 import type {AliasWithDefaultT} from '../types/aliases';
 import type {EntityTypeString} from '../types/entity';
 import type {IdentifierT} from '../types/identifiers';
+import type {ORM} from '..';
 import type {Transaction} from './types';
 import {createNote} from './note';
 import {incrementEditorEditCountById} from './editor';
@@ -50,7 +51,7 @@ interface ExtraEntityDataType extends EntityDataType {
 }
 
 interface CreateEntityPropsType {
-	orm: any,
+	orm: ORM,
 	transacting: Transaction,
 	editorId: string,
 	entityData: ExtraEntityDataType,

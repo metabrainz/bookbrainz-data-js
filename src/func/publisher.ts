@@ -21,10 +21,11 @@ import type {FormPublisherT as Publisher, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
+import type {ORM} from '..';
 
 
 export function updatePublisherSet(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Publisher>
 ): Promise<any> {
 	function comparisonFunc(obj: Publisher, other: Publisher) {

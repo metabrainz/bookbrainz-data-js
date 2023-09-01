@@ -26,12 +26,13 @@ import {
 	getUnchangedItems
 } from './set';
 import type {EntityTypeString} from '../types/entity';
+import type {ORM} from '..';
 import type {Transaction} from './types';
 import {snakeToCamel} from '../util';
 
 
 export async function updateAliasSet(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	oldDefaultAliasId: number | null | undefined,
 	newSetItemsWithDefault: Array<AliasWithDefaultT>
 ) {

@@ -26,6 +26,7 @@ import {
 	removeItemsFromSet
 } from './set';
 import type {EntityTypeString} from '../types/entity';
+import type {ORM} from '..';
 import {promiseProps} from '../util';
 
 
@@ -81,7 +82,7 @@ async function getMasterRelationshipSetForEntity(
 }
 
 async function updateRelationshipSetForEntity(
-	orm: any,
+	orm: ORM,
 	transacting: Transaction,
 	bbid: string,
 	allAddedItems: Array<Relationship>,
@@ -119,7 +120,7 @@ async function updateRelationshipSetForEntity(
  * these. If no entities are affected (there are no changes), an empty object
  * is returned.
  *
- * @param {any} orm - an initialized instance of bookbrainz-data-js
+ * @param {ORM} orm - an initialized instance of bookbrainz-data-js
  * @param {Transaction} transacting - the current transaction
  * @param {any} oldSet - the RelationshipSet object for the old entity data
  * @param {Array<Relationship>} newSetItems - the edited RelationshipSet for the
@@ -129,7 +130,7 @@ async function updateRelationshipSetForEntity(
  *          map
  */
 export function updateRelationshipSets(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Relationship>
 ): Promise<any> {
 	function comparisonFunc(obj: Relationship, other: Relationship) {

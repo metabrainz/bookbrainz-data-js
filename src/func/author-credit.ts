@@ -18,10 +18,11 @@
 
 import * as _ from 'lodash';
 import type {AuthorCreditNameT, Transaction} from './types';
+import type {ORM} from '..';
 
 
 function findAuthorCredit(
-	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
+	orm: ORM, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
 	const tables = {cc: 'bookbrainz.author_credit'};
 
@@ -58,7 +59,7 @@ function findAuthorCredit(
 
 
 export async function fetchOrCreateCredit(
-	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
+	orm: ORM, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
 	const result = await findAuthorCredit(orm, transacting, authorCredit);
 
@@ -88,7 +89,7 @@ export async function fetchOrCreateCredit(
 }
 
 export function updateAuthorCredit(
-	orm: any, transacting: Transaction, oldCredit: any,
+	orm: ORM, transacting: Transaction, oldCredit: any,
 	newCreditNames: Array<AuthorCreditNameT>
 ): Promise<any> {
 	/* eslint-disable consistent-return */
