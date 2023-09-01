@@ -63,14 +63,15 @@ function findAuthorCredit(
 export async function fetchOrCreateCredit(
 	orm: ORM, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
+	const {AuthorCredit} = orm;
 	const result = await findAuthorCredit(orm, transacting, authorCredit);
 
 	if (result) {
-		return orm.AuthorCredit.forge({id: result.id})
-			.fetch({transacting, withRelated: 'names'});
+		return new AuthorCredit({id: result.id})
+			.fetch({transacting, withRelated: ['names']});
 	}
 
-	const newCredit = await new orm.AuthorCredit(
+	const newCredit = await new AuthorCredit(
 		{authorCount: authorCredit.length}
 	).save(null, {transacting});
 

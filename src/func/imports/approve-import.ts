@@ -81,9 +81,9 @@ export async function approveImport(
 		revisionId: revisionRecord && revisionRecord.get('id')
 	}, entitySets, additionalProps);
 
-	const model = getEntityModelByType(orm, entityType);
+	const Model = getEntityModelByType(orm, entityType);
 
-	const entityModel = await model.forge(propsToSet)
+	const entityModel = await new Model(propsToSet)
 		.save(null, {
 			method: 'insert',
 			transacting

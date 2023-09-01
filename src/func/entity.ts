@@ -202,8 +202,8 @@ export async function getEntity(
 	// if bbid appears in entity_redirect table, use that bbid instead
 	// Do a recursive search in case the redirected bbid also redirects, etc.
 	const finalBBID = await recursivelyGetRedirectBBID(orm, bbid);
-	const model = getEntityModelByType(orm, entityType);
-	const entity = await model.forge({bbid: finalBBID})
+	const Model = getEntityModelByType(orm, entityType);
+	const entity = await new Model({bbid: finalBBID})
 		.fetch({
 			require: true,
 			withRelated: relations
