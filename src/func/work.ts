@@ -18,6 +18,7 @@
 */
 
 import type {ORM} from '..';
+import type {QueryResult} from 'pg';
 
 
 /**
@@ -55,6 +56,12 @@ export async function loadAuthorNames(orm: ORM, workBBIDs: Array<string>) {
 			and work.data_id is not null
 			and work.bbid in ${`(${workBBIDs.map(bbid => `'${bbid}'`).join(', ')})`}`;
 
-	const queryResults = await orm.bookshelf.knex.raw(sqlQuery);
+	const queryResults = await orm.bookshelf.knex.raw<QueryResult<WorkAuthorRow>>(sqlQuery);
 	return queryResults.rows;
 }
+
+type WorkAuthorRow = {
+	authorBBID: string;
+	authorAlias: string;
+	workBBID: string;
+};
