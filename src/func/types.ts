@@ -17,9 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import type {FormAliasT} from '../types/aliases';
 import type {IdentifierT} from '../types/identifiers';
 import type {Knex} from 'knex';
+import type {NewOrExistingAliasT} from '../types/aliases';
 
 
 export type Transaction = Knex.Transaction<any>;
@@ -58,7 +58,7 @@ export interface FormReleaseEventT {
 // TODO: Although FormRelationshipAttributesT is missing from this type, createNewRelationshipAttributeSetWithItems
 //  (which requires SetItemT inputs) causes no type errors?
 export type SetItemT =
-	FormAliasT | IdentifierT | FormLanguageT | FormRelationshipT |
+	NewOrExistingAliasT | IdentifierT | FormLanguageT | FormRelationshipT |
 	FormPublisherT | FormReleaseEventT;
 
 export interface AuthorCreditNameT {

@@ -18,7 +18,7 @@
  */
 
 import * as _ from 'lodash';
-import type {AliasWithDefaultT, FormAliasT} from '../types/aliases';
+import type {AliasWithDefaultT, NewOrExistingAliasT} from '../types/aliases';
 import {
 	createNewSetWithItems,
 	getAddedItems,
@@ -36,7 +36,7 @@ export async function updateAliasSet(
 	oldDefaultAliasId: number | null | undefined,
 	newSetItemsWithDefault: Array<AliasWithDefaultT>
 ) {
-	function comparisonFunc(obj: FormAliasT, other: FormAliasT) {
+	function comparisonFunc(obj: NewOrExistingAliasT, other: NewOrExistingAliasT) {
 		return (
 			obj.name === other.name &&
 			obj.sortName === other.sortName &&
@@ -47,10 +47,10 @@ export async function updateAliasSet(
 
 	const {AliasSet} = orm;
 
-	const newSetItems: Array<FormAliasT> =
+	const newSetItems: Array<NewOrExistingAliasT> =
 		newSetItemsWithDefault.map((item) => _.omit(item, 'default'));
 
-	const oldSetItems: Array<FormAliasT> =
+	const oldSetItems: Array<NewOrExistingAliasT> =
 		oldSet ? oldSet.related('aliases').toJSON() : [];
 
 	if (_.isEmpty(oldSetItems) && _.isEmpty(newSetItems)) {
