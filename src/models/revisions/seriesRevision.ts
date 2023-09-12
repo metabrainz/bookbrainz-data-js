@@ -54,6 +54,8 @@ export default function seriesRevision(bookshelf: Bookshelf) {
 						return null;
 					}
 
+					// @ts-expect-error - The bookshelf type declarations do not support our models which do not use ES
+					// class inheritance. So we either have to adapt all models or switch to a different ORM (BB-729).
 					return new SeriesRevision()
 						.where('bbid', this.get('bbid'))
 						.query('whereIn', 'id', parentIds)
