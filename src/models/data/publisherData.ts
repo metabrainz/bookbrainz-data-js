@@ -37,7 +37,7 @@ export default function publisherData(bookshelf: Bookshelf) {
 		editions(options) {
 			const Edition = bookshelf.model('Edition');
 			const bbid = this.get('bbid');
-			return Edition.query((qb) => {
+			return new Edition().query((qb) => {
 				qb
 					.leftJoin(
 						'bookbrainz.publisher_set',
