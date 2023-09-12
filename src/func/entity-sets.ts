@@ -24,7 +24,7 @@ import {
 	createNewSetWithItems, getAddedItems, getComparisonFunc, getRemovedItems,
 	getUnchangedItems
 } from './set';
-import {type EntitySetMetadataT} from './entity';
+import type {EntitySetMetadataT} from './entity';
 import type {ORM} from '..';
 
 
