@@ -172,20 +172,20 @@ const DAY_STR_LENGTH = 2;
  * @returns {string} The provided date formatted as an ISO 8601-2004 year or calendar date.
  */
 export function formatDate(year: number, month?: number, day?: number): string {
-	if ((!year || isNaN(parseInt(year as any, 10))) && year !== 0) {
+	if ((!year || isNaN(_.toNumber(year))) && year !== 0) {
 		return null;
 	}
 	const isCommonEraDate = Math.sign(year) === 1 || Math.sign(year) === 0;
 	// eslint-disable-next-line max-len
 	const yearString = `${isCommonEraDate ? '+' : '-'}${_.padStart(Math.abs(year).toString(), YEAR_STR_LENGTH, '0')}`;
 
-	if (!month || isNaN(parseInt(month as any, 10))) {
+	if (!month || isNaN(_.toNumber(month))) {
 		return `${yearString}`;
 	}
 
 	const monthString = _.padStart(month.toString(), MONTH_STR_LENGTH, '0');
 
-	if (!day || isNaN(parseInt(day as any, 10))) {
+	if (!day || isNaN(_.toNumber(day))) {
 		return `${yearString}-${monthString}`;
 	}
 
@@ -197,7 +197,7 @@ export function formatDate(year: number, month?: number, day?: number): string {
 /**
  * Split ISO 8601 calendar dates or years into a numerical array.
  * @param {string} date - A date of the format 'YYYY', 'YYYY-MM', or 'YYYY-MM-DD'.
- * @returns {number[]} Year, month, and day of month respectively.
+ * @returns {Array<number| null>} - Year, month, and day of month respectively.
  */
 export function parseDate(date: string): Array<number | null> {
 	if (!date) {
