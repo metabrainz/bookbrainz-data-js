@@ -27,4 +27,3 @@ The command for running the tests, following dependency installation, is the sta
 
 This will also provide style checking and coverage information.
 
-Please note, ES6 features are used within this codebase, and it has only been tested in Node 4.x. It may also work in Node 0.12.x, but not any earlier than that.
