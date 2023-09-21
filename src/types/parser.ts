@@ -28,6 +28,7 @@ import {IdentifierT} from './identifiers';
 
 
 type ParsedBaseEntity = {
+	// TODO: Stop using this field to store the type of the parsed entity as Series uses this for the type of its items!
 	entityType: EntityTypeString;
 	// TODO: rename array property to `aliases`, also for consistency with e.g. `EntityDataType`
 	alias: AliasWithDefaultT[];
@@ -56,17 +57,54 @@ type ParsedBaseEntity = {
 export type ParsedAuthor = ParsedBaseEntity & {
 	beginDate?: string;
 	endDate?: string;
-	type?: 'Person';
+	ended: boolean;
+	type?: string;
+	typeId?: number;
+	genderId?: number;
+	beginAreaId?: number;
+	endAreaId?: number;
 };
 
 export type ParsedEdition = ParsedBaseEntity & {
+	editionGroupBbid: string;
+	width?: number;
+	height?: number;
+	depth?: number;
+	weight?: number;
+	pages?: number;
+	formatId?: number;
+	statusId?: number;
 	languages?: FormLanguageT[];
 	releaseEvents?: FormReleaseEventT[];
 };
 
-export type ParsedWork = ParsedBaseEntity;
+export type ParsedEditionGroup = ParsedBaseEntity & {
+	typeId?: number;
+};
+
+export type ParsedPublisher = ParsedBaseEntity & {
+	typeId?: number;
+	areaId?: number;
+	beginDate?: string;
+	endDate?: string;
+	ended: boolean;
+};
+
+export type ParsedSeries = ParsedBaseEntity & {
+
+	/** Type of the items in the series. */
+	entityType: EntityTypeString;
+	orderingTypeId: number;
+};
+
+export type ParsedWork = ParsedBaseEntity & {
+	typeId?: number;
+};
 
 export type ParsedEntity =
 	| ParsedAuthor
 	| ParsedEdition
+	| ParsedEditionGroup
+	| ParsedPublisher
+	| ParsedSeries
 	| ParsedWork;

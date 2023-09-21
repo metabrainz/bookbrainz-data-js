@@ -19,6 +19,7 @@
 */
 
 import * as _ from 'lodash';
+import type {ParsedAuthor, ParsedEdition, ParsedEntity, ParsedPublisher, ParsedSeries} from '../types/parser';
 import type {AliasWithIdT} from '../types/aliases';
 import type {EntityTypeString} from '../types/entity';
 import type {ORM} from '..';
@@ -32,13 +33,12 @@ import {parseDate} from '../util';
  * @returns {Object} - Returns all the additional entity specific data
 */
 export function getAdditionalEntityProps(
-	// TODO: `entityData` should have the type ParsedEntity later which is currently causing lots of type issues.
-	entityData: Record<string, unknown>, entityType: EntityTypeString
+	entityData: ParsedEntity, entityType: EntityTypeString
 ) {
 	switch (entityType) {
 		case 'Author': {
 			const {typeId, genderId, beginAreaId, beginDate, endDate,
-				ended, endAreaId} = entityData;
+				ended, endAreaId} = entityData as ParsedAuthor;
 
 			const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
 			const [endYear, endMonth, endDay] = parseDate(endDate);
@@ -50,13 +50,13 @@ export function getAdditionalEntityProps(
 		}
 
 		case 'Edition':
-			return _.pick(entityData, [
+			return _.pick(entityData as ParsedEdition, [
 				'editionGroupBbid', 'width', 'height', 'depth', 'weight',
 				'pages', 'formatId', 'statusId'
 			]);
 
 		case 'Publisher': {
-			const {typeId, areaId, beginDate, endDate, ended} = entityData;
+			const {typeId, areaId, beginDate, endDate, ended} = entityData as ParsedPublisher;
 
 			const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
 			const [endYear, endMonth, endDay] = parseDate(endDate);
@@ -72,7 +72,7 @@ export function getAdditionalEntityProps(
 			return _.pick(entityData, ['typeId']);
 
 		case 'Series':
-			return _.pick(entityData, ['entityType', 'orderingTypeId']);
+			return _.pick(entityData as ParsedSeries, ['entityType', 'orderingTypeId']);
 
 		default:
 			return null;

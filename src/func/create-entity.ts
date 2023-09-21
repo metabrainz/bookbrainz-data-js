@@ -58,6 +58,7 @@ interface CreateEntityPropsType {
 	entityType: EntityTypeString
 }
 
+// TODO: function seems to be unused across all BB repos, ignore its errors (and delete it?)
 export async function createEntity({
 	editorId, entityData, orm, transacting
 }: CreateEntityPropsType) {
