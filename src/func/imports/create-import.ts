@@ -18,6 +18,7 @@
 
 
 import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
+import type {ImportMetadataT, _ImportMetadataT, _ImportT} from '../../types/imports';
 import type {ParsedEdition, ParsedEntity, QueuedEntity} from '../../types/parser';
 
 import type {ORM} from '../..';
@@ -33,11 +34,11 @@ import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
 
-function createImportRecord(transacting: Transaction, data) {
+function createImportRecord(transacting: Transaction, data: _ImportT[]) {
 	return transacting.insert(data).into('bookbrainz.import').returning('id');
 }
 
-function createLinkTableRecord(transacting: Transaction, record) {
+function createLinkTableRecord(transacting: Transaction, record: _ImportMetadataT[]) {
 	return transacting.insert(record).into('bookbrainz.link_import');
 }
 
@@ -163,7 +164,7 @@ export function createImport(orm: ORM, importData: QueuedEntity) {
 			throw new Error(`Error during getting source id - ${err}`);
 		}
 
-		const linkTableData = camelToSnake({
+		const linkTableData = camelToSnake<_ImportMetadataT, ImportMetadataT>({
 			importId,
 			importMetadata: importData.data.metadata,
 			lastEdited: importData.lastEdited,

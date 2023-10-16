@@ -22,6 +22,7 @@
  */
 
 import {FormLanguageT, FormReleaseEventT} from '../func/types';
+import {AdditionalImportDataT} from './imports';
 import {AliasWithDefaultT} from './aliases';
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
@@ -33,20 +34,7 @@ type ParsedBaseEntity = {
 	annotation?: string;
 	disambiguation?: string;
 	identifiers: IdentifierT[];
-	metadata: {
-		identifiers?: IdentifierT[];
-		links: Array<{
-			title: string;
-			url: string;
-		}>;
-		// TODO: find correct type in OL samples
-		originId?: object[];
-		relationships: Array<{
-			type: string;
-			value: string;
-		}>;
-		[custom: string]: any;
-	};
+	metadata: AdditionalImportDataT;
 	source: string;
 	lastEdited?: string;
 	originId?: string;
