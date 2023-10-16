@@ -127,9 +127,9 @@ export function createImport(orm: ORM, importData: QueuedEntity) {
 			]);
 
 		// Create entityTypedataId
-		let dataId = null;
+		let dataId: number = null;
 		try {
-			[dataId] = await createImportDataRecord(
+			const [idObj] = await createImportDataRecord(
 				transacting,
 				camelToSnake({
 					aliasSetId: aliasSet && aliasSet.get('id'),
@@ -139,28 +139,30 @@ export function createImport(orm: ORM, importData: QueuedEntity) {
 				}),
 				importData
 			);
+			dataId = _.get(idObj, 'id');
 		}
 		catch (err) {
 			throw new Error(`Error during dataId creation ${err}`);
 		}
 
 		// Create import entity
-		let importId = null;
+		let importId: number = null;
 		try {
-			[importId] =
-				await createImportRecord(transacting, [{type: entityType}]);
+			const [idObj] = await createImportRecord(transacting, [{type: entityType}]);
+			importId = _.get(idObj, 'id');
 		}
 		catch (err) {
 			throw new Error(`Error during creation of importId ${err}`);
 		}
 
 		// Get origin_source
-		let originSourceId = null;
+		let originSourceId: number = null;
 
 		try {
 			originSourceId = await getOriginSourceId(transacting, source);
 		}
 		catch (err) {
+			// TODO: useless, we are only catching our self-thrown errors here
 			throw new Error(`Error during getting source id - ${err}`);
 		}
 
