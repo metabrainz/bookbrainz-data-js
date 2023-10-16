@@ -18,7 +18,7 @@
 
 
 import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
-import type {ParsedEdition, ParsedEntity} from '../../types/parser';
+import type {ParsedEdition, ParsedEntity, QueuedEntity} from '../../types/parser';
 
 import type {ORM} from '../..';
 import type {Transaction} from '../types';
@@ -41,7 +41,7 @@ function createLinkTableRecord(transacting: Transaction, record) {
 	return transacting.insert(record).into('bookbrainz.link_import');
 }
 
-function createImportDataRecord(transacting: Transaction, dataSets, importData: ParsedEntity) {
+function createImportDataRecord(transacting: Transaction, dataSets, importData: QueuedEntity) {
 	const {entityType} = importData;
 
 	// Safe check if entityType is one among the expected
@@ -56,7 +56,7 @@ function createImportDataRecord(transacting: Transaction, dataSets, importData: 
 		and not directly dates, so we omit them.
 	*/
 	const additionalEntityProps = _.omit(
-		getAdditionalEntityProps(importData, entityType),
+		getAdditionalEntityProps(importData.data, entityType),
 		['beginDate', 'endDate']
 	);
 
@@ -112,17 +112,17 @@ async function updateEntityDataSets(
 	return entityDataSet;
 }
 
-export function createImport(orm: ORM, importData: ParsedEntity) {
+export function createImport(orm: ORM, importData: QueuedEntity) {
 	return orm.bookshelf.transaction(async (transacting) => {
-		const {alias, identifiers, disambiguation, entityType, source} =
-			importData;
+		const {entityType} = importData;
+		const {alias, identifiers, disambiguation, source} = importData.data;
 
 		const [aliasSet, identifierSet, disambiguationObj, entityDataSets] =
 			await Promise.all([
 				updateAliasSet(orm, transacting, null, null, alias),
 				updateIdentifierSet(orm, transacting, null, identifiers),
 				updateDisambiguation(orm, transacting, null, disambiguation),
-				updateEntityDataSets(orm, transacting, importData)
+				updateEntityDataSets(orm, transacting, importData.data)
 			]);
 
 		// Create entityTypedataId
@@ -165,7 +165,7 @@ export function createImport(orm: ORM, importData: ParsedEntity) {
 
 		const linkTableData = camelToSnake({
 			importId,
-			importMetadata: importData.metadata,
+			importMetadata: importData.data.metadata,
 			lastEdited: importData.lastEdited,
 			originId: importData.originId,
 			originSourceId

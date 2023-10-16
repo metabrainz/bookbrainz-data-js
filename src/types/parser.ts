@@ -28,8 +28,6 @@ import {IdentifierT} from './identifiers';
 
 
 type ParsedBaseEntity = {
-	// TODO: Stop using this field to store the type of the parsed entity as Series uses this for the type of its items!
-	entityType: EntityTypeString;
 	// TODO: rename array property to `aliases`, also for consistency with e.g. `EntityDataType`
 	alias: AliasWithDefaultT[];
 	annotation?: string;
@@ -108,3 +106,12 @@ export type ParsedEntity =
 	| ParsedPublisher
 	| ParsedSeries
 	| ParsedWork;
+
+// TODO: drop redundant properties which are present in `data` and at the top level
+export type QueuedEntity = {
+	data: ParsedEntity;
+	entityType: EntityTypeString;
+	source: string;
+	lastEdited?: string;
+	originId?: string;
+};
