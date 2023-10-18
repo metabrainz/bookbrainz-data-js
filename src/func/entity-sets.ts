@@ -54,8 +54,9 @@ function updateEntitySet<Item extends SetItemT>(
 		// No action - set has not changed
 		return Promise.resolve(oldSet);
 	}
-
 	return createNewSetWithItems(
+		// @ts-expect-error We don't know why this `model` property is expected,
+		// even though it does not exist on Entity Set metadata
 		orm, transacting, derivedSet.model, [...unchangedItems, ...addedItems],
 		[], derivedSet.propName, derivedSet.idField
 	);
@@ -80,6 +81,8 @@ export async function updateEntitySets(
 		}
 
 		// TODO: Find out why we expect a non-existing `model` property here!?
+		// @ts-expect-error We don't know why this `model` property is expected,
+		// even though it does not exist on Entity Set metadata
 		const oldSetRecord = await derivedSet.model.forge({
 			id: currentEntity[derivedSet.name].id
 		}).fetch({

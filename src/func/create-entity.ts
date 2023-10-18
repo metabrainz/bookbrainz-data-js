@@ -105,6 +105,7 @@ export async function createEntity({
 	);
 
 	// Get additional props
+	// @ts-expect-error Not sure why we have this error but this whole function is unused across our repos
 	const additionalProps = getAdditionalEntityProps(entityData, entityType);
 
 	// Create entitySets
