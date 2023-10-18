@@ -16,23 +16,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {LanguageT} from './language';
-import {LazyLoaded} from './utils';
+import {LazyLoaded, WithId} from './utils';
+import {LanguageWithIdT} from './language';
 
 
 export type AliasT = {
-	id: number,
 	name: string,
 	sortName: string,
 	languageId: number | null,
 	primary: boolean,
-} & LazyLoaded<{
-	language: LanguageT,
+};
+
+export type AliasWithIdT = WithId<AliasT>;
+
+export type LazyLoadedAliasT = AliasWithIdT & LazyLoaded<{
+	language: LanguageWithIdT,
 }>;
 
+export type NewOrExistingAliasT = AliasT & {
+	id?: number;
+};
+
+export type AliasWithDefaultT = NewOrExistingAliasT & {
+	default?: boolean,
+};
+
 export type AliasSetT = {
-	id: number,
 	defaultAliasId: number | null,
-} & LazyLoaded<{
-	aliases: Array<AliasT>,
+};
+
+export type AliasSetWithIdT = WithId<AliasSetT>;
+
+export type LazyLoadedAliasSetT = AliasSetWithIdT & LazyLoaded<{
+	aliases: Array<LazyLoadedAliasT>,
 }>;

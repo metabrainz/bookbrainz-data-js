@@ -19,11 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import type {ORM} from '..';
 import type {Transaction} from './types';
 
 
 /**
- * @param  {Object} orm - Bookbrainz orm wrapper holding all models
+ * @param  {ORM} orm - Bookbrainz orm wrapper holding all models
  * @param  {Transaction} transacting - The present knex transacting object
  * @param  {Object} oldAnnotation - The old annotation object
  * @param  {string} newContent - New annotation to be set
@@ -31,7 +32,7 @@ import type {Transaction} from './types';
  * @returns {Promise<Object>} - Returns Annotation object
  */
 export function updateAnnotation(
-	orm: any, transacting: Transaction, oldAnnotation: any,
+	orm: ORM, transacting: Transaction, oldAnnotation: any,
 	newContent: string, revision: any
 ) {
 	const {Annotation} = orm;

@@ -18,10 +18,13 @@
 
 import * as _ from 'lodash';
 import type {AuthorCreditNameT, Transaction} from './types';
+import type Bookshelf from '@metabrainz/bookshelf';
+import type {ORM} from '..';
+import type {QueryResult} from 'pg';
 
 
 function findAuthorCredit(
-	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
+	orm: ORM, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
 	const tables = {cc: 'bookbrainz.author_credit'};
 
@@ -58,16 +61,17 @@ function findAuthorCredit(
 
 
 export async function fetchOrCreateCredit(
-	orm: any, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
+	orm: ORM, transacting: Transaction, authorCredit: Array<AuthorCreditNameT>
 ) {
+	const {AuthorCredit} = orm;
 	const result = await findAuthorCredit(orm, transacting, authorCredit);
 
 	if (result) {
-		return orm.AuthorCredit.forge({id: result.id})
-			.fetch({transacting, withRelated: 'names'});
+		return new AuthorCredit({id: result.id})
+			.fetch({transacting, withRelated: ['names']});
 	}
 
-	const newCredit = await new orm.AuthorCredit(
+	const newCredit = await new AuthorCredit(
 		{authorCount: authorCredit.length}
 	).save(null, {transacting});
 
@@ -88,7 +92,7 @@ export async function fetchOrCreateCredit(
 }
 
 export function updateAuthorCredit(
-	orm: any, transacting: Transaction, oldCredit: any,
+	orm: ORM, transacting: Transaction, oldCredit: any,
 	newCreditNames: Array<AuthorCreditNameT>
 ): Promise<any> {
 	/* eslint-disable consistent-return */
@@ -122,13 +126,13 @@ export function updateAuthorCredit(
 
 /**
  * Fetches all the Edition entities credited to an Author (with Author Credits)
- * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {Bookshelf} bookshelf - the Bookshelf instance, initialized during app setup
  * @param {string} authorBBID - The target Author's BBID.
  * @returns {Promise} The returned Promise returns the Edition BBID and default alias
  */
 
 export async function getEditionsCreditedToAuthor(
-	bookshelf: any, authorBBID: string
+	bookshelf: Bookshelf, authorBBID: string
 ) {
 	const rawSql = ` SELECT e.bbid , alias."name" from bookbrainz.author
 	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
@@ -140,7 +144,7 @@ export async function getEditionsCreditedToAuthor(
 		AND e.master = true
 		AND e.data_id is not null
 	`;
-	let queryResult;
+	let queryResult: QueryResult<AliasAndBBIDRow>;
 	try {
 		queryResult = await bookshelf.knex.raw(rawSql);
 	}
@@ -156,13 +160,13 @@ export async function getEditionsCreditedToAuthor(
 
 /**
  * Fetches all the Edition Group entities credited to an Author (with Author Credits)
- * @param {object} bookshelf - the BookBrainz ORM, initialized during app setup
+ * @param {Bookshelf} bookshelf - the Bookshelf instance, initialized during app setup
  * @param {string} authorBBID - The target Author's BBID.
  * @returns {Promise} The returned Promise returns the Edition Group BBID and default alias
  */
 
 export async function getEditionGroupsCreditedToAuthor(
-	bookshelf: any, authorBBID: string
+	bookshelf: Bookshelf, authorBBID: string
 ) {
 	const rawSql = ` SELECT eg.bbid , alias."name" from bookbrainz.author
 	LEFT JOIN bookbrainz.author_credit_name acn on acn.author_bbid = author.bbid
@@ -174,7 +178,7 @@ export async function getEditionGroupsCreditedToAuthor(
 		AND eg.master = true
 		AND eg.data_id is not null
 	`;
-	let queryResult;
+	let queryResult: QueryResult<AliasAndBBIDRow>;
 	try {
 		queryResult = await bookshelf.knex.raw(rawSql);
 	}
@@ -187,3 +191,8 @@ export async function getEditionGroupsCreditedToAuthor(
 	}
 	return queryResult.rows;
 }
+
+type AliasAndBBIDRow = {
+	name: string;
+	bbid: string;
+};

@@ -16,12 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {LazyLoaded, WithId} from './utils';
 import {EntityTypeString} from './entity';
-import {LazyLoaded} from './utils';
 
 
 export type IdentifierTypeT = {
-	id: number,
 	label: string,
 	description: string,
 	detectionRegex: string | null,
@@ -33,16 +32,23 @@ export type IdentifierTypeT = {
 	deprecated: boolean,
 };
 
+export type IdentifierTypeWithIdT = WithId<IdentifierTypeT>;
+
 export type IdentifierT = {
-	id: number,
 	typeId: number,
 	value: string,
-} & LazyLoaded<{
-	type: IdentifierTypeT,
+};
+
+export type IdentifierWithIdT = WithId<IdentifierT>;
+
+export type LazyLoadedIdentifierT = IdentifierWithIdT & LazyLoaded<{
+	type: IdentifierTypeWithIdT,
 }>;
 
-export type IdentifierSetT = {
+export type IdentifierSetWithIdT = {
 	id: number,
-} & LazyLoaded<{
-	identifiers: Array<IdentifierT>,
+};
+
+export type LazyLoadedIdentifierSetT = IdentifierSetWithIdT & LazyLoaded<{
+	identifiers: Array<LazyLoadedIdentifierT>,
 }>;

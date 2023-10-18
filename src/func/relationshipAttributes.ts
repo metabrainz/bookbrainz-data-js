@@ -21,10 +21,11 @@ import type {FormRelationshipAttributesT as RelationshipAttributes, Transaction}
 import {
 	createNewRelationshipAttributeSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
+import type {ORM} from '..';
 
 
 export function updateRelationshipAttributeSet(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	newSetItems: Array<RelationshipAttributes>
 ): Promise<any> {
 	function comparisonFunc(obj: RelationshipAttributes, other: RelationshipAttributes) {

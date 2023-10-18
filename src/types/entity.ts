@@ -16,24 +16,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {AliasSetT, AliasT} from './aliases';
-import {IdentifierSetT} from './identifiers';
+import {LazyLoadedAliasSetT, LazyLoadedAliasT} from './aliases';
 import {LazyLoaded} from './utils';
+import {LazyLoadedIdentifierSetT} from './identifiers';
 
 
-export type EntityTypeString =
-	| 'Author'
-	| 'Edition'
-	| 'EditionGroup'
-	| 'Publisher'
-	| 'Series'
-	| 'Work';
+export const ENTITY_TYPES = [
+	'Author',
+	'Edition',
+	'EditionGroup',
+	'Publisher',
+	'Series',
+	'Work'
+] as const;
+
+export type EntityTypeString = typeof ENTITY_TYPES[number];
 
 // TODO: incomplete
 export type EntityT = {
 	type: EntityTypeString,
-} & LazyLoaded<{
-	aliasSet: AliasSetT,
-	defaultAlias: AliasT,
-	identifierSet: IdentifierSetT,
+};
+
+export type LazyLoadedEntityT = EntityT & LazyLoaded<{
+	aliasSet: LazyLoadedAliasSetT,
+	defaultAlias: LazyLoadedAliasT,
+	identifierSet: LazyLoadedIdentifierSetT,
 }>;

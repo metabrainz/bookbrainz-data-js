@@ -19,20 +19,13 @@
 */
 
 import * as _ from 'lodash';
+import type {ParsedAuthor, ParsedEdition, ParsedEntity, ParsedPublisher, ParsedSeries} from '../types/parser';
+import type {AliasWithIdT} from '../types/aliases';
 import type {EntityTypeString} from '../types/entity';
+import type {ORM} from '..';
+import type {Transaction} from './types';
 import {parseDate} from '../util';
 
-
-export const AUTHOR: EntityTypeString = 'Author';
-export const EDITION: EntityTypeString = 'Edition';
-export const EDITION_GROUP: EntityTypeString = 'EditionGroup';
-export const PUBLISHER: EntityTypeString = 'Publisher';
-export const SERIES: EntityTypeString = 'Series';
-export const WORK: EntityTypeString = 'Work';
-
-export const entityTypes = {
-	AUTHOR, EDITION, EDITION_GROUP, PUBLISHER, SERIES, WORK
-};
 
 /**
  * @param  {Object} entityData - Object holding all data related to an entity
@@ -40,56 +33,66 @@ export const entityTypes = {
  * @returns {Object} - Returns all the additional entity specific data
 */
 export function getAdditionalEntityProps(
-	entityData: Record<string, unknown>, entityType: string
+	entityData: ParsedEntity, entityType: EntityTypeString
 ) {
-	if (entityType === entityTypes.AUTHOR) {
-		const {typeId, genderId, beginAreaId, beginDate, endDate,
-			ended, endAreaId} = entityData;
+	switch (entityType) {
+		case 'Author': {
+			const {typeId, genderId, beginAreaId, beginDate, endDate,
+				ended, endAreaId} = entityData as ParsedAuthor;
 
-		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
-		const [endYear, endMonth, endDay] = parseDate(endDate);
-		return {
-			beginAreaId, beginDate, beginDay, beginMonth, beginYear,
-			endAreaId, endDate, endDay, endMonth, endYear,
-			ended, genderId, typeId
-		};
+			const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
+			const [endYear, endMonth, endDay] = parseDate(endDate);
+			return {
+				beginAreaId, beginDate, beginDay, beginMonth, beginYear,
+				endAreaId, endDate, endDay, endMonth, endYear,
+				ended, genderId, typeId
+			};
+		}
+
+		case 'Edition':
+			return _.pick(entityData as ParsedEdition, [
+				'editionGroupBbid', 'width', 'height', 'depth', 'weight',
+				'pages', 'formatId', 'statusId'
+			]);
+
+		case 'Publisher': {
+			const {typeId, areaId, beginDate, endDate, ended} = entityData as ParsedPublisher;
+
+			const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
+			const [endYear, endMonth, endDay] = parseDate(endDate);
+
+			return {
+				areaId, beginDate, beginDay, beginMonth, beginYear,
+				endDate, endDay, endMonth, endYear, ended, typeId
+			};
+		}
+
+		case 'EditionGroup':
+		case 'Work':
+			return _.pick(entityData, ['typeId']);
+
+		case 'Series':
+			return _.pick(entityData as ParsedSeries, ['entityType', 'orderingTypeId']);
+
+		default:
+			return null;
 	}
-
-	if (entityType === entityTypes.EDITION) {
-		return _.pick(entityData, [
-			'editionGroupBbid', 'width', 'height', 'depth', 'weight',
-			'pages', 'formatId', 'statusId'
-		]);
-	}
-
-	if (entityType === entityTypes.PUBLISHER) {
-		const {typeId, areaId, beginDate, endDate, ended} = entityData;
-
-		const [beginYear, beginMonth, beginDay] = parseDate(beginDate);
-		const [endYear, endMonth, endDay] = parseDate(endDate);
-
-		return {areaId, beginDate, beginDay, beginMonth, beginYear,
-			endDate, endDay, endMonth, endYear, ended, typeId};
-	}
-
-	if (entityType === entityTypes.EDITION_GROUP ||
-		entityType === entityTypes.WORK) {
-		return _.pick(entityData, ['typeId']);
-	}
-
-	if (entityType === entityTypes.SERIES) {
-		return _.pick(entityData, ['entityType', 'orderingTypeId']);
-	}
-
-	return null;
 }
+
+export type EntitySetMetadataT = {
+	entityIdField: string;
+	idField: string;
+	mutableFields?: string[];
+	name: string;
+	propName: string;
+};
 
 /**
  * @param  {string} entityType - Entity type string
  * @returns {Object} - Returns entitySetMetadata (derivedSets)
 */
-export function getEntitySetMetadataByType(entityType: string): Array<Record<string, unknown>> {
-	if (entityType === EDITION) {
+export function getEntitySetMetadataByType(entityType: EntityTypeString): EntitySetMetadataT[] {
+	if (entityType === 'Edition') {
 		return [
 			{
 				entityIdField: 'languageSetId',
@@ -115,7 +118,7 @@ export function getEntitySetMetadataByType(entityType: string): Array<Record<str
 			}
 		];
 	}
-	else if (entityType === WORK) {
+	else if (entityType === 'Work') {
 		return [
 			{
 				entityIdField: 'languageSetId',
@@ -135,7 +138,7 @@ export function getEntitySetMetadataByType(entityType: string): Array<Record<str
  * @param {object} orm - the BookBrainz ORM, initialized during app setup
  * @returns {object} - Object mapping model name to the entity model
 */
-export function getEntityModels(orm: Record<string, unknown>): any {
+export function getEntityModels(orm: ORM) {
 	const {Author, Edition, EditionGroup, Publisher, Series, Work} = orm;
 	return {
 		Author,
@@ -157,7 +160,7 @@ export function getEntityModels(orm: Record<string, unknown>): any {
  * @returns {object} - Bookshelf model object with the type specified in the
  * single param
 */
-export function getEntityModelByType(orm: Record<string, unknown>, type: string): any {
+export function getEntityModelByType(orm: ORM, type: EntityTypeString) {
 	const entityModels = getEntityModels(orm);
 
 	if (!entityModels[type]) {
@@ -175,7 +178,7 @@ export function getEntityModelByType(orm: Record<string, unknown>, type: string)
  * @param {any} transacting - Optional ORM transaction object
  * @returns {string} The final bbid to redirect to
  */
-export async function recursivelyGetRedirectBBID(orm: any, bbid: string, transacting?) {
+export async function recursivelyGetRedirectBBID(orm: ORM, bbid: string, transacting?: Transaction) {
 	const redirectSQLQuery = `SELECT target_bbid FROM bookbrainz.entity_redirect WHERE source_bbid = '${bbid}'`;
 	const redirectQueryResults = await (transacting || orm.bookshelf.knex).raw(redirectSQLQuery);
 	if (redirectQueryResults.rows && redirectQueryResults.rows.length) {
@@ -194,13 +197,13 @@ export async function recursivelyGetRedirectBBID(orm: any, bbid: string, transac
  * @returns {Promise} A Promise that resolves to the entity in JSON format
  */
 export async function getEntity(
-	orm: Record<string, unknown>, entityType: string, bbid: string, relations: Array<string> = []
+	orm: ORM, entityType: EntityTypeString, bbid: string, relations: string[] = []
 ): Promise<Record<string, unknown>> {
 	// if bbid appears in entity_redirect table, use that bbid instead
 	// Do a recursive search in case the redirected bbid also redirects, etc.
 	const finalBBID = await recursivelyGetRedirectBBID(orm, bbid);
-	const model = getEntityModelByType(orm, entityType);
-	const entity = await model.forge({bbid: finalBBID})
+	const Model = getEntityModelByType(orm, entityType);
+	const entity = await new Model({bbid: finalBBID})
 		.fetch({
 			require: true,
 			withRelated: relations
@@ -217,7 +220,9 @@ export async function getEntity(
  * @returns {Promise} The returned Promise returns the entity's
  * 					   parent default alias
  */
-export async function getEntityParentAlias(orm, entityType, bbid) {
+export async function getEntityParentAlias(
+	orm: ORM, entityType: EntityTypeString, bbid: string
+): Promise<AliasWithIdT> {
 	const rawSql = `
 		SELECT alias.name,
 			alias.sort_name,

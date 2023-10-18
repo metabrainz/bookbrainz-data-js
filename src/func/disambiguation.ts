@@ -19,18 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import type {ORM} from '..';
 import type {Transaction} from './types';
 
 
 /**
- * @param  {Object} orm - The BookBrainz orm wrapper containing all models
+ * @param  {ORM} orm - The BookBrainz orm wrapper containing all models
  * @param  {Transaction} transacting - The current knex transaction object
  * @param  {Object} oldDisambiguation - The previous disambiguation object
  * @param  {string} newComment - The new disambiguation string
  * @returns {Promise<Object>} - Returns Promise holding Disambiguation object
  */
 export function updateDisambiguation(
-	orm: any, transacting: Transaction, oldDisambiguation: any,
+	orm: ORM, transacting: Transaction, oldDisambiguation: any,
 	newComment: string
 ) {
 	const {Disambiguation} = orm;

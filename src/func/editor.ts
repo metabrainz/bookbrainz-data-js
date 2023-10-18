@@ -19,19 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {ORM} from '..';
 import type {Transaction} from './types';
 
 /**
  * Adds 1 to the edit count of the specified editor
  *
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param {ORM} orm - the BookBrainz ORM, initialized during app setup
  * @param {string} id - row ID of editor to be updated
  * @param {Transaction} transacting - Bookshelf transaction object (must be in
  * progress)
  * @returns {Promise} - Resolves to the updated editor model
  */
 export function incrementEditorEditCountById(
-	orm: any,
+	orm: ORM,
 	id: string,
 	transacting: Transaction
 ): Promise<any> {

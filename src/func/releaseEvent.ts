@@ -22,10 +22,11 @@ import type {FormReleaseEventT as ReleaseEvent, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
+import type {ORM} from '..';
 
 
 export function updateReleaseEventSet(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	newSetItems: Array<ReleaseEvent>
 ): Promise<any> {
 	function comparisonFunc(obj, other) {

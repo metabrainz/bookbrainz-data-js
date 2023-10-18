@@ -17,9 +17,9 @@
  */
 
 import * as _ from 'lodash';
-import type {EntityTypeString} from '../../types/entity';
+import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
+import type {ORM} from '../..';
 import type {Transaction} from '../types';
-import {entityTypes} from '../entity';
 import {getAliasByIds} from '../alias';
 import moment from 'moment';
 import {originSourceMapping} from './misc';
@@ -60,9 +60,9 @@ async function getRecentImportUtilData(
 					'bookbrainz.import.id'
 				);
 
-	/* Contruct importHolder object (holds importIds classified by their types)
+	/* Construct importHolder object (holds importIds classified by their types)
 		object of form {type: []} */
-	const importHolder = _.values(entityTypes).reduce(
+	const importHolder = ENTITY_TYPES.reduce(
 		(holder: Record<string, unknown>, type: string) => _.assign(holder, {[type]: []}), {}
 	);
 
@@ -83,17 +83,16 @@ async function getRecentImportUtilData(
 	}, {importHolder, originIdMap: {}, timeStampMap: {}});
 }
 
-function getRecentImportsByType(transacting, type, importIds) {
+function getRecentImportsByType(transacting: Transaction, type: EntityTypeString, importIds: string[]) {
 	return transacting.select('*')
 		.from(`bookbrainz.${_.snakeCase(type)}_import`)
 		.whereIn('import_id', importIds);
 }
 
 export async function getRecentImports(
-	orm: Record<string, unknown>, transacting: Transaction, limit = 10,
-	offset = 0
+	orm: ORM, transacting: Transaction, limit = 10, offset = 0
 ) {
-	/* Fetch most recent ImportIds classified by importTypes
+	/* Fetch most recent ImportIds classified by entity types
 		=> importHolder - holds recentImports classified by entity type
 		=> timeStampMap - holds value importedAt value in object with importId
 			as key
@@ -103,12 +102,7 @@ export async function getRecentImports(
 	const {importHolder: recentImportIdsByType, timeStampMap, originIdMap} =
 		await getRecentImportUtilData(transacting, limit, offset);
 
-
-	/* Qs. What are all import types? Ans => Extract the values from entityTypes
-		[Author, Edition, EditionGroup, Publisher, Work] */
-	const importTypes: Array<EntityTypeString> = _.values(entityTypes);
-
-	/* Fetch imports for each importType using their importIds
+	/* Fetch imports for each entity type using their importIds
 		We first pass type and id to fetch function, await all those promises
 		and then flatten the array containing those results. Classification by
 		type is important as only by knowing types we can access dataId and
@@ -116,7 +110,7 @@ export async function getRecentImports(
 	*/
 	const recentImports = _.flatten(
 		await Promise.all(
-			importTypes.map(type =>
+			ENTITY_TYPES.map(type =>
 				getRecentImportsByType(transacting, type,
 					recentImportIdsByType[type]))
 		)
@@ -131,7 +125,7 @@ export async function getRecentImports(
 
 	/* Add timestamp, source and defaultAlias to the recentImports
 		Previously while getting utils data we fetched a mapping of importId to
-		timestamp and oringId.
+		timestamp and originId.
 		We also fetched map of aliasId to alias object.
 		Now using those we populate our final object */
 	// First, get the origin mapping => {originId: name}

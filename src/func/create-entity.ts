@@ -20,13 +20,14 @@
  */
 
 import * as _ from 'lodash';
-import type {
-	FormAliasWithDefaultT as AliasWithDefault, FormIdentifierT as Identifier,
-	Transaction
-} from './types';
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from './entity';
+import type {AliasWithDefaultT} from '../types/aliases';
+import type {EntityTypeString} from '../types/entity';
+import type {IdentifierT} from '../types/identifiers';
+import type {ORM} from '..';
+import type {Transaction} from './types';
 import {createNote} from './note';
 import {incrementEditorEditCountById} from './editor';
 import {updateAliasSet} from './alias';
@@ -37,12 +38,12 @@ import {updateIdentifierSet} from './identifier';
 
 
 interface EntityDataType {
-	aliases: Array<AliasWithDefault>,
+	aliases: Array<AliasWithDefaultT>,
 	annotation: string,
 	disambiguation: string,
-	identifiers: Array<Identifier>,
+	identifiers: Array<IdentifierT>,
 	note: string,
-	type: string
+	type: EntityTypeString
 }
 
 interface ExtraEntityDataType extends EntityDataType {
@@ -50,13 +51,14 @@ interface ExtraEntityDataType extends EntityDataType {
 }
 
 interface CreateEntityPropsType {
-	orm: any,
+	orm: ORM,
 	transacting: Transaction,
 	editorId: string,
 	entityData: ExtraEntityDataType,
-	entityType: string
+	entityType: EntityTypeString
 }
 
+// TODO: function seems to be unused across all BB repos, ignore its errors (and delete it?)
 export async function createEntity({
 	editorId, entityData, orm, transacting
 }: CreateEntityPropsType) {
@@ -129,9 +131,9 @@ export async function createEntity({
 		revisionId: revisionRecord && revisionRecord.get('id')
 	}, entitySets, additionalProps);
 
-	const model = getEntityModelByType(orm, entityType);
+	const Model = getEntityModelByType(orm, entityType);
 
-	const entityModel = await model.forge(propsToSet)
+	const entityModel = await new Model(propsToSet)
 		.save(null, {
 			method: 'insert',
 			transacting

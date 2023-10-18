@@ -17,13 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import type {ORM} from '..';
+import type {QueryResult} from 'pg';
+
 
 /**
- * @param  {object} orm - the BookBrainz ORM, initialized during app setup
+ * @param  {ORM} orm - the BookBrainz ORM, initialized during app setup
  * @param  {array} workBBIDs - the array containing the BBIDs of the works contained in the edition
  * @returns {Object} - Returns an array of objects containing the authorAlias, authorBBID of each work in an edition
 */
-export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
+export async function loadAuthorNames(orm: ORM, workBBIDs: Array<string>) {
 	if (!workBBIDs.length) {
 		return [];
 	}
@@ -53,6 +56,12 @@ export async function loadAuthorNames(orm: any, workBBIDs: Array<string>) {
 			and work.data_id is not null
 			and work.bbid in ${`(${workBBIDs.map(bbid => `'${bbid}'`).join(', ')})`}`;
 
-	const queryResults = await orm.bookshelf.knex.raw(sqlQuery);
+	const queryResults = await orm.bookshelf.knex.raw<QueryResult<WorkAuthorRow>>(sqlQuery);
 	return queryResults.rows;
 }
+
+type WorkAuthorRow = {
+	authorBBID: string;
+	authorAlias: string;
+	workBBID: string;
+};

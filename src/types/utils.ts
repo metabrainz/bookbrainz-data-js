@@ -18,3 +18,8 @@
 
 /** Utility type to mark properties which are lazy-loaded by the ORM and might not always be present. */
 export type LazyLoaded<T> = Partial<T>;
+
+/** Utility which adds a numeric `id` property to a given ORM model (for select statements). */
+export type WithId<T extends Record<string, any>> = T & {
+	id: number,
+};

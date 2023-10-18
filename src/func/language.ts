@@ -21,10 +21,11 @@ import type {FormLanguageT as Language, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
+import type {ORM} from '..';
 
 
 export function updateLanguageSet(
-	orm: any, transacting: Transaction, oldSet: any,
+	orm: ORM, transacting: Transaction, oldSet: any,
 	newSetItems: Array<Language>
 ): Promise<any> {
 	function comparisonFunc(obj: Language, other: Language) {
@@ -50,7 +51,7 @@ export function updateLanguageSet(
 		return Promise.resolve(oldSet || null);
 	}
 
-	// addedItems combined with unchangedItems since lanuguages are read-only
+	// addedItems combined with unchangedItems since languages are read-only
 	return createNewSetWithItems(
 		orm, transacting, LanguageSet, [...unchangedItems, ...addedItems], [],
 		'languages'

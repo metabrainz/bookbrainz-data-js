@@ -16,8 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import {WithId} from './utils';
+
+
 export type LanguageT = {
-	id: number,
 	isoCode2t: string | null,
 	isoCode2b: string | null,
 	isoCode1: string | null,
@@ -25,3 +27,5 @@ export type LanguageT = {
 	frequency: number,
 	isoCode3: string | null,
 };
+
+export type LanguageWithIdT = WithId<LanguageT>;

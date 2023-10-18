@@ -17,23 +17,25 @@
  */
 
 import * as _ from 'lodash';
-import type {FormIdentifierT as Identifier, Transaction} from './types';
 import {
 	createNewSetWithItems, getAddedItems, getRemovedItems, getUnchangedItems
 } from './set';
+import type {IdentifierT} from '../types/identifiers';
+import type {ORM} from '..';
+import type {Transaction} from './types';
 
 
 export function updateIdentifierSet(
-	orm: any, transacting: Transaction, oldSet: any,
-	newSetItems: Array<Identifier>
+	orm: ORM, transacting: Transaction, oldSet: any,
+	newSetItems: Array<IdentifierT>
 ): Promise<any> {
-	function comparisonFunc(obj: Identifier, other: Identifier) {
+	function comparisonFunc(obj: IdentifierT, other: IdentifierT) {
 		return obj.value === other.value && obj.typeId === other.typeId;
 	}
 
 	const {IdentifierSet} = orm;
 
-	const oldSetItems: Array<Identifier> =
+	const oldSetItems: Array<IdentifierT> =
 		oldSet ? oldSet.related('identifiers').toJSON() : [];
 
 	const addedItems =

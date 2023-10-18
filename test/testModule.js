@@ -29,7 +29,7 @@ const {expect} = chai;
 
 describe('Module', () => {
 	it('should return one model for each file in the models directory', () => {
-		const modelsDirectory = path.join(__dirname, '../src/models');
+		const modelsDirectory = path.join(__dirname, '../lib/models');
 		const modelFiles = glob.sync('**/*.js', {cwd: modelsDirectory});
 		const modelNames = modelFiles.map(
 			(file) => _.upperFirst(path.basename(file, path.extname(file)))
