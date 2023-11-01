@@ -49,7 +49,20 @@ function getImportMetadata(transacting: Transaction, externalSourceId: number, e
 	}));
 }
 
-function createImportDataRecord(transacting: Transaction, dataSets, importData: QueuedEntity) {
+/** IDs of extra data sets which not all entity types have. */
+type ExtraDataSetIds = Partial<{
+	languageSetId: number;
+	releaseEventSetId: number;
+}>;
+
+/** IDs of all data sets which an entity can have. */
+type DataSetIds = {
+	aliasSetId: number;
+	disambiguationId: number;
+	identifierSetId: number;
+} & ExtraDataSetIds;
+
+function createImportDataRecord(transacting: Transaction, dataSets: DataSetIds, importData: QueuedEntity) {
 	const {entityType} = importData;
 
 	/* We omit all extra props which are not taken in as args when creating an
@@ -68,7 +81,7 @@ function createImportDataRecord(transacting: Transaction, dataSets, importData: 
 		...additionalEntityProps
 	};
 
-	return transacting.insert([camelToSnake(dataRecordProps)])
+	return transacting.insert(camelToSnake(dataRecordProps))
 		.into(`bookbrainz.${_.snakeCase(entityType)}_data`)
 		.returning('id');
 }
@@ -78,34 +91,25 @@ function createImportHeader(transacting: Transaction, record: ImportHeaderT, ent
 	return transacting.insert(camelToSnake(record)).into(table).returning('import_id');
 }
 
-type EntityDataSetIds = Partial<{
-	languageSetId: number;
-	releaseEventSetId: number;
-}>;
-
-async function updateEntityDataSets(
+async function updateEntityExtraDataSets(
 	orm: ORM, transacting: Transaction, importData: ParsedEntity
-): Promise<EntityDataSetIds> {
-	// Extract all entity data sets related fields
+): Promise<ExtraDataSetIds> {
+	// Extract all entity data sets' related fields
 	const {languages, releaseEvents} = importData as ParsedEdition;
 
-	// Create an empty entityDataSet
-	const entityDataSet: EntityDataSetIds = {};
+	const dataSets: ExtraDataSetIds = {};
 
 	if (languages) {
-		entityDataSet.languageSetId =
-			await updateLanguageSet(orm, transacting, null, languages);
+		dataSets.languageSetId = await updateLanguageSet(orm, transacting, null, languages);
 	}
 
 	if (releaseEvents) {
-		const releaseEventSet =
-			await updateReleaseEventSet(orm, transacting, null, releaseEvents);
-		entityDataSet.releaseEventSetId =
-			releaseEventSet && releaseEventSet.get('id');
+		const releaseEventSet = await updateReleaseEventSet(orm, transacting, null, releaseEvents);
+		dataSets.releaseEventSetId = releaseEventSet && releaseEventSet.get('id');
 	}
 	// Skipping publisher field, as they're not required in imports.
 
-	return entityDataSet;
+	return dataSets;
 }
 
 type ImportOptions = Partial<{
@@ -143,25 +147,25 @@ export function createImport(orm: ORM, importData: QueuedEntity, {overwritePendi
 			}
 		}
 
-		const [aliasSet, identifierSet, disambiguationObj, entityDataSets] =
+		const [aliasSet, identifierSet, disambiguationObj, entityExtraDataSets] =
 			await Promise.all([
 				updateAliasSet(orm, transacting, null, null, alias),
 				updateIdentifierSet(orm, transacting, null, identifiers),
 				updateDisambiguation(orm, transacting, null, disambiguation),
-				updateEntityDataSets(orm, transacting, importData.data)
+				updateEntityExtraDataSets(orm, transacting, importData.data)
 			]);
 
-		// Create entityTypedataId
+		// Create entity type-specific data record
 		let dataId: number = null;
 		try {
 			const [idObj] = await createImportDataRecord(
 				transacting,
-				camelToSnake({
+				{
 					aliasSetId: aliasSet && aliasSet.get('id'),
 					disambiguationId: disambiguationObj && disambiguationObj.get('id'),
 					identifierSetId: identifierSet && identifierSet.get('id'),
-					...entityDataSets
-				}),
+					...entityExtraDataSets
+				},
 				importData
 			);
 			dataId = _.get(idObj, 'id');
