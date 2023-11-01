@@ -28,6 +28,11 @@ export type _ImportT = {
 
 export type _ImportWithIdT = WithId<_ImportT>;
 
+export type ImportHeaderT = {
+	importId: number;
+	dataId: number;
+};
+
 export type AdditionalImportDataT = {
 	identifiers?: IdentifierT[];
 	links: Array<{

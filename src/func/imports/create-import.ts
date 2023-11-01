@@ -18,7 +18,7 @@
 
 
 import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
-import type {ImportMetadataT, _ImportT} from '../../types/imports';
+import type {ImportHeaderT, ImportMetadataT, _ImportT} from '../../types/imports';
 import type {ParsedEdition, ParsedEntity, QueuedEntity} from '../../types/parser';
 
 import type {ORM} from '../..';
@@ -73,9 +73,9 @@ function createImportDataRecord(transacting: Transaction, dataSets, importData: 
 		.returning('id');
 }
 
-function createImportHeader(transacting: Transaction, record, entityType: EntityTypeString) {
+function createImportHeader(transacting: Transaction, record: ImportHeaderT, entityType: EntityTypeString) {
 	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
-	return transacting.insert(record).into(table).returning('import_id');
+	return transacting.insert(camelToSnake(record)).into(table).returning('import_id');
 }
 
 type EntityDataSetIds = Partial<{
@@ -196,14 +196,10 @@ export function createImport(orm: ORM, importData: QueuedEntity, {overwritePendi
 		}
 
 		try {
-			await createImportHeader(
-				transacting,
-				[camelToSnake({dataId, importId})],
-				entityType
-			);
+			await createImportHeader(transacting, {dataId, importId}, entityType);
 		}
 		catch (err) {
-			throw new Error(`Error during importHeader creation - ${err}`);
+			throw new Error(`Failed to insert import header: ${err}`);
 		}
 
 		return importId;
