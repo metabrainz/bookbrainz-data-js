@@ -100,7 +100,8 @@ async function updateEntityExtraDataSets(
 	const dataSets: ExtraDataSetIds = {};
 
 	if (languages) {
-		dataSets.languageSetId = await updateLanguageSet(orm, transacting, null, languages);
+		const languageSet = await updateLanguageSet(orm, transacting, null, languages);
+		dataSets.languageSetId = languageSet && languageSet.get('id');
 	}
 
 	if (releaseEvents) {
