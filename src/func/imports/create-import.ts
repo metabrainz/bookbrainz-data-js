@@ -52,11 +52,6 @@ function getImportMetadata(transacting: Transaction, externalSourceId: number, e
 function createImportDataRecord(transacting: Transaction, dataSets, importData: QueuedEntity) {
 	const {entityType} = importData;
 
-	// Safe check if entityType is one among the expected
-	if (!ENTITY_TYPES.includes(entityType)) {
-		throw new Error('Invalid entity type');
-	}
-
 	/* We omit all extra props which are not taken in as args when creating an
 	entity_data record, else it will raise error (of there being no such
 	column in the table).
@@ -79,13 +74,6 @@ function createImportDataRecord(transacting: Transaction, dataSets, importData: 
 }
 
 function createImportHeader(transacting: Transaction, record, entityType: EntityTypeString) {
-	// Safe check if entityType is one among the expected
-
-	if (!ENTITY_TYPES.includes(entityType)) {
-		throw new Error('Invalid entity type');
-	}
-
-
 	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
 	return transacting.insert(record).into(table).returning('import_id');
 }
@@ -127,6 +115,10 @@ type ImportOptions = Partial<{
 }>;
 
 export function createImport(orm: ORM, importData: QueuedEntity, {overwritePending = false}: ImportOptions = {}) {
+	if (!ENTITY_TYPES.includes(importData.entityType)) {
+		throw new Error('Invalid entity type');
+	}
+
 	return orm.bookshelf.transaction(async (transacting) => {
 		const {entityType} = importData;
 		const {alias, identifiers, disambiguation, source} = importData.data;
