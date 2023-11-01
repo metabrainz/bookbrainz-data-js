@@ -61,14 +61,3 @@ export type ImportMetadataT = {
 	/** JSONB */
 	importMetadata: AdditionalImportDataT;
 };
-
-/** Snake case variant of `ImportMetadataT`. */
-export type _ImportMetadataT = {
-	import_id: number;
-	origin_source_id: number;
-	origin_id: string;
-	imported_at?: any;
-	last_edited: any;
-	entity_id?: string;
-	import_metadata: any;
-};

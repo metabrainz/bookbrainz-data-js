@@ -18,7 +18,7 @@
 
 
 import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
-import type {ImportMetadataT, _ImportMetadataT, _ImportT} from '../../types/imports';
+import type {ImportMetadataT, _ImportT} from '../../types/imports';
 import type {ParsedEdition, ParsedEntity, QueuedEntity} from '../../types/parser';
 
 import type {ORM} from '../..';
@@ -34,20 +34,19 @@ import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
 
-function createImportRecord(transacting: Transaction, data: _ImportT[]) {
-	return transacting.insert(data).into('bookbrainz.import').returning('id');
+function createImportRecord(transacting: Transaction, data: _ImportT) {
+	return transacting.insert(camelToSnake(data)).into('bookbrainz.import').returning('id');
 }
 
-function createLinkTableRecord(transacting: Transaction, record: _ImportMetadataT[]) {
-	return transacting.insert(record).into('bookbrainz.link_import');
+function createImportMetadataRecord(transacting: Transaction, record: ImportMetadataT) {
+	return transacting.insert(camelToSnake(record)).into('bookbrainz.link_import');
 }
 
 function getImportMetadata(transacting: Transaction, externalSourceId: number, externalIdentifier: string) {
-	/* eslint-disable camelcase */
-	return transacting.select('import_id', 'entity_id').from('bookbrainz.link_import').where({
-		origin_id: externalIdentifier,
-		origin_source_id: externalSourceId
-	});
+	return transacting.select('import_id', 'entity_id').from('bookbrainz.link_import').where(camelToSnake({
+		originId: externalIdentifier,
+		originSourceId: externalSourceId
+	}));
 }
 
 function createImportDataRecord(transacting: Transaction, dataSets, importData: QueuedEntity) {
@@ -182,31 +181,26 @@ export function createImport(orm: ORM, importData: QueuedEntity, {overwritePendi
 		// Create import entity
 		let importId: number = null;
 		try {
-			const [idObj] = await createImportRecord(transacting, [{type: entityType}]);
+			const [idObj] = await createImportRecord(transacting, {type: entityType});
 			importId = _.get(idObj, 'id');
 		}
 		catch (err) {
 			throw new Error(`Error during creation of importId ${err}`);
 		}
 
-		const linkTableData = camelToSnake<_ImportMetadataT, ImportMetadataT>({
+		const importMetadata: ImportMetadataT = {
 			importId,
 			importMetadata: importData.data.metadata,
 			lastEdited: importData.lastEdited,
 			originId: importData.originId,
 			originSourceId
-		});
+		};
 
-
-		// Set up link_import table
 		try {
-			await createLinkTableRecord(
-				transacting,
-				[linkTableData]
-			);
+			await createImportMetadataRecord(transacting, importMetadata);
 		}
 		catch (err) {
-			throw new Error(`Error during link import table creation - ${err}`);
+			throw new Error(`Failed to insert import metadata: ${err}`);
 		}
 
 		try {
