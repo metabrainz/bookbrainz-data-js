@@ -88,7 +88,7 @@ export async function fetchOrCreateCredit(
 		).returning(['author_bbid', 'join_phrase', 'name', 'position']);
 	/* eslint-enable camelcase */
 
-	return newCredit.refresh({transacting, withRelated: 'names'});
+	return newCredit.refresh({transacting, withRelated: ['names']});
 }
 
 export function updateAuthorCredit(

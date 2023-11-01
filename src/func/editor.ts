@@ -40,6 +40,7 @@ export function incrementEditorEditCountById(
 	return new Editor({id})
 		.fetch({transacting})
 		.then((editor) => {
+			// @ts-expect-error -- Types for custom methods of Bookshelf models are lacking
 			editor.incrementEditCount();
 			return editor.save(null, {transacting});
 		});
