@@ -42,6 +42,14 @@ function createLinkTableRecord(transacting: Transaction, record: _ImportMetadata
 	return transacting.insert(record).into('bookbrainz.link_import');
 }
 
+function getImportMetadata(transacting: Transaction, externalSourceId: number, externalIdentifier: string) {
+	/* eslint-disable camelcase */
+	return transacting.select('import_id', 'entity_id').from('bookbrainz.link_import').where({
+		origin_id: externalIdentifier,
+		origin_source_id: externalSourceId
+	});
+}
+
 function createImportDataRecord(transacting: Transaction, dataSets, importData: QueuedEntity) {
 	const {entityType} = importData;
 
@@ -113,10 +121,36 @@ async function updateEntityDataSets(
 	return entityDataSet;
 }
 
-export function createImport(orm: ORM, importData: QueuedEntity) {
+type ImportOptions = Partial<{
+
+	/** Overwrite a pending entity with the same (external) identifier with the given data. */
+	overwritePending: boolean;
+}>;
+
+export function createImport(orm: ORM, importData: QueuedEntity, {overwritePending = false}: ImportOptions = {}) {
 	return orm.bookshelf.transaction(async (transacting) => {
 		const {entityType} = importData;
 		const {alias, identifiers, disambiguation, source} = importData.data;
+
+		// Get origin_source
+		let originSourceId: number = null;
+
+		try {
+			originSourceId = await getOriginSourceId(transacting, source);
+		}
+		catch (err) {
+			// TODO: useless, we are only catching our self-thrown errors here
+			throw new Error(`Error during getting source id - ${err}`);
+		}
+
+		const [previousImport] = await getImportMetadata(transacting, originSourceId, importData.originId);
+		if (previousImport) {
+			// console.log('Previous import found:', previousImport);
+			// TODO: return a status value to indicate whether an import has been skipped
+			if (!overwritePending) {
+				return previousImport.import_id;
+			}
+		}
 
 		const [aliasSet, identifierSet, disambiguationObj, entityDataSets] =
 			await Promise.all([
@@ -153,17 +187,6 @@ export function createImport(orm: ORM, importData: QueuedEntity) {
 		}
 		catch (err) {
 			throw new Error(`Error during creation of importId ${err}`);
-		}
-
-		// Get origin_source
-		let originSourceId: number = null;
-
-		try {
-			originSourceId = await getOriginSourceId(transacting, source);
-		}
-		catch (err) {
-			// TODO: useless, we are only catching our self-thrown errors here
-			throw new Error(`Error during getting source id - ${err}`);
 		}
 
 		const linkTableData = camelToSnake<_ImportMetadataT, ImportMetadataT>({
