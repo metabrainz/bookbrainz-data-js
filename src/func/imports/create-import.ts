@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2018 Shivam Tripathi
+ * Copyright (C) 2018  Shivam Tripathi
+ *               2023  David Kellner
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -113,18 +114,43 @@ async function updateEntityExtraDataSets(
 	return dataSets;
 }
 
+type ExistingImportAction =
+	| 'skip'
+	| 'update pending'
+	| 'update pending and accepted';
+
 type ImportOptions = Partial<{
 
-	/** Overwrite a pending entity with the same (external) identifier with the given data. */
-	overwritePending: boolean;
+	/** Specifies what should happen if an import with the same external identifier already exists. */
+	existingImportAction: ExistingImportAction;
 }>;
 
-export function createImport(orm: ORM, importData: QueuedEntity, {overwritePending = false}: ImportOptions = {}) {
+type ImportStatus =
+	| 'created pending'
+	| 'skipped pending'
+	| 'unchanged pending'
+	| 'updated pending'
+	| 'skipped accepted'
+	| 'unchanged accepted'
+	| 'updated accepted';
+
+type ImportResult = {
+
+	/** ID of the imported entity (numeric for now, will be a BBID in a future version). */
+	importId: number | string;
+
+	/** Import status of the processed entity. */
+	status: ImportStatus;
+};
+
+export function createImport(orm: ORM, importData: QueuedEntity, {
+	existingImportAction = 'skip'
+}: ImportOptions = {}): Promise<ImportResult> {
 	if (!ENTITY_TYPES.includes(importData.entityType)) {
 		throw new Error('Invalid entity type');
 	}
 
-	return orm.bookshelf.transaction(async (transacting) => {
+	return orm.bookshelf.transaction<ImportResult>(async (transacting) => {
 		const {entityType} = importData;
 		const {alias, identifiers, disambiguation, source} = importData.data;
 
@@ -139,12 +165,24 @@ export function createImport(orm: ORM, importData: QueuedEntity, {overwritePendi
 			throw new Error(`Error during getting source id - ${err}`);
 		}
 
-		const [previousImport] = await getImportMetadata(transacting, originSourceId, importData.originId);
-		if (previousImport) {
-			// console.log('Previous import found:', previousImport);
-			// TODO: return a status value to indicate whether an import has been skipped
-			if (!overwritePending) {
-				return previousImport.import_id;
+		const [existingImport] = await getImportMetadata(transacting, originSourceId, importData.originId);
+		if (existingImport) {
+			const isPendingImport = !existingImport.entity_id;
+			if (existingImportAction === 'skip') {
+				return {
+					importId: existingImport.import_id,
+					status: isPendingImport ? 'skipped pending' : 'skipped accepted'
+				};
+			}
+			else if (isPendingImport) {
+				// TODO: update data of pending imports
+			}
+			else {
+				// TODO: create updates for already accepted entities in a later version
+				return {
+					importId: existingImport.import_id,
+					status: 'skipped accepted'
+				};
 			}
 		}
 
@@ -207,6 +245,9 @@ export function createImport(orm: ORM, importData: QueuedEntity, {overwritePendi
 			throw new Error(`Failed to insert import header: ${err}`);
 		}
 
-		return importId;
+		return {
+			importId,
+			status: 'created pending'
+		};
 	});
 }
