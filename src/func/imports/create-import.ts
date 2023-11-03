@@ -228,6 +228,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		const importMetadata: ImportMetadataT = {
 			importId,
 			importMetadata: importData.data.metadata,
+			importedAt: transacting.raw("timezone('UTC'::TEXT, now())"),
 			lastEdited: importData.lastEdited,
 			originId: importData.originId,
 			originSourceId

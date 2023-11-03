@@ -18,6 +18,7 @@
 
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
+import type {Knex} from 'knex';
 import {WithId} from './utils';
 
 
@@ -55,7 +56,7 @@ export type ImportMetadataT = {
 	originId: string;
 
 	/** TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC'::TEXT, now()) */
-	importedAt?: string;
+	importedAt?: Knex.Raw;
 
 	/** TIMESTAMP WITHOUT TIME ZONE */
 	lastEdited: string;
