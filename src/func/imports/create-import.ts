@@ -39,8 +39,8 @@ function createImportRecord(transacting: Transaction, data: _ImportT) {
 	return transacting.insert(camelToSnake(data)).into('bookbrainz.import').returning('id');
 }
 
-function createImportMetadataRecord(transacting: Transaction, record: ImportMetadataT) {
-	return transacting.insert(camelToSnake(record)).into('bookbrainz.link_import');
+function createOrUpdateImportMetadata(transacting: Transaction, record: ImportMetadataT) {
+	return transacting.upsert(camelToSnake(record)).into('bookbrainz.link_import');
 }
 
 function getImportMetadata(transacting: Transaction, externalSourceId: number, externalIdentifier: string) {
@@ -87,9 +87,9 @@ function createImportDataRecord(transacting: Transaction, dataSets: DataSetIds, 
 		.returning('id');
 }
 
-function createImportHeader(transacting: Transaction, record: ImportHeaderT, entityType: EntityTypeString) {
+function createOrUpdateImportHeader(transacting: Transaction, record: ImportHeaderT, entityType: EntityTypeString) {
 	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
-	return transacting.insert(camelToSnake(record)).into(table).returning('import_id');
+	return transacting.upsert(camelToSnake(record)).into(table).returning('import_id');
 }
 
 async function updateEntityExtraDataSets(
@@ -175,7 +175,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 				};
 			}
 			else if (isPendingImport) {
-				// TODO: update data of pending imports
+				// TODO: update/reuse already existing data of pending imports
 			}
 			else {
 				// TODO: create updates for already accepted entities in a later version
@@ -213,14 +213,16 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 			throw new Error(`Error during dataId creation ${err}`);
 		}
 
-		// Create import entity
-		let importId: number = null;
-		try {
-			const [idObj] = await createImportRecord(transacting, {type: entityType});
-			importId = _.get(idObj, 'id');
-		}
-		catch (err) {
-			throw new Error(`Error during creation of importId ${err}`);
+		// Create import entity (if it is not already existing from a previous import attempt)
+		let importId: number = existingImport?.import_id;
+		if (!importId) {
+			try {
+				const [idObj] = await createImportRecord(transacting, {type: entityType});
+				importId = _.get(idObj, 'id');
+			}
+			catch (err) {
+				throw new Error(`Failed to create a new import ID: ${err}`);
+			}
 		}
 
 		const importMetadata: ImportMetadataT = {
@@ -232,17 +234,17 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		};
 
 		try {
-			await createImportMetadataRecord(transacting, importMetadata);
+			await createOrUpdateImportMetadata(transacting, importMetadata);
 		}
 		catch (err) {
-			throw new Error(`Failed to insert import metadata: ${err}`);
+			throw new Error(`Failed to upsert import metadata: ${err}`);
 		}
 
 		try {
-			await createImportHeader(transacting, {dataId, importId}, entityType);
+			await createOrUpdateImportHeader(transacting, {dataId, importId}, entityType);
 		}
 		catch (err) {
-			throw new Error(`Failed to insert import header: ${err}`);
+			throw new Error(`Failed to upsert import header: ${err}`);
 		}
 
 		return {
