@@ -252,7 +252,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 
 		return {
 			importId,
-			status: 'created pending'
+			status: existingImport ? 'updated pending' : 'created pending'
 		};
 	});
 }
