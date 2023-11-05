@@ -40,7 +40,8 @@ function createImportRecord(transacting: Transaction, data: _ImportT) {
 }
 
 function createOrUpdateImportMetadata(transacting: Transaction, record: ImportMetadataT) {
-	return transacting.upsert(camelToSnake(record)).into('bookbrainz.link_import');
+	return transacting.insert(camelToSnake(record)).into('bookbrainz.link_import')
+		.onConflict(['origin_source_id', 'origin_id']).merge();
 }
 
 function getImportMetadata(transacting: Transaction, externalSourceId: number, externalIdentifier: string) {
@@ -89,7 +90,8 @@ function createImportDataRecord(transacting: Transaction, dataSets: DataSetIds, 
 
 function createOrUpdateImportHeader(transacting: Transaction, record: ImportHeaderT, entityType: EntityTypeString) {
 	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
-	return transacting.upsert(camelToSnake(record)).into(table).returning('import_id');
+	return transacting.insert(camelToSnake(record)).into(table)
+		.onConflict('import_id').merge();
 }
 
 async function updateEntityExtraDataSets(
