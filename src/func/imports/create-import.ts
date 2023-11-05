@@ -114,18 +114,18 @@ async function updateEntityExtraDataSets(
 	return dataSets;
 }
 
-type ExistingImportAction =
+export type ExistingImportAction =
 	| 'skip'
 	| 'update pending'
 	| 'update pending and accepted';
 
-type ImportOptions = Partial<{
+export type ImportOptions = Partial<{
 
 	/** Specifies what should happen if an import with the same external identifier already exists. */
 	existingImportAction: ExistingImportAction;
 }>;
 
-type ImportStatus =
+export type ImportStatus =
 	| 'created pending'
 	| 'skipped pending'
 	| 'unchanged pending'
@@ -134,7 +134,7 @@ type ImportStatus =
 	| 'unchanged accepted'
 	| 'updated accepted';
 
-type ImportResult = {
+export type ImportResult = {
 
 	/** ID of the imported entity (numeric for now, will be a BBID in a future version). */
 	importId: number | string;
