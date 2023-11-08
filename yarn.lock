@@ -1171,6 +1171,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@types/bluebird@^3.5.41":
+  version "3.5.41"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.41.tgz#0ef9959efaf1de8ddd7bcef9664fc7bada60ee35"
+  integrity sha512-/OT2UoYPu2fqGNS85UYUx0Ke8Zd/vM0/Au0JqLInTprkRO0NexYe7qAUkDsjhsO3BKHI14wX/UhN5SUaoFVDUQ==
+
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"

@@ -18,6 +18,7 @@
 
 import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
+import type {Knex} from 'knex';
 import {WithId} from './utils';
 
 
@@ -27,6 +28,11 @@ export type _ImportT = {
 };
 
 export type _ImportWithIdT = WithId<_ImportT>;
+
+export type ImportHeaderT = {
+	importId: number;
+	dataId: number;
+};
 
 export type AdditionalImportDataT = {
 	identifiers?: IdentifierT[];
@@ -50,7 +56,7 @@ export type ImportMetadataT = {
 	originId: string;
 
 	/** TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC'::TEXT, now()) */
-	importedAt?: string;
+	importedAt?: Knex.Raw;
 
 	/** TIMESTAMP WITHOUT TIME ZONE */
 	lastEdited: string;
@@ -60,15 +66,4 @@ export type ImportMetadataT = {
 
 	/** JSONB */
 	importMetadata: AdditionalImportDataT;
-};
-
-/** Snake case variant of `ImportMetadataT`. */
-export type _ImportMetadataT = {
-	import_id: number;
-	origin_source_id: number;
-	origin_id: string;
-	imported_at?: any;
-	last_edited: any;
-	entity_id?: string;
-	import_metadata: any;
 };
