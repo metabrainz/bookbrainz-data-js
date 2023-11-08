@@ -180,7 +180,16 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 				// TODO: update/reuse already existing data of pending imports
 			}
 			else {
-				// TODO: create updates for already accepted entities in a later version
+				// The previously imported entity has already been accepted
+				if (existingImportAction === 'update pending') {
+					// We only want to update pending, but not accepted entities
+					return {
+						importId: existingImport.import_id,
+						status: 'skipped accepted'
+					};
+				}
+				// We also want to create updates for already accepted entities ('update pending and accepted')
+				// TODO: implement this feature in a later version and drop the following temporary return statement
 				return {
 					importId: existingImport.import_id,
 					status: 'skipped accepted'
