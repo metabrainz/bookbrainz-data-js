@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>func/relationship.js - Documentation</title>
+    <title>func/imports/create-import.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">func/relationship.js</h1>
+    <h1 class="page-title">func/imports/create-import.js</h1>
     
 
     
@@ -44,15 +44,23 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateRelationshipSets = updateRelationshipSets;
-var _isEmpty2 = _interopRequireDefault(require("lodash/isEmpty"));
+exports.createImport = createImport;
+var _get2 = _interopRequireDefault(require("lodash/get"));
+var _snakeCase2 = _interopRequireDefault(require("lodash/snakeCase"));
 var _omit2 = _interopRequireDefault(require("lodash/omit"));
-var _uniq2 = _interopRequireDefault(require("lodash/uniq"));
-var _set = require("./set");
-var _util = require("../util");
+var _entity = require("../../types/entity");
+var _util = require("../../util");
+var _entity2 = require("../entity");
+var _misc = require("./misc");
+var _alias = require("../alias");
+var _disambiguation = require("../disambiguation");
+var _identifier = require("../identifier");
+var _language = require("../language");
+var _releaseEvent = require("../releaseEvent");
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
 /*
- * Copyright (C) 2018  Ben Ockmore
+ * Copyright (C) 2018  Shivam Tripathi
+ *               2023  David Kellner
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,112 +77,170 @@ function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? ob
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-function getAffectedBBIDs(addedItems, removedItems) {
-  const affectedSourceBBIDs = [...addedItems, ...removedItems].map(relationship => relationship.sourceBbid);
-  const affectedTargetBBIDs = [...addedItems, ...removedItems].map(relationship => relationship.targetBbid);
-  return (0, _uniq2.default)([...affectedSourceBBIDs, ...affectedTargetBBIDs]);
+function createImportRecord(transacting, data) {
+  return transacting.insert((0, _util.camelToSnake)(data)).into('bookbrainz.import').returning('id');
 }
-async function getMasterRelationshipSetForEntity(orm, transacting, bbid) {
+function createOrUpdateImportMetadata(transacting, record) {
+  return transacting.insert((0, _util.camelToSnake)(record)).into('bookbrainz.link_import').onConflict(['origin_source_id', 'origin_id']).merge();
+}
+function getImportMetadata(transacting, externalSourceId, externalIdentifier) {
+  return transacting.select('import_id', 'entity_id').from('bookbrainz.link_import').where((0, _util.camelToSnake)({
+    originId: externalIdentifier,
+    originSourceId: externalSourceId
+  }));
+}
+
+/** IDs of extra data sets which not all entity types have. */
+
+/** IDs of all data sets which an entity can have. */
+
+function createImportDataRecord(transacting, dataSets, importData) {
   const {
-    Entity,
-    Author,
-    Edition,
-    EditionGroup,
-    Publisher,
-    RelationshipSet,
-    Series,
-    Work
-  } = orm;
-  const entityHeader = await Entity.forge({
-    bbid
-  }).fetch({
-    require: true,
-    transacting
-  });
-  const typeModelMap = {
-    Author,
-    Edition,
-    EditionGroup,
-    Publisher,
-    Series,
-    Work
+    entityType
+  } = importData;
+
+  /* We omit all extra props which are not taken in as args when creating an
+  entity_data record, else it will raise error (of there being no such
+  column in the table).
+  Entity data props use split versions of dates into (day, month and year)
+  	and not directly dates, so we omit them.
+  */
+  const additionalEntityProps = (0, _omit2.default)((0, _entity2.getAdditionalEntityProps)(importData.data, entityType), ['beginDate', 'endDate']);
+  const dataRecordProps = {
+    ...dataSets,
+    ...additionalEntityProps
   };
-
-  // Extract entity type
-  const type = entityHeader.get('type');
-
-  // Fetch master revision of entity
-  const entity = await typeModelMap[type].forge({
-    bbid
-  }).fetch({
-    require: false,
-    transacting
-  });
-  if (!entity) {
-    return null;
-  }
-  const relationshipSetId = entity.get('relationshipSetId');
-  if (!relationshipSetId) {
-    return null;
-  }
-
-  // Return relationship set
-  return RelationshipSet.forge({
-    id: relationshipSetId
-  }).fetch({
-    require: true,
-    transacting,
-    withRelated: ['relationships']
-  });
+  return transacting.insert((0, _util.camelToSnake)(dataRecordProps)).into(`bookbrainz.${(0, _snakeCase2.default)(entityType)}_data`).returning('id');
 }
-async function updateRelationshipSetForEntity(orm, transacting, bbid, allAddedItems, allRemovedItems, comparisonFunc) {
+function createOrUpdateImportHeader(transacting, record, entityType) {
+  const table = `bookbrainz.${(0, _snakeCase2.default)(entityType)}_import_header`;
+  return transacting.insert((0, _util.camelToSnake)(record)).into(table).onConflict('import_id').merge();
+}
+async function updateEntityExtraDataSets(orm, transacting, importData) {
+  // Extract all entity data sets' related fields
   const {
-    RelationshipSet
-  } = orm;
-  const oldSet = await getMasterRelationshipSetForEntity(orm, transacting, bbid);
-  const oldSetItems = oldSet ? oldSet.related('relationships').toJSON() : [];
-  const addedItems = allAddedItems.filter(relationship => relationship.sourceBbid === bbid || relationship.targetBbid === bbid);
-  const unchangedItems = (0, _set.removeItemsFromSet)(oldSetItems, allRemovedItems, comparisonFunc);
-  return (0, _set.createNewSetWithItems)(orm, transacting, RelationshipSet, unchangedItems, addedItems, 'relationships');
+    languages,
+    releaseEvents
+  } = importData;
+  const dataSets = {};
+  if (languages) {
+    const languageSet = await (0, _language.updateLanguageSet)(orm, transacting, null, languages);
+    dataSets.languageSetId = languageSet &amp;&amp; languageSet.get('id');
+  }
+  if (releaseEvents) {
+    const releaseEventSet = await (0, _releaseEvent.updateReleaseEventSet)(orm, transacting, null, releaseEvents);
+    dataSets.releaseEventSetId = releaseEventSet &amp;&amp; releaseEventSet.get('id');
+  }
+  // Skipping publisher field, as they're not required in imports.
+
+  return dataSets;
 }
-
-/**
- * Takes an array of relationships that should be set for the entity, and
- * compares it to the currently set list of relationships to determine the
- * difference. Compiles a list of affected entity BBIDs from this difference,
- * and then updates the relationship sets for all affected entities, and returns
- * these. If no entities are affected (there are no changes), an empty object
- * is returned.
- *
- * @param {ORM} orm - an initialized instance of bookbrainz-data-js
- * @param {Transaction} transacting - the current transaction
- * @param {any} oldSet - the RelationshipSet object for the old entity data
- * @param {Array&lt;Relationship>} newSetItems - the edited RelationshipSet for the
- *        entity
- *
- * @returns {Promise&lt;any>} a promise which resolves to a {BBID: RelationshipSet}
- *          map
- */
-function updateRelationshipSets(orm, transacting, oldSet, newSetItems) {
-  function comparisonFunc(obj, other) {
-    return obj.typeId === other.typeId &amp;&amp; obj.sourceBbid === other.sourceBbid &amp;&amp; obj.targetBbid === other.targetBbid &amp;&amp; obj.attributeSetId === other.attributeSetId;
+function createImport(orm, importData, {
+  existingImportAction = 'skip'
+} = {}) {
+  if (!_entity.ENTITY_TYPES.includes(importData.entityType)) {
+    throw new Error('Invalid entity type');
   }
-  const allAddedItems = newSetItems.filter(rel => rel.isAdded).map(rel => (0, _omit2.default)(rel, ['isRemoved', 'isAdded']));
-  const allRemovedItems = newSetItems.filter(rel => rel.isRemoved).map(rel => (0, _omit2.default)(rel, ['isRemoved', 'isAdded']));
-  if ((0, _isEmpty2.default)(allAddedItems) &amp;&amp; (0, _isEmpty2.default)(allRemovedItems)) {
-    // No action - set has not changed
-    return Promise.resolve({});
-  }
-  const affectedBBIDs = getAffectedBBIDs(allAddedItems, allRemovedItems);
+  return orm.bookshelf.transaction(async transacting => {
+    const {
+      entityType
+    } = importData;
+    const {
+      alias,
+      identifiers,
+      disambiguation,
+      source
+    } = importData.data;
 
-  // For each BBID, get the entity and the old relationship set, then apply
-  // the relevant changes to create a new set.
+    // Get origin_source
+    let originSourceId = null;
+    try {
+      originSourceId = await (0, _misc.getOriginSourceId)(transacting, source);
+    } catch (err) {
+      // TODO: useless, we are only catching our self-thrown errors here
+      throw new Error(`Error during getting source id - ${err}`);
+    }
+    const [existingImport] = await getImportMetadata(transacting, originSourceId, importData.originId);
+    if (existingImport) {
+      const isPendingImport = !existingImport.entity_id;
+      if (existingImportAction === 'skip') {
+        return {
+          importId: existingImport.import_id,
+          status: isPendingImport ? 'skipped pending' : 'skipped accepted'
+        };
+      } else if (isPendingImport) {
+        // TODO: update/reuse already existing data of pending imports
+      } else {
+        // The previously imported entity has already been accepted
+        if (existingImportAction === 'update pending') {
+          // We only want to update pending, but not accepted entities
+          return {
+            importId: existingImport.import_id,
+            status: 'skipped accepted'
+          };
+        }
+        // We also want to create updates for already accepted entities ('update pending and accepted')
+        // TODO: implement this feature in a later version and drop the following temporary return statement
+        return {
+          importId: existingImport.import_id,
+          status: 'skipped accepted'
+        };
+      }
+    }
+    const [aliasSet, identifierSet, disambiguationObj, entityExtraDataSets] = await Promise.all([(0, _alias.updateAliasSet)(orm, transacting, null, null, alias), (0, _identifier.updateIdentifierSet)(orm, transacting, null, identifiers), (0, _disambiguation.updateDisambiguation)(orm, transacting, null, disambiguation), updateEntityExtraDataSets(orm, transacting, importData.data)]);
 
-  const newSetPromises = affectedBBIDs.reduce((result, bbid) => ({
-    ...result,
-    [bbid]: updateRelationshipSetForEntity(orm, transacting, bbid, allAddedItems, allRemovedItems, comparisonFunc)
-  }), {});
-  return (0, _util.promiseProps)(newSetPromises);
+    // Create entity type-specific data record
+    let dataId = null;
+    try {
+      const [idObj] = await createImportDataRecord(transacting, {
+        aliasSetId: aliasSet &amp;&amp; aliasSet.get('id'),
+        disambiguationId: disambiguationObj &amp;&amp; disambiguationObj.get('id'),
+        identifierSetId: identifierSet &amp;&amp; identifierSet.get('id'),
+        ...entityExtraDataSets
+      }, importData);
+      dataId = (0, _get2.default)(idObj, 'id');
+    } catch (err) {
+      throw new Error(`Error during dataId creation ${err}`);
+    }
+
+    // Create import entity (if it is not already existing from a previous import attempt)
+    let importId = existingImport?.import_id;
+    if (!importId) {
+      try {
+        const [idObj] = await createImportRecord(transacting, {
+          type: entityType
+        });
+        importId = (0, _get2.default)(idObj, 'id');
+      } catch (err) {
+        throw new Error(`Failed to create a new import ID: ${err}`);
+      }
+    }
+    const importMetadata = {
+      importId,
+      importMetadata: importData.data.metadata,
+      importedAt: transacting.raw("timezone('UTC'::TEXT, now())"),
+      lastEdited: importData.lastEdited,
+      originId: importData.originId,
+      originSourceId
+    };
+    try {
+      await createOrUpdateImportMetadata(transacting, importMetadata);
+    } catch (err) {
+      throw new Error(`Failed to upsert import metadata: ${err}`);
+    }
+    try {
+      await createOrUpdateImportHeader(transacting, {
+        dataId,
+        importId
+      }, entityType);
+    } catch (err) {
+      throw new Error(`Failed to upsert import header: ${err}`);
+    }
+    return {
+      importId,
+      status: existingImport ? 'updated pending' : 'created pending'
+    };
+  });
 }</code></pre>
         </article>
     </section>
