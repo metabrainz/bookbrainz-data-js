@@ -32,8 +32,9 @@ async function autoCreateNewEditionGroup(model, bookshelf: Bookshelf, options) {
 	const aliasSetId = model.get('aliasSetId');
 	const revisionId = model.get('revisionId');
 	const authorCreditId = model.get('authorCreditId');
+	const creditSection = model.get('creditSection');
 	const newEditionGroupBBID = await createEditionGroupForNewEdition(
-		bookshelf, options.transacting, aliasSetId, revisionId, authorCreditId
+		bookshelf, options.transacting, aliasSetId, revisionId, authorCreditId, creditSection
 	);
 	model.set('editionGroupBbid', newEditionGroupBBID);
 }
