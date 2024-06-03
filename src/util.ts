@@ -243,11 +243,12 @@ export function parseDate(date: string): Array<number | null> {
  * @param {number|string} aliasSetId - The id of the new edition's alias set
  * @param {number|string} revisionId - The id of the new edition's revision
  * @param {number|string} authorCreditId - The id of the new edition's author credit
+ * @param {boolean} creditSection - The state of author credit section of the new edition
  * @returns {string} BBID of the newly created Edition Group
  */
 export async function createEditionGroupForNewEdition(
 	orm: Bookshelf, transacting: Transaction,
-	aliasSetId: number | string, revisionId: number | string, authorCreditId: number | string
+	aliasSetId: number | string, revisionId: number | string, authorCreditId: number | string, creditSection: boolean
 ): Promise<string> {
 	const Entity = orm.model('Entity');
 	const EditionGroup = orm.model('EditionGroup');
@@ -258,6 +259,7 @@ export async function createEditionGroupForNewEdition(
 		aliasSetId,
 		authorCreditId,
 		bbid,
+		creditSection,
 		revisionId
 	})
 		.save(null, {method: 'insert', transacting});
