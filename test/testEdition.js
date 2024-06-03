@@ -148,7 +148,7 @@ describe('Edition model', () => {
 
 		expect(editionJSON).to.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'bbid',
-			'authorCredit', 'authorCreditId', 'dataId', 'defaultAliasId', 'depth',
+			'authorCredit', 'authorCreditId', 'creditSection', 'dataId', 'defaultAliasId', 'depth',
 			'disambiguation', 'disambiguationId', 'formatId', 'height',
 			'identifierSet', 'identifierSetId', 'languageSetId', 'master',
 			'pages', 'editionGroupBbid', 'publisherSetId', 'relationshipSet',

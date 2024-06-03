@@ -145,7 +145,7 @@ describe('EditionGroup model', () => {
 
 		return expect(entityPromise).to.eventually.have.all.keys([
 			'aliasSet', 'aliasSetId', 'annotation', 'annotationId', 'authorCreditId',
-			'bbid', 'dataId', 'defaultAliasId', 'disambiguation',
+			'bbid', 'creditSection', 'dataId', 'defaultAliasId', 'disambiguation',
 			'disambiguationId', 'identifierSet', 'identifierSetId', 'master',
 			'relationshipSet', 'relationshipSetId', 'revisionId', 'type',
 			'typeId', 'collections', 'sortName', 'name', 'editionGroupType'
