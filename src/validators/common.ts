@@ -25,7 +25,7 @@ import {
 	validateUUID
 } from './base';
 
-import {AuthorCredit} from '../author-credit-editor/actions';
+import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import {Iterable} from 'immutable';
 import _ from 'lodash';
 
@@ -39,6 +39,8 @@ export function validateMultiple(
 	if (requiresOneOrMore && _.isEmpty(values)) {
 		return false;
 	}
+
+	// eslint-disable-next-line func-style -- we have to reassign
 	let every = (object, predicate) => _.every(object, predicate);
 	if (Iterable.isIterable(values)) {
 		every = (object, predicate) => object.every(predicate);
@@ -80,14 +82,9 @@ export const validateAliases = _.partial(
 	validateMultiple, _.partial.placeholder, validateAlias
 );
 
-export type IdentifierType = {
-	id: number,
-	label: string,
-	validationRegex: string
-};
 
 export function validateIdentifierValue(
-	value: any, typeId: unknown, types?: Array<IdentifierType> | null | undefined
+	value: any, typeId: unknown, types?: Array<IdentifierTypeWithIdT> | null | undefined
 ): boolean {
 	if (!validateRequiredString(value)) {
 		return false;
@@ -107,7 +104,7 @@ export function validateIdentifierValue(
 }
 
 export function validateIdentifierType(
-	typeId: any, types?: Array<IdentifierType> | null | undefined
+	typeId: any, types?: Array<IdentifierTypeWithIdT> | null | undefined
 ): boolean {
 	if (!validatePositiveInteger(typeId, true)) {
 		return false;
@@ -123,7 +120,7 @@ export function validateIdentifierType(
 }
 
 export function validateIdentifier(
-	identifier: any, types?: Array<IdentifierType> | null | undefined
+	identifier: any, types?: Array<IdentifierTypeWithIdT> | null | undefined
 ): boolean {
 	const value = get(identifier, 'value');
 	const type = get(identifier, 'type');
@@ -134,7 +131,7 @@ export function validateIdentifier(
 	);
 }
 
-type ValidateIdentifiersFunc = (identifiers: any[], types?: Array<IdentifierType> | null | undefined) => boolean;
+type ValidateIdentifiersFunc = (identifiers: any[], types?: Array<IdentifierTypeWithIdT> | null | undefined) => boolean;
 export const validateIdentifiers: ValidateIdentifiersFunc = _.partial(
 	validateMultiple, _.partial.placeholder,
 	validateIdentifier, _.partial.placeholder
@@ -195,7 +192,8 @@ export const validateAuthorCreditSection = _.partialRight(
 	validateMultiple, _.partialRight.placeholder,
 	validateAuthorCreditRow, null, _.partialRight.placeholder
 );
+
 // In the merge editor we use the authorCredit directly instead of the authorCreditEditor state
-export function validateAuthorCreditSectionMerge(authorCredit:AuthorCredit) :boolean {
+export function validateAuthorCreditSectionMerge(authorCredit: any) :boolean {
 	return validatePositiveInteger(get(authorCredit, 'id', null), true);
 }

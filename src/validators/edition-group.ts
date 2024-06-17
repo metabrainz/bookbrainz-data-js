@@ -17,7 +17,6 @@
  */
 
 
-import {_IdentifierType, isIterable} from '../../../types';
 import {get, validatePositiveInteger} from './base';
 import {
 	validateAliases,
@@ -28,7 +27,9 @@ import {
 	validateSubmissionSection
 } from './common';
 
+import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
+import {isIterable} from '../util';
 
 
 export function validateEditionGroupSectionType(value: any): boolean {
@@ -40,11 +41,12 @@ export function validateEditionGroupSection(data: any): boolean {
 }
 
 export function validateForm(
-	formData: any, identifierTypes?: Array<_IdentifierType> | null | undefined,
+	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined,
 	isMerge?:boolean
 ): boolean {
 	let validAuthorCredit;
-	const authorCreditEnable = isIterable(formData) ? formData.getIn(['editionGroupSection', 'authorCreditEnable'], true) :
+	const authorCreditEnable = isIterable(formData) ?
+		formData.getIn(['editionGroupSection', 'authorCreditEnable'], true) :
 		get(formData, 'editionGroupSection.authorCreditEnable', true);
 	if (isMerge) {
 		validAuthorCredit = validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));

@@ -22,8 +22,8 @@ import {
 	validateAliases, validateIdentifiers, validateNameSection,
 	validateSubmissionSection
 } from './common';
+import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
-import type {_IdentifierType} from '../../../types';
 
 
 export function validateWorkSectionType(value: any): boolean {
@@ -46,7 +46,7 @@ export function validateWorkSection(data: any): boolean {
 }
 
 export function validateForm(
-	formData: any, identifierTypes?: Array<_IdentifierType> | null | undefined
+	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined
 ): boolean {
 	const conditions = [
 		validateAliases(get(formData, 'aliasEditor', {})),

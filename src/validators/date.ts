@@ -1,11 +1,14 @@
 import {isNil as _isNil} from 'lodash';
 
 
-function isEmpty(value) {
+function isEmpty(value: any): boolean {
 	return _isNil(value) || value === '';
 }
 
-export function dateValidator(dayObj, monthObj, yearObj) {
+export function dateValidator(dayObj, monthObj, yearObj): {
+	errorMessage: string;
+	isValid: boolean;
+} {
 	const year = Number.parseInt(yearObj, 10);
 	const month = Number.parseInt(monthObj, 10);
 	const day = Number.parseInt(dayObj, 10);
