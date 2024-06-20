@@ -36,6 +36,7 @@ import {
 	validateSeriesSectionOrderingType
 } from '../../lib/validators/series';
 
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {testValidatePositiveIntegerFunc} from './helpers';
@@ -54,12 +55,10 @@ function describeValidateSeriesSectionOrderingType() {
 
 function describeValidateSeriesSectionEntityType() {
 	it('should return true if passed a valid series type', () => {
-		const result = validateSeriesSectionEntityType(VALID_SERIES_TYPE);
-		expect(result).to.be.true;
+		expect(() => validateSeriesSectionEntityType(VALID_SERIES_TYPE)).to.not.throw();
 	});
 	it('should return false if passed a invalid series type', () => {
-		const result = validateSeriesSectionEntityType(INVALID_SERIES_TYPE);
-		expect(result).to.be.false;
+		expect(() => validateSeriesSectionEntityType(INVALID_SERIES_TYPE)).to.throw(ValidationError);
 	});
 }
 
@@ -71,48 +70,41 @@ const INVALID_SERIES_SECTION = {...VALID_SERIES_SECTION, seriesType: INVALID_SER
 
 function describeValidateSeriesSection() {
 	it('should pass a valid Object', () => {
-		const result = validateSeriesSection(VALID_SERIES_SECTION);
-		expect(result).to.be.true;
+		expect(() => validateSeriesSection(VALID_SERIES_SECTION)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateSeriesSection(
+		expect(() => validateSeriesSection(
 			Immutable.fromJS(VALID_SERIES_SECTION)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid ordering type', () => {
-		const result = validateSeriesSection({
+		expect(() => validateSeriesSection({
 			...VALID_SERIES_SECTION,
 			orderType: {}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid series type', () => {
-		const result = validateSeriesSection({
+		expect(() => validateSeriesSection({
 			...VALID_SERIES_SECTION,
 			seriesType: INVALID_SERIES_TYPE
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateSeriesSection(
+		expect(() => validateSeriesSection(
 			Immutable.fromJS(INVALID_SERIES_SECTION)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateSeriesSection(1);
-		expect(result).to.be.false;
+		expect(() => validateSeriesSection(1)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateSeriesSection(null);
-		expect(result).to.be.false;
+		expect(() => validateSeriesSection(null)).to.throw(ValidationError);
 	});
 }
 
@@ -126,70 +118,63 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		const result = validateForm(validForm, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
 			}, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid series section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				seriesSection: INVALID_SERIES_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	const invalidForm = {
@@ -198,21 +183,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateForm(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateForm(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

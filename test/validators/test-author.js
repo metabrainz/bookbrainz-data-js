@@ -48,6 +48,7 @@ import {
 	validateForm
 } from '../../lib/validators/author';
 
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -97,88 +98,76 @@ const INVALID_AUTHOR_SECTION = {...VALID_AUTHOR_SECTION, type: {}};
 
 function describeValidateAuthorSection() {
 	it('should pass a valid Object', () => {
-		const result = validateAuthorSection(VALID_AUTHOR_SECTION);
-		expect(result).to.be.true;
+		expect(() => validateAuthorSection(VALID_AUTHOR_SECTION)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateAuthorSection(
+		expect(() => validateAuthorSection(
 			Immutable.fromJS(VALID_AUTHOR_SECTION)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid area', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			beginArea: {id: null}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid begin date', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			beginDate: {day: '100', month: '21', year: '2012'}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid area', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			endArea: {id: null}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid end date', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			endDate: {day: '', month: '', year: 'aaaa'}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid ended flag', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			ended: 1
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid type', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			type: {}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid gender', () => {
-		const result = validateAuthorSection({
+		expect(() => validateAuthorSection({
 			...VALID_AUTHOR_SECTION,
 			gender: {}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateAuthorSection(
+		expect(() => validateAuthorSection(
 			Immutable.fromJS(INVALID_AUTHOR_SECTION)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass any other non-null data type', () => {
-		const result = validateAuthorSection(1);
-		expect(result).to.be.true;
+		expect(() => validateAuthorSection(1)).to.not.throw();
 	});
 
 	it('should pass a empty value  object', () => {
-		const result = validateAuthorSection({day: '', month: '', year: ''});
-		expect(result).to.be.true;
+		expect(() => validateAuthorSection({day: '', month: '', year: ''})).to.not.throw();
 	});
 }
 
@@ -193,70 +182,63 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		const result = validateForm(validForm, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
 			}, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid author section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				authorSection: INVALID_AUTHOR_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	const invalidForm = {
@@ -266,21 +248,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateForm(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateForm(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

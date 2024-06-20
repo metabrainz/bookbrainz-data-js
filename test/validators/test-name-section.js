@@ -26,6 +26,7 @@ import {
 	validateNameSectionLanguage, validateNameSectionName,
 	validateNameSectionSortName
 } from '../../lib/validators/common';
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -53,58 +54,49 @@ function describeValidateNameSectionDisambiguation() {
 
 function describeValidateNameSection() {
 	it('should pass a valid Object', () => {
-		const result = validateNameSection(VALID_NAME_SECTION);
-		expect(result).to.be.true;
+		expect(() => validateNameSection(VALID_NAME_SECTION)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateNameSection(
+		expect(() => validateNameSection(
 			Immutable.fromJS(VALID_NAME_SECTION)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid name', () => {
-		const result = validateNameSection({...VALID_NAME_SECTION, name: null});
-		expect(result).to.be.false;
+		expect(() => validateNameSection({...VALID_NAME_SECTION, name: null})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid sort name', () => {
-		const result = validateNameSection(
+		expect(() => validateNameSection(
 			{...VALID_NAME_SECTION, sortName: null}
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid language', () => {
-		const result = validateNameSection(
+		expect(() => validateNameSection(
 			{...VALID_NAME_SECTION, language: null}
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid disambiguation', () => {
-		const result = validateNameSection(
+		expect(() => validateNameSection(
 			{...VALID_NAME_SECTION, disambiguation: 2}
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateNameSection(
+		expect(() => validateNameSection(
 			Immutable.fromJS(INVALID_NAME_SECTION)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateNameSection(1);
-		expect(result).to.be.false;
+		expect(() => validateNameSection(1)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateNameSection(null);
-		expect(result).to.be.false;
+		expect(() => validateNameSection(null)).to.throw(ValidationError);
 	});
 }
 

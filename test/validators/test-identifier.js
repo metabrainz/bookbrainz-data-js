@@ -28,6 +28,7 @@ import {
 	validateIdentifier, validateIdentifierType, validateIdentifierValue,
 	validateIdentifiers
 } from '../../lib/validators/common';
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -42,30 +43,25 @@ function describeValidateIdentifierValueNoIdentifierTypes() {
 
 function describeValidateIdentifierValueWithIdentifierTypes() {
 	it('should pass a non-empty string value that matches the validation regular expression', () => {
-		const result = validateIdentifierValue(
+		expect(() => validateIdentifierValue(
 			'B076KQRJV1', 1, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject a non-empty string value that doesn\'t match the validation regular expression', () => {
-		const result = validateIdentifierValue('B076K1', 1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierValue('B076K1', 1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject an empty string', () => {
-		const result = validateIdentifierValue('', 1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierValue('', 1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject any non-string value', () => {
-		const result = validateIdentifierValue({}, 1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierValue({}, 1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateIdentifierValue(null, 1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierValue(null, 1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 
@@ -75,132 +71,111 @@ function describeValidateIdentifierTypeNoIdentifierTypes() {
 
 function describeValidateIdentifierTypeWithIdentifierTypes() {
 	it('should pass any positive integer value which is a type ID', () => {
-		const result = validateIdentifierType(1, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateIdentifierType(1, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should reject any positive integer value which isn\'t a type ID', () => {
-		const result = validateIdentifierType(1000, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierType(1000, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject zero', () => {
-		const result = validateIdentifierType(0, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierType(0, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject an negative number', () => {
-		const result = validateIdentifierType(-1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierType(-1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject any non-number value', () => {
-		const result = validateIdentifierType({}, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierType({}, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateIdentifierType(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifierType(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 
 function describeValidateIdentifier() {
 	it('should pass a valid Object', () => {
-		const result = validateIdentifier(VALID_IDENTIFIER, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateIdentifier(VALID_IDENTIFIER, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateIdentifier(
+		expect(() => validateIdentifier(
 			Immutable.fromJS(VALID_IDENTIFIER), IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid value', () => {
-		const result = validateIdentifier(
+		expect(() => validateIdentifier(
 			{...VALID_IDENTIFIER, value: 'B076QRJV1'}, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid type', () => {
-		const result = validateIdentifier(
+		expect(() => validateIdentifier(
 			{...VALID_IDENTIFIER, type: 5},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateIdentifier(
+		expect(() => validateIdentifier(
 			Immutable.fromJS(INVALID_IDENTIFIER),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateIdentifier(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifier(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateIdentifier(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifier(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 
 
 function describeValidateIdentifiers() {
 	it('should pass an Object of two valid Objects', () => {
-		const result = validateIdentifiers(VALID_IDENTIFIERS, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateIdentifiers(VALID_IDENTIFIERS, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass an Immutable.Map of valid Immutable.Maps', () => {
-		const result = validateIdentifiers(
+		expect(() => validateIdentifiers(
 			Immutable.fromJS(VALID_IDENTIFIERS),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should pass an empty Object', () => {
-		const result = validateIdentifiers({}, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateIdentifiers({}, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass an empty Immutable.Map', () => {
-		const result = validateIdentifiers(Immutable.Map(), IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateIdentifiers(Immutable.Map(), IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should reject an Object containing one invalid Object', () => {
-		const result = validateIdentifiers(
+		expect(() => validateIdentifiers(
 			INVALID_IDENTIFIERS,
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Immutable.Map containing one invalid Immutable.Map', () => {
-		const result = validateIdentifiers(
+		expect(() => validateIdentifiers(
 			Immutable.fromJS(INVALID_IDENTIFIERS),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateIdentifiers(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifiers(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateIdentifiers(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateIdentifiers(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

@@ -36,6 +36,7 @@ import {
 	validateWorkSectionType
 } from '../../lib/validators/work';
 
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {testValidatePositiveIntegerFunc} from './helpers';
@@ -49,41 +50,35 @@ function describeValidateWorkSectionLanguage() {
 	const validLanguage = {value: 1};
 
 	it('should pass a valid Object', () => {
-		const result = validateWorkSectionLanguage(validLanguage);
-		expect(result).to.be.true;
+		expect(() => validateWorkSectionLanguage(validLanguage)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateWorkSectionLanguage(
+		expect(() => validateWorkSectionLanguage(
 			Immutable.fromJS(validLanguage)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid value', () => {
-		const result = validateWorkSectionLanguage(
+		expect(() => validateWorkSectionLanguage(
 			{...validLanguage, value: 'bad'}
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	const invalidLanguage = {value: 'bad'};
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateWorkSectionLanguage(
+		expect(() => validateWorkSectionLanguage(
 			Immutable.fromJS(invalidLanguage)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateWorkSectionLanguage(1);
-		expect(result).to.be.false;
+		expect(() => validateWorkSectionLanguage(1)).to.throw(ValidationError);
 	});
 
 	it('should pass a null value', () => {
-		const result = validateWorkSectionLanguage(null);
-		expect(result).to.be.true;
+		expect(() => validateWorkSectionLanguage(null)).to.not.throw();
 	});
 }
 
@@ -99,48 +94,41 @@ const INVALID_WORK_SECTION = {...VALID_WORK_SECTION, type: {}};
 
 function describeValidateWorkSection() {
 	it('should pass a valid Object', () => {
-		const result = validateWorkSection(VALID_WORK_SECTION);
-		expect(result).to.be.true;
+		expect(() => validateWorkSection(VALID_WORK_SECTION)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateWorkSection(
+		expect(() => validateWorkSection(
 			Immutable.fromJS(VALID_WORK_SECTION)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid language', () => {
-		const result = validateWorkSection({
+		expect(() => validateWorkSection({
 			...VALID_WORK_SECTION,
 			language: {value: 'bad'}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid type', () => {
-		const result = validateWorkSection({
+		expect(() => validateWorkSection({
 			...VALID_WORK_SECTION,
 			type: {}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateWorkSection(
+		expect(() => validateWorkSection(
 			Immutable.fromJS(INVALID_WORK_SECTION)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass any other non-null data type', () => {
-		const result = validateWorkSection(1);
-		expect(result).to.be.true;
+		expect(() => validateWorkSection(1)).to.not.throw();
 	});
 
 	it('should pass a null value', () => {
-		const result = validateWorkSection(null);
-		expect(result).to.be.true;
+		expect(() => validateWorkSection(null)).to.not.throw();
 	});
 }
 
@@ -154,70 +142,63 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		const result = validateForm(validForm, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
 			}, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid work section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				workSection: INVALID_WORK_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	const invalidForm = {
@@ -226,21 +207,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateForm(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateForm(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

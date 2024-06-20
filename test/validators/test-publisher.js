@@ -46,6 +46,7 @@ import {
 	validatePublisherSectionType
 } from '../../lib/validators/publisher';
 
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -85,72 +86,62 @@ const INVALID_PUBLISHER_SECTION = {...VALID_PUBLISHER_SECTION, type: {}};
 
 function describeValidatePublisherSection() {
 	it('should pass a valid Object', () => {
-		const result = validatePublisherSection(VALID_PUBLISHER_SECTION);
-		expect(result).to.be.true;
+		expect(() => validatePublisherSection(VALID_PUBLISHER_SECTION)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validatePublisherSection(
+		expect(() => validatePublisherSection(
 			Immutable.fromJS(VALID_PUBLISHER_SECTION)
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid area', () => {
-		const result = validatePublisherSection({
+		expect(() => validatePublisherSection({
 			...VALID_PUBLISHER_SECTION,
 			area: {id: null}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid begin date', () => {
-		const result = validatePublisherSection({
+		expect(() => validatePublisherSection({
 			...VALID_PUBLISHER_SECTION,
 			beginDate: {day: '', month: '19', year: '2019'}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid end date', () => {
-		const result = validatePublisherSection({
+		expect(() => validatePublisherSection({
 			...VALID_PUBLISHER_SECTION,
 			endDate: {day: '', month: '19', year: '2019'}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid ended flag', () => {
-		const result = validatePublisherSection({
+		expect(() => validatePublisherSection({
 			...VALID_PUBLISHER_SECTION,
 			ended: 1
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid type', () => {
-		const result = validatePublisherSection({
+		expect(() => validatePublisherSection({
 			...VALID_PUBLISHER_SECTION,
 			type: {}
-		});
-		expect(result).to.be.false;
+		})).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validatePublisherSection(
+		expect(() => validatePublisherSection(
 			Immutable.fromJS(INVALID_PUBLISHER_SECTION)
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass any other non-null data type', () => {
-		const result = validatePublisherSection(1);
-		expect(result).to.be.true;
+		expect(() => validatePublisherSection(1)).to.not.throw();
 	});
 
 	it('should pass a null value', () => {
-		const result = validatePublisherSection({});
-		expect(result).to.be.true;
+		expect(() => validatePublisherSection({})).to.not.throw();
 	});
 }
 
@@ -165,70 +156,63 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		const result = validateForm(validForm, IDENTIFIER_TYPES);
-		expect(result).to.be.true;
+		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
 			}, IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid publisher section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				publisherSection: INVALID_PUBLISHER_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
 			},
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.true;
+		)).to.not.throw();
 	});
 
 	const invalidForm = {
@@ -237,21 +221,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateForm(
+		expect(() => validateForm(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
-		);
-		expect(result).to.be.false;
+		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateForm(1, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateForm(null, IDENTIFIER_TYPES);
-		expect(result).to.be.false;
+		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

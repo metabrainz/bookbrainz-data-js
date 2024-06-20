@@ -28,6 +28,7 @@ import {
 	validateAlias, validateAliasLanguage, validateAliasName,
 	validateAliasPrimary, validateAliasSortName, validateAliases
 } from '../../lib/validators/common';
+import {ValidationError} from '../../lib/validators/base';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -54,91 +55,74 @@ function describeValidateAliasPrimary() {
 
 function describeValidateAlias() {
 	it('should pass a valid Object', () => {
-		const result = validateAlias(VALID_ALIAS);
-		expect(result).to.be.true;
+		expect(() => validateAlias(VALID_ALIAS)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		const result = validateAlias(Immutable.fromJS(VALID_ALIAS));
-		expect(result).to.be.true;
+		expect(() => validateAlias(Immutable.fromJS(VALID_ALIAS))).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid name', () => {
-		const result = validateAlias({...VALID_ALIAS, name: null});
-		expect(result).to.be.false;
+		expect(() => validateAlias({...VALID_ALIAS, name: null})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid sort name', () => {
-		const result = validateAlias({...VALID_ALIAS, sortName: null});
-		expect(result).to.be.false;
+		expect(() => validateAlias({...VALID_ALIAS, sortName: null})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid language', () => {
-		const result = validateAlias({...VALID_ALIAS, language: null});
-		expect(result).to.be.false;
+		expect(() => validateAlias({...VALID_ALIAS, language: null})).to.throw(ValidationError);
 	});
 
 	it('should reject an Object with an invalid primary', () => {
-		const result = validateAlias({...VALID_ALIAS, primary: null});
-		expect(result).to.be.false;
+		expect(() => validateAlias({...VALID_ALIAS, primary: null})).to.throw(ValidationError);
 	});
 
 	it('should reject an invalid Immutable.Map', () => {
-		const result = validateAlias(Immutable.fromJS(INVALID_ALIAS));
-		expect(result).to.be.false;
+		expect(() => validateAlias(Immutable.fromJS(INVALID_ALIAS))).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateAlias(1);
-		expect(result).to.be.false;
+		expect(() => validateAlias(1)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateAlias(null);
-		expect(result).to.be.false;
+		expect(() => validateAlias(null)).to.throw(ValidationError);
 	});
 }
 
 
 function describeValidateAliases() {
 	it('should pass an Object of two valid Objects', () => {
-		const result = validateAliases(VALID_ALIASES);
-		expect(result).to.be.true;
+		expect(() => validateAliases(VALID_ALIASES)).to.not.throw();
 	});
 
 	it('should pass an Immutable.Map of valid Immutable.Maps', () => {
-		const result = validateAliases(Immutable.fromJS(VALID_ALIASES));
-		expect(result).to.be.true;
+		expect(() => validateAliases(Immutable.fromJS(VALID_ALIASES))).to.not.throw();
 	});
 
 	it('should pass an empty Object', () => {
-		const result = validateAliases({});
-		expect(result).to.be.true;
+		expect(() => validateAliases({})).to.not.throw();
 	});
 
 	it('should pass an empty Immutable.Map', () => {
-		const result = validateAliases(Immutable.Map());
-		expect(result).to.be.true;
+		expect(() => validateAliases(Immutable.Map())).to.not.throw();
 	});
 
 	it('should reject an Object containing one invalid Object', () => {
-		const result = validateAliases(INVALID_ALIASES);
-		expect(result).to.be.false;
+		expect(() => validateAliases(INVALID_ALIASES)).to.throw(ValidationError);
 	});
 
 	it('should reject an Immutable.Map containing one invalid Immutable.Map', () => {
-		const result = validateAliases(Immutable.fromJS(INVALID_ALIASES));
-		expect(result).to.be.false;
+		expect(() => validateAliases(Immutable.fromJS(INVALID_ALIASES))).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		const result = validateAliases(1);
-		expect(result).to.be.false;
+		expect(() => validateAliases(1)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		const result = validateAliases(null);
-		expect(result).to.be.false;
+		expect(() => validateAliases(null)).to.throw(ValidationError);
 	});
 }
 

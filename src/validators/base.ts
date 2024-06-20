@@ -23,6 +23,16 @@ import {isIterable} from '../util';
 import validator from 'validator';
 
 
+export class ValidationError extends Error {
+	constructor(message: string) {
+		super(message);
+		Object.defineProperty(this, 'name', {
+			enumerable: false,
+			value: 'ValidationError'
+		});
+	}
+}
+
 export function get(
 	object: any,
 	path: string,
