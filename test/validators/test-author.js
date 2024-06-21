@@ -37,6 +37,7 @@ import {
 	testValidatePositiveIntegerFunc
 } from './helpers';
 import {
+	validateAuthor,
 	validateAuthorSection,
 	validateAuthorSectionBeginArea,
 	validateAuthorSectionBeginDate,
@@ -44,8 +45,7 @@ import {
 	validateAuthorSectionEndDate,
 	validateAuthorSectionEnded,
 	validateAuthorSectionGender,
-	validateAuthorSectionType,
-	validateForm
+	validateAuthorSectionType
 } from '../../lib/validators/author';
 
 import {ValidationError} from '../../lib/validators/base';
@@ -182,18 +182,18 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
+		expect(() => validateAuthor(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
 		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
@@ -203,7 +203,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
@@ -212,7 +212,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
@@ -222,7 +222,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid author section', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			{
 				...validForm,
 				authorSection: INVALID_AUTHOR_SECTION
@@ -232,7 +232,7 @@ function describeValidateForm() {
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
@@ -248,18 +248,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateAuthor(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
 		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateAuthor(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateAuthor(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

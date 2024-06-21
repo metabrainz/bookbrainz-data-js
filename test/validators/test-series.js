@@ -30,7 +30,7 @@ import {
 	VALID_SUBMISSION_SECTION
 } from './data';
 import {
-	validateForm,
+	validateSeries,
 	validateSeriesSection,
 	validateSeriesSectionEntityType,
 	validateSeriesSectionOrderingType
@@ -118,18 +118,18 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
+		expect(() => validateSeries(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
 		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
@@ -139,7 +139,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
@@ -148,7 +148,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
@@ -158,7 +158,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid series section', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			{
 				...validForm,
 				seriesSection: INVALID_SERIES_SECTION
@@ -168,7 +168,7 @@ function describeValidateForm() {
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
@@ -183,18 +183,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateSeries(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
 		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateSeries(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateSeries(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

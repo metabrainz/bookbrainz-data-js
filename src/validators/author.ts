@@ -17,7 +17,7 @@
  */
 
 
-import {dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
+import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 import {
 	validateAliases,
 	validateIdentifiers,
@@ -30,82 +30,76 @@ import _ from 'lodash';
 import {labelsForAuthor} from '../func/author';
 
 
-export function validateAuthorSectionBeginArea(value: any): boolean {
+export function validateAuthorSectionBeginArea(value: any): void {
 	if (!value) {
-		return true;
+		return;
 	}
 
-	return validatePositiveInteger(get(value, 'id', null), true);
+	validatePositiveInteger(get(value, 'id', null), 'authorSection.beginArea.id', true);
 }
 
 export function validateAuthorSectionBeginDate(value: any) {
-	const {isValid, errorMessage} = validateDate(value);
-	return {errorMessage, isValid};
+	validateDate(value, 'authorSection.beginDate');
 }
 
-export function validateAuthorSectionEndArea(value: any): boolean {
+export function validateAuthorSectionEndArea(value: any): void {
 	if (!value) {
-		return true;
+		return;
 	}
 
-	return validatePositiveInteger(get(value, 'id', null), true);
+	validatePositiveInteger(get(value, 'id', null), 'authorSection.endArea.id', true);
 }
 
 export function validateAuthorSectionEndDate(
 	beginValue: any, endValue: any, authorType?: string
-) {
-	const {isValid, errorMessage} = validateDate(endValue);
+): void {
+	validateDate(endValue, 'authorSection.endDate');
+	try {
+		validateDate(beginValue, 'beginDate');
+	}
+	catch (error) {
+		// Ignore invalid begin date during end date validation.
+		// TODO: It probably makes more sense to drop these silly test cases?
+		return;
+	}
+
 	const isGroup = authorType === 'Group';
 	const {beginDateLabel, endDateLabel} = labelsForAuthor(isGroup);
-
-	if (isValid) {
-		if (dateIsBefore(beginValue, endValue)) {
-			return {errorMessage: '', isValid: true};
-		}
-
-		return {errorMessage: `${endDateLabel} must be greater than ${beginDateLabel}`, isValid: false};
+	if (!dateIsBefore(beginValue, endValue)) {
+		throw new ValidationError(`${endDateLabel} must be greater than ${beginDateLabel}`);
 	}
-	return {errorMessage, isValid};
 }
 
-export function validateAuthorSectionEnded(value: any): boolean {
-	return _.isNull(value) || _.isBoolean(value);
+export function validateAuthorSectionEnded(value: any): void {
+	if (!(_.isNull(value) || _.isBoolean(value))) {
+		throw new ValidationError('Value has to be a boolean or `null`', 'authorSection.ended');
+	}
 }
 
-export function validateAuthorSectionType(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateAuthorSectionType(value: any): void {
+	validatePositiveInteger(value, 'authorSection.type');
 }
 
-export function validateAuthorSectionGender(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateAuthorSectionGender(value: any): void {
+	validatePositiveInteger(value, 'authorSection.gender');
 }
 
-export function validateAuthorSection(data: any): boolean {
-	return (
-		validateAuthorSectionBeginArea(get(data, 'beginArea', null)) &&
-		validateAuthorSectionBeginDate(get(data, 'beginDate', '')).isValid &&
-		validateAuthorSectionEndArea(get(data, 'endArea', null)) &&
-		validateAuthorSectionEndDate(
-			get(data, 'beginDate', ''), get(data, 'endDate', '')
-		).isValid &&
-		validateAuthorSectionEnded(get(data, 'ended', null)) &&
-		validateAuthorSectionType(get(data, 'gender', null)) &&
-		validateAuthorSectionType(get(data, 'type', null))
-	);
+export function validateAuthorSection(data: any): void {
+	validateAuthorSectionBeginArea(get(data, 'beginArea', null));
+	validateAuthorSectionBeginDate(get(data, 'beginDate', ''));
+	validateAuthorSectionEndArea(get(data, 'endArea', null));
+	validateAuthorSectionEndDate(get(data, 'beginDate', ''), get(data, 'endDate', ''));
+	validateAuthorSectionEnded(get(data, 'ended', null));
+	validateAuthorSectionType(get(data, 'gender', null));
+	validateAuthorSectionType(get(data, 'type', null));
 }
 
-export function validateForm(
+export function validateAuthor(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validateAuthorSection(get(formData, 'authorSection', {})),
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
-
-	return _.every(conditions);
+): void {
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validateAuthorSection(get(formData, 'authorSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

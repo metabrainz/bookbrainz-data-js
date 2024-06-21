@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
+import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 import {
 	validateAliases, validateIdentifiers, validateNameSection,
 	validateSubmissionSection
@@ -25,69 +25,64 @@ import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
 
 
-export function validatePublisherSectionArea(value: any): boolean {
+export function validatePublisherSectionArea(value: any): void {
 	if (!value) {
-		return true;
+		return;
 	}
 
-	return validatePositiveInteger(get(value, 'id', null), true);
+	validatePositiveInteger(get(value, 'id', null), 'publisherSection.area', true);
 }
 
 export function validatePublisherSectionBeginDate(value: any) {
-	const {isValid, errorMessage} = validateDate(value);
-	return {errorMessage, isValid};
+	validateDate(value, 'publisherSection.beginDate');
 }
 
 export function validatePublisherSectionEndDate(
 	beginValue: any, endValue: any, ended: boolean
-) {
+): void {
 	if (ended === false) {
-		return {errorMessage: 'Dissolved date will be ignored', isValid: true};
+		return;
 	}
-	const {isValid, errorMessage} = validateDate(endValue);
-
-	if (isValid) {
-		if (dateIsBefore(beginValue, endValue)) {
-			return {errorMessage: '', isValid: true};
-		}
-		return {errorMessage: 'Dissolved Date must be greater than Founded Date', isValid: false};
+	validateDate(endValue, 'publisherSection.endDate');
+	try {
+		validateDate(beginValue, 'beginDate');
 	}
-	return {errorMessage, isValid};
+	catch (error) {
+		// Ignore invalid begin date during end date validation.
+		// TODO: It probably makes more sense to drop these silly test cases?
+		return;
+	}
+
+	if (!dateIsBefore(beginValue, endValue)) {
+		throw new ValidationError('Dissolved Date must be greater than Founded Date');
+	}
 }
 
-export function validatePublisherSectionEnded(value: any): boolean {
-	return _.isNull(value) || _.isBoolean(value);
+export function validatePublisherSectionEnded(value: any): void {
+	if (!(_.isNull(value) || _.isBoolean(value))) {
+		throw new ValidationError('Value has to be a boolean or `null`', 'publisherSection.ended');
+	}
 }
 
-export function validatePublisherSectionType(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validatePublisherSectionType(value: any): void {
+	validatePositiveInteger(value, 'publisherSection.type');
 }
 
 
-export function validatePublisherSection(data: any): boolean {
-	return (
-		validatePublisherSectionArea(get(data, 'area', null)) &&
-		validatePublisherSectionBeginDate(get(data, 'beginDate', '')).isValid &&
-		validatePublisherSectionEndDate(
-			get(data, 'beginDate', ''), get(data, 'endDate', ''), get(data, 'ended', null)
-		).isValid &&
-		validatePublisherSectionEnded(get(data, 'ended', null)) &&
-		validatePublisherSectionType(get(data, 'type', null))
-	);
+export function validatePublisherSection(data: any): void {
+	validatePublisherSectionArea(get(data, 'area', null));
+	validatePublisherSectionBeginDate(get(data, 'beginDate', ''));
+	validatePublisherSectionEndDate(get(data, 'beginDate', ''), get(data, 'endDate', ''), get(data, 'ended', null));
+	validatePublisherSectionEnded(get(data, 'ended', null));
+	validatePublisherSectionType(get(data, 'type', null));
 }
 
-export function validateForm(
+export function validatePublisher(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validatePublisherSection(get(formData, 'publisherSection', {})),
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
-
-	return _.every(conditions);
+): void {
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validatePublisherSection(get(formData, 'publisherSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

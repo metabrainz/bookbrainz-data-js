@@ -17,6 +17,7 @@
  */
 
 import {
+	ValidationError,
 	get,
 	getIn,
 	validateOptionalString,
@@ -26,56 +27,52 @@ import {
 } from './base';
 
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
-import {Iterable} from 'immutable';
 import _ from 'lodash';
+import {isIterable} from '../util';
 
 
 export function validateMultiple(
 	values: any[],
-	validationFunction: (value: any, ...rest: any[]) => boolean,
+	validationFunction: (value: any, ...rest: any[]) => void,
 	additionalArgs?: any,
 	requiresOneOrMore?: boolean
-): boolean {
+): void {
 	if (requiresOneOrMore && _.isEmpty(values)) {
-		return false;
+		throw new ValidationError('At least one value is required');
 	}
 
-	// eslint-disable-next-line func-style -- we have to reassign
-	let every = (object, predicate) => _.every(object, predicate);
-	if (Iterable.isIterable(values)) {
-		every = (object, predicate) => object.every(predicate);
-	}
-	else if (!_.isObject(values)) {
-		return false;
+	if (!_.isObject(values)) {
+		throw new ValidationError('Value is not an object');
 	}
 
-	return every(values, (value) =>
-		validationFunction(value, additionalArgs));
+	for (const value of isIterable(values) ? values.values() : Object.values(values)) {
+		validationFunction(value, additionalArgs);
+	}
 }
 
-export function validateAliasName(value: any): boolean {
-	return validateRequiredString(value);
+export function validateAliasName(value: any): void {
+	validateRequiredString(value, 'alias.name');
 }
 
-export function validateAliasSortName(value: any): boolean {
-	return validateRequiredString(value);
+export function validateAliasSortName(value: any): void {
+	validateRequiredString(value, 'alias.name');
 }
 
-export function validateAliasLanguage(value: any): boolean {
-	return validatePositiveInteger(value, true);
+export function validateAliasLanguage(value: any): void {
+	validatePositiveInteger(value, 'alias.language', true);
 }
 
-export function validateAliasPrimary(value: any): boolean {
-	return _.isBoolean(value);
+export function validateAliasPrimary(value: any): void {
+	if (!_.isBoolean(value)) {
+		throw new ValidationError('Value has to be a boolean', 'alias.primary', value);
+	}
 }
 
-export function validateAlias(value: any): boolean {
-	return (
-		validateAliasName(get(value, 'name')) &&
-		validateAliasSortName(get(value, 'sortName')) &&
-		validateAliasLanguage(get(value, 'language')) &&
-		validateAliasPrimary(get(value, 'primary'))
-	);
+export function validateAlias(value: any): void {
+	validateAliasName(get(value, 'name'));
+	validateAliasSortName(get(value, 'sortName'));
+	validateAliasLanguage(get(value, 'language'));
+	validateAliasPrimary(get(value, 'primary'));
 }
 
 export const validateAliases = _.partial(
@@ -85,106 +82,96 @@ export const validateAliases = _.partial(
 
 export function validateIdentifierValue(
 	value: any, typeId: unknown, types?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	if (!validateRequiredString(value)) {
-		return false;
-	}
+): void {
+	validateRequiredString(value, 'identifier.value');
 
 	if (!types) {
-		return true;
+		return;
 	}
 
-	const selectedType = _.find(types, (type) => type.id === typeId);
+	const selectedType = types.find((type) => type.id === typeId);
 
 	if (selectedType) {
-		return new RegExp(selectedType.validationRegex).test(value);
+		if (!new RegExp(selectedType.validationRegex).test(value)) {
+			throw new ValidationError(`Value is not a valid ${selectedType.label}`, 'identifier.value', value);
+		}
 	}
-
-	return false;
 }
 
 export function validateIdentifierType(
 	typeId: any, types?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	if (!validatePositiveInteger(typeId, true)) {
-		return false;
-	}
+): void {
+	validatePositiveInteger(typeId, 'identifier.type', true);
 
 	if (!types) {
-		return true;
+		return;
 	}
 
-	const selectedType = _.find(types, (type) => type.id === typeId);
-
-	return Boolean(selectedType);
+	if (!types.find((type) => type.id === typeId)) {
+		throw new ValidationError('Value is not a valid identifier type ID', 'identifier.type', typeId);
+	}
 }
 
 export function validateIdentifier(
 	identifier: any, types?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
+): void {
 	const value = get(identifier, 'value');
 	const type = get(identifier, 'type');
 
-	return (
-		validateIdentifierValue(value, type, types) &&
-		validateIdentifierType(type, types)
-	);
+	validateIdentifierValue(value, type, types);
+	validateIdentifierType(type, types);
 }
 
-type ValidateIdentifiersFunc = (identifiers: any[], types?: Array<IdentifierTypeWithIdT> | null | undefined) => boolean;
+type ValidateIdentifiersFunc = (identifiers: any[], types?: Array<IdentifierTypeWithIdT> | null | undefined) => void;
 export const validateIdentifiers: ValidateIdentifiersFunc = _.partial(
 	validateMultiple, _.partial.placeholder,
 	validateIdentifier, _.partial.placeholder
 );
 
-export function validateNameSectionName(value: any): boolean {
-	return validateRequiredString(value);
+export function validateNameSectionName(value: any): void {
+	validateRequiredString(value, 'nameSection.name');
 }
 
-export function validateNameSectionSortName(value: any): boolean {
-	return validateRequiredString(value);
+export function validateNameSectionSortName(value: any): void {
+	validateRequiredString(value, 'nameSection.sortName');
 }
 
-export function validateNameSectionLanguage(value: any): boolean {
-	return validatePositiveInteger(value, true);
+export function validateNameSectionLanguage(value: any): void {
+	validatePositiveInteger(value, 'nameSection.language', true);
 }
 
-export function validateNameSectionDisambiguation(value: any): boolean {
-	return validateOptionalString(value);
+export function validateNameSectionDisambiguation(value: any): void {
+	validateOptionalString(value, 'nameSection.disambiguation');
 }
 
 export function validateNameSection(
 	values: any
-): boolean {
-	return (
-		validateNameSectionName(get(values, 'name', null)) &&
-		validateNameSectionSortName(get(values, 'sortName', null)) &&
-		validateNameSectionLanguage(get(values, 'language', null)) &&
-		validateNameSectionDisambiguation(get(values, 'disambiguation', null))
-	);
+): void {
+	validateNameSectionName(get(values, 'name', null));
+	validateNameSectionSortName(get(values, 'sortName', null));
+	validateNameSectionLanguage(get(values, 'language', null));
+	validateNameSectionDisambiguation(get(values, 'disambiguation', null));
 }
 
-export function validateSubmissionSectionNote(value: any): boolean {
-	return validateOptionalString(value);
+export function validateSubmissionSectionNote(value: any): void {
+	validateOptionalString(value, 'submissionSection.note');
 }
 
-export function validateSubmissionSectionAnnotation(value: any): boolean {
-	return validateOptionalString(value);
+export function validateSubmissionSectionAnnotation(value: any): void {
+	validateOptionalString(value, 'submissionSection.annotation.content');
 }
 
 export function validateSubmissionSection(
 	data: any
-): boolean {
-	return (
-		validateSubmissionSectionNote(get(data, 'note', null)) &&
-		validateSubmissionSectionAnnotation(get(data, 'annotation.content', null))
-	);
+): void {
+	validateSubmissionSectionNote(get(data, 'note', null));
+	validateSubmissionSectionAnnotation(get(data, 'annotation.content', null));
 }
 
-export function validateAuthorCreditRow(row: any): boolean {
-	return validateUUID(getIn(row, ['author', 'id'], null), true) &&
-	validateRequiredString(get(row, 'name', null)) &&
-	validateOptionalString(get(row, 'joinPhrase', null));
+export function validateAuthorCreditRow(row: any): void {
+	validateUUID(getIn(row, ['author', 'id'], null), 'authorCredit.author.id', true);
+	validateRequiredString(get(row, 'name', null), 'authorCredit.name');
+	validateOptionalString(get(row, 'joinPhrase', null), 'authorCredit.joinPhrase');
 }
 
 export const validateAuthorCreditSection = _.partialRight(
@@ -194,6 +181,6 @@ export const validateAuthorCreditSection = _.partialRight(
 );
 
 // In the merge editor we use the authorCredit directly instead of the authorCreditEditor state
-export function validateAuthorCreditSectionMerge(authorCredit: any) :boolean {
-	return validatePositiveInteger(get(authorCredit, 'id', null), true);
+export function validateAuthorCreditSectionMerge(authorCredit: any): void {
+	validatePositiveInteger(get(authorCredit, 'id', null), 'authorCredit.id', true);
 }

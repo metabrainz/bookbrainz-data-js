@@ -23,40 +23,31 @@ import {
 	validateSubmissionSection
 } from './common';
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
-import _ from 'lodash';
 
 
-export function validateWorkSectionType(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateWorkSectionType(value: any): void {
+	validatePositiveInteger(value, 'workSection.type');
 }
 
-export function validateWorkSectionLanguage(value: any): boolean {
+export function validateWorkSectionLanguage(value: any): void {
 	if (!value) {
-		return true;
+		return;
 	}
 
-	return validatePositiveInteger(get(value, 'value', null), true);
+	validatePositiveInteger(get(value, 'value', null), 'workSection.language', true);
 }
 
-export function validateWorkSection(data: any): boolean {
-	return (
-		validateWorkSectionType(get(data, 'type', null)) &&
-		validateWorkSectionLanguage(get(data, 'language', null))
-	);
+export function validateWorkSection(data: any): void {
+	validateWorkSectionType(get(data, 'type', null));
+	validateWorkSectionLanguage(get(data, 'language', null));
 }
 
-export function validateForm(
+export function validateWork(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validateWorkSection(get(formData, 'workSection', {})),
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
-
-	return _.every(conditions);
+): void {
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validateWorkSection(get(formData, 'workSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

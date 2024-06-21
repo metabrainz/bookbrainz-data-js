@@ -36,6 +36,7 @@ import {
 	testValidatePositiveIntegerFunc
 } from './helpers';
 import {
+	validateEdition,
 	validateEditionSection,
 	validateEditionSectionDepth,
 	validateEditionSectionEditionGroup,
@@ -48,8 +49,7 @@ import {
 	validateEditionSectionReleaseDate,
 	validateEditionSectionStatus,
 	validateEditionSectionWeight,
-	validateEditionSectionWidth,
-	validateForm
+	validateEditionSectionWidth
 } from '../../lib/validators/edition';
 
 import {ValidationError} from '../../lib/validators/base';
@@ -388,18 +388,18 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
+		expect(() => validateEdition(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
 		)).to.not.throw();
 	});
 
 	it('should pass an Object with an empty author credit editor and AC disabled', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				authorCreditEditor: {},
@@ -413,7 +413,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
@@ -423,7 +423,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid author credit editor', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				authorCreditEditor: INVALID_AUTHOR_CREDIT_EDITOR
@@ -433,7 +433,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an empty author credit editor', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				authorCreditEditor: {}
@@ -443,7 +443,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with a non empty author credit editor and AC disabled', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				authorCreditEditor: VALID_AUTHOR_CREDIT_EDITOR,
@@ -457,7 +457,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
@@ -466,7 +466,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
@@ -476,7 +476,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid edition section', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				editionSection: INVALID_EDITION_SECTION
@@ -486,7 +486,7 @@ function describeValidateForm() {
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
@@ -501,18 +501,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateEdition(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
 		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateEdition(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateEdition(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

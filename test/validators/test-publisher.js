@@ -37,7 +37,7 @@ import {
 	testValidatePositiveIntegerFunc
 } from './helpers';
 import {
-	validateForm,
+	validatePublisher,
 	validatePublisherSection,
 	validatePublisherSectionArea,
 	validatePublisherSectionBeginDate,
@@ -156,18 +156,18 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
+		expect(() => validatePublisher(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
 		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
@@ -177,7 +177,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
@@ -186,7 +186,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
@@ -196,7 +196,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid publisher section', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			{
 				...validForm,
 				publisherSection: INVALID_PUBLISHER_SECTION
@@ -206,7 +206,7 @@ function describeValidateForm() {
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
@@ -221,18 +221,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validatePublisher(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
 		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validatePublisher(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validatePublisher(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

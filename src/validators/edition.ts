@@ -17,149 +17,126 @@
  */
 
 
+import {ValidationError, get, validateDate, validatePositiveInteger, validateUUID} from './base';
 import {convertMapToObject, isIterable} from '../util';
-import {get, validateDate, validatePositiveInteger, validateUUID} from './base';
 import {
 	validateAliases,
 	validateAuthorCreditSection,
 	validateAuthorCreditSectionMerge,
 	validateIdentifiers,
+	validateMultiple,
 	validateNameSection,
 	validateSubmissionSection
 } from './common';
 
 import {IdentifierTypeWithIdT} from '../types/identifiers';
-import {Iterable} from 'immutable';
 import _ from 'lodash';
 
 
-export function validateEditionSectionDepth(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionDepth(value: any): void {
+	validatePositiveInteger(value, 'editionSection.depth');
 }
 
-export function validateEditionSectionFormat(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionFormat(value: any): void {
+	validatePositiveInteger(value, 'editionSection.format');
 }
 
-export function validateEditionSectionHeight(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionHeight(value: any): void {
+	validatePositiveInteger(value, 'editionSection.height');
 }
 
-export function validateEditionSectionLanguage(value: any): boolean {
-	return validatePositiveInteger(get(value, 'value', null), true);
+export function validateEditionSectionLanguage(value: any): void {
+	validatePositiveInteger(get(value, 'value', null), 'editionSection.language', true);
 }
 
-export function validateEditionSectionLanguages(values: any): boolean {
-	if (!values) {
-		return true;
+export function validateEditionSectionLanguages(values: any): void {
+	// TODO: Passing for nil values is inconsistent with aliases and identifiers?
+	if (values) {
+		validateMultiple(values, validateEditionSectionLanguage);
 	}
-
-	// eslint-disable-next-line func-style -- we have to reassign
-	let every = (object, predicate) => _.every(object, predicate);
-	if (Iterable.isIterable(values)) {
-		every = (object, predicate) => object.every(predicate);
-	}
-	else if (!_.isObject(values)) {
-		return false;
-	}
-
-	return every(values, (value) => validateEditionSectionLanguage(value));
 }
 
-export function validateEditionSectionPages(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionPages(value: any): void {
+	validatePositiveInteger(value, 'editionSection.pages');
 }
 
 export function validateEditionSectionEditionGroup(
 	value: any,
 	editionGroupRequired: boolean | null | undefined
-): boolean {
-	return validateUUID(get(value, 'id', null), editionGroupRequired);
+): void {
+	validateUUID(get(value, 'id', null), 'editionSection.editionGroup.id', editionGroupRequired);
 }
 
-export function validateEditionSectionPublisher(value: any): boolean {
+export function validateEditionSectionPublisher(value: any): void {
 	if (!value) {
-		return true;
+		return;
 	}
 	const publishers = convertMapToObject(value);
 	if (!_.isPlainObject(publishers)) {
-		return false;
+		throw new ValidationError('Value is no plain object', 'editionSection.publisher', publishers);
 	}
 	for (const pubId in publishers) {
 		if (Object.prototype.hasOwnProperty.call(publishers, pubId)) {
 			const publisher = publishers[pubId];
-			const isValid = validateUUID(get(publisher, 'id', null), true);
-			if (!isValid) {
-				return false;
-			}
+			validateUUID(get(publisher, 'id', null), 'editionSection.publisher.id', true);
 		}
 	}
-	return true;
 }
 
-export function validateEditionSectionReleaseDate(value: any) {
-	const {isValid, errorMessage} = validateDate(value);
-	return {errorMessage, isValid};
+export function validateEditionSectionReleaseDate(value: any): void {
+	validateDate(value, 'editionSection.releaseDate');
 }
 
-export function validateEditionSectionStatus(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionStatus(value: any): void {
+	validatePositiveInteger(value, 'editionSection.status');
 }
 
-export function validateEditionSectionWeight(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionWeight(value: any): void {
+	validatePositiveInteger(value, 'editionSection.weight');
 }
 
-export function validateEditionSectionWidth(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionSectionWidth(value: any): void {
+	validatePositiveInteger(value, 'editionSection.width');
 }
 
-export function validateEditionSection(data: any): boolean {
-	return (
-		validateEditionSectionDepth(get(data, 'depth', null)) &&
-		validateEditionSectionFormat(get(data, 'format', null)) &&
-		validateEditionSectionHeight(get(data, 'height', null)) &&
-		validateEditionSectionLanguages(get(data, 'languages', null)) &&
-		validateEditionSectionPages(get(data, 'pages', null)) &&
-		validateEditionSectionEditionGroup(
-			get(data, 'editionGroup', null),
-			get(data, 'editionGroupRequired', null)
-		) &&
-		validateEditionSectionPublisher(get(data, 'publisher', null)) &&
-		validateEditionSectionReleaseDate(get(data, 'releaseDate', null)).isValid &&
-		validateEditionSectionStatus(get(data, 'status', null)) &&
-		validateEditionSectionWeight(get(data, 'weight', null)) &&
-		validateEditionSectionWidth(get(data, 'width', null))
-	);
+export function validateEditionSection(data: any): void {
+	validateEditionSectionDepth(get(data, 'depth', null));
+	validateEditionSectionFormat(get(data, 'format', null));
+	validateEditionSectionHeight(get(data, 'height', null));
+	validateEditionSectionLanguages(get(data, 'languages', null));
+	validateEditionSectionPages(get(data, 'pages', null));
+	validateEditionSectionEditionGroup(get(data, 'editionGroup', null), get(data, 'editionGroupRequired', null));
+	validateEditionSectionPublisher(get(data, 'publisher', null));
+	validateEditionSectionReleaseDate(get(data, 'releaseDate', null));
+	validateEditionSectionStatus(get(data, 'status', null));
+	validateEditionSectionWeight(get(data, 'weight', null));
+	validateEditionSectionWidth(get(data, 'width', null));
 }
 
-export function validateForm(
+export function validateEdition(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined,
-	isMerge?:boolean
-): boolean {
-	let validAuthorCredit;
-	const authorCreditEnable = isIterable(formData) ? formData.getIn(['editionSection', 'authorCreditEnable'], true) :
+	isMerge?: boolean
+): void {
+	const authorCreditEnable = isIterable(formData) ?
+		formData.getIn(['editionSection', 'authorCreditEnable'], true) :
 		get(formData, 'editionSection.authorCreditEnable', true);
 	if (isMerge) {
-		validAuthorCredit = validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));
+		validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));
 	}
 	else if (!authorCreditEnable) {
-		validAuthorCredit = isIterable(formData) ? formData.get('authorCreditEditor')?.size === 0 :
+		const emptyAuthorCredit = isIterable(formData) ? formData.get('authorCreditEditor')?.size === 0 :
 			_.size(get(formData, 'authorCreditEditor', {})) === 0;
+		if (!emptyAuthorCredit) {
+			throw new ValidationError('Disabled author credit has to be empty', 'authorCreditEditor');
+		}
 	}
 	else {
-		validAuthorCredit = validateAuthorCreditSection(get(formData, 'authorCreditEditor', {}), authorCreditEnable);
+		validateAuthorCreditSection(get(formData, 'authorCreditEditor', {}), authorCreditEnable);
 	}
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validateEditionSection(get(formData, 'editionSection', {})),
-		validAuthorCredit,
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
 
-	return _.every(conditions);
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validateEditionSection(get(formData, 'editionSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

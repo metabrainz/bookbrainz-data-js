@@ -30,7 +30,7 @@ import {
 	VALID_SUBMISSION_SECTION
 } from './data';
 import {
-	validateForm,
+	validateWork,
 	validateWorkSection,
 	validateWorkSectionLanguage,
 	validateWorkSectionType
@@ -142,18 +142,18 @@ function describeValidateForm() {
 	};
 
 	it('should pass a valid Object', () => {
-		expect(() => validateForm(validForm, IDENTIFIER_TYPES)).to.not.throw();
+		expect(() => validateWork(validForm, IDENTIFIER_TYPES)).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			Immutable.fromJS(validForm),
 			IDENTIFIER_TYPES
 		)).to.not.throw();
 	});
 
 	it('should reject an Object with an invalid alias editor', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			{
 				...validForm,
 				aliasEditor: INVALID_ALIASES
@@ -163,7 +163,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid identifier editor', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			{
 				...validForm,
 				identifierEditor: INVALID_IDENTIFIERS
@@ -172,7 +172,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid name section', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			{
 				...validForm,
 				nameSection: INVALID_NAME_SECTION
@@ -182,7 +182,7 @@ function describeValidateForm() {
 	});
 
 	it('should reject an Object with an invalid work section', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			{
 				...validForm,
 				workSection: INVALID_WORK_SECTION
@@ -192,7 +192,7 @@ function describeValidateForm() {
 	});
 
 	it('should pass an Object with an empty submission section', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			{
 				...validForm,
 				submissionSection: EMPTY_SUBMISSION_SECTION
@@ -207,18 +207,18 @@ function describeValidateForm() {
 	};
 
 	it('should reject an invalid Immutable.Map', () => {
-		expect(() => validateForm(
+		expect(() => validateWork(
 			Immutable.fromJS(invalidForm),
 			IDENTIFIER_TYPES
 		)).to.throw(ValidationError);
 	});
 
 	it('should reject any other non-null data type', () => {
-		expect(() => validateForm(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateWork(1, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 
 	it('should reject a null value', () => {
-		expect(() => validateForm(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
+		expect(() => validateWork(null, IDENTIFIER_TYPES)).to.throw(ValidationError);
 	});
 }
 

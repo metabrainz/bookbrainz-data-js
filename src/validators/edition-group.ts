@@ -17,7 +17,7 @@
  */
 
 
-import {get, validatePositiveInteger} from './base';
+import {ValidationError, get, validatePositiveInteger} from './base';
 import {
 	validateAliases,
 	validateAuthorCreditSection,
@@ -32,42 +32,38 @@ import _ from 'lodash';
 import {isIterable} from '../util';
 
 
-export function validateEditionGroupSectionType(value: any): boolean {
-	return validatePositiveInteger(value);
+export function validateEditionGroupSectionType(value: any): void {
+	validatePositiveInteger(value, 'editionGroupSection.type');
 }
 
-export function validateEditionGroupSection(data: any): boolean {
-	return validateEditionGroupSectionType(get(data, 'type', null));
+export function validateEditionGroupSection(data: any): void {
+	validateEditionGroupSectionType(get(data, 'type', null));
 }
 
-export function validateForm(
+export function validateEditionGroup(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined,
-	isMerge?:boolean
-): boolean {
-	let validAuthorCredit;
+	isMerge?: boolean
+): void {
 	const authorCreditEnable = isIterable(formData) ?
 		formData.getIn(['editionGroupSection', 'authorCreditEnable'], true) :
 		get(formData, 'editionGroupSection.authorCreditEnable', true);
 	if (isMerge) {
-		validAuthorCredit = validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));
+		validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));
 	}
 	else if (!authorCreditEnable) {
-		validAuthorCredit = isIterable(formData) ? formData.get('authorCreditEditor')?.size === 0 :
+		const emptyAuthorCredit = isIterable(formData) ? formData.get('authorCreditEditor')?.size === 0 :
 			_.size(get(formData, 'authorCreditEditor', {})) === 0;
+		if (!emptyAuthorCredit) {
+			throw new ValidationError('Disabled author credit has to be empty', 'authorCreditEditor');
+		}
 	}
 	else {
-		validAuthorCredit = validateAuthorCreditSection(get(formData, 'authorCreditEditor', {}), authorCreditEnable);
+		validateAuthorCreditSection(get(formData, 'authorCreditEditor', {}), authorCreditEnable);
 	}
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validateEditionGroupSection(get(formData, 'editionGroupSection', {})),
-		validAuthorCredit,
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
 
-	return _.every(conditions);
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validateEditionGroupSection(get(formData, 'editionGroupSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

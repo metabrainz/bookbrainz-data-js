@@ -18,7 +18,7 @@
  */
 
 
-import {get, validatePositiveInteger} from './base';
+import {ValidationError, get, validatePositiveInteger} from './base';
 import {
 	validateAliases,
 	validateIdentifiers,
@@ -27,38 +27,34 @@ import {
 } from './common';
 
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
-import _ from 'lodash';
 
 
-export function validateSeriesSectionOrderingType(value: any): boolean {
-	return validatePositiveInteger(value, true);
+export function validateSeriesSectionOrderingType(value: any): void {
+	validatePositiveInteger(value, 'seriesSection.orderType', true);
 }
 
-export function validateSeriesSectionEntityType(value: any): boolean {
-	const entity = ['Author', 'Work', 'Edition', 'EditionGroup', 'Publisher'];
-	return entity.includes(value);
+export function validateSeriesSectionEntityType(value: any): void {
+	const itemEntityTypes = ['Author', 'Work', 'Edition', 'EditionGroup', 'Publisher'];
+	if (!itemEntityTypes.includes(value)) {
+		throw new ValidationError(
+			'Value is not an entity type which can be part of a series',
+			'seriesSection.seriesType',
+			value
+		);
+	}
 }
 
-export function validateSeriesSection(data: any): boolean {
-	return (
-		validateSeriesSectionOrderingType(get(data, 'orderType', null)) &&
-		validateSeriesSectionEntityType(get(data, 'seriesType', null))
-
-	);
+export function validateSeriesSection(data: any): void {
+	validateSeriesSectionOrderingType(get(data, 'orderType', null));
+	validateSeriesSectionEntityType(get(data, 'seriesType', null));
 }
 
-export function validateForm(
+export function validateSeries(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined
-): boolean {
-	const conditions = [
-		validateAliases(get(formData, 'aliasEditor', {})),
-		validateIdentifiers(
-			get(formData, 'identifierEditor', {}), identifierTypes
-		),
-		validateNameSection(get(formData, 'nameSection', {})),
-		validateSeriesSection(get(formData, 'seriesSection', {})),
-		validateSubmissionSection(get(formData, 'submissionSection', {}))
-	];
-
-	return _.every(conditions);
+): void {
+	validateAliases(get(formData, 'aliasEditor', {}));
+	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
+	validateNameSection(get(formData, 'nameSection', {}));
+	validateSeriesSection(get(formData, 'seriesSection', {}));
+	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }

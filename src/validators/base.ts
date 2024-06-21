@@ -24,7 +24,7 @@ import validator from 'validator';
 
 
 export class ValidationError extends Error {
-	constructor(message: string) {
+	constructor(message: string, public field?: string, public value?: any) {
 		super(message);
 		Object.defineProperty(this, 'name', {
 			enumerable: false,
@@ -55,46 +55,35 @@ export function getIn(
 	return _.get(object, paths, defaultValue);
 }
 
-export function absentAndRequired(value: any, required: boolean | null | undefined): boolean {
-	return Boolean(required && _.isNil(value));
-}
-
-export function nilOrString(value: any): boolean {
-	return _.isNil(value) || _.isString(value);
-}
-
-export function nilOrInteger(value: any): boolean {
-	return _.isNil(value) || _.isInteger(value);
-}
-
-export function validateOptionalString(value: any): boolean {
-	return nilOrString(value);
-}
-
-export function validateRequiredString(value: any): boolean {
-	if (!_.isString(value)) {
-		return false;
+export function validateOptionalString(value: any, field: string): void {
+	if (!(_.isNil(value) || _.isString(value))) {
+		throw new ValidationError('Value has to be a string, `null` or `undefined`', field, value);
 	}
+}
 
-	return Boolean(value);
+export function validateRequiredString(value: any, field: string): void {
+	if (!_.isString(value) || value === '') {
+		throw new ValidationError('Value has to be a non-empty string', field, value);
+	}
 }
 
 export function validatePositiveInteger(
-	value: any, required = false
-): boolean {
-	if (absentAndRequired(value, required)) {
-		return false;
+	value: any, field: string, required = false
+): void {
+	if (_.isNil(value)) {
+		if (required) {
+			throw new ValidationError('Required value is missing', field);
+		}
+		return;
 	}
 
-	if (!nilOrInteger(value)) {
-		return false;
+	if (!(_.isInteger(value) && value > 0)) {
+		throw new ValidationError('Value has to be a positive integer', field, value);
 	}
-
-	return _.isNil(value) || (_.isInteger(value) && value > 0);
 }
 
-export function validateDate(value: string | DateObject) {
-	let dateObject;
+export function validateDate(value: string | DateObject, field: string): void {
+	let dateObject: DateObject;
 	// We expect a string but accept both ISO date strings and {year,month,date} objects
 	if (_.isString(value)) {
 		dateObject = ISODateStringToObject(value);
@@ -105,16 +94,23 @@ export function validateDate(value: string | DateObject) {
 	const year = _.get(dateObject, 'year', null);
 	const month = _.get(dateObject, 'month', null);
 	const day = _.get(dateObject, 'day', null);
-	const {isValid, errorMessage} = dateValidator(day, month, year);
-	return {errorMessage, isValid};
+	try {
+		dateValidator(day, month, year);
+	}
+	catch (error) {
+		if (error instanceof ValidationError) {
+			error.field = field;
+			error.value = value;
+		}
+		throw error;
+	}
 }
 
-
+/* Checks whether the given dates form a valid range. Only to be used with valid dates. */
 export function dateIsBefore(beginValue: string | DateObject, endValue: string | DateObject): boolean {
 	const beginDateObject = ISODateStringToObject(beginValue);
 	const endDateObject = ISODateStringToObject(endValue);
-	if (isNullDate(beginDateObject) || isNullDate(endDateObject) || !validateDate(beginDateObject).isValid ||
-		!validateDate(endDateObject).isValid) {
+	if (isNullDate(beginDateObject) || isNullDate(endDateObject)) {
 		return true;
 	}
 
@@ -149,15 +145,16 @@ export function dateIsBefore(beginValue: string | DateObject, endValue: string |
 }
 
 export function validateUUID(
-	value: unknown, required = false
-): boolean {
-	if (absentAndRequired(value, required)) {
-		return false;
+	value: unknown, field: string, required = false
+): void {
+	if (_.isNil(value)) {
+		if (required) {
+			throw new ValidationError('Required value is missing', field);
+		}
+		return;
 	}
 
-	if (!nilOrString(value)) {
-		return false;
+	if (!validator.isUUID(value)) {
+		throw new ValidationError('Value is not a valid UUID', field, value);
 	}
-
-	return !value || validator.isUUID(value);
 }
