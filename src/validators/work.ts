@@ -18,11 +18,12 @@
  */
 
 
-import {get, validatePositiveInteger} from './base';
 import {
+	LanguageStub,
 	validateAliases, validateIdentifiers, validateNameSection,
 	validateSubmissionSection
 } from './common';
+import {get, validatePositiveInteger} from './base';
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
 
 
@@ -52,3 +53,8 @@ export function validateWork(
 	validateWorkSection(get(formData, 'workSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type WorkSection = Partial<{
+	language: LanguageStub;
+	type: number;
+}>;

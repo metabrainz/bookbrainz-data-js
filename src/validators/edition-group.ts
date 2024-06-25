@@ -68,3 +68,8 @@ export function validateEditionGroup(
 	validateEditionGroupSection(get(formData, 'editionGroupSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type EditionGroupSection = {
+	authorCreditEnable?: boolean;
+	type?: number;
+};

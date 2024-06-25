@@ -17,11 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 import {
+	type AreaStub,
 	validateAliases, validateIdentifiers, validateNameSection,
 	validateSubmissionSection
 } from './common';
+import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
 
@@ -87,3 +88,11 @@ export function validatePublisher(
 	validatePublisherSection(get(formData, 'publisherSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type PublisherSection = Partial<{
+	area: AreaStub;
+	beginDate: string;
+	endDate: string;
+	ended: boolean;
+	type: number;
+}>;

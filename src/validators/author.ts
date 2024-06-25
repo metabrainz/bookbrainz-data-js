@@ -18,13 +18,14 @@
  */
 
 
-import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 import {
+	type AreaStub,
 	validateAliases,
 	validateIdentifiers,
 	validateNameSection,
 	validateSubmissionSection
 } from './common';
+import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
 
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
@@ -104,3 +105,13 @@ export function validateAuthor(
 	validateAuthorSection(get(formData, 'authorSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type AuthorSection = Partial<{
+	beginArea: AreaStub;
+	beginDate: string;
+	endArea: AreaStub;
+	endDate: string;
+	ended: boolean;
+	gender: number;
+	type: number;
+}>;

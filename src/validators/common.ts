@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import type {IdentifierT, IdentifierTypeWithIdT} from '../types/identifiers';
 import {
 	ValidationError,
 	get,
@@ -27,7 +28,7 @@ import {
 	validateUUID
 } from './base';
 
-import type {IdentifierTypeWithIdT} from '../types/identifiers';
+import type {AliasWithDefaultT} from '../types/aliases';
 import _ from 'lodash';
 import {isIterable} from '../util';
 
@@ -185,3 +186,40 @@ export const validateAuthorCreditSection = _.partialRight(
 export function validateAuthorCreditSectionMerge(authorCredit: any): void {
 	validatePositiveInteger(get(authorCredit, 'id', null), 'authorCredit.id', true);
 }
+
+export type NameSection = {
+	name: string;
+	sortName: string;
+	language: number;
+	default?: boolean;
+	primary: boolean;
+	disambiguation?: string;
+};
+
+// TODO: Change website and validators to use `languageId` instead of `language` to make code cleaner?
+export type AliasSection = Record<string, AliasWithDefaultT & {
+	language: number;
+}>;
+
+// TODO: Change website and validators to use `typeId` instead of `type` to make code cleaner?
+export type IdentifierSection = Record<string, IdentifierT & {
+	type: number;
+}>;
+
+/** Incomplete area type definition for validation functions. */
+export type AreaStub = {
+	id: number;
+	[x: string]: any;
+};
+
+/** Incomplete language type definition for validation functions. */
+export type LanguageStub = {
+	value: number;
+	[x: string]: any;
+};
+
+/** Incomplete entity type definition for validation functions. */
+export type EntityStub = {
+	id: string;
+	[x: string]: any;
+};

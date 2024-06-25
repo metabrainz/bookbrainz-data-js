@@ -18,9 +18,9 @@
  */
 
 
-import {ValidationError, get, validateDate, validatePositiveInteger, validateUUID} from './base';
-import {convertMapToObject, isIterable} from '../util';
 import {
+	type EntityStub,
+	type LanguageStub,
 	validateAliases,
 	validateAuthorCreditSection,
 	validateAuthorCreditSectionMerge,
@@ -29,6 +29,8 @@ import {
 	validateNameSection,
 	validateSubmissionSection
 } from './common';
+import {ValidationError, get, validateDate, validatePositiveInteger, validateUUID} from './base';
+import {convertMapToObject, isIterable} from '../util';
 
 import {IdentifierTypeWithIdT} from '../types/identifiers';
 import _ from 'lodash';
@@ -141,3 +143,18 @@ export function validateEdition(
 	validateEditionSection(get(formData, 'editionSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type EditionSection = {
+	authorCreditEnable?: boolean;
+	depth?: number;
+	format?: number;
+	height?: number;
+	languages?: LanguageStub[];
+	pages?: number;
+	editionGroup: EntityStub;
+	publisher?: Record<string, EntityStub>;
+	releaseDate?: string;
+	status?: number;
+	weight?: number;
+	width?: number;
+};
