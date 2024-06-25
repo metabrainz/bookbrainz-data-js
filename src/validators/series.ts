@@ -27,6 +27,7 @@ import {
 	validateSubmissionSection
 } from './common';
 
+import type {EntityTypeString} from '../types/entity';
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
 
 
@@ -59,3 +60,8 @@ export function validateSeries(
 	validateSeriesSection(get(formData, 'seriesSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
+
+export type SeriesSection = Partial<{
+	orderType: number;
+	seriesType: Exclude<EntityTypeString, 'Series'>;
+}>;
