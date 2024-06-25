@@ -25,7 +25,7 @@ import {
 	testValidateStringFunc
 } from './helpers';
 import {
-	validateAlias, validateAliasLanguage, validateAliasName,
+	validateAlias, validateAliasDefault, validateAliasLanguage, validateAliasName,
 	validateAliasPrimary, validateAliasSortName, validateAliases
 } from '../../lib/validators/common';
 import {ValidationError} from '../../lib/validators/base';
@@ -53,9 +53,17 @@ function describeValidateAliasPrimary() {
 	testValidateBooleanFunc(validateAliasPrimary);
 }
 
+function describeValidateAliasDefault() {
+	testValidateBooleanFunc(validateAliasDefault, false);
+}
+
 function describeValidateAlias() {
 	it('should pass a valid Object', () => {
 		expect(() => validateAlias(VALID_ALIAS)).to.not.throw();
+	});
+
+	it('should pass a valid Object with a default flag', () => {
+		expect(() => validateAlias({...VALID_ALIAS, default: true})).to.not.throw();
 	});
 
 	it('should pass a valid Immutable.Map', () => {
@@ -132,6 +140,7 @@ function tests() {
 	describe('validateAliasLanguage', describeValidateAliasLanguage);
 	describe('validateAlias', describeValidateAlias);
 	describe('validateAliasPrimary', describeValidateAliasPrimary);
+	describe('validateAliasDefault', describeValidateAliasDefault);
 	describe('validateAliases', describeValidateAliases);
 }
 

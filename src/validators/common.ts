@@ -70,11 +70,19 @@ export function validateAliasPrimary(value: any): void {
 	}
 }
 
+export function validateAliasDefault(value: any): void {
+	// Property is optional, it only exists for imported entities.
+	if (!(_.isNil(value) || _.isBoolean(value))) {
+		throw new ValidationError('Value has to be a boolean, `null` or `undefined`', 'alias.default', value);
+	}
+}
+
 export function validateAlias(value: any): void {
 	validateAliasName(get(value, 'name'));
 	validateAliasSortName(get(value, 'sortName'));
 	validateAliasLanguage(get(value, 'language'));
 	validateAliasPrimary(get(value, 'primary'));
+	validateAliasDefault(get(value, 'default', null));
 }
 
 export const validateAliases = _.partial(
