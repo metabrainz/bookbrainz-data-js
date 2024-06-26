@@ -214,6 +214,14 @@ export type IdentifierSection = Record<string, IdentifierT & {
 	type: number;
 }>;
 
+export type AuthorCreditRow = {
+	author: EntityStub;
+	joinPhrase?: string;
+	name: string;
+};
+
+export type AuthorCreditSection = AuthorCreditRow[];
+
 /** Incomplete area type definition for validation functions. */
 export type AreaStub = {
 	id: number;
