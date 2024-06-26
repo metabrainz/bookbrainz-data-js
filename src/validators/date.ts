@@ -6,6 +6,7 @@ function isEmpty(value: any): boolean {
 	return _isNil(value) || value === '';
 }
 
+// eslint-disable-next-line complexity -- Date validation is complex unless we want to use a library
 export function dateValidator(dayObj, monthObj, yearObj): void {
 	const year = Number.parseInt(yearObj, 10);
 	const month = Number.parseInt(monthObj, 10);
