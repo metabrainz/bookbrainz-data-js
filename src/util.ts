@@ -18,6 +18,7 @@
  */
 
 import type Bookshelf from '@metabrainz/bookshelf';
+import {Iterable} from 'immutable';
 import type {Transaction} from './func/types';
 import _ from 'lodash';
 import {diff} from 'deep-diff';
@@ -279,4 +280,12 @@ export async function promiseProps<T>(promiseObj: Record<string, T>): Promise<Re
 		)
 	);
 	return Object.fromEntries(resolvedKeyValuePairs);
+}
+
+export function isIterable<K, V>(testVal: any): testVal is Iterable<K, V> {
+	return Iterable.isIterable(testVal);
+}
+
+export function convertMapToObject(value) {
+	return isIterable(value) ? value.toJS() : value;
 }
