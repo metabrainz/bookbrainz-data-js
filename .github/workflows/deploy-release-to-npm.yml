@@ -26,7 +26,7 @@ jobs:
       # This script will not bump the version and will use the version from package.json
       # It will just fail if trying to publish an already published version
       - name: Build and publish the package
-        run: yarn publish --non-interactive
+        run: yarn publish --non-interactive --new-version ${{ github.event.release.tag_name }} --no-git-tag-version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
