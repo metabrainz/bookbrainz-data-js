@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>func/externalServiceOauth.js - Documentation</title>
+    <title>func/date.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">func/externalServiceOauth.js</h1>
+    <h1 class="page-title">func/date.js</h1>
     
 
     
@@ -44,12 +44,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteOauthToken = deleteOauthToken;
-exports.getOauthToken = getOauthToken;
-exports.saveOauthToken = saveOauthToken;
-exports.updateOauthToken = updateOauthToken;
+exports.ISODateStringToObject = ISODateStringToObject;
+exports.isNullDate = isNullDate;
+var _isNil2 = _interopRequireDefault(require("lodash/isNil"));
+var _has2 = _interopRequireDefault(require("lodash/has"));
+var _isPlainObject2 = _interopRequireDefault(require("lodash/isPlainObject"));
+var _isString2 = _interopRequireDefault(require("lodash/isString"));
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
 /*
- * Copyright (C) 2022  Ansh Goyal
+ * Copyright (C) 2019  Nicolas Pelletier
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,115 +70,51 @@ exports.updateOauthToken = updateOauthToken;
  */
 
 /**
- * Fetches the Oauth token with related data
- * @param {number} editorId - Editor's id.
- * @param {string} service - Name of the service.
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
- * @returns {Promise} A Promise that resolves to the oauth token in JSON format
+ * Parse an ISO 8601-2004 string and return an object with separate day, month and year, if they exist.
+ * If any of the values don't exist, the default is an empty string.
+ * @function ISODateStringToObject
+ * @param {string} value - relationshipId number for initaial relationship
+ * @returns {object} a {day, month, year} object
  */
-async function getOauthToken(editorId, service, orm) {
-  const rawSql = `SELECT 
-			  editor_id,
-			  service,
-			  access_token,
-			  refresh_token,
-			  token_expires::text,
-              scopes
-		 FROM bookbrainz.external_service_oauth 
-		WHERE editor_id = ${editorId} 
-		  AND service = '${service}'`;
-  const result = await orm.bookshelf.knex.raw(rawSql);
-  return result.rows[0];
+function ISODateStringToObject(value) {
+  if (!(0, _isString2.default)(value)) {
+    if ((0, _isPlainObject2.default)(value) &amp;&amp; (0, _has2.default)(value, 'year')) {
+      return value;
+    }
+    return {
+      day: '',
+      month: '',
+      year: ''
+    };
+  }
+  const date = value ? value.split('-') : [];
+  // A leading minus sign denotes a BC date
+  // This creates an empty first array item that needs to be removed,
+  // and requires us to add the negative sign back for the year
+  if (date.length &amp;&amp; date[0] === '') {
+    date.shift();
+    date[0] = (-parseInt(date[0], 10)).toString();
+  }
+  return {
+    day: date.length > 2 ? date[2] : '',
+    month: date.length > 1 ? date[1] : '',
+    year: date.length > 0 ? date[0] : ''
+  };
 }
 
 /**
- * Deletes the Oauth token with related data from the database
- *
- * @param {number} editorId - Editor's id.
- * @param {string} service - name of the service.
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
- *
+ * Determines wether a given date is empty or null, meaning no year month or day has been specified.
+ * Accepts a {day, month, year} object or an ISO 8601-2004 string (±YYYYYY-MM-DD)
+ * @function isNullDate
+ * @param {object|string} date - a {day, month, year} object or ISO 8601-2004 string (±YYYYYY-MM-DD)
+ * @returns {boolean} true if the date is empty/null
  */
-async function deleteOauthToken(editorId, service, orm) {
-  const {
-    ExternalServiceOauth
-  } = orm;
-  await ExternalServiceOauth.where(
-  // eslint-disable-next-line camelcase
-  {
-    editor_id: editorId,
-    service
-  }).destroy();
-}
-
-/**
- * Saves the Oauth token with related data to the database
- *
- * @param {number} editorId - Editor's id.
- * @param {string} service - name of the service.
- * @param {string} accessToken - access token.
- * @param {string} refreshToken - refresh token.
- * @param {number} tokenExpiresTs - token expiration timestamp.
- * @param {string[]} scopes - scopes.
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
- * @returns {Promise} A Promise that resolves to the oauth token in JSON format
- */
-async function saveOauthToken(editorId, service, accessToken, refreshToken, tokenExpiresTs, scopes, orm) {
-  const rawSql = `INSERT INTO bookbrainz.external_service_oauth
-			(editor_id, service, access_token, refresh_token, token_expires, scopes)
-		VALUES
-			(${editorId},
-			'${service}',
-			'${accessToken}',
-			'${refreshToken}',
-			to_timestamp(${tokenExpiresTs}),
-			'{${scopes}}')
-		ON CONFLICT (editor_id, service)
-		DO UPDATE SET
-			editor_id = EXCLUDED.editor_id,
-			service = EXCLUDED.service,
-			access_token = EXCLUDED.access_token,
-			refresh_token = EXCLUDED.refresh_token,
-			token_expires = EXCLUDED.token_expires,
-			scopes = EXCLUDED.scopes
-  RETURNING
-            editor_id,
-            service,
-            access_token,
-            refresh_token,
-            token_expires::text,
-            scopes;`;
-  const result = await orm.bookshelf.knex.raw(rawSql);
-  return result.rows[0];
-}
-
-/**
- * Updates the Oauth token with related data in the database
- *
- * @param {number} editorId - Editor's id.
- * @param {string} service - name of the service.
- * @param {string} accessToken - access token.
- * @param {string} refreshToken - refresh token.
- * @param {number} tokenExpiresTs - token expiration timestamp.
- * @param {object} orm - the BookBrainz ORM, initialized during app setup
- * @returns {Promise} A Promise that resolves to the oauth token in JSON format
- */
-async function updateOauthToken(editorId, service, accessToken, refreshToken, tokenExpiresTs, orm) {
-  const rawSql = `UPDATE bookbrainz.external_service_oauth
-			SET access_token = '${accessToken}',
-				refresh_token = '${refreshToken}',
-				token_expires = to_timestamp(${tokenExpiresTs})
-		  WHERE editor_id = '${editorId}'
-			AND service = '${service}'
-	  RETURNING
-                editor_id,
-                service,
-                access_token,
-                refresh_token,
-                token_expires::text,
-                scopes;`;
-  const result = await orm.bookshelf.knex.raw(rawSql);
-  return result.rows[0];
+function isNullDate(date) {
+  const dateObject = ISODateStringToObject(date);
+  const isNullYear = (0, _isNil2.default)(dateObject.year) || dateObject.year === '';
+  const isNullMonth = (0, _isNil2.default)(dateObject.month) || dateObject.month === '';
+  const isNullDay = (0, _isNil2.default)(dateObject.day) || dateObject.day === '';
+  return isNullYear &amp;&amp; isNullMonth &amp;&amp; isNullDay;
 }</code></pre>
         </article>
     </section>
