@@ -33,6 +33,7 @@ import {ValidationError, get, validateDate, validatePositiveInteger, validateUUI
 import {convertMapToObject, isIterable} from '../util';
 
 import {IdentifierTypeWithIdT} from '../types/identifiers';
+import {Iterable} from 'immutable';
 import _ from 'lodash';
 
 
@@ -127,8 +128,13 @@ export function validateEdition(
 		validateAuthorCreditSectionMerge(get(formData, 'authorCredit', {}));
 	}
 	else if (!authorCreditEnable) {
-		const emptyAuthorCredit = isIterable(formData) ? formData.get('authorCreditEditor')?.size === 0 :
-			_.size(get(formData, 'authorCreditEditor', {})) === 0;
+		let emptyAuthorCredit:boolean;
+		if (isIterable(formData)) {
+			emptyAuthorCredit = (formData.get('authorCreditEditor') as Iterable<unknown, unknown>)?.size === 0;
+		}
+		else {
+			emptyAuthorCredit = _.size(get(formData, 'authorCreditEditor', {})) === 0;
+		}
 		if (!emptyAuthorCredit) {
 			throw new ValidationError('Disabled author credit has to be empty', 'authorCreditEditor');
 		}
