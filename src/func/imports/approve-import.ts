@@ -41,7 +41,7 @@ export async function approveImport(
 		identifierSetId} = importEntity;
 	const {id: aliasSetId} = aliasSet;
 
-	const {Revision} = orm;
+	const {Entity, Revision} = orm;
 
 	// Increase user edit count
 	const editorUpdatePromise =
@@ -74,8 +74,11 @@ export async function approveImport(
 		revisionPromise, notePromise, editorUpdatePromise
 	]);
 
+	const newEntity = await new Entity({type: entityType})
+		.save(null, {transacting});
 	const propsToSet = _.extend({
 		aliasSetId,
+		bbid: newEntity.get('bbid'),
 		disambiguationId,
 		identifierSetId,
 		revisionId: revisionRecord && revisionRecord.get('id')
