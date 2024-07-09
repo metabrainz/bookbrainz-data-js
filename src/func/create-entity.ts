@@ -148,5 +148,5 @@ export async function createEntity({
 		withRelated: ['defaultAlias']
 	});
 
-	return entity.toJSON();
+	return entity;
 }

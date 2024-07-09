@@ -76,9 +76,10 @@ export async function approveImport(
 
 	const newEntity = await new Entity({type: entityType})
 		.save(null, {transacting});
+	const bbid = newEntity.get('bbid');
 	const propsToSet = _.extend({
 		aliasSetId,
-		bbid: newEntity.get('bbid'),
+		bbid,
 		disambiguationId,
 		identifierSetId,
 		revisionId: revisionRecord && revisionRecord.get('id')
@@ -95,9 +96,9 @@ export async function approveImport(
 	const entity = await entityModel.refresh({
 		transacting,
 		withRelated: ['defaultAlias']
-	}).then(entityObject => entityObject.toJSON());
+	});
 
-	await deleteImport(transacting, importId, entity.bbid);
+	await deleteImport(transacting, importId, bbid);
 
 	return entity;
 }
