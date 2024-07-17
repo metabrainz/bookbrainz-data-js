@@ -175,15 +175,10 @@ export function validateSubmissionSectionNote(value: any): void {
 	validateOptionalString(value, 'submissionSection.note');
 }
 
-export function validateSubmissionSectionAnnotation(value: any): void {
-	validateOptionalString(value, 'submissionSection.annotation.content');
-}
-
 export function validateSubmissionSection(
 	data: any
 ): void {
 	validateSubmissionSectionNote(get(data, 'note', null));
-	validateSubmissionSectionAnnotation(get(data, 'annotation.content', null));
 }
 
 export function validateAuthorCreditRow(row: any): void {
@@ -228,9 +223,6 @@ export type AnnotationSection = {
 
 export type SubmissionSection = {
 	note?: string;
-	annotation?: {
-		content: string;
-	};
 };
 
 export type AuthorCreditRow = {
