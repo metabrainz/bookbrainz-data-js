@@ -96,8 +96,8 @@ export type ParsedEntity =
 	| ParsedWork;
 
 // TODO: drop redundant properties which are present in `data` and at the top level
-export type QueuedEntity = {
-	data: ParsedEntity;
+export type QueuedEntity<T extends ParsedEntity = ParsedEntity> = {
+	data: T;
 	entityType: EntityTypeString;
 	source: string;
 	lastEdited?: string;

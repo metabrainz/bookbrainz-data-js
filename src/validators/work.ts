@@ -20,7 +20,7 @@
 
 import {
 	LanguageStub,
-	validateAliases, validateIdentifiers, validateNameSection,
+	validateAliases, validateAnnotationSection, validateIdentifiers, validateNameSection,
 	validateSubmissionSection
 } from './common';
 import {get, validatePositiveInteger} from './base';
@@ -51,6 +51,7 @@ export function validateWork(
 	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
 	validateNameSection(get(formData, 'nameSection', {}));
 	validateWorkSection(get(formData, 'workSection', {}));
+	validateAnnotationSection(get(formData, 'annotationSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
 

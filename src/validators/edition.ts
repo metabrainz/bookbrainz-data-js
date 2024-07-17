@@ -22,6 +22,7 @@ import {
 	type EntityStub,
 	type LanguageStub,
 	validateAliases,
+	validateAnnotationSection,
 	validateAuthorCreditSection,
 	validateAuthorCreditSectionMerge,
 	validateIdentifiers,
@@ -147,6 +148,7 @@ export function validateEdition(
 	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
 	validateNameSection(get(formData, 'nameSection', {}));
 	validateEditionSection(get(formData, 'editionSection', {}));
+	validateAnnotationSection(get(formData, 'annotationSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
 

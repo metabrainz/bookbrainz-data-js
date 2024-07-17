@@ -19,7 +19,10 @@
 
 import {
 	type AreaStub,
-	validateAliases, validateIdentifiers, validateNameSection,
+	validateAliases,
+	validateAnnotationSection,
+	validateIdentifiers,
+	validateNameSection,
 	validateSubmissionSection
 } from './common';
 import {ValidationError, dateIsBefore, get, validateDate, validatePositiveInteger} from './base';
@@ -86,6 +89,7 @@ export function validatePublisher(
 	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
 	validateNameSection(get(formData, 'nameSection', {}));
 	validatePublisherSection(get(formData, 'publisherSection', {}));
+	validateAnnotationSection(get(formData, 'annotationSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
 

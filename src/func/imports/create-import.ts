@@ -29,6 +29,7 @@ import {camelToSnake} from '../../util';
 import {getAdditionalEntityProps} from '../entity';
 import {getOriginSourceId} from './misc';
 import {updateAliasSet} from '../alias';
+import {updateAnnotation} from '../annotation';
 import {updateDisambiguation} from '../disambiguation';
 import {updateIdentifierSet} from '../identifier';
 import {updateLanguageSet} from '../language';
@@ -60,6 +61,7 @@ type ExtraDataSetIds = Partial<{
 /** IDs of all data sets which an entity can have. */
 type DataSetIds = {
 	aliasSetId: number;
+	annotationId: number;
 	disambiguationId: number;
 	identifierSetId: number;
 } & ExtraDataSetIds;
@@ -154,7 +156,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 
 	return orm.bookshelf.transaction<ImportResult>(async (transacting) => {
 		const {entityType} = importData;
-		const {alias, identifiers, disambiguation, source} = importData.data;
+		const {alias, annotation, identifiers, disambiguation, source} = importData.data;
 
 		// Get origin_source
 		let originSourceId: number = null;
@@ -197,9 +199,10 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 			}
 		}
 
-		const [aliasSet, identifierSet, disambiguationObj, entityExtraDataSets] =
+		const [aliasSet, annotationObj, identifierSet, disambiguationObj, entityExtraDataSets] =
 			await Promise.all([
 				updateAliasSet(orm, transacting, null, null, alias),
+				updateAnnotation(orm, transacting, null, annotation, null),
 				updateIdentifierSet(orm, transacting, null, identifiers),
 				updateDisambiguation(orm, transacting, null, disambiguation),
 				updateEntityExtraDataSets(orm, transacting, importData.data)
@@ -212,6 +215,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 				transacting,
 				{
 					aliasSetId: aliasSet && aliasSet.get('id'),
+					annotationId: annotationObj && annotationObj.get('id'),
 					disambiguationId: disambiguationObj && disambiguationObj.get('id'),
 					identifierSetId: identifierSet && identifierSet.get('id'),
 					...entityExtraDataSets

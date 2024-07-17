@@ -88,6 +88,14 @@ export const VALID_NAME_SECTION = {
 
 export const INVALID_NAME_SECTION = {...VALID_NAME_SECTION, language: null};
 
+export const VALID_ANNOTATION_SECTION = {
+	content: 'blah blah'
+};
+
+export const EMPTY_ANNOTATION_SECTION = {
+	content: null
+};
+
 export const VALID_SUBMISSION_SECTION = {
 	note: 'blah'
 };

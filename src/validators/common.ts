@@ -163,19 +163,22 @@ export function validateNameSection(
 	validateNameSectionDisambiguation(get(values, 'disambiguation', null));
 }
 
-export function validateSubmissionSectionNote(value: any): void {
-	validateOptionalString(value, 'submissionSection.note');
+export function validateAnnotationSectionContent(value: any): void {
+	validateOptionalString(value, 'annotationSection.content');
 }
 
-export function validateSubmissionSectionAnnotation(value: any): void {
-	validateOptionalString(value, 'submissionSection.annotation.content');
+export function validateAnnotationSection(data: any): void {
+	validateAnnotationSectionContent(get(data, 'content', null));
+}
+
+export function validateSubmissionSectionNote(value: any): void {
+	validateOptionalString(value, 'submissionSection.note');
 }
 
 export function validateSubmissionSection(
 	data: any
 ): void {
 	validateSubmissionSectionNote(get(data, 'note', null));
-	validateSubmissionSectionAnnotation(get(data, 'annotation.content', null));
 }
 
 export function validateAuthorCreditRow(row: any): void {
@@ -213,6 +216,14 @@ export type AliasSection = Record<string, AliasWithDefaultT & {
 export type IdentifierSection = Record<string, IdentifierT & {
 	type: number;
 }>;
+
+export type AnnotationSection = {
+	content?: string;
+};
+
+export type SubmissionSection = {
+	note?: string;
+};
 
 export type AuthorCreditRow = {
 	author: EntityStub;

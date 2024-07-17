@@ -22,6 +22,7 @@
 import {ValidationError, get, validatePositiveInteger} from './base';
 import {
 	validateAliases,
+	validateAnnotationSection,
 	validateIdentifiers,
 	validateNameSection,
 	validateSubmissionSection
@@ -58,6 +59,7 @@ export function validateSeries(
 	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
 	validateNameSection(get(formData, 'nameSection', {}));
 	validateSeriesSection(get(formData, 'seriesSection', {}));
+	validateAnnotationSection(get(formData, 'annotationSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
 

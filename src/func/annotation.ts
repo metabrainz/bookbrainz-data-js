@@ -45,7 +45,7 @@ export function updateAnnotation(
 	if (newContent) {
 		return new Annotation({
 			content: newContent,
-			lastRevisionId: revision.get('id')
+			lastRevisionId: revision && revision.get('id')
 		}).save(null, {transacting});
 	}
 	return Promise.resolve(null);
