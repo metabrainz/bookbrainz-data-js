@@ -38,7 +38,7 @@ export async function approveImport(
 	{orm, transacting, importEntity, editorId}: approveEntityPropsType
 ): Promise<Record<string, unknown>> {
 	const {source, importId, type: entityType, disambiguationId, aliasSet,
-		identifierSetId} = importEntity;
+		identifierSetId, annotationId} = importEntity;
 	const {id: aliasSetId} = aliasSet;
 
 	const {Entity, Revision} = orm;
@@ -79,6 +79,7 @@ export async function approveImport(
 	const bbid = newEntity.get('bbid');
 	const propsToSet = _.extend({
 		aliasSetId,
+		annotationId,
 		bbid,
 		disambiguationId,
 		identifierSetId,
