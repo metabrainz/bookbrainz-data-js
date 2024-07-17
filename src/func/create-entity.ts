@@ -58,11 +58,11 @@ interface CreateEntityPropsType {
 	entityType: EntityTypeString
 }
 
-// TODO: function seems to be unused across all BB repos, ignore its errors (and delete it?)
+// TODO: function is only used to approve imports, check whether type error below is critical
 export async function createEntity({
 	editorId, entityData, orm, transacting
 }: CreateEntityPropsType) {
-	const {Revision} = orm;
+	const {Entity, Revision} = orm;
 
 	const {aliases, annotation, disambiguation, identifiers, note,
 		type: entityType, ...entitySetData} = entityData;
@@ -105,7 +105,7 @@ export async function createEntity({
 	);
 
 	// Get additional props
-	// @ts-expect-error Not sure why we have this error but this whole function is unused across our repos
+	// @ts-expect-error Not sure why we have this error
 	const additionalProps = getAdditionalEntityProps(entityData, entityType);
 
 	// Create entitySets
@@ -123,9 +123,12 @@ export async function createEntity({
 		editorUpdatePromise, notePromise
 	]);
 
+	const newEntity = await new Entity({type: entityType})
+		.save(null, {transacting});
 	const propsToSet = _.extend({
 		aliasSetId: aliasSetRecord && aliasSetRecord.get('id'),
 		annotationId: annotationRecord && annotationRecord.get('id'),
+		bbid: newEntity.get('bbid'),
 		disambiguationId:
 			disambiguationRecord && disambiguationRecord.get('id'),
 		identifierSetId: identSetRecord && identSetRecord.get('id'),
@@ -145,5 +148,5 @@ export async function createEntity({
 		withRelated: ['defaultAlias']
 	});
 
-	return entity.toJSON();
+	return entity;
 }
