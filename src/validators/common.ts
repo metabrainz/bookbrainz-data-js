@@ -163,6 +163,14 @@ export function validateNameSection(
 	validateNameSectionDisambiguation(get(values, 'disambiguation', null));
 }
 
+export function validateAnnotationSectionContent(value: any): void {
+	validateOptionalString(value, 'annotationSection.content');
+}
+
+export function validateAnnotationSection(data: any): void {
+	validateAnnotationSectionContent(get(data, 'content', null));
+}
+
 export function validateSubmissionSectionNote(value: any): void {
 	validateOptionalString(value, 'submissionSection.note');
 }
@@ -213,6 +221,10 @@ export type AliasSection = Record<string, AliasWithDefaultT & {
 export type IdentifierSection = Record<string, IdentifierT & {
 	type: number;
 }>;
+
+export type AnnotationSection = {
+	content?: string;
+};
 
 export type SubmissionSection = {
 	note?: string;

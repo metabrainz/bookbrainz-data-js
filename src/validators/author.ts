@@ -21,6 +21,7 @@
 import {
 	type AreaStub,
 	validateAliases,
+	validateAnnotationSection,
 	validateIdentifiers,
 	validateNameSection,
 	validateSubmissionSection
@@ -103,6 +104,7 @@ export function validateAuthor(
 	validateIdentifiers(get(formData, 'identifierEditor', {}), identifierTypes);
 	validateNameSection(get(formData, 'nameSection', {}));
 	validateAuthorSection(get(formData, 'authorSection', {}));
+	validateAnnotationSection(get(formData, 'annotationSection', {}));
 	validateSubmissionSection(get(formData, 'submissionSection', {}));
 }
 
