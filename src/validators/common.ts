@@ -214,6 +214,13 @@ export type IdentifierSection = Record<string, IdentifierT & {
 	type: number;
 }>;
 
+export type SubmissionSection = {
+	note?: string;
+	annotation?: {
+		content: string;
+	};
+};
+
 export type AuthorCreditRow = {
 	author: EntityStub;
 	joinPhrase?: string;
