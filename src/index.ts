@@ -85,6 +85,7 @@ import revision from './models/revision';
 import series from './models/entities/series';
 import seriesData from './models/data/seriesData';
 import seriesHeader from './models/headers/seriesHeader';
+import seriesImport from './models/imports/seriesImport';
 import seriesOrderingType from './models/seriesOrderingType';
 import seriesRevision from './models/revisions/seriesRevision';
 import titleType from './models/titleType';
@@ -180,6 +181,7 @@ export default function init(config: Knex.Config) {
 		Series: series(bookshelf),
 		SeriesData,
 		SeriesHeader: seriesHeader(bookshelf),
+		SeriesImport: seriesImport(bookshelf),
 		SeriesOrderingType: seriesOrderingType(bookshelf),
 		SeriesRevision: seriesRevision(bookshelf),
 		TitleType: titleType(bookshelf),
