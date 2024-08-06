@@ -27,8 +27,7 @@ export async function deleteImport(
 	// Get the type of the import
 	const [typeObj] = await transacting.select('type')
 		.from('bookbrainz.import').where('id', importId);
-	const {type} = typeObj;
-	const importType = type.toLowerCase();
+	const {type: importType} = typeObj;
 
 	// Get the dataId of the import
 	const [dataIdObj] =

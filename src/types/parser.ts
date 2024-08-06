@@ -44,6 +44,7 @@ export type ParsedAuthor = ParsedBaseEntity & {
 	beginDate?: string;
 	endDate?: string;
 	ended: boolean;
+	// TODO: `type` is currently ignored, only `typeId` is actually used!
 	type?: string;
 	typeId?: number;
 	genderId?: number;
@@ -79,7 +80,7 @@ export type ParsedPublisher = ParsedBaseEntity & {
 export type ParsedSeries = ParsedBaseEntity & {
 
 	/** Type of the items in the series. */
-	entityType: EntityTypeString;
+	entityType: Exclude<EntityTypeString, 'Series'>;
 	orderingTypeId: number;
 };
 

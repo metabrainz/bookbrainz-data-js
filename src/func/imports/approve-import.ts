@@ -38,26 +38,30 @@ export async function approveImport(
 	{orm, transacting, importEntity, editorId}: approveEntityPropsType
 ): Promise<Record<string, unknown>> {
 	const {source, importId, type: entityType, disambiguationId, aliasSet,
-		identifierSetId} = importEntity;
+		identifierSetId, annotationId} = importEntity;
 	const {id: aliasSetId} = aliasSet;
 
-	const {Entity, Revision} = orm;
+	const {Annotation, Entity, Revision} = orm;
 
 	// Increase user edit count
 	const editorUpdatePromise =
 		incrementEditorEditCountById(orm, editorId, transacting);
 
 	// Create a new revision record
-	const revisionPromise = new Revision({
+	const revision = await new Revision({
 		authorId: editorId
 	}).save(null, {transacting});
+	const revisionId = revision.get('id');
+
+	if (annotationId) {
+		// Set revision of our annotation which is NULL for imports
+		await new Annotation({id: annotationId})
+			.save({lastRevisionId: revisionId}, {transacting});
+	}
 
 	const note = `Approved from automatically imported record of ${source}`;
 	// Create a new note promise
-	const notePromise = revisionPromise
-		.then((revision) => createNote(
-			orm, note, editorId, revision, transacting
-		));
+	const notePromise = createNote(orm, note, editorId, revision, transacting);
 
 	// Get additional props
 	const additionalProps = getAdditionalEntityProps(importEntity, entityType);
@@ -70,19 +74,18 @@ export async function approveImport(
 		, {}
 	);
 
-	const [revisionRecord] = await Promise.all([
-		revisionPromise, notePromise, editorUpdatePromise
-	]);
+	await Promise.all([notePromise, editorUpdatePromise]);
 
 	const newEntity = await new Entity({type: entityType})
 		.save(null, {transacting});
 	const bbid = newEntity.get('bbid');
 	const propsToSet = _.extend({
 		aliasSetId,
+		annotationId,
 		bbid,
 		disambiguationId,
 		identifierSetId,
-		revisionId: revisionRecord && revisionRecord.get('id')
+		revisionId
 	}, entitySets, additionalProps);
 
 	const Model = getEntityModelByType(orm, entityType);
