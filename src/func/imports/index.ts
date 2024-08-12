@@ -19,8 +19,8 @@
 
 export {DISCARD_LIMIT, castDiscardVote, discardVotesCast} from './discard';
 export {
-	getImportDetails, getOriginSourceFromId, getOriginSourceId,
-	originSourceMapping
+	getImportMetadata, getExternalSourceFromId, getExternalSourceId,
+	getExternalSourceMapping
 } from './misc';
 export {getRecentImports, getTotalImports} from './recent-imports';
 export {approveImport} from './approve-import';

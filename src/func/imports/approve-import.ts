@@ -37,7 +37,7 @@ interface approveEntityPropsType {
 export async function approveImport(
 	{orm, transacting, importEntity, editorId}: approveEntityPropsType
 ): Promise<Record<string, unknown>> {
-	const {source, importId, type: entityType, disambiguationId, aliasSet,
+	const {source, bbid: pendingEntityBbid, type: entityType, disambiguationId, aliasSet,
 		identifierSetId, annotationId} = importEntity;
 	const {id: aliasSetId} = aliasSet;
 
@@ -78,11 +78,11 @@ export async function approveImport(
 
 	const newEntity = await new Entity({type: entityType})
 		.save(null, {transacting});
-	const bbid = newEntity.get('bbid');
+	const acceptedEntityBbid = newEntity.get('bbid');
 	const propsToSet = _.extend({
 		aliasSetId,
 		annotationId,
-		bbid,
+		bbid: acceptedEntityBbid,
 		disambiguationId,
 		identifierSetId,
 		revisionId
@@ -101,7 +101,7 @@ export async function approveImport(
 		withRelated: ['defaultAlias']
 	});
 
-	await deleteImport(transacting, importId, bbid);
+	await deleteImport(transacting, pendingEntityBbid, acceptedEntityBbid);
 
 	return entity;
 }

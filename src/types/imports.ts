@@ -16,21 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import {EntityTypeString} from './entity';
 import {IdentifierT} from './identifiers';
 import type {Knex} from 'knex';
-import {WithId} from './utils';
 
-
-// TODO: Drop type once we merge the `import` table into the `entity` table
-export type _ImportT = {
-	type: EntityTypeString;
-};
-
-export type _ImportWithIdT = WithId<_ImportT>;
 
 export type ImportHeaderT = {
-	importId: number;
+	bbid: string;
 	dataId: number;
 };
 
@@ -49,11 +40,10 @@ export type AdditionalImportDataT = {
 	[custom: string]: any;
 };
 
-/** Type for the `link_import` table, which should be renamed for clarity (TODO). */
 export type ImportMetadataT = {
-	importId: number;
-	originSourceId: number;
-	originId: string;
+	pendingEntityBbid: string;
+	externalSourceId: number;
+	externalIdentifier: string;
 
 	/** TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC'::TEXT, now()) */
 	importedAt?: Knex.Raw;
@@ -62,8 +52,14 @@ export type ImportMetadataT = {
 	lastEdited: string;
 
 	/** UUID */
-	entityId?: string;
+	acceptedEntityBbid?: string;
 
 	/** JSONB */
-	importMetadata: AdditionalImportDataT;
+	additionalData: AdditionalImportDataT;
+};
+
+export type ImportMetadataWithSourceT = ImportMetadataT & {
+
+	/** Name of the external source. */
+	source: string;
 };

@@ -34,6 +34,7 @@ export type EntityTypeString = typeof ENTITY_TYPES[number];
 
 // TODO: incomplete
 export type EntityT = {
+	isImport?: boolean,
 	type: EntityTypeString,
 };
 

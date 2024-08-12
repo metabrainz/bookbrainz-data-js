@@ -17,16 +17,17 @@
  */
 
 import * as _ from 'lodash';
+import type {ImportMetadataWithSourceT} from '../../types/imports';
 import type {Transaction} from '../types';
 import {snakeToCamel} from '../../util';
 
 
-export async function originSourceMapping(
+export async function getExternalSourceMapping(
 	transacting: Transaction, idAsKey?: boolean
 ) {
-	const mappingRecord = await transacting.select('*')
-		.from('bookbrainz.origin_source');
-	return mappingRecord.reduce(
+	const externalSources = await transacting.select('*')
+		.from('bookbrainz.external_source');
+	return externalSources.reduce(
 		(mapping, {id, name}) => {
 			if (idAsKey) {
 				return _.assign(mapping, {[id]: name});
@@ -36,75 +37,75 @@ export async function originSourceMapping(
 	);
 }
 
-export async function getOriginSourceId(
-	transacting: Transaction, source: string
+export async function getExternalSourceId(
+	transacting: Transaction, sourceName: string
 ): Promise<number | null | undefined> {
-	let originSourceId: number | null | undefined = null;
+	let externalSourceId: number | null | undefined = null;
 
 	try {
 		const [idObj] = await transacting.select('id')
-			.from('bookbrainz.origin_source')
-			.where('name', '=', source);
-		originSourceId = _.get(idObj, 'id');
+			.from('bookbrainz.external_source')
+			.where('name', '=', sourceName);
+		externalSourceId = _.get(idObj, 'id');
 	}
 	catch (err) {
 		// Should error loudly if anything goes wrong
 		throw new Error(
-			`Error while extracting origin source using ${source} - ${err}`
+			`Error while extracting external source using ${sourceName} - ${err}`
 		);
 	}
 
 	// Create the data source if it does not exist
-	if (!originSourceId) {
+	if (!externalSourceId) {
 		try {
-			const [idObj] = await transacting.insert([{name: source}])
-				.into('bookbrainz.origin_source')
+			const [idObj] = await transacting.insert([{name: sourceName}])
+				.into('bookbrainz.external_source')
 				.returning('id');
-			originSourceId = _.get(idObj, 'id');
+			externalSourceId = _.get(idObj, 'id');
 		}
 		catch (err) {
 			// Should error loudly if anything goes wrong
 			throw new Error(
-				`Error while creating a new source ${source} - ${err}`
+				`Error while creating a new source ${sourceName} - ${err}`
 			);
 		}
 	}
 
 	// Returning the {id} of the origin source
-	return originSourceId || null;
+	return externalSourceId || null;
 }
 
-export async function getOriginSourceFromId(
-	transacting: Transaction, originSourceId: number
+export async function getExternalSourceFromId(
+	transacting: Transaction, externalSourceId: number
 ): Promise<string | null | undefined> {
 	// Should error loudly if anything goes wrong
 	const [nameObj] = await transacting.select('name')
-		.from('bookbrainz.origin_source')
-		.where('id', originSourceId);
+		.from('bookbrainz.external_source')
+		.where('id', externalSourceId);
 
 	if (!nameObj || !nameObj.name) {
 		throw new Error(
-			`No source found with the given source Id ${originSourceId}`
+			`No source found with the given source ID ${externalSourceId}`
 		);
 	}
 
 	return nameObj.name;
 }
 
-export async function getImportDetails(
-	transacting: Transaction, importId: number
-): Promise<Record<string, unknown>> {
+export async function getImportMetadata(
+	transacting: Transaction, importId: string
+): Promise<ImportMetadataWithSourceT> {
 	// Should error loudly if anything goes wrong
 	const [details] = await transacting.select('*')
-		.from('bookbrainz.link_import')
-		.where('import_id', importId);
+		.from('bookbrainz.import_metadata')
+		.where('pending_entity_bbid', importId);
 
 	if (!details) {
 		throw new Error(`Details for the import ${importId} not found`);
 	}
 
-	details.source = await getOriginSourceFromId(
-		transacting, details.origin_source_id
+	details.source = await getExternalSourceFromId(
+		transacting, details.external_source_id
 	);
 
 	return snakeToCamel(details);

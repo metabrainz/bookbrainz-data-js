@@ -25,11 +25,11 @@ import {deleteImport} from './delete-import';
 export const DISCARD_LIMIT = 1;
 
 export async function discardVotesCast(
-	transacting: Transaction, importId: number
+	transacting: Transaction, importId: string
 ): Promise<Array<any>> {
 	const votes = await transacting.select('*')
 		.from('bookbrainz.discard_votes')
-		.where('import_id', importId);
+		.where('import_bbid', importId);
 
 	return votes.map(snakeToCamel);
 }
@@ -39,19 +39,20 @@ export async function discardVotesCast(
  * it returns a Promise that resolves to true, else it returns an promise that
  * resolves to false.
  * @param  {Transaction} transacting - The knex Transacting object
- * @param  {number} importId - Id of the import
+ * @param  {string} importId - BBID of the import
  * @param  {number} editorId - Id of the user casting the vote
  * @returns {Promise<boolean>} - Promise<true> if records has been deleted or
  * 		Promise<false> if the record is still present
  */
 export async function castDiscardVote(
-	transacting: Transaction, importId: number, editorId: number
+	transacting: Transaction, importId: string, editorId: number
 ): Promise<boolean> {
 	const votesCast = await discardVotesCast(transacting, importId);
 
 	// If editor has already cast the vote, reject the vote
 	for (const vote of votesCast) {
 		if (vote.editor_id === editorId) {
+			// TODO: This property can't exist since we are using `snakeToCamel`?
 			throw new Error('Already cast the vote');
 		}
 	}

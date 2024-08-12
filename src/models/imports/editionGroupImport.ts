@@ -26,7 +26,7 @@ export default function editionGroup(bookshelf: Bookshelf) {
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
-		idAttribute: 'import_id',
+		idAttribute: 'bbid',
 		tableName: 'bookbrainz.edition_group_import'
 	});
 
