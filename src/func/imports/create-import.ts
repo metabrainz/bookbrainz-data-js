@@ -156,15 +156,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		const {entityType} = importData;
 		const {alias, annotation, identifiers, disambiguation, externalSource} = importData.data;
 
-		let externalSourceId: number = null;
-
-		try {
-			externalSourceId = await getExternalSourceId(transacting, externalSource);
-		}
-		catch (err) {
-			// TODO: useless, we are only catching our self-thrown errors here
-			throw new Error(`Error during getting source id - ${err}`);
-		}
+		const externalSourceId: number = await getExternalSourceId(transacting, externalSource);
 
 		const [existingImport] = await getImportMetadata(transacting, externalSourceId, importData.externalIdentifier);
 		if (existingImport) {
