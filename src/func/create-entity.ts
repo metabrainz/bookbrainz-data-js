@@ -54,8 +54,7 @@ interface CreateEntityPropsType {
 	orm: ORM,
 	transacting: Transaction,
 	editorId: string,
-	entityData: ExtraEntityDataType,
-	entityType: EntityTypeString
+	entityData: ExtraEntityDataType
 }
 
 // TODO: function is only used to approve imports, check whether type error below is critical
