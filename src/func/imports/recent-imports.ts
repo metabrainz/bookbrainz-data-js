@@ -46,6 +46,7 @@ async function getRecentImportUtilData(
 				'bookbrainz.entity.type'
 			)
 				.from('bookbrainz.entity')
+				.where('is_import', true)
 				.join(
 					transacting.select(
 						'pending_entity_bbid', 'imported_at', 'external_source_id'
@@ -76,9 +77,9 @@ async function getRecentImportUtilData(
 			This holds a mapping of all imports and their external_source_ids
 		*/
 	return recentImportUtilsData.reduce((holder: Record<string, unknown>, data: any) => {
-		holder.importHolder[data.type].push(data.id);
-		holder.externalSourceIdMap[data.id] = data.external_source_id;
-		holder.timeStampMap[data.id] = data.imported_at;
+		holder.importHolder[data.type].push(data.bbid);
+		holder.externalSourceIdMap[data.bbid] = data.external_source_id;
+		holder.timeStampMap[data.bbid] = data.imported_at;
 		return holder;
 	}, {externalSourceIdMap: {}, importHolder, timeStampMap: {}});
 }
