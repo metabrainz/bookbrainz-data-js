@@ -21,13 +21,13 @@ import {camelToSnake, snakeToCamel} from '../../util';
 import type {Transaction} from '../types';
 
 
-// TODO: Do we actually want to delete any data of discarded imports?
+// TODO: Don't call this function on approval, we want to reuse BBID and data of approved imports!
 export async function deleteImport(
 	transacting: Transaction, importId: string, entityId?: string | null | undefined
 ) {
 	// Get the type of the import
 	const [typeObj] = await transacting.select('type')
-		.from('bookbrainz.entity').where('bbid', importId);
+		.from('bookbrainz.entity').where(camelToSnake({bbid: importId, isImport: true}));
 	const {type: importType} = typeObj;
 
 	// Get the dataId of the import
@@ -38,8 +38,8 @@ export async function deleteImport(
 	const {dataId}: {dataId: number} = snakeToCamel(dataIdObj);
 
 	// Update link table arguments - if entityId present add it to the args obj
-	const linkUpdateObj: {importId: null, entityId?: string} =
-		entityId ? {entityId, importId: null} : {importId: null};
+	const metadataUpdate: {pendingEntityBbid: null, acceptedEntityBbid?: string} =
+		entityId ? {acceptedEntityBbid: entityId, pendingEntityBbid: null} : {pendingEntityBbid: null};
 
 	await Promise.all([
 		// Delete the import header and entity data table records
@@ -58,7 +58,7 @@ export async function deleteImport(
 			-> if entityId provided, update it */
 		transacting('bookbrainz.import_metadata')
 			.where('pending_entity_bbid', importId)
-			.update(camelToSnake(linkUpdateObj))
+			.update(camelToSnake(metadataUpdate))
 	]);
 
 	// Finally delete the import table record
