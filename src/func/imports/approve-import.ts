@@ -20,6 +20,7 @@ import * as _ from 'lodash';
 import {
 	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
 } from '../entity';
+import type {ImportMetadataWithSourceT} from '../../types/imports';
 import type {ORM} from '../..';
 import type {Transaction} from '../types';
 import {createNote} from '../note';
@@ -37,8 +38,9 @@ interface approveEntityPropsType {
 export async function approveImport(
 	{orm, transacting, importEntity, editorId}: approveEntityPropsType
 ): Promise<Record<string, unknown>> {
-	const {source, bbid: pendingEntityBbid, type: entityType, disambiguationId, aliasSet,
+	const {bbid: pendingEntityBbid, type: entityType, disambiguationId, aliasSet,
 		identifierSetId, annotationId} = importEntity;
+	const metadata: ImportMetadataWithSourceT = importEntity.importMetadata;
 	const {id: aliasSetId} = aliasSet;
 
 	const {Annotation, Entity, Revision} = orm;
@@ -59,7 +61,7 @@ export async function approveImport(
 			.save({lastRevisionId: revisionId}, {transacting});
 	}
 
-	const note = `Approved from automatically imported record of ${source}`;
+	const note = `Approved from automatically imported record of ${metadata.source}`;
 	// Create a new note promise
 	const notePromise = createNote(orm, note, editorId, revision, transacting);
 

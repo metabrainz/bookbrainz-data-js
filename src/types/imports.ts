@@ -41,18 +41,18 @@ export type AdditionalImportDataT = {
 };
 
 export type ImportMetadataT = {
-	pendingEntityBbid: string;
+	pendingEntityBbid: string | null;
 	externalSourceId: number;
 	externalIdentifier: string;
 
 	/** TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC'::TEXT, now()) */
-	importedAt?: Knex.Raw;
+	importedAt?: string;
 
 	/** TIMESTAMP WITHOUT TIME ZONE */
 	lastEdited: string;
 
 	/** UUID */
-	acceptedEntityBbid?: string;
+	acceptedEntityBbid?: string | null;
 
 	/** JSONB */
 	additionalData: AdditionalImportDataT;
