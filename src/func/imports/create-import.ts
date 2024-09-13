@@ -233,7 +233,6 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 			additionalData: importData.data.metadata,
 			externalIdentifier: importData.externalIdentifier,
 			externalSourceId,
-			importedAt: transacting.raw("timezone('UTC'::TEXT, now())"),
 			lastEdited: importData.lastEdited,
 			pendingEntityBbid: importId
 		};
