@@ -21,7 +21,6 @@ import {camelToSnake, snakeToCamel} from '../../util';
 import type {Transaction} from '../types';
 
 
-// TODO: Don't call this function on approval, we want to reuse BBID and data of approved imports!
 export async function deleteImport(
 	transacting: Transaction, importId: string, entityId?: string | null | undefined
 ) {

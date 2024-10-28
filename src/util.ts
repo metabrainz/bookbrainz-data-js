@@ -79,6 +79,10 @@ export function camelToSnake<S, C extends object>(attrs: C) {
 		{} as S);
 }
 
+export function uncapitalize<T extends string>(word: T): Uncapitalize<T> {
+	return word.replace(/^./, (first) => first.toLowerCase()) as Uncapitalize<T>;
+}
+
 export class EntityTypeError extends Error {
 	constructor(message: string) {
 		super(message);

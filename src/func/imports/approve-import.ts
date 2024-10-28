@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Shivam Tripathi
+ * Copyright (C) 2024  David Kellner
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,94 +16,91 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as _ from 'lodash';
-import {
-	getAdditionalEntityProps, getEntityModelByType, getEntitySetMetadataByType
-} from '../entity';
+import type {EntityType} from '../../types/schema';
 import type {ImportMetadataWithSourceT} from '../../types/imports';
 import type {ORM} from '../..';
-import type {Transaction} from '../types';
-import {createNote} from '../note';
-import {deleteImport} from './delete-import';
-import {incrementEditorEditCountById} from '../editor';
+import {uncapitalize} from '../../util';
 
 
-interface approveEntityPropsType {
-	orm: ORM,
-	transacting: Transaction,
+export async function approveImport({editorId, importEntity, orm}: {
+	editorId: number,
 	importEntity: any,
-	editorId: string
-}
-
-export async function approveImport(
-	{orm, transacting, importEntity, editorId}: approveEntityPropsType
-): Promise<Record<string, unknown>> {
-	const {bbid: pendingEntityBbid, type: entityType, disambiguationId, aliasSet,
-		identifierSetId, annotationId} = importEntity;
+	orm: ORM,
+}) {
+	const {bbid, type, annotationId} = importEntity;
 	const metadata: ImportMetadataWithSourceT = importEntity.importMetadata;
-	const {id: aliasSetId} = aliasSet;
+	const entityType = uncapitalize(type as EntityType);
 
-	const {Annotation, Entity, Revision} = orm;
+	await orm.kysely.transaction().execute(async (trx) => {
+		const pendingUpdates = [
+			// Mark the pending entity as accepted
+			trx.updateTable('entity')
+				.set('isImport', false)
+				.where((eb) => eb.and({bbid, isImport: true}))
+				.executeTakeFirst(),
+			// Indicate approval of the entity by setting the accepted BBID
+			trx.updateTable('importMetadata')
+				.set('acceptedEntityBbid', bbid)
+				.where('pendingEntityBbid', '=', bbid)
+				.executeTakeFirst(),
+			// Increment revision count of the active editor
+			trx.updateTable('editor')
+				.set((eb) => ({
+					revisionsApplied: eb('revisionsApplied', '+', 1),
+					totalRevisions: eb('totalRevisions', '+', 1),
+				}))
+				.where('id', '=', editorId)
+				.executeTakeFirst(),
+		];
 
-	// Increase user edit count
-	const editorUpdatePromise =
-		incrementEditorEditCountById(orm, editorId, transacting);
+		// Create a new revision and an entity header
+		const revision = await trx.insertInto('revision')
+			.values({authorId: editorId})
+			.returning('id')
+			.executeTakeFirstOrThrow();
+		await trx.insertInto(`${entityType}Header`)
+			.values({bbid})
+			.executeTakeFirstOrThrow();
 
-	// Create a new revision record
-	const revision = await new Revision({
-		authorId: editorId
-	}).save(null, {transacting});
-	const revisionId = revision.get('id');
+		// Create initial entity revision using the entity data from the import
+		await trx.insertInto(`${entityType}Revision`)
+			.values((eb) => ({
+				bbid,
+				dataId: eb.selectFrom(`${entityType}ImportHeader`)
+					.select('dataId')
+					.where('bbid', '=', bbid),
+				id: revision.id
+			}))
+			.executeTakeFirstOrThrow();
 
-	if (annotationId) {
-		// Set revision of our annotation which is NULL for imports
-		await new Annotation({id: annotationId})
-			.save({lastRevisionId: revisionId}, {transacting});
-	}
+		// Update the entity header with the revision, doing this earlier causes a FK constraint violation
+		pendingUpdates.push(trx.updateTable(`${entityType}Header`)
+			.set('masterRevisionId', revision.id)
+			.where('bbid', '=', bbid)
+			.executeTakeFirst());
 
-	const note = `Approved from automatically imported record of ${metadata.source}`;
-	// Create a new note promise
-	const notePromise = createNote(orm, note, editorId, revision, transacting);
+		if (annotationId) {
+			// Set revision of our annotation which is NULL for pending imports
+			pendingUpdates.push(trx.updateTable('annotation')
+				.set('lastRevisionId', revision.id)
+				.where('id', '=', annotationId)
+				.executeTakeFirst());
+		}
 
-	// Get additional props
-	const additionalProps = getAdditionalEntityProps(importEntity, entityType);
+		// Create edit note
+		await trx.insertInto('note')
+			.values({
+				authorId: editorId,
+				content: `Approved automatically imported record ${metadata.externalIdentifier} from ${metadata.source}`,
+				revisionId: revision.id,
+			})
+			.executeTakeFirstOrThrow();
 
-	// Collect the entity sets from the importEntity
-	const entitySetMetadata = getEntitySetMetadataByType(entityType);
-	const entitySets = entitySetMetadata.reduce(
-		(set, {entityIdField}) =>
-			_.assign(set, {[entityIdField]: importEntity[entityIdField]})
-		, {}
-	);
-
-	await Promise.all([notePromise, editorUpdatePromise]);
-
-	const newEntity = await new Entity({type: entityType})
-		.save(null, {transacting});
-	const acceptedEntityBbid = newEntity.get('bbid');
-	const propsToSet = _.extend({
-		aliasSetId,
-		annotationId,
-		bbid: acceptedEntityBbid,
-		disambiguationId,
-		identifierSetId,
-		revisionId
-	}, entitySets, additionalProps);
-
-	const Model = getEntityModelByType(orm, entityType);
-
-	const entityModel = await new Model(propsToSet)
-		.save(null, {
-			method: 'insert',
-			transacting
-		});
-
-	const entity = await entityModel.refresh({
-		transacting,
-		withRelated: ['defaultAlias']
+		return Promise.all(pendingUpdates.map(async (update) => {
+			const {numUpdatedRows} = await update;
+			if (Number(numUpdatedRows) !== 1) {
+				throw new Error(`Failed to approve import of ${bbid}`);
+			}
+		}));
 	});
-
-	await deleteImport(transacting, pendingEntityBbid, acceptedEntityBbid);
-
-	return entity;
 }
