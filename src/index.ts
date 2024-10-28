@@ -19,9 +19,12 @@
 import * as func from './func';
 import * as util from './util'; // eslint-disable-line import/no-namespace
 
+import {CamelCasePlugin, Kysely, PostgresDialect} from 'kysely';
 import {type Knex, knex} from 'knex';
 
 import Bookshelf from '@metabrainz/bookshelf';
+import type {DB} from './types/schema';
+import {Pool} from 'pg';
 import achievementType from './models/achievementType';
 import achievementUnlock from './models/achievementUnlock';
 import adminLog from './models/adminLog';
@@ -117,6 +120,15 @@ export default function init(config: Knex.Config) {
 	const SeriesData = seriesData(bookshelf);
 	const WorkData = workData(bookshelf);
 
+	const kysely = new Kysely<DB>({
+		dialect: new PostgresDialect({
+			pool: new Pool(config.connection as Knex.ConnectionConfig),
+		}),
+		plugins: [
+			new CamelCasePlugin(),
+		],
+	});
+
 	return {
 		AchievementType: achievementType(bookshelf),
 		AchievementUnlock: achievementUnlock(bookshelf),
@@ -197,6 +209,7 @@ export default function init(config: Knex.Config) {
 		WorkType: workType(bookshelf),
 		bookshelf,
 		func,
+		kysely,
 		util
 	};
 }

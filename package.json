@@ -10,6 +10,7 @@
   "scripts": {
     "build": "rimraf lib/* && babel src --out-dir lib --extensions .js,.ts && tsc",
     "build-js-for-test": "rimraf lib/* && babel src --out-dir lib --source-maps inline --extensions .js,.ts",
+    "kysely-codegen": "kysely-codegen --out-file src/types/schema.ts --schema bookbrainz --camel-case",
     "lint": "eslint .",
     "lint-errors": "eslint --quiet .",
     "lint-staged": "lint-staged",
@@ -100,6 +101,7 @@
     "glob": "^7.1.2",
     "husky": "^8.0.0",
     "jsinspect": "^0.12.7",
+    "kysely-codegen": "^0.17.0",
     "lint-staged": "^13.1.0",
     "mocha": "^10.2.0",
     "node-uuid": "^1.4.8",
