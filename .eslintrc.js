@@ -200,7 +200,6 @@ const stylisticIssuesRules = {
 			properties: 'always'
 		}
 	],
-	'comma-dangle': ERROR,
 	'comma-spacing': ERROR,
 	'comma-style': ERROR,
 	'computed-property-spacing': ERROR,
