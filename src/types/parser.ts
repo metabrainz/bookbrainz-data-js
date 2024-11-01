@@ -53,7 +53,7 @@ export type ParsedAuthor = ParsedBaseEntity & {
 };
 
 export type ParsedEdition = ParsedBaseEntity & {
-	editionGroupBbid: string;
+	editionGroupBbid?: string;
 	width?: number;
 	height?: number;
 	depth?: number;
