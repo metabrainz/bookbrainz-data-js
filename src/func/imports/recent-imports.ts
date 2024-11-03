@@ -53,7 +53,8 @@ async function getRecentImportUtilData(
 					)
 						.from('bookbrainz.import_metadata')
 						.orderBy('imported_at')
-						.whereNot('pending_entity_bbid', null)
+						.whereNotNull('pending_entity_bbid')
+						.whereNull('accepted_entity_bbid')
 						.limit(limit)
 						.offset(offset)
 						.as('meta'),
@@ -148,10 +149,9 @@ export async function getRecentImports(
 	});
 }
 
-// TODO: Besides being expensive to compute, this will no longer be accurate once
-// we keep the pending entity data column populated for potential source updates.
+// TODO: This will become expensive/pointless to compute, refactor the entire module.
 export async function getTotalImports(transacting: Transaction) {
 	const [{count}] =
-		await transacting('bookbrainz.import_metadata').count('pending_entity_bbid');
+		await transacting('bookbrainz.import_metadata').count('pending_entity_bbid').whereNull('accepted_entity_bbid');
 	return parseInt(count as string, 10);
 }
