@@ -79,59 +79,6 @@ export function getAdditionalEntityProps(
 	}
 }
 
-export type EntitySetMetadataT = {
-	entityIdField: string;
-	idField: string;
-	mutableFields?: string[];
-	name: string;
-	propName: string;
-};
-
-/**
- * @param  {string} entityType - Entity type string
- * @returns {Object} - Returns entitySetMetadata (derivedSets)
-*/
-export function getEntitySetMetadataByType(entityType: EntityTypeString): EntitySetMetadataT[] {
-	if (entityType === 'Edition') {
-		return [
-			{
-				entityIdField: 'languageSetId',
-				idField: 'id',
-				name: 'languageSet',
-				propName: 'languages'
-			},
-			{
-				entityIdField: 'publisherSetId',
-				idField: 'bbid',
-				name: 'publisherSet',
-				propName: 'publishers'
-			},
-			{
-				entityIdField: 'releaseEventSetId',
-				idField: 'id',
-				mutableFields: [
-					'date',
-					'areaId'
-				],
-				name: 'releaseEventSet',
-				propName: 'releaseEvents'
-			}
-		];
-	}
-	else if (entityType === 'Work') {
-		return [
-			{
-				entityIdField: 'languageSetId',
-				idField: 'id',
-				name: 'languageSet',
-				propName: 'languages'
-			}
-		];
-	}
-
-	return [];
-}
-
 /**
  * Returns all entity models defined in bookbrainz-data-js
  *

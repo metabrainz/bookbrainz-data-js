@@ -17,7 +17,6 @@
  */
 
 import {IdentifierT} from './identifiers';
-import type {Knex} from 'knex';
 
 
 export type ImportHeaderT = {
