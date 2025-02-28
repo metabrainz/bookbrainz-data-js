@@ -25,11 +25,11 @@ import {deleteImport} from './delete-import';
 export const DISCARD_LIMIT = 1;
 
 export async function discardVotesCast(
-	transacting: Transaction, importId: number
+	transacting: Transaction, importBbid: string
 ): Promise<Array<any>> {
 	const votes = await transacting.select('*')
 		.from('bookbrainz.discard_votes')
-		.where('import_id', importId);
+		.where('import_bbid', importBbid);
 
 	return votes.map(snakeToCamel);
 }
@@ -39,32 +39,33 @@ export async function discardVotesCast(
  * it returns a Promise that resolves to true, else it returns an promise that
  * resolves to false.
  * @param  {Transaction} transacting - The knex Transacting object
- * @param  {number} importId - Id of the import
+ * @param  {string} importBbid - BBID of the import
  * @param  {number} editorId - Id of the user casting the vote
  * @returns {Promise<boolean>} - Promise<true> if records has been deleted or
  * 		Promise<false> if the record is still present
  */
 export async function castDiscardVote(
-	transacting: Transaction, importId: number, editorId: number
+	transacting: Transaction, importBbid: string, editorId: number
 ): Promise<boolean> {
-	const votesCast = await discardVotesCast(transacting, importId);
+	const votesCast = await discardVotesCast(transacting, importBbid);
 
 	// If editor has already cast the vote, reject the vote
 	for (const vote of votesCast) {
 		if (vote.editor_id === editorId) {
+			// TODO: This property can't exist since we are using `snakeToCamel`?
 			throw new Error('Already cast the vote');
 		}
 	}
 
 	// If cast vote is decisive one, delete the records
 	if (votesCast.length === DISCARD_LIMIT) {
-		await deleteImport(transacting, importId);
+		await deleteImport(transacting, importBbid);
 		// The record been deleted
 		return true;
 	}
 	else if (votesCast.length < DISCARD_LIMIT) {
 		// Cast vote if it's below the limit
-		await transacting.insert(camelToSnake({editorId, importId}))
+		await transacting.insert(camelToSnake({editorId, importBbid}))
 			.into('bookbrainz.discard_votes');
 	}
 	else {

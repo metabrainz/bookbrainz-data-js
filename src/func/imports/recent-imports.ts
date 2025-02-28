@@ -21,8 +21,8 @@ import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
 import type {ORM} from '../..';
 import type {Transaction} from '../types';
 import {getAliasByIds} from '../alias';
+import {getExternalSourceMapping} from './misc';
 import moment from 'moment';
-import {originSourceMapping} from './misc';
 import {snakeToCamel} from '../../util';
 
 /** getRecentImportIdsByType -
@@ -40,24 +40,26 @@ async function getRecentImportUtilData(
 	// Extract recent imports, types and import timeStamp
 	const recentImportUtilsData =
 			await transacting.select(
-				'link.imported_at',
-				'link.origin_source_id',
-				'bookbrainz.import.id',
-				'bookbrainz.import.type'
+				'meta.imported_at',
+				'meta.external_source_id',
+				'bookbrainz.entity.bbid',
+				'bookbrainz.entity.type'
 			)
-				.from('bookbrainz.import')
+				.from('bookbrainz.entity')
+				.where('is_import', true)
 				.join(
 					transacting.select(
-						'import_id', 'imported_at', 'origin_source_id'
+						'pending_entity_bbid', 'imported_at', 'external_source_id'
 					)
-						.from('bookbrainz.link_import')
+						.from('bookbrainz.import_metadata')
 						.orderBy('imported_at')
-						.whereNot('import_id', null)
+						.whereNotNull('pending_entity_bbid')
+						.whereNull('accepted_entity_bbid')
 						.limit(limit)
 						.offset(offset)
-						.as('link'),
-					'link.import_id',
-					'bookbrainz.import.id'
+						.as('meta'),
+					'meta.pending_entity_bbid',
+					'bookbrainz.entity.bbid'
 				);
 
 	/* Construct importHolder object (holds importIds classified by their types)
@@ -72,21 +74,21 @@ async function getRecentImportUtilData(
 			imports into the their respective types
 		=> timestampMap: Object{importId: imported_at}
 			This holds a mapping of all imports and their imported_at timestamps
-		=> originIdMap: Object{originId: origin_id}
-			This holds a mapping of all imports and their origin_ids
+		=> externalSourceIdMap: Object{importId: external_source_id}
+			This holds a mapping of all imports and their external_source_ids
 		*/
 	return recentImportUtilsData.reduce((holder: Record<string, unknown>, data: any) => {
-		holder.importHolder[data.type].push(data.id);
-		holder.originIdMap[data.id] = data.origin_source_id;
-		holder.timeStampMap[data.id] = data.imported_at;
+		holder.importHolder[data.type].push(data.bbid);
+		holder.externalSourceIdMap[data.bbid] = data.external_source_id;
+		holder.timeStampMap[data.bbid] = data.imported_at;
 		return holder;
-	}, {importHolder, originIdMap: {}, timeStampMap: {}});
+	}, {externalSourceIdMap: {}, importHolder, timeStampMap: {}});
 }
 
 function getRecentImportsByType(transacting: Transaction, type: EntityTypeString, importIds: string[]) {
 	return transacting.select('*')
 		.from(`bookbrainz.${_.snakeCase(type)}_import`)
-		.whereIn('import_id', importIds);
+		.whereIn('bbid', importIds);
 }
 
 export async function getRecentImports(
@@ -96,10 +98,10 @@ export async function getRecentImports(
 		=> importHolder - holds recentImports classified by entity type
 		=> timeStampMap - holds value importedAt value in object with importId
 			as key
-		=> originIdMap - holds value originId value in object with importId as
+		=> externalSourceIdMap - holds value originId value in object with importId as
 			key
 	*/
-	const {importHolder: recentImportIdsByType, timeStampMap, originIdMap} =
+	const {importHolder: recentImportIdsByType, timeStampMap, externalSourceIdMap} =
 		await getRecentImportUtilData(transacting, limit, offset);
 
 	/* Fetch imports for each entity type using their importIds
@@ -125,19 +127,19 @@ export async function getRecentImports(
 
 	/* Add timestamp, source and defaultAlias to the recentImports
 		Previously while getting utils data we fetched a mapping of importId to
-		timestamp and originId.
+		timestamp and externalSourceId.
 		We also fetched map of aliasId to alias object.
 		Now using those we populate our final object */
-	// First, get the origin mapping => {originId: name}
-	const sourceMapping = await originSourceMapping(transacting, true);
+	// First, get the external source mapping => {id: name}
+	const sourceMapping = await getExternalSourceMapping(transacting, true);
 	return recentImports.map(recentImport => {
 		// Add timestamp
 		recentImport.importedAt =
-			moment(timeStampMap[recentImport.import_id]).format('YYYY-MM-DD');
+			moment(timeStampMap[recentImport.bbid]).format('YYYY-MM-DD');
 
-		// Add origin source
-		const originId = originIdMap[recentImport.import_id];
-		recentImport.source = sourceMapping[originId];
+		// Add name of external source
+		const externalSourceId = externalSourceIdMap[recentImport.bbid];
+		recentImport.source = sourceMapping[externalSourceId];
 
 		// Add default alias
 		const defaultAliasId = _.get(recentImport, 'default_alias_id');
@@ -147,8 +149,9 @@ export async function getRecentImports(
 	});
 }
 
+// TODO: This will become expensive/pointless to compute, refactor the entire module.
 export async function getTotalImports(transacting: Transaction) {
 	const [{count}] =
-		await transacting('bookbrainz.link_import').count('import_id');
+		await transacting('bookbrainz.import_metadata').count('pending_entity_bbid').whereNull('accepted_entity_bbid');
 	return parseInt(count as string, 10);
 }

@@ -25,7 +25,7 @@ export default function work(bookshelf: Bookshelf) {
 		defaultAlias() {
 			return this.belongsTo('Alias', 'default_alias_id');
 		},
-		idAttribute: 'import_id',
+		idAttribute: 'bbid',
 		tableName: 'bookbrainz.work_import'
 	});
 

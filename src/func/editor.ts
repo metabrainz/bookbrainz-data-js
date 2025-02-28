@@ -2,7 +2,6 @@
  * Copied from bookbrainz-site
  * Copyright (C) 2016  Sean Burke
  *               2016  Ben Ockmore
- *               2018  Shivam Tripathi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,33 +17,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-import {ORM} from '..';
-import type {Transaction} from './types';
-
-/**
- * Adds 1 to the edit count of the specified editor
- *
- * @param {ORM} orm - the BookBrainz ORM, initialized during app setup
- * @param {string} id - row ID of editor to be updated
- * @param {Transaction} transacting - Bookshelf transaction object (must be in
- * progress)
- * @returns {Promise} - Resolves to the updated editor model
- */
-export function incrementEditorEditCountById(
-	orm: ORM,
-	id: string,
-	transacting: Transaction
-): Promise<any> {
-	const {Editor} = orm;
-	return new Editor({id})
-		.fetch({transacting})
-		.then((editor) => {
-			// @ts-expect-error -- Types for custom methods of Bookshelf models are lacking
-			editor.incrementEditCount();
-			return editor.save(null, {transacting});
-		});
-}
 
 /* eslint-disable camelcase */
 function getEditorIDByMetaBrainzID(trx, metabrainzUserID) {

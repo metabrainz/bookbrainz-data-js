@@ -22,44 +22,44 @@ import type {Transaction} from '../types';
 
 
 export async function deleteImport(
-	transacting: Transaction, importId: number, entityId?: string | null | undefined
+	transacting: Transaction, importId: string, entityId?: string | null | undefined
 ) {
 	// Get the type of the import
 	const [typeObj] = await transacting.select('type')
-		.from('bookbrainz.import').where('id', importId);
+		.from('bookbrainz.entity').where(camelToSnake({bbid: importId, isImport: true}));
 	const {type: importType} = typeObj;
 
 	// Get the dataId of the import
 	const [dataIdObj] =
 		await transacting.select('data_id')
 			.from(`bookbrainz.${_.snakeCase(importType)}_import_header`)
-			.where('import_id', importId);
+			.where('bbid', importId);
 	const {dataId}: {dataId: number} = snakeToCamel(dataIdObj);
 
 	// Update link table arguments - if entityId present add it to the args obj
-	const linkUpdateObj: {importId: null, entityId?: string} =
-		entityId ? {entityId, importId: null} : {importId: null};
+	const metadataUpdate: {pendingEntityBbid: null, acceptedEntityBbid?: string} =
+		entityId ? {acceptedEntityBbid: entityId, pendingEntityBbid: null} : {pendingEntityBbid: null};
 
 	await Promise.all([
 		// Delete the import header and entity data table records
 		transacting(`bookbrainz.${_.snakeCase(importType)}_import_header`)
-			.where('import_id', importId).del()
+			.where('bbid', importId).del()
 			.then(() =>
 				transacting(`bookbrainz.${_.snakeCase(importType)}_data`)
 					.where('id', dataId).del()),
 
 		// Delete the discard votes
 		transacting('bookbrainz.discard_votes')
-			.where('import_id', importId).del(),
+			.where('import_bbid', importId).del(),
 
 		/* Update the link import record:
 			-> set importId as null
 			-> if entityId provided, update it */
-		transacting('bookbrainz.link_import')
-			.where('import_id', importId)
-			.update(camelToSnake(linkUpdateObj))
+		transacting('bookbrainz.import_metadata')
+			.where('pending_entity_bbid', importId)
+			.update(camelToSnake(metadataUpdate))
 	]);
 
 	// Finally delete the import table record
-	return transacting('bookbrainz.import').where('id', importId).del();
+	return transacting('bookbrainz.entity').where('bbid', importId).del();
 }

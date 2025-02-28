@@ -35,9 +35,9 @@ type ParsedBaseEntity = {
 	disambiguation?: string;
 	identifiers: IdentifierT[];
 	metadata: AdditionalImportDataT;
-	source: string;
+	externalSource: string;
+	externalIdentifier?: string;
 	lastEdited?: string;
-	originId?: string;
 };
 
 export type ParsedAuthor = ParsedBaseEntity & {
@@ -53,7 +53,7 @@ export type ParsedAuthor = ParsedBaseEntity & {
 };
 
 export type ParsedEdition = ParsedBaseEntity & {
-	editionGroupBbid: string;
+	editionGroupBbid?: string;
 	width?: number;
 	height?: number;
 	depth?: number;
@@ -100,7 +100,7 @@ export type ParsedEntity =
 export type QueuedEntity<T extends ParsedEntity = ParsedEntity> = {
 	data: T;
 	entityType: EntityTypeString;
-	source: string;
+	externalSource: string;
+	externalIdentifier?: string;
 	lastEdited?: string;
-	originId?: string;
 };

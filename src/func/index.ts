@@ -33,4 +33,3 @@ export * as relationshipAttributes from './relationshipAttributes';
 export * as releaseEvent from './releaseEvent';
 export * as set from './set';
 export * as work from './work';
-export {createEntity} from './create-entity';

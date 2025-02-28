@@ -18,8 +18,8 @@
  */
 
 
-import {ENTITY_TYPES, type EntityTypeString} from '../../types/entity';
-import type {ImportHeaderT, ImportMetadataT, _ImportT} from '../../types/imports';
+import {ENTITY_TYPES, EntityT, type EntityTypeString} from '../../types/entity';
+import type {ImportHeaderT, ImportMetadataT} from '../../types/imports';
 import type {ParsedEdition, ParsedEntity, QueuedEntity} from '../../types/parser';
 
 import type {ORM} from '../..';
@@ -27,7 +27,7 @@ import type {Transaction} from '../types';
 import _ from 'lodash';
 import {camelToSnake} from '../../util';
 import {getAdditionalEntityProps} from '../entity';
-import {getOriginSourceId} from './misc';
+import {getExternalSourceId} from './misc';
 import {updateAliasSet} from '../alias';
 import {updateAnnotation} from '../annotation';
 import {updateDisambiguation} from '../disambiguation';
@@ -36,20 +36,18 @@ import {updateLanguageSet} from '../language';
 import {updateReleaseEventSet} from '../releaseEvent';
 
 
-function createImportRecord(transacting: Transaction, data: _ImportT) {
-	return transacting.insert(camelToSnake(data)).into('bookbrainz.import').returning('id');
+function createEntityRecord(transacting: Transaction, data: EntityT) {
+	return transacting.insert(camelToSnake(data)).into('bookbrainz.entity').returning('bbid');
 }
 
 function createOrUpdateImportMetadata(transacting: Transaction, record: ImportMetadataT) {
-	return transacting.insert(camelToSnake(record)).into('bookbrainz.link_import')
-		.onConflict(['origin_source_id', 'origin_id']).merge();
+	return transacting.insert(camelToSnake(record)).into('bookbrainz.import_metadata')
+		.onConflict(['external_source_id', 'external_identifier']).merge();
 }
 
 function getImportMetadata(transacting: Transaction, externalSourceId: number, externalIdentifier: string) {
-	return transacting.select('import_id', 'entity_id').from('bookbrainz.link_import').where(camelToSnake({
-		originId: externalIdentifier,
-		originSourceId: externalSourceId
-	}));
+	return transacting.select('pending_entity_bbid', 'accepted_entity_bbid').from('bookbrainz.import_metadata')
+		.where(camelToSnake({externalIdentifier, externalSourceId}));
 }
 
 /** IDs of extra data sets which not all entity types have. */
@@ -93,7 +91,7 @@ function createImportDataRecord(transacting: Transaction, dataSets: DataSetIds, 
 function createOrUpdateImportHeader(transacting: Transaction, record: ImportHeaderT, entityType: EntityTypeString) {
 	const table = `bookbrainz.${_.snakeCase(entityType)}_import_header`;
 	return transacting.insert(camelToSnake(record)).into(table)
-		.onConflict('import_id').merge();
+		.onConflict('bbid').merge();
 }
 
 async function updateEntityExtraDataSets(
@@ -140,8 +138,8 @@ export type ImportStatus =
 
 export type ImportResult = {
 
-	/** ID of the imported entity (numeric for now, will be a BBID in a future version). */
-	importId: number | string;
+	/** BBID of the pending imported entity. */
+	importId: string;
 
 	/** Import status of the processed entity. */
 	status: ImportStatus;
@@ -156,25 +154,16 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 
 	return orm.bookshelf.transaction<ImportResult>(async (transacting) => {
 		const {entityType} = importData;
-		const {alias, annotation, identifiers, disambiguation, source} = importData.data;
+		const {alias, annotation, identifiers, disambiguation, externalSource} = importData.data;
 
-		// Get origin_source
-		let originSourceId: number = null;
+		const externalSourceId: number = await getExternalSourceId(transacting, externalSource);
 
-		try {
-			originSourceId = await getOriginSourceId(transacting, source);
-		}
-		catch (err) {
-			// TODO: useless, we are only catching our self-thrown errors here
-			throw new Error(`Error during getting source id - ${err}`);
-		}
-
-		const [existingImport] = await getImportMetadata(transacting, originSourceId, importData.originId);
+		const [existingImport] = await getImportMetadata(transacting, externalSourceId, importData.externalIdentifier);
 		if (existingImport) {
-			const isPendingImport = !existingImport.entity_id;
+			const isPendingImport = !existingImport.accepted_entity_bbid;
 			if (existingImportAction === 'skip') {
 				return {
-					importId: existingImport.import_id,
+					importId: existingImport.pending_entity_bbid,
 					status: isPendingImport ? 'skipped pending' : 'skipped accepted'
 				};
 			}
@@ -186,14 +175,14 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 				if (existingImportAction === 'update pending') {
 					// We only want to update pending, but not accepted entities
 					return {
-						importId: existingImport.import_id,
+						importId: existingImport.pending_entity_bbid,
 						status: 'skipped accepted'
 					};
 				}
 				// We also want to create updates for already accepted entities ('update pending and accepted')
 				// TODO: implement this feature in a later version and drop the following temporary return statement
 				return {
-					importId: existingImport.import_id,
+					importId: existingImport.pending_entity_bbid,
 					status: 'skipped accepted'
 				};
 			}
@@ -229,11 +218,11 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		}
 
 		// Create import entity (if it is not already existing from a previous import attempt)
-		let importId: number = existingImport?.import_id;
+		let importId: string = existingImport?.pending_entity_bbid;
 		if (!importId) {
 			try {
-				const [idObj] = await createImportRecord(transacting, {type: entityType});
-				importId = _.get(idObj, 'id');
+				const [idObj] = await createEntityRecord(transacting, {isImport: true, type: entityType});
+				importId = _.get(idObj, 'bbid');
 			}
 			catch (err) {
 				throw new Error(`Failed to create a new import ID: ${err}`);
@@ -241,12 +230,11 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		}
 
 		const importMetadata: ImportMetadataT = {
-			importId,
-			importMetadata: importData.data.metadata,
-			importedAt: transacting.raw("timezone('UTC'::TEXT, now())"),
+			additionalData: importData.data.metadata,
+			externalIdentifier: importData.externalIdentifier,
+			externalSourceId,
 			lastEdited: importData.lastEdited,
-			originId: importData.originId,
-			originSourceId
+			pendingEntityBbid: importId
 		};
 
 		try {
@@ -257,7 +245,7 @@ export function createImport(orm: ORM, importData: QueuedEntity, {
 		}
 
 		try {
-			await createOrUpdateImportHeader(transacting, {dataId, importId}, entityType);
+			await createOrUpdateImportHeader(transacting, {bbid: importId, dataId}, entityType);
 		}
 		catch (err) {
 			throw new Error(`Failed to upsert import header: ${err}`);

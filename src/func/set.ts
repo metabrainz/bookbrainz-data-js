@@ -22,28 +22,6 @@ import type Bookshelf from '@metabrainz/bookshelf';
 import type {ORM} from '..';
 
 /**
- * Returns a function which compares two object provided to it using the
- * comparison fields mentioned
- * @param  {Array<string>} compareFields - Comparison fields of two objects
- * @returns {Function} - Returns a comparison function
- */
-export function getComparisonFunc(compareFields: Array<string>) {
-	/**
-	 * @param  {any} obj - Object for comparison
-	 * @param  {any} other - Object for comparison
-	 * @returns {boolean} Boolean value denoting objects are equal on fields
-	 */
-	return function Cmp(obj: any, other: any): boolean {
-		for (const field of compareFields) {
-			if (obj[field] !== other[field]) {
-				return false;
-			}
-		}
-		return true;
-	};
-}
-
-/**
  * Get the intersection of two arrays of objects using a custom comparison
  * function. The two arrays represent two versions of a single set - one array
  * is the set before a particular change and the other is the same set after
