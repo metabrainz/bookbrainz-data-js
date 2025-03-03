@@ -3,7 +3,7 @@ name: Deploy release to NPM
 on:
   release:
     types: [published]
-  
+
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
@@ -11,32 +11,48 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Set up node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20'
           # Enables caching Yarn dependencies (uses https://github.com/actions/cache under the hood)
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
           always-auth: true
           
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      # Make sure you have bumped the version before publishing the release
-      # This script will not bump the version and will use the version from package.json
-      # It will just fail if trying to publish an already published version
-      - name: Build and publish the package
-        run: yarn publish --non-interactive --new-version ${{ github.event.release.tag_name }} --no-git-tag-version
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create env variables
+        run: |
+          RELEASE_VERSION=${{ github.event.release.tag_name }}
+          NEW_VERSION_NUMBER=${RELEASE_VERSION/v}
+          echo NEW_VERSION_NUMBER=$NEW_VERSION_NUMBER >> $GITHUB_ENV
+          echo Publishing $NEW_VERSION_NUMBER
       
       - name: setup git config
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
+          
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-      - name: Commit files
+      # Sets the version number in package.json
+      # Invoked with --no-git-tag-version because the tag is already created by Github Release 
+      - name: Bump package version
+        run: yarn version --new-version $NEW_VERSION_NUMBER --no-git-tag-version
+
+      - name: Commit package version bump
         run: |
           git add package.json
           git commit -m "chore: Release ${{ github.event.release.tag_name }}"
-          git push origin master
+
+      # Builds and publishes the package.
+      # Invoked with --no-git-tag-version because the tag is already created by Github Release
+      - name: Build and publish the package
+        run: yarn publish --non-interactive --no-git-tag-version
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Replace tag and push commit
+        run: |
+          git push origin --delete ${{ github.event.release.tag_name }}
+          git tag -af ${{ github.event.release.tag_name }} -m "Release ${{ github.event.release.tag_name }}"
+          git push origin master --follow-tags
