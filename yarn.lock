@@ -2904,9 +2904,9 @@ kysely-codegen@^0.17.0:
     pluralize "^8.0.0"
 
 kysely@^0.28.12:
-  version "0.28.12"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.12.tgz#bb21e998cac234ef6428ead96c59a56a9e663b2b"
-  integrity sha512-kWiueDWXhbCchgiotwXkwdxZE/6h56IHAeFWg4euUfW0YsmO9sxbAxzx1KLLv2lox15EfuuxHQvgJ1qIfZuHGw==
+  version "0.28.17"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.17.tgz#cb8c74696b911a43c595f752b653b90ed56d42b9"
+  integrity sha512-nbD8lB9EB3wNdMhOCdx5Li8DxnLbvKByylRLcJ1h+4SkrowVeECAyZlyiKMThF7xFdRz0jSQ2MoJr+wXux2y0Q==
 
 levn@^0.4.1:
   version "0.4.1"
