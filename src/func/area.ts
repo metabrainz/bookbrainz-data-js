@@ -12,27 +12,31 @@ import type {QueryResult} from 'pg';
  * 					   parent default alias
  */
 export async function recursivelyGetAreaParentsWithNames(orm: ORM | Bookshelf, areaId: string, checkAllLevels = false) {
+	/** Maximum depth when walking the area hierarchy. */
+	const MAX_AREA_HIERARCHY_DEPTH = 10;
+
 	const levelsCondition = checkAllLevels ? '' :
 		'WHERE area.type IN (1, 2, 3)';
+
 	const rawSql = `
 		WITH RECURSIVE area_descendants AS (
-			SELECT entity0 AS parent, entity1 AS descendant, 1 AS depth
+			SELECT entity0 AS parent, entity1 AS descendant, 1 AS depth, ARRAY[entity0] AS path
 			FROM musicbrainz.l_area_area laa
-			where entity1 = ${areaId}
-				UNION
-			SELECT entity0 AS parent, descendant, (depth + 1) AS depth
+			WHERE entity1 = ${areaId}
+			UNION
+			SELECT entity0 AS parent, ad.descendant, (ad.depth + 1) AS depth, ad.path || entity0
 			FROM musicbrainz.l_area_area laa
-			JOIN area_descendants ON area_descendants.parent = laa.entity1
-			where entity0 != descendant
+			JOIN area_descendants ad ON ad.parent = laa.entity1
+			WHERE NOT entity0 = ANY(ad.path)
+				AND ad.depth < ${MAX_AREA_HIERARCHY_DEPTH}
 		)
 		SELECT ad.descendant, ad.parent, ad.depth, area.name
 		FROM area_descendants ad
-		JOIN musicbrainz.area area on area.id  = ad.parent
+		JOIN musicbrainz.area area ON area.id = ad.parent
 		${levelsCondition}
 		ORDER BY ad.descendant, ad.depth ASC
 	`;
 
-	// Query the database to get the area parents recursively
 	const knex = 'bookshelf' in orm ? orm.bookshelf.knex : orm.knex;
 	const queryResult = await knex.raw<QueryResult<AreaDescendantRow>>(rawSql);
 	if (!Array.isArray(queryResult.rows)) {

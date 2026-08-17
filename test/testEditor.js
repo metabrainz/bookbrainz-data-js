@@ -103,7 +103,8 @@ describe('Editor model', () => {
 			'createdAt', 'activeAt', 'typeId', 'gender', 'genderId',
 			'areaId', 'revisionsApplied', 'revisionsReverted',
 			'totalRevisions', 'type', 'revisions', 'titleUnlockId',
-			'metabrainzUserId', 'cachedMetabrainzName', 'privs'
+			'metabrainzUserId', 'cachedMetabrainzName', 'privs',
+			'metabrainzOauthAccessToken', 'metabrainzOauthRefreshToken'
 		]);
 	});
 });

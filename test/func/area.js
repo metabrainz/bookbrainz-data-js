@@ -76,4 +76,17 @@ describe('recursivelyGetAreaParentsWithNames', () => {
 		expect(parents[1].name).to.equal('Ile-de-France');
 		expect(parents[2].name).to.equal('France');
 	});
+
+	it('should terminate when the area hierarchy contains a cycle', async function () {
+		await bookshelf.knex('musicbrainz.l_area_area').insert(
+			{entity0: area3.id, entity1: area1.id, link: 118734}
+		);
+
+		const parents = await recursivelyGetAreaParentsWithNames(bookbrainzData, area4.id, true);
+		expect(parents).to.be.an('array').that.is.not.empty;
+		expect(parents.length).to.equal(3);
+		expect(parents[0].name).to.equal('OtherSubdivision');
+		expect(parents[1].name).to.equal('Ile-de-France');
+		expect(parents[2].name).to.equal('France');
+	});
 });
