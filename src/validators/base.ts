@@ -20,7 +20,7 @@
 import {type DateObject, ISODateStringToObject, isNullDate} from '../func/date';
 import _ from 'lodash';
 import {dateValidator} from './date';
-import {isIterable} from '../util';
+import {isCollection} from 'immutable';
 import validator from 'validator';
 
 
@@ -39,7 +39,7 @@ export function get(
 	path: string,
 	defaultValue: unknown | null | undefined = null
 ): any {
-	if (isIterable(object)) {
+	if (isCollection(object)) {
 		return object.get(path, defaultValue);
 	}
 	return _.get(object, path, defaultValue);
@@ -50,7 +50,7 @@ export function getIn(
 	paths: string[],
 	defaultValue: unknown | null | undefined = null
 ): any {
-	if (isIterable(object)) {
+	if (isCollection(object)) {
 		return object.getIn(paths, defaultValue);
 	}
 	return _.get(object, paths, defaultValue);
