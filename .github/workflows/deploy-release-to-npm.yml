@@ -1,60 +1,104 @@
 name: Deploy release to NPM
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 5.3.2 or v5.3.2). Ensure a matching draft release exists and is tagged with the same version number.'
+        required: true
+        type: string
 
 permissions:
   id-token: write  # Required for OIDC
-  contents: read
+  contents: write  # Required to push the version bump, create the tag, and publish the draft release
 
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
-          always-auth: true
           package-manager-cache: false  # never use caching in release builds
 
-      - name: Create env variables
+      - name: Create release env variables
         run: |
-          RELEASE_VERSION=${{ github.event.release.tag_name }}
-          NEW_VERSION_NUMBER=${RELEASE_VERSION/v}
-          echo NEW_VERSION_NUMBER=$NEW_VERSION_NUMBER >> $GITHUB_ENV
-          echo Publishing $NEW_VERSION_NUMBER
-      
-      - name: setup git config
+          VERSION="${{ inputs.version }}"
+          VERSION="${VERSION#v}"
+          TAG_NAME="v${VERSION}"
+
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+          echo "TAG_NAME=${TAG_NAME}" >> "$GITHUB_ENV"
+          echo "Publishing ${TAG_NAME}"
+
+      - name: Verify release draft exists
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-            git config user.name "GitHub Actions Bot"
-            git config user.email "<>"
-          
+          if ! IS_DRAFT="$(gh release view "$TAG_NAME" --json isDraft --jq '.isDraft')"; then
+            echo "No release draft found for $TAG_NAME"
+            exit 1
+          fi
+
+          if [ "$IS_DRAFT" != "true" ]; then
+            echo "Release $TAG_NAME exists, but it is not a draft"
+            exit 1
+          fi
+
+      - name: Verify release tag does not exist yet
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG_NAME"; then
+            echo "Tag $TAG_NAME already exists"
+            exit 1
+          fi
+
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Sets the version number in package.json
-      # Invoked with --no-git-tag-version because the tag is already created by Github Release 
+      # Sets the version number in package.json.
+      # Invoked with --no-git-tag-version because this workflow creates the release tag after the commit.
       - name: Bump package version
-        run: yarn version --new-version $NEW_VERSION_NUMBER --no-git-tag-version
+        run: |
+          CURRENT_VERSION="$(node -p "require('./package.json').version")"
+
+          if [ "$CURRENT_VERSION" = "$VERSION" ]; then
+            echo "package.json is already at version $VERSION"
+          else
+            yarn version --new-version "$VERSION" --no-git-tag-version
+          fi
 
       - name: Commit package version bump
         run: |
           git add package.json
-          git commit -m "chore: Release ${{ github.event.release.tag_name }}"
+          if git diff --cached --quiet; then
+            echo "No package version bump to commit"
+          else
+            git commit -m "chore: Release $TAG_NAME"
+          fi
+
+      - name: Create and push release tag
+        run: |
+          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin HEAD:master
+          git push origin "$TAG_NAME"
+
+      - name: Publish GitHub release draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$TAG_NAME" --draft=false --verify-tag
 
       # Builds and publishes the package.
-      # No tokens are required because the OIDC token is automatically exchanged for an NPM token by the setup-node action.
       # We use npm here because it natively handles the OIDC token exchange.
-      # Invoked with --no-git-tag-version because the tag is already created by Github Release
-      - name: Build and publish the package
-        run: npm publish --non-interactive --no-git-tag-version
-      
-      - name: Replace tag and push commit
-        run: |
-          git push origin --delete ${{ github.event.release.tag_name }}
-          git tag -af ${{ github.event.release.tag_name }} -m "Release ${{ github.event.release.tag_name }}"
-          git push origin master --follow-tags
+      - name: Publish to npm via OIDC
+        run: npm publish
