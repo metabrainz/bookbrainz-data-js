@@ -4,21 +4,23 @@ on:
   release:
     types: [published]
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
-          # Enables caching Yarn dependencies (uses https://github.com/actions/cache under the hood)
-          cache: 'yarn'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
           always-auth: true
-          
+          package-manager-cache: false  # never use caching in release builds
+
       - name: Create env variables
         run: |
           RELEASE_VERSION=${{ github.event.release.tag_name }}
@@ -45,11 +47,11 @@ jobs:
           git commit -m "chore: Release ${{ github.event.release.tag_name }}"
 
       # Builds and publishes the package.
+      # No tokens are required because the OIDC token is automatically exchanged for an NPM token by the setup-node action.
+      # We use npm here because it natively handles the OIDC token exchange.
       # Invoked with --no-git-tag-version because the tag is already created by Github Release
       - name: Build and publish the package
-        run: yarn publish --non-interactive --no-git-tag-version
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --non-interactive --no-git-tag-version
       
       - name: Replace tag and push commit
         run: |
