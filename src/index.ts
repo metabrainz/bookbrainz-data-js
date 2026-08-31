@@ -85,6 +85,7 @@ import relationshipTypeAttributeType from './models/relationshipTypeAttributeTyp
 import releaseEvent from './models/releaseEvent';
 import releaseEventSet from './models/releaseEventSet';
 import revision from './models/revision';
+import script from './models/script';
 import series from './models/entities/series';
 import seriesData from './models/data/seriesData';
 import seriesHeader from './models/headers/seriesHeader';
@@ -190,6 +191,7 @@ export default function init(config: Knex.Config) {
 		ReleaseEvent: releaseEvent(bookshelf),
 		ReleaseEventSet: releaseEventSet(bookshelf),
 		Revision: revision(bookshelf),
+		Script: script(bookshelf),
 		Series: series(bookshelf),
 		SeriesData,
 		SeriesHeader: seriesHeader(bookshelf),

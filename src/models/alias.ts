@@ -28,6 +28,9 @@ export default function alias(bookshelf: Bookshelf) {
 			return this.belongsTo('Language', 'language_id');
 		},
 		parse: snakeToCamel,
+		script() {
+			return this.belongsTo('Script', 'script_id');
+		},
 		sets() {
 			return this.belongsToMany(
 				'AliasSet', 'bookbrainz.alias_set__alias', 'alias_id', 'set_id'
