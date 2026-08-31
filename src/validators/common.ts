@@ -30,7 +30,7 @@ import {
 
 import type {AliasWithDefaultT} from '../types/aliases';
 import _ from 'lodash';
-import {isIterable} from '../util';
+import {isCollection} from 'immutable';
 
 
 export function validateMultiple(
@@ -47,7 +47,7 @@ export function validateMultiple(
 		throw new ValidationError('Value is not an object');
 	}
 
-	for (const value of isIterable(values) ? values.values() : Object.values(values)) {
+	for (const value of isCollection(values) ? values.values() : Object.values(values)) {
 		validationFunction(value, additionalArgs);
 	}
 }

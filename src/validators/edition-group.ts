@@ -30,9 +30,8 @@ import {
 } from './common';
 
 import type {IdentifierTypeWithIdT} from '../types/identifiers';
-import {Iterable} from 'immutable';
 import _ from 'lodash';
-import {isIterable} from '../util';
+import {isCollection} from 'immutable';
 
 
 export function validateEditionGroupSectionType(value: any): void {
@@ -47,7 +46,7 @@ export function validateEditionGroup(
 	formData: any, identifierTypes?: Array<IdentifierTypeWithIdT> | null | undefined,
 	isMerge?: boolean
 ): void {
-	const authorCreditEnable = isIterable(formData) ?
+	const authorCreditEnable = isCollection(formData) ?
 		formData.getIn(['editionGroupSection', 'authorCreditEnable'], true) :
 		get(formData, 'editionGroupSection.authorCreditEnable', true);
 	if (isMerge) {
@@ -55,8 +54,10 @@ export function validateEditionGroup(
 	}
 	else if (!authorCreditEnable) {
 		let emptyAuthorCredit:boolean;
-		if (isIterable(formData)) {
-			emptyAuthorCredit = (formData.get('authorCreditEditor') as Iterable<unknown, unknown>)?.size === 0;
+		if (isCollection(formData)) {
+			const authorCreditEditor = formData.get('authorCreditEditor');
+			emptyAuthorCredit = isCollection(authorCreditEditor) &&
+				authorCreditEditor.count() === 0;
 		}
 		else {
 			emptyAuthorCredit = _.size(get(formData, 'authorCreditEditor', {})) === 0;
